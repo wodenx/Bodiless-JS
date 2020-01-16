@@ -14,15 +14,29 @@
 
 import path from 'path';
 import axios from 'axios';
+import { v1 } from 'uuid';
 
 const backendPort = process.env.GATSBY_BODILESS_BACKEND_PORT || 8001;
+
+type BackendClientConf = {
+  baseUrl?: string,
+  prefix?: string,
+  clientId?: string,
+};
 
 export default class BackendClient {
   private root: string;
 
   private prefix: string;
 
-  constructor(baseUrl?: string, prefix?: string) {
+  private clientId: string;
+
+  constructor(backendClientConf?: BackendClientConf) {
+    const {
+      baseUrl = undefined,
+      prefix = undefined,
+      clientId = undefined,
+    } = backendClientConf || {};
     let host = `http://localhost:${backendPort}`;
     if (typeof window !== 'undefined') {
       // eslint-disable-next-line no-undef
@@ -31,14 +45,26 @@ export default class BackendClient {
     }
     this.root = baseUrl || process.env.GATSBY_BODILESS_BACKEND_URL || host;
     this.prefix = prefix || process.env.GATSBY_BODILESS_BACKEND_PREFIX || '/___backend';
+    this.clientId = clientId || v1();
+  }
+
+  setClientId(clientId: string) {
+    this.clientId = clientId;
+  }
+
+  private getRequestOptions() {
+    const options = {
+      headers: { 'X-ClientId': this.clientId },
+    };
+    return options;
   }
 
   get(resourcePath: string) {
-    return axios.get(this.root + resourcePath);
+    return axios.get(this.root + resourcePath, this.getRequestOptions());
   }
 
   post(resourcePath: string, data: any) {
-    return axios.post(this.root + resourcePath, data);
+    return axios.post(this.root + resourcePath, data, this.getRequestOptions());
   }
 
   savePath(resourcePath: string, data: any) {

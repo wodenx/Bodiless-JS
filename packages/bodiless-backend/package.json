@@ -12,7 +12,8 @@
     "dotenv": "^8.2.0",
     "express": "^4.16.4",
     "formidable": "^1.2.1",
-    "tmp": "^0.0.33"
+    "tmp": "^0.0.33",
+    "uuid": "^3.3.3"
   },
   "publishConfig": {
     "access": "public"

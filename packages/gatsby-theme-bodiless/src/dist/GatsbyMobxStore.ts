@@ -17,6 +17,7 @@ import {
   observable, action, reaction, IReactionDisposer,
 } from 'mobx';
 import { AxiosPromise } from 'axios';
+import { v1 } from 'uuid';
 // import isEqual from 'react-fast-compare';
 import BackendClient from './BackendClient';
 
@@ -53,6 +54,8 @@ class Item {
 
   @observable dirty = false;
 
+  metaData = {};
+
   store: GatsbyMobxStore;
 
   dispose?: IReactionDisposer;
@@ -72,15 +75,37 @@ class Item {
     }
   }
 
+  private shouldAccept(metaData: any) {
+    // We want to reject data if it was created by this client
+    const isAuthor = metaData !== undefined && metaData.author === this.store.storeId;
+    return !isAuthor;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private shouldSave(resourcePath: string) {
+    const saveEnabled = (process.env.BODILESS_BACKEND_SAVE_ENABLED || '1') === '1';
+    // Determine if the resource path is for a page created for preview purposes
+    // we do not want to save data for these pages
+    const isPreviewTemplatePage = resourcePath.includes(path.join('pages', '___templates'));
+    return saveEnabled && !isPreviewTemplatePage;
+  }
+
+  private setData(data: any) {
+    const { ___meta, ...rest } = data;
+    if (this.shouldAccept(___meta)) {
+      this.metaData = ___meta;
+      this.data = rest;
+    }
+  }
+
   constructor(
     store: GatsbyMobxStore,
     key: string,
     initialData = {},
     save = true,
   ) {
-    const saveEnabled = (process.env.BODILESS_BACKEND_SAVE_ENABLED || '1') === '1';
     this.store = store;
-    this.data = initialData;
+    this.setData(initialData);
     this.dirty = save;
     const preparePostData = () => (this.dirty ? this.data : null);
 
@@ -106,10 +131,7 @@ class Item {
       this.lock();
       this.store.client.savePath(resourcePath, data).then(() => this.unLock());
     };
-    // Determine if the resource path is for a page created for preview purposes
-    // we do not want to save data for these pages
-    const isPreviewTemplatePage = resourcePath.includes(path.join('pages', '___templates'));
-    if (saveEnabled && !isPreviewTemplatePage) {
+    if (this.shouldSave(resourcePath)) {
       postData(preparePostData());
       this.dispose = reaction(preparePostData, postData, {
         delay: 500,
@@ -120,9 +142,9 @@ class Item {
   @action update(data = {}, save = true) {
     if (save) {
       this.dirty = true;
-      this.data = data;
+      this.setData(data);
     } else if (!this.dirty) {
-      this.data = data;
+      this.setData(data);
     }
   }
 }
@@ -143,9 +165,12 @@ export default class GatsbyMobxStore {
 
   data: any;
 
+  storeId: string;
+
   constructor(nodeProvider: DataSource) {
     this.setNodeProvider(nodeProvider);
-    this.client = new BackendClient();
+    this.storeId = v1();
+    this.client = new BackendClient({ clientId: this.storeId });
   }
 
   setNodeProvider(nodeProvider: DataSource) {
