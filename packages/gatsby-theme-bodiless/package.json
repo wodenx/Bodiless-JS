@@ -58,7 +58,7 @@
     "slash": "^2.0.0",
     "sleep-promise": "^8.0.1",
     "universal-cookie": "^4.0.3",
-    "uuid": "^3.3.3"
+    "uuid": "^3.3.2"
   },
   "peerDependencies": {
     "gatsby": "^2.0.19",
