@@ -204,15 +204,15 @@ if [ "$1" = "deploy" ]; then
   else
     full_deploy
   fi
-  # install
-  # postdeploy
+  install
+  postdeploy
 elif [ "$1" = "start" ]; then
   if ! check_branch; then
-    echo 'Invalid branch: not starting edit app'
-    exec sleep infinity
+      echo 'Invalid branch: not starting edit app'
+      exec sleep infinity
   else
-    echo "Starting application on ${date}"
-    exec pm2 start --no-daemon ${PLATFORM_APP_DIR}/ecosystem.config.js
+      echo "Starting application on ${date}"
+      exec pm2 start --no-daemon ${PLATFORM_APP_DIR}/ecosystem.config.js
   fi
 elif [ "$1" = "build" ]; then
   echo "APP BUILD AT $(date)"
@@ -225,6 +225,6 @@ elif [ "$1" = "fresh" ]; then
   echo "FRESH INSTALL AT $(date)"
   predeploy
   full_deploy
-  # install
-  # postdeploy
+  install
+  postdeploy
 fi
