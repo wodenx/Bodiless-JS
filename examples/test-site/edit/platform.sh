@@ -69,20 +69,35 @@ install () {
 }
 
 rebase () {
-  ${CMD_GIT} fetch origin
-  ${CMD_GIT} rebase origin/${PLATFORM_BRANCH} -s recursive -X theirs
+  if [[ ${PLATFORM_BRANCH} =~ ^pr ]]; then
+    ID=$(echo $PLATFORM_BRANCH | sed s/pr-//g)
+    git fetch origin pull/${ID}/head:${PLATFORM_BRANCH}-rebase
+    ${CMD_GIT} rebase ${PLATFORM_BRANCH}-rebase -s recursive -X theirs
+    ${CMD_GIT} branch -d ${PLATFORM_BRANCH}-rebase
+  else
+    ${CMD_GIT} fetch origin
+    ${CMD_GIT} rebase origin/${PLATFORM_BRANCH} -s recursive -X theirs
+  fi
 }
 
 reset () {
   echo "Reset"
-  ${CMD_GIT} fetch origin
-  current_branch=${get_current_branch}
-  if [[ -z ${current_branch} ]]; then
-    git checkout ${PLATFORM_BRANCH}
-  elif [[ ${current_branch} != ${PLATFORM_BRANCH} ]]; then
-    git checkout ${PLATFORM_BRANCH}
+  if [[ ${PLATFORM_BRANCH} =~ ^pr ]]; then
+    current_branch=${get_current_branch}
+    if [[ -z ${current_branch} || ${current_branch} != ${PLATFORM_BRANCH} ]]; then
+      echo Cannot reset PR when platform branch is not current branch.
+      exit 1
+    fi
+    ID=$(echo $PLATFORM_BRANCH | sed s/pr-//g)
+    git fetch origin pull/${ID}/head:${PLATFORM_BRANCH}-rebase
+    git reset --hard ${PLATFORM_BRANCH}-rebase
+    git branch -D ${PLATFORM_BRANCH}-rebase
+  else
+    if [[ -z ${current_branch} || ${current_branch} != ${PLATFORM_BRANCH} ]]; then
+      git checkout ${PLATFORM_BRANCH}
+    fi
+    git reset --hard origin/${PLATFORM_BRANCH}
   fi
-  git reset --hard origin/${PLATFORM_BRANCH}
   git clean -fd
 }
 
