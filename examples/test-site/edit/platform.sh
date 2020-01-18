@@ -100,6 +100,10 @@ pull () {
 }
 
 incremental_deploy () {
+  if ! check_branch; then
+    echo 'Incremental deploy not available on PR branches. Please use "bash ./platform.sh fresh" instead.'
+    exit
+  fi
   echo "Performing incremental deploy on $(get_current_branch)"
   cd ${ROOT_DIR}
   if [ ! -z "$(git status | grep rebasing)" ]; then
