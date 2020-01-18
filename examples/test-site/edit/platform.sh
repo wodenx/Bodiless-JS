@@ -140,8 +140,12 @@ full_deploy () {
 
 predeploy () {
   if [[ ${PLATFORM_BRANCH} =~ ^pr- ]]; then
-      echo "Edit environments are not enabled on PR branches"
+    if [[ ${GIT_REMOTE_URL} =~ github\.com ]]; then
+      echo "Deploying GitHub pull request ${PLATFORM_BRANCH}"
+    else
+      echo "Edit environments are only enabled for PR branches on GitHub"
       exit
+    fi
   fi
   check_vars
   mkdir -p ${APP_VOLUME}/.config
@@ -185,7 +189,7 @@ for dict in json_object:
 
 if [ "$1" = "deploy" ]; then
   echo "DEPLOY AT $(date)"
-  # predeploy
+  predeploy
   if [ -d ${ROOT_DIR}/.git ]; then
     incremental_deploy
   else
@@ -212,6 +216,6 @@ elif [ "$1" = "fresh" ]; then
   echo "FRESH INSTALL AT $(date)"
   predeploy
   full_deploy
-  install
-  postdeploy
+  # install
+  # postdeploy
 fi
