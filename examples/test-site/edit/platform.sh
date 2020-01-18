@@ -152,7 +152,7 @@ check_branch () {
 
 predeploy () {
   # Exit of on a PR branch and not on GitHub
-  if [[ check_branch ]]; then
+  if check_branch; then
     exit
   fi
   check_vars
@@ -206,7 +206,7 @@ if [ "$1" = "deploy" ]; then
   # install
   # postdeploy
 elif [ "$1" = "start" ]; then
-  if [[ check_branch ]]; then
+  if check_branch; then
     exec sleep infinity
   else
     echo "Starting application on ${date}"
