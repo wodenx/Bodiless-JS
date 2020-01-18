@@ -124,8 +124,16 @@ incremental_deploy () {
 full_deploy () {
   echo "Performing full deploy, branch is ${PLATFORM_BRANCH}"
   rm -rf ${ROOT_DIR}
-  ${CMD_GIT} clone -b ${PLATFORM_BRANCH} ${GIT_REMOTE_URL} ${ROOT_DIR}
-  cd ${ROOT_DIR}
+  if [[ ${PLATFORM_BRANCH} =~ ^pr- ]]; then
+    ${CMD_GIT} clone ${GIT_REMOTE_URL} ${ROOT_DIR}
+    cd ${ROOT_DIR}
+    ID=$(echo $PLATFORM_BRANCH | sed s/pr-//g)
+    git fetch origin pull/${ID}/head:${PLATFORM_BRANCH}
+    git checkout ${PLATFORM_BRANCH}
+  else
+    ${CMD_GIT} clone -b ${PLATFORM_BRANCH} ${GIT_REMOTE_URL} ${ROOT_DIR}
+    cd ${ROOT_DIR}
+  fi
   ${CMD_GIT} config user.email "${APP_GIT_USER_EMAIL}"
   ${CMD_GIT} config user.name "${APP_GIT_USER}"
 }
@@ -177,14 +185,14 @@ for dict in json_object:
 
 if [ "$1" = "deploy" ]; then
   echo "DEPLOY AT $(date)"
-  predeploy
+  # predeploy
   if [ -d ${ROOT_DIR}/.git ]; then
     incremental_deploy
   else
     full_deploy
   fi
-  install
-  postdeploy
+  # install
+  # postdeploy
 elif [ "$1" = "start" ]; then
   if [[ ${PLATFORM_BRANCH} =~ ^pr- ]]; then
       echo "Edit environments are not enabled on PR branches"
