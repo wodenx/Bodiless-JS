@@ -138,14 +138,22 @@ full_deploy () {
   ${CMD_GIT} config user.name "${APP_GIT_USER}"
 }
 
-predeploy () {
+check_branch () {
   if [[ ${PLATFORM_BRANCH} =~ ^pr- ]]; then
     if [[ ${GIT_REMOTE_URL} =~ github\.com ]]; then
-      echo "Deploying GitHub pull request ${PLATFORM_BRANCH}"
+      return 0
     else
-      echo "Edit environments are only enabled for PR branches on GitHub"
-      exit
+      echo "Edit environments for PR branches are only enabled on GitHub"
+      return 1
     fi
+  fi
+  return 0
+}
+
+predeploy () {
+  # Exit of on a PR branch and not on GitHub
+  if [[ check_branch ]]; then
+    exit
   fi
   check_vars
   mkdir -p ${APP_VOLUME}/.config
@@ -198,12 +206,11 @@ if [ "$1" = "deploy" ]; then
   # install
   # postdeploy
 elif [ "$1" = "start" ]; then
-  if [[ ${PLATFORM_BRANCH} =~ ^pr- ]]; then
-      echo "Edit environments are not enabled on PR branches"
-      exec sleep infinity
+  if [[ check_branch ]]; then
+    exec sleep infinity
   else
-      echo "Starting application on ${date}"
-      exec pm2 start --no-daemon ${PLATFORM_APP_DIR}/ecosystem.config.js
+    echo "Starting application on ${date}"
+    exec pm2 start --no-daemon ${PLATFORM_APP_DIR}/ecosystem.config.js
   fi
 elif [ "$1" = "build" ]; then
   echo "APP BUILD AT $(date)"
