@@ -317,6 +317,11 @@ deployed to its own environment. Be aware of the following:
   updated.
 - PR environments are named simply `pr-{pr#}` (eg `pr-123`).  You can easily run platform cli
   commands against them using the `-e pr-xxx` option.
+- A link to the p.sh environment will be posted to the PR:
+  - **GitHub**: Expand the "Show All Checks" link next to the section on the "Conversations"
+    tab, and click the "details" link next to the platform.sh build.
+  - **Bitbucket Server**: Click the build status icon next to the PR title, and then click the
+    "platform.sh" link.
 
 ### Manual Deployments
 
