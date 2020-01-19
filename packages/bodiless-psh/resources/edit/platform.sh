@@ -63,9 +63,12 @@ install () {
   cd ${ROOT_DIR}
 
   bash ${PLATFORM_APP_DIR}/platform.custom.sh install
-  bash ${PLATFORM_APP_DIR}/platform.custom.sh build
 
   ${CMD_GIT} checkout  package-lock.json
+}
+
+build () {
+  bash ${PLATFORM_APP_DIR}/platform.custom.sh build
 }
 
 rebase () {
@@ -78,7 +81,7 @@ rebase () {
     ${CMD_GIT} fetch origin
     ${CMD_GIT} rebase origin/${PLATFORM_BRANCH} -s recursive -X theirs
   fi
-}
+} 
 
 reset () {
   echo "Reset"
@@ -115,10 +118,6 @@ pull () {
 }
 
 incremental_deploy () {
-  if ! check_branch; then
-    echo 'Incremental deploy not available on PR branches. Please use "bash ./platform.sh fresh" instead.'
-    exit
-  fi
   echo "Performing incremental deploy on $(get_current_branch)"
   cd ${ROOT_DIR}
   if [ ! -z "$(git status | grep rebasing)" ]; then
@@ -219,11 +218,16 @@ if [ "$1" = "deploy" ]; then
   echo "DEPLOY AT $(date)"
   predeploy
   if [ -d ${ROOT_DIR}/.git ]; then
+    last_hash=$(git rev-parse HEAD)
     incremental_deploy
+    if [[ ! -z $(git diff --shortstat $last_hash -- package-lock.json) ]]
+      install
+    fi
   else
     full_deploy
+    install
   fi
-  install
+  build
   postdeploy
 elif [ "$1" = "start" ]; then
   if ! check_branch; then
@@ -245,5 +249,6 @@ elif [ "$1" = "fresh" ]; then
   predeploy
   full_deploy
   install
+  build
   postdeploy
 fi
