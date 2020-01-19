@@ -312,6 +312,9 @@ deployed to its own environment. Be aware of the following:
   from the edit environment is not supported even there.
 - On Bitbucket Server, pull requests from *forks* will not automatically rebuild when new commits
   are added.  This limitation does not apply to GitHub.
+- On both GitHub and Bitbucket, changes pushed to code outside the `/edit` directory will
+  not automatically be deployed to the edit environment.  You must manually update the
+  edit environment as described under [Pushing Changes](#pushing-changes) below.
 - Pull request environments will be automatically deleted when the PR is merged or declined.
 - If you manually delete a PR environment, it will not be recreated when the PR is
   updated.
