@@ -15,9 +15,9 @@
 const processPayload = req => {
   const { body } = req;
   let meta;
-  if (req.headers !== undefined && req.headers['x-clientid']) {
+  if (req.headers['x-bl-clientid']) {
     meta = {
-      author: req.headers['x-clientid'],
+      author: req.headers['x-bl-clientid'],
     };
   }
   return meta ? Object.assign(body, { ___meta: meta }) : body;

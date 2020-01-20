@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 Johnson & Johnson
+ * Copyright © 2020 Johnson & Johnson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ describe('procesPayload', () => {
     it('should return request body augmented with metadata', () => {
       const clientId = 'clientA';
       const testInputData = {
-        'text': 'testData',
+        text: 'testData',
       };
       const request = {
         headers: {
-          'x-clientid': clientId,
+          'x-bl-clientid': clientId,
         },
         body: testInputData,
       };
@@ -32,7 +32,7 @@ describe('procesPayload', () => {
           author: clientId,
         },
         ...testInputData,
-      }
+      };
       const processedData = processPayload(request);
       expect(processedData).toStrictEqual(expectedData);
     });
@@ -40,10 +40,11 @@ describe('procesPayload', () => {
   describe('when request does not contain clientId in header', () => {
     it('should return request body', () => {
       const testInputData = {
-        'text': 'testData',
+        text: 'testData',
       };
       const request = {
         body: testInputData,
+        headers: {},
       };
       const processedData = processPayload(request);
       expect(processedData).toBe(testInputData);

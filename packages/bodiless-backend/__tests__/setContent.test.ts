@@ -12,7 +12,6 @@
  * limitations under the License.
  */
 
-import path from 'path';
 import request from 'supertest';
 
 const backendPrefix = '/prefix';
@@ -20,11 +19,11 @@ const backendFilePath = '/files';
 
 const mockPageWrite = jest.fn();
 
-jest.mock('../src/page', () => (pagePath: any) => ({
-  file: `${backendFilePath}/${pagePath}.json`,
+jest.mock('../src/page', () => () => ({
   write: mockPageWrite.mockResolvedValue(true),
-  setBasePath: () => true,
 }));
+
+jest.mock('../src/logger');
 
 const getApp = () => {
   // eslint-disable-next-line global-require
@@ -33,7 +32,7 @@ const getApp = () => {
   return backend.getApp();
 };
 
-describe('Create page endpoint', () => {
+describe('set content endpoint', () => {
   // preparing environment variables
   // clearing mocks
   beforeEach(() => {
@@ -43,34 +42,39 @@ describe('Create page endpoint', () => {
     mockPageWrite.mockReset();
   });
 
-  describe('when the page is created succefully', () => {
-    const page = 'products';
-    const template = '_default';
-    const performRequest = (app$: any) => request(app$)
-      .post(`${backendPrefix}/pages`)
-      .send({
-        path: page,
-        template,
-      });
-    describe('index.json containing template', () => {
-      it('should be writen to file system', async () => {
-        const app = getApp();
-        await performRequest(app);
-        expect(mockPageWrite).toHaveBeenCalledTimes(1);
-        const expected = path.resolve(backendFilePath, page, 'index.json');
-        const resolved = await mockPageWrite.mock.instances[0];
-        expect(resolved.file).toBe(expected);
-      });
-      it('should contain template', async () => {
-        const app = getApp();
-        await performRequest(app);
-        expect(mockPageWrite.mock.calls[0][0]['#template']).toBe(template);
-      });
-    });
-    it('should respond with 201 status', async () => {
+  const performRequest = (app$: any, data: any, headers: any) => request(app$)
+    .post(`${backendPrefix}/content/test`)
+    .send(data)
+    .set(headers);
+
+  describe('when request does not have x-bl-clientid', () => {
+    it('should write payload to json file', async () => {
       const app = getApp();
-      const result = await performRequest(app);
-      expect(result.status).toEqual(201);
+      const data = {
+        text: 'testData',
+      };
+      await performRequest(app, data, {});
+      expect(mockPageWrite.mock.calls[0][0]).toStrictEqual(data);
+    });
+  });
+  describe('when request contains x-bl-clientid', () => {
+    it('should write payload and metadata to json file', async () => {
+      const app = getApp();
+      const clientId = 'clientA';
+      const data = {
+        text: 'testData',
+      };
+      const headers = {
+        'x-bl-clientid': clientId,
+      };
+      const expectedData = {
+        ___meta: {
+          author: clientId,
+        },
+        ...data,
+      };
+      await performRequest(app, data, headers);
+      expect(mockPageWrite.mock.calls[0][0]).toStrictEqual(expectedData);
     });
   });
 });

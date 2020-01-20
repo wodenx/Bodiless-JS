@@ -54,7 +54,7 @@ export default class BackendClient {
 
   private getRequestOptions() {
     const options = {
-      headers: { 'X-ClientId': this.clientId },
+      headers: { 'x-bl-clientid': this.clientId },
     };
     return options;
   }

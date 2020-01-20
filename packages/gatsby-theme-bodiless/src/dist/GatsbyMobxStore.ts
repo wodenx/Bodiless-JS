@@ -35,7 +35,7 @@ type GatsbyNode = {
 
 export type GatsbyData = {
   [collection: string]: {
-    edges: [GatsbyNode];
+    edges: GatsbyNode[];
   };
 };
 
@@ -49,12 +49,16 @@ type Client = {
   savePath(resourcePath: string, data: any): AxiosPromise<any>;
 };
 
+type MetaData = {
+  author: string;
+};
+
 class Item {
   @observable data = {};
 
   @observable dirty = false;
 
-  metaData = {};
+  metaData?: MetaData;
 
   store: GatsbyMobxStore;
 
@@ -75,7 +79,7 @@ class Item {
     }
   }
 
-  private shouldAccept(metaData: any) {
+  private shouldAccept(metaData: MetaData) {
     // We want to reject data if it was created by this client
     const isAuthor = metaData !== undefined && metaData.author === this.store.storeId;
     return !isAuthor;
@@ -221,7 +225,7 @@ export default class GatsbyMobxStore {
 
   getKeys = () => Array.from(this.store.keys());
 
-  getNode = (keyPath: [string]) => {
+  getNode = (keyPath: string[]) => {
     const key = keyPath.join(nodeChildDelimiter);
     const item = this.store.get(key);
     const storeValue = item ? item.data : null;
@@ -232,7 +236,7 @@ export default class GatsbyMobxStore {
   /**
    * Mobx action saves or updates items to GatsbyMobxStore.store.
    */
-  @action setNode = (keyPath: [string], value = {}, save = true) => {
+  @action setNode = (keyPath: string[], value = {}, save = true) => {
     const key = keyPath.join(nodeChildDelimiter);
     const item = this.store.get(key);
     if (item) {
