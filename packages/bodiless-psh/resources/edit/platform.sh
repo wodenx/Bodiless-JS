@@ -218,11 +218,12 @@ if [ "$1" = "deploy" ]; then
   echo "DEPLOY AT $(date)"
   predeploy
   if [ -d ${ROOT_DIR}/.git ]; then
-    last_hash=$(git rev-parse HEAD)
+    # TODO: Install only when necessary.
+    # last_hash=$(git rev-parse HEAD)
     incremental_deploy
-    if [[ ! -z $(git diff --shortstat $last_hash -- package-lock.json) ]]
-      install
-    fi
+    # if [[ ! -z $(git diff --shortstat $last_hash -- package-lock.json) ]]
+    install
+    # fi
   else
     full_deploy
     install
