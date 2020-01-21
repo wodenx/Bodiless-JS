@@ -380,7 +380,7 @@ to learn more.
 #### Pushing changes
 
 Once a new branch is created, changes pushed to Bitbucket will be automatically
-deployed to the static site onplatform.sh. You can run `platform activity:log`
+deployed to the static site on platform.sh. You can run `platform activity:log`
 to see the current build status, or visit [console.platform.sh](https://console.platform.sh),
 locate your build, and click "View Logs".
 
