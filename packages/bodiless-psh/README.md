@@ -1,6 +1,6 @@
 # Bodiless integration with platform.sh
 
-This package provides standard configuration files and helper scripts which
+This package provides standard configuration files and helpehttps://github.com/johnsonandjohnson/Bodiless-JS/issues/65https://github.com/johnsonandjohnson/Bodiless-JS/issues/65r scripts which
 make it easy for a bodiless site to be deployed to platform.sh.
 
 ## Setting up your project
@@ -305,7 +305,7 @@ Are you sure you want to continue? [y/N] y
 
 ### Continuous Integration
 
-If you cnnfigured platform.sh to build pull requests, then every PR to your repository will be
+If you configured platform.sh to build pull requests, then every PR to your repository will be
 deployed to its own environment. Be aware of the following:
 - It is easy to reach your quota of development environments with this enabled, so use cautiously.
 - Edit environments for pull requests are currently only supported on GitHub -- and pushing changes
