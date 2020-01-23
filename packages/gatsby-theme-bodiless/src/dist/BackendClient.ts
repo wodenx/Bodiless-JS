@@ -31,6 +31,8 @@ export default class BackendClient {
 
   private clientId: string;
 
+  private pendingRequests: string[] = [];
+
   constructor(backendClientConf?: BackendClientConf) {
     const {
       baseUrl = undefined,
@@ -64,7 +66,20 @@ export default class BackendClient {
   }
 
   post(resourcePath: string, data: any) {
-    return axios.post(this.root + resourcePath, data, this.getRequestOptions());
+    const pendingRequests = this.pendingRequests;
+    window.addEventListener('beforeunload', function (e) {
+      if (pendingRequests.length > 0) {
+        // Cancel the event
+        e.preventDefault();
+        // Chrome requires returnValue to be set
+        e.returnValue = 'Are you sure you want to leave?';
+      };
+    });
+    const requestId = v1();
+    this.pendingRequests.push(requestId);
+    console.log(this.pendingRequests);
+    return axios.post(this.root + resourcePath, data, this.getRequestOptions())
+      .then(result => { this.pendingRequests = this.pendingRequests.filter(item => item !== requestId); return result;});
   }
 
   savePath(resourcePath: string, data: any) {

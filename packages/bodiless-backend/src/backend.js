@@ -23,6 +23,9 @@ const path = require('path');
 const Page = require('./page');
 const Logger = require('./logger');
 const processPayload = require('./processPayload');
+const morgan = require('morgan');
+const morganBody = require('morgan-body');
+
 
 const backendPrefix = process.env.GATSBY_BACKEND_PREFIX || '/___backend';
 const backendFilePath = process.env.BODILESS_BACKEND_DATA_FILE_PATH || '';
@@ -307,7 +310,9 @@ class GitCommit {
 class Backend {
   constructor() {
     this.app = express();
+    this.app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
     this.app.use(bodyParser.json());
+    morganBody(this.app);
     this.app.use((req, res, next) => {
       res.header(
         'Access-Control-Allow-Headers',
