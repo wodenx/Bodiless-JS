@@ -20,7 +20,7 @@ import { AxiosPromise } from 'axios';
 import { v1 } from 'uuid';
 // import isEqual from 'react-fast-compare';
 import BackendClient from './BackendClient';
-
+import addPageLeaver from './addPageLeaver';
 
 export type DataSource = {
   slug: string,
@@ -47,6 +47,7 @@ const nodeChildDelimiter = '$';
 
 type Client = {
   savePath(resourcePath: string, data: any): AxiosPromise<any>;
+  getPendingRequests(): any[];
 };
 
 type MetaData = {
@@ -175,6 +176,7 @@ export default class GatsbyMobxStore {
     this.setNodeProvider(nodeProvider);
     this.storeId = v1();
     this.client = new BackendClient({ clientId: this.storeId });
+    addPageLeaver(this.client.getPendingRequests.bind(this.client));
   }
 
   setNodeProvider(nodeProvider: DataSource) {

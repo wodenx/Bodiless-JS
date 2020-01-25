@@ -18,13 +18,13 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const { spawn } = require('child_process');
 const formidable = require('formidable');
+const morgan = require('morgan');
+const morganBody = require('morgan-body');
 const tmp = require('tmp');
 const path = require('path');
 const Page = require('./page');
 const Logger = require('./logger');
 const processPayload = require('./processPayload');
-const morgan = require('morgan');
-const morganBody = require('morgan-body');
 
 
 const backendPrefix = process.env.GATSBY_BACKEND_PREFIX || '/___backend';
@@ -32,10 +32,12 @@ const backendFilePath = process.env.BODILESS_BACKEND_DATA_FILE_PATH || '';
 const defaultBackendPagePath = path.resolve(backendFilePath, 'pages');
 const backendPagePath = process.env.BODILESS_BACKEND_DATA_PAGE_PATH || defaultBackendPagePath;
 const backendStaticPath = process.env.BODILESS_BACKEND_STATIC_PATH || '';
+const isExtendedLogging = (process.env.BODILESS_BACKEND_EXTENDED_LOGGING_ENABLED || '0') === '1';
 const canCommit = (process.env.BODILESS_BACKEND_COMMIT_ENABLED || '0') === '1';
 
 const logger = new Logger('BACKEND');
 
+const isMorganEnabled = () => isExtendedLogging;
 /*
 This Class holds all of the interaction with Git
 */
@@ -310,9 +312,11 @@ class GitCommit {
 class Backend {
   constructor() {
     this.app = express();
-    this.app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
     this.app.use(bodyParser.json());
-    morganBody(this.app);
+    if (isMorganEnabled()) {
+      this.app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+      morganBody(this.app);
+    }
     this.app.use((req, res, next) => {
       res.header(
         'Access-Control-Allow-Headers',

@@ -61,12 +61,34 @@ export default class BackendClient {
     return options;
   }
 
+  private addPendingRequest(requestId: string) {
+    this.pendingRequests.push(requestId);
+  }
+
+  private completePendingRequest(requestId: string) {
+    this.pendingRequests = this.pendingRequests.filter(item => item !== requestId);
+  }
+
+  getPendingRequests() {
+    return this.pendingRequests;
+  }
+
   get(resourcePath: string) {
     return axios.get(this.root + resourcePath, this.getRequestOptions());
   }
 
   post(resourcePath: string, data: any) {
-    return axios.post(this.root + resourcePath, data, this.getRequestOptions());
+    const requestId = v1();
+    this.addPendingRequest(requestId);
+    return axios.post(this.root + resourcePath, data, this.getRequestOptions())
+      .then(result => {
+        this.completePendingRequest(requestId);
+        return result;
+      })
+      .catch(error => {
+        this.completePendingRequest(requestId);
+        throw error;
+      });
   }
 
   savePath(resourcePath: string, data: any) {

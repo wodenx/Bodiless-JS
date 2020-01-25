@@ -11,9 +11,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "formidable": "^1.2.1",
-    "tmp": "^0.0.33",
-    "morgan": "^1.9.1",
-    "morgan-body": "^2.4.8"
+    "tmp": "^0.0.33"
   },
   "publishConfig": {
     "access": "public"
@@ -23,6 +21,8 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/supertest": "^2.0.8",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "morgan": "^1.9.1",
+    "morgan-body": "^2.4.8"
   }
 }
