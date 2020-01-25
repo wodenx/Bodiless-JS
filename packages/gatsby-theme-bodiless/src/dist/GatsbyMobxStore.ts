@@ -139,7 +139,7 @@ class Item {
     if (this.shouldSave(resourcePath)) {
       postData(preparePostData());
       this.dispose = reaction(preparePostData, postData, {
-        delay: 500,
+        delay: 2000,
       });
     }
   }
