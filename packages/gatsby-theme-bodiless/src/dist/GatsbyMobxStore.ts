@@ -57,7 +57,7 @@ enum ItemStatus {
   Stale,
   Flushing,
   Normal,
-};
+}
 
 class Item {
   @observable data = {};
@@ -202,7 +202,7 @@ export default class GatsbyMobxStore {
 
   private getPendingItems() {
     return Array.from(this.store.values())
-            .filter(item => item.status !== ItemStatus.Normal);
+      .filter(item => item.status !== ItemStatus.Normal);
   }
 
   setNodeProvider(nodeProvider: DataSource) {
