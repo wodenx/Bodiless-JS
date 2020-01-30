@@ -17,7 +17,7 @@ import { arrayMove, SortEnd } from 'react-sortable-hoc';
 import { observer } from 'mobx-react-lite';
 import { v1 } from 'uuid';
 import {
-  ContextProvider, useContextActivator, withActivateOnEffect, withNode,
+  ContextProvider, useContextActivator, withActivateOnEffect, withNode, contextMenuForm,
 } from '@bodiless/core';
 import { DesignableComponents } from '@bodiless/fclasses';
 import SortableChild from './SortableChild';
@@ -28,6 +28,8 @@ import {
   useGetMenuOptions,
 } from './helpers';
 import { EditFlexboxProps, FlexboxItem } from './types';
+import ComponentSelector from '../ComponentSelector';
+import { ComponentSelectorUI } from '../ComponentSelector/types';
 
 const ChildNodeProvider = withNode<PropsWithChildren<{}>, any>(React.Fragment);
 
@@ -43,6 +45,27 @@ const FlexboxActivator: React.FC = ({ children }) => (
     {children}
   </div>
 );
+
+const useOnSwap = (props: EditFlexboxProps) => (
+  () => contextMenuForm({
+    initialValues: { selection: '' },
+    hasSubmit: false,
+  })(
+    ({ ui, closeForm }) => (
+      <ComponentSelector
+        {...props}
+        ui={{ ...ui as ComponentSelectorUI, ...props.ui as ComponentSelectorUI }}
+        closeForm={closeForm}
+        onSelect={(event, componentName) => {
+          alert(componentName);
+          closeForm();
+        }}
+        components={Object.values(props.components)}
+      />
+    ),
+  )
+);
+
 
 const EditFlexbox: FC<EditFlexboxProps> = (props:EditFlexboxProps) => {
   const uuid = useRef(v1());
@@ -81,6 +104,7 @@ const EditFlexbox: FC<EditFlexboxProps> = (props:EditFlexboxProps) => {
                   flexboxItem={flexboxItem}
                   snapData={snapData}
                   onDelete={() => deleteFlexboxItem(flexboxItem.uuid)}
+                  onSwap={useOnSwap(props)}
                   onResizeStop={
                     flexboxItemProps => onFlexboxItemResize(flexboxItem.uuid, flexboxItemProps)
                   }
