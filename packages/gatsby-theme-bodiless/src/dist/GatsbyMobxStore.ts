@@ -54,38 +54,21 @@ type MetaData = {
 };
 
 enum ItemStatus {
-  Stale,
+  Clean,
+  Dirty,
   Flushing,
-  Normal,
 }
 
 class Item {
   @observable data = {};
 
-  @observable dirty = false;
-
-  status: ItemStatus = ItemStatus.Normal;
+  @observable status: ItemStatus = ItemStatus.Clean;
 
   metaData?: MetaData;
 
   store: GatsbyMobxStore;
 
   dispose?: IReactionDisposer;
-
-  lockTimeout?: NodeJS.Timeout;
-
-  unLock() {
-    this.lockTimeout = setTimeout(() => {
-      this.dirty = false;
-    }, 5000);
-  }
-
-  lock() {
-    this.dirty = true;
-    if (this.lockTimeout !== undefined) {
-      clearTimeout(this.lockTimeout);
-    }
-  }
 
   private shouldAccept(metaData: MetaData) {
     // We want to reject data if it was created by this client
@@ -111,7 +94,7 @@ class Item {
   }
 
   private setStatus(newStatus: ItemStatus) {
-    if (newStatus === ItemStatus.Normal && this.status !== ItemStatus.Flushing) {
+    if (newStatus === ItemStatus.Clean && this.status !== ItemStatus.Flushing) {
       return;
     }
     this.status = newStatus;
@@ -125,8 +108,7 @@ class Item {
   ) {
     this.store = store;
     this.setData(initialData);
-    this.dirty = save;
-    const preparePostData = () => (this.dirty ? this.data : null);
+    this.setStatus(save ? ItemStatus.Dirty : ItemStatus.Clean);
 
     // Extract the collection name (query alias) from the left-side of the key name.
     const [collection, ...rest] = key.split('$');
@@ -139,6 +121,7 @@ class Item {
       ? path.join('pages', this.store.slug || '', fileName)
       : path.join('site', fileName);
 
+    const preparePostData = () => (this.status === ItemStatus.Dirty ? this.data : null);
     // Post this.data back to filesystem if dirty flag is true.
     const postData = (data: {} | null) => {
       if (!data) {
@@ -147,12 +130,8 @@ class Item {
 
       // TODO: Don't hardcode 'pages' and provide mechanism for shared (cross-page) content.
       // const resourcePath = path.join('pages', this.store.slug || '', fileName);
-      this.lock();
       this.setStatus(ItemStatus.Flushing);
-      this.store.client.savePath(resourcePath, data).then(() => {
-        this.setStatus(ItemStatus.Normal);
-        this.unLock();
-      });
+      this.store.client.savePath(resourcePath, data).then(() => this.setStatus(ItemStatus.Clean));
     };
     if (this.shouldSave(resourcePath)) {
       postData(preparePostData());
@@ -160,16 +139,15 @@ class Item {
         delay: 2000,
       });
     } else {
-      this.setStatus(ItemStatus.Normal);
+      this.setStatus(ItemStatus.Clean);
     }
   }
 
   @action update(data = {}, save = true) {
     if (save) {
-      this.dirty = true;
+      this.setStatus(ItemStatus.Dirty);
       this.setData(data);
-      this.setStatus(ItemStatus.Stale);
-    } else if (!this.dirty) {
+    } else if (this.status === ItemStatus.Clean) {
       this.setData(data);
     }
   }
@@ -202,7 +180,7 @@ export default class GatsbyMobxStore {
 
   private getPendingItems() {
     return Array.from(this.store.values())
-      .filter(item => item.status !== ItemStatus.Normal);
+      .filter(item => item.status !== ItemStatus.Clean);
   }
 
   setNodeProvider(nodeProvider: DataSource) {
