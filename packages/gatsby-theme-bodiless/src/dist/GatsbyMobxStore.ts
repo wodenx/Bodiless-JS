@@ -47,17 +47,24 @@ const nodeChildDelimiter = '$';
 
 type Client = {
   savePath(resourcePath: string, data: any): AxiosPromise<any>;
-  getPendingRequests(): any[];
 };
 
 type MetaData = {
   author: string;
 };
 
+enum ItemStatus {
+  Stale,
+  Flushing,
+  Normal,
+};
+
 class Item {
   @observable data = {};
 
   @observable dirty = false;
+
+  status: ItemStatus = ItemStatus.Normal;
 
   metaData?: MetaData;
 
@@ -103,6 +110,13 @@ class Item {
     }
   }
 
+  private setStatus(newStatus: ItemStatus) {
+    if (newStatus === ItemStatus.Normal && this.status !== ItemStatus.Flushing) {
+      return;
+    }
+    this.status = newStatus;
+  }
+
   constructor(
     store: GatsbyMobxStore,
     key: string,
@@ -134,13 +148,19 @@ class Item {
       // TODO: Don't hardcode 'pages' and provide mechanism for shared (cross-page) content.
       // const resourcePath = path.join('pages', this.store.slug || '', fileName);
       this.lock();
-      this.store.client.savePath(resourcePath, data).then(() => this.unLock());
+      this.setStatus(ItemStatus.Flushing);
+      this.store.client.savePath(resourcePath, data).then(() => {
+        this.setStatus(ItemStatus.Normal);
+        this.unLock();
+      });
     };
     if (this.shouldSave(resourcePath)) {
       postData(preparePostData());
       this.dispose = reaction(preparePostData, postData, {
         delay: 2000,
       });
+    } else {
+      this.setStatus(ItemStatus.Normal);
     }
   }
 
@@ -148,6 +168,7 @@ class Item {
     if (save) {
       this.dirty = true;
       this.setData(data);
+      this.setStatus(ItemStatus.Stale);
     } else if (!this.dirty) {
       this.setData(data);
     }
@@ -162,7 +183,7 @@ class Item {
  */
 
 export default class GatsbyMobxStore {
-  @observable store = new Map();
+  @observable store = new Map<string, Item>();
 
   client: Client;
 
@@ -176,7 +197,12 @@ export default class GatsbyMobxStore {
     this.setNodeProvider(nodeProvider);
     this.storeId = v1();
     this.client = new BackendClient({ clientId: this.storeId });
-    addPageLeaver(this.client.getPendingRequests.bind(this.client));
+    addPageLeaver(this.getPendingItems.bind(this));
+  }
+
+  private getPendingItems() {
+    return Array.from(this.store.values())
+            .filter(item => item.status !== ItemStatus.Normal);
   }
 
   setNodeProvider(nodeProvider: DataSource) {
