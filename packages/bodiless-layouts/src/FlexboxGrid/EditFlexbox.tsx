@@ -46,8 +46,9 @@ const FlexboxActivator: React.FC = ({ children }) => (
   </div>
 );
 
-const useOnSwap = (props: EditFlexboxProps) => (
-  () => contextMenuForm({
+const useOnSwap = (props: EditFlexboxProps, item: FlexboxItem) => {
+  const { updateFlexboxItem } = useFlexboxDataHandlers();
+  return () => contextMenuForm({
     initialValues: { selection: '' },
     hasSubmit: false,
   })(
@@ -57,14 +58,15 @@ const useOnSwap = (props: EditFlexboxProps) => (
         ui={{ ...ui as ComponentSelectorUI, ...props.ui as ComponentSelectorUI }}
         closeForm={closeForm}
         onSelect={(event, componentName) => {
-          alert(componentName);
+          const newItem: FlexboxItem = { ...item, type: componentName };
+          updateFlexboxItem(newItem);
           closeForm();
         }}
         components={Object.values(props.components)}
       />
     ),
-  )
-);
+  );
+};
 
 
 const EditFlexbox: FC<EditFlexboxProps> = (props:EditFlexboxProps) => {
@@ -104,7 +106,7 @@ const EditFlexbox: FC<EditFlexboxProps> = (props:EditFlexboxProps) => {
                   flexboxItem={flexboxItem}
                   snapData={snapData}
                   onDelete={() => deleteFlexboxItem(flexboxItem.uuid)}
-                  onSwap={useOnSwap(props)}
+                  onSwap={useOnSwap(props, flexboxItem)}
                   onResizeStop={
                     flexboxItemProps => onFlexboxItemResize(flexboxItem.uuid, flexboxItemProps)
                   }
