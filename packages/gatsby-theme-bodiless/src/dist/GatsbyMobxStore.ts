@@ -53,16 +53,25 @@ type MetaData = {
   author: string;
 };
 
-enum ItemStatus {
+enum ItemState {
   Clean,
   Dirty,
   Flushing,
 }
 
+enum ItemStateEvent {
+  UpdateFromServer,
+  UpdateFromBrowser,
+  BeginPostData,
+  EndPostData,
+}
+
 class Item {
   @observable data = {};
 
-  @observable status: ItemStatus = ItemStatus.Clean;
+  @observable state: ItemState = ItemState.Clean;
+
+  key: string;
 
   metaData?: MetaData;
 
@@ -70,85 +79,113 @@ class Item {
 
   dispose?: IReactionDisposer;
 
-  private shouldAccept(metaData: MetaData) {
+  private shouldAccept(data: any) {
+    const { ___meta: metaData } = data;
     // We want to reject data if it was created by this client
     const isAuthor = metaData !== undefined && metaData.author === this.store.storeId;
     return !isAuthor;
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private shouldSave(resourcePath: string) {
+  private reduceMeta(data: any) {
+    const { ___meta, ...rest } = data;
+    return rest;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private shouldSave() {
     const saveEnabled = (process.env.BODILESS_BACKEND_SAVE_ENABLED || '1') === '1';
     // Determine if the resource path is for a page created for preview purposes
     // we do not want to save data for these pages
+    const resourcePath = this.getResoucePath();
     const isPreviewTemplatePage = resourcePath.includes(path.join('pages', '___templates'));
     return saveEnabled && !isPreviewTemplatePage;
   }
 
-  private setData(data: any) {
-    const { ___meta, ...rest } = data;
-    if (this.shouldAccept(___meta)) {
-      this.metaData = ___meta;
-      this.data = rest;
+  @action private setData(data: any) {
+    this.data = data;
+  }
+
+  @action private updateState(event: ItemStateEvent) {
+    switch (event) {
+      case ItemStateEvent.UpdateFromBrowser:
+        this.state = ItemState.Dirty;
+        break;
+      case ItemStateEvent.UpdateFromServer:
+        this.state = ItemState.Clean;
+        break;
+      case ItemStateEvent.BeginPostData:
+        this.state = ItemState.Flushing;
+        break;
+      case ItemStateEvent.EndPostData:
+        // If an update happens while flushing, the status will be set to dirty.
+        // In this case we don't want to reset it to clean.
+        this.state = this.state === ItemState.Dirty ? ItemState.Dirty : ItemState.Clean;
+        break;
+      default:
+        throw new Error('Invalid item event specified.');
     }
   }
 
-  private setStatus(newStatus: ItemStatus) {
-    if (newStatus === ItemStatus.Clean && this.status !== ItemStatus.Flushing) {
-      return;
-    }
-    this.status = newStatus;
+  private getResoucePath() {
+    // Extract the collection name (query alias) from the left-side of the key name.
+    const [collection, ...rest] = this.key.split('$');
+    // Re-join the rest of the key's right-hand side.
+    const fileName = rest.join('$');
+
+    // The query alias (collection) determines the filesystem location
+    // where to store the JSON data files.
+    // TODO: Don't hardcode 'pages' and provide mechanism for shared (cross-page) content.
+    // const resourcePath = path.join('pages', this.store.slug || '', fileName);
+    const resourcePath = collection === 'Page'
+      ? path.join('pages', this.store.slug || '', fileName)
+      : path.join('site', fileName);
+    return resourcePath;
   }
 
   constructor(
     store: GatsbyMobxStore,
     key: string,
     initialData = {},
-    save = true,
+    event = ItemStateEvent.UpdateFromBrowser,
   ) {
     this.store = store;
+    this.key = key;
     this.setData(initialData);
-    this.setStatus(save ? ItemStatus.Dirty : ItemStatus.Clean);
+    this.updateState(event);
 
-    // Extract the collection name (query alias) from the left-side of the key name.
-    const [collection, ...rest] = key.split('$');
-    // Re-join the rest of the key's right-hand side.
-    const fileName = rest.join('$');
-
-    // The query alias (collection) determines the filesystem location
-    // where to store the JSON data files.
-    const resourcePath = collection === 'Page'
-      ? path.join('pages', this.store.slug || '', fileName)
-      : path.join('site', fileName);
-
-    const preparePostData = () => (this.status === ItemStatus.Dirty ? this.data : null);
-    // Post this.data back to filesystem if dirty flag is true.
+    const preparePostData = () => (this.state === ItemState.Dirty ? this.data : null);
+    // Post this.data back to filesystem if item state is dirty.
     const postData = (data: {} | null) => {
       if (!data) {
         return;
       }
-
-      // TODO: Don't hardcode 'pages' and provide mechanism for shared (cross-page) content.
-      // const resourcePath = path.join('pages', this.store.slug || '', fileName);
-      this.setStatus(ItemStatus.Flushing);
-      this.store.client.savePath(resourcePath, data).then(() => this.setStatus(ItemStatus.Clean));
+      this.updateState(ItemStateEvent.BeginPostData);
+      this.store.client.savePath(this.getResoucePath(), data)
+        .then(() => this.updateState(ItemStateEvent.EndPostData));
     };
-    if (this.shouldSave(resourcePath)) {
+    if (this.shouldSave()) {
       postData(preparePostData());
       this.dispose = reaction(preparePostData, postData, {
         delay: 2000,
       });
-    } else {
-      this.setStatus(ItemStatus.Clean);
     }
   }
 
-  @action update(data = {}, save = true) {
-    if (save) {
-      this.setStatus(ItemStatus.Dirty);
-      this.setData(data);
-    } else if (this.status === ItemStatus.Clean) {
-      this.setData(data);
+  update(data = {}, event = ItemStateEvent.UpdateFromBrowser) {
+    switch (event) {
+      case ItemStateEvent.UpdateFromBrowser:
+        this.setData(data);
+        this.updateState(event);
+        break;
+      case ItemStateEvent.UpdateFromServer:
+        if (this.shouldAccept(data)) {
+          this.setData(this.reduceMeta(data));
+          this.updateState(event);
+        }
+        break;
+      default:
+        throw new Error('Invalid item event specified.');
     }
   }
 }
@@ -180,7 +217,7 @@ export default class GatsbyMobxStore {
 
   private getPendingItems() {
     return Array.from(this.store.values())
-      .filter(item => item.status !== ItemStatus.Clean);
+      .filter(item => item.state !== ItemState.Clean);
   }
 
   setNodeProvider(nodeProvider: DataSource) {
@@ -219,7 +256,7 @@ export default class GatsbyMobxStore {
             !existingData
             || JSON.stringify(existingData.data) !== JSON.stringify(data)
           ) {
-            this.setNode([key], data, false);
+            this.setNode([key], data, ItemStateEvent.UpdateFromServer);
           }
         } catch (e) {
           // console.log(e);
@@ -242,13 +279,13 @@ export default class GatsbyMobxStore {
   /**
    * Mobx action saves or updates items to GatsbyMobxStore.store.
    */
-  @action setNode = (keyPath: string[], value = {}, save = true) => {
+  @action setNode = (keyPath: string[], value = {}, event = ItemStateEvent.UpdateFromBrowser) => {
     const key = keyPath.join(nodeChildDelimiter);
     const item = this.store.get(key);
     if (item) {
-      item.update(value, save);
+      item.update(value, event);
     } else {
-      this.store.set(key, new Item(this, key, value, save));
+      this.store.set(key, new Item(this, key, value, event));
     }
   };
 }
