@@ -20,7 +20,7 @@ import {
   useActivateOnEffect,
 } from '@bodiless/core';
 import ComponentSelector from '../ComponentSelector';
-import { ComponentSelectorUI } from '../ComponentSelector/types';
+import { ComponentSelectorUI, ComponentSelectorProps } from '../ComponentSelector/types';
 import {
   EditFlexboxProps, FlexboxItem, FlexboxItemProps, FlexboxData,
 } from './types';
@@ -110,41 +110,81 @@ function useFlexboxDataHandlers(): FlexboxDataHandlers {
   };
 }
 
+/**
+ * Returns a component selector form.
+ *
+ * @param props The props passed to the EditFlexbox
+ * @param onSelect The action to perform when a component is selected.
+ */
+const useComponentSelectorForm = (
+  props: EditFlexboxProps,
+  onSelect: ComponentSelectorProps['onSelect'],
+) => contextMenuForm({
+  initialValues: { selection: '' },
+  hasSubmit: false,
+})(
+  ({ ui, closeForm }) => (
+    <ComponentSelector
+      {...props}
+      ui={{ ...ui as ComponentSelectorUI, ...props.ui as ComponentSelectorUI }}
+      closeForm={closeForm}
+      onSelect={(...args) => { onSelect(...args); closeForm(); }}
+      components={Object.values(props.components)}
+    />
+  ),
+);
+
+/**
+ * Returns actions which can be executed upon selecting a component in the
+ * component selector.
+ *
+ * @param props The props provided to the FlexboxGrid
+ * @param currentItem The currently selected item in the grid (optional);
+ */
+export const useComponentSelectorActions = (
+  props: EditFlexboxProps,
+  currentItem?: FlexboxItem,
+) => {
+  const { insertFlexboxItem, updateFlexboxItem } = useFlexboxDataHandlers();
+  const { setId } = useActivateOnEffect();
+
+  const insertItem: ComponentSelectorProps['onSelect'] = (event, componentName) => {
+    const { uuid } = insertFlexboxItem(componentName);
+    // Set the new id so it will activate on creation.
+    setId(uuid);
+  };
+
+  const replaceItem: ComponentSelectorProps['onSelect'] = (event, componentName) => {
+    if (currentItem) {
+      const newItem: FlexboxItem = { ...currentItem, type: componentName };
+      updateFlexboxItem(newItem);
+    }
+  };
+
+  return { insertItem, replaceItem };
+};
+
+function useItemGetMenuOptions(props: EditFlexboxProps, item: FlexboxItem) {
+
+}
+
 function useGetMenuOptions(props: EditFlexboxProps) {
   const context = useEditContext();
   const { maxComponents } = props;
   const { getItems } = useItemHandlers();
-  const { insertFlexboxItem } = useFlexboxDataHandlers();
-  const { setId } = useActivateOnEffect();
+  const { insertItem } = useComponentSelectorActions(props);
   const addButton = {
     icon: 'add',
     name: 'add',
     global: true,
     isDisabled: () => !context.isEdit,
-    handler: () => contextMenuForm({
-      initialValues: { selection: '' },
-      hasSubmit: false,
-    })(
-      ({ ui, closeForm }) => (
-        <ComponentSelector
-          {...props}
-          ui={{ ...ui as ComponentSelectorUI, ...props.ui as ComponentSelectorUI }}
-          closeForm={closeForm}
-          onSelect={(event, componentName) => {
-            const { uuid } = insertFlexboxItem(componentName);
-            // Set the new id so it will activate on creation.
-            setId(uuid);
-            closeForm();
-          }}
-          components={Object.values(props.components)}
-        />
-      ),
-    ),
+    handler: () => useComponentSelectorForm(props, insertItem),
   };
   // If we have hit the max elements do not allow adding more items
   return () => {
     if (!context.isEdit) return [];
     const items = getItems();
+    return items.length > 0 ? [] : [addButton];
 
     if (maxComponents && maxComponents <= items.length) {
       return [];
@@ -152,5 +192,9 @@ function useGetMenuOptions(props: EditFlexboxProps) {
     return [addButton];
   };
 }
-
-export { useGetMenuOptions, useFlexboxDataHandlers };
+const useOnSwap = (props: EditFlexboxProps, item: FlexboxItem) => {
+  const { replaceItem } = useComponentSelectorActions(props, item);
+  const Form = useComponentSelectorForm(props, replaceItem);
+  return () => Form;
+};
+export { useGetMenuOptions, useFlexboxDataHandlers, useOnSwap };
