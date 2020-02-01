@@ -164,37 +164,54 @@ export const useComponentSelectorActions = (
   return { insertItem, replaceItem };
 };
 
-function useItemGetMenuOptions(props: EditFlexboxProps, item: FlexboxItem) {
-
-}
-
-function useGetMenuOptions(props: EditFlexboxProps) {
+function useGetMenuOptions(props: EditFlexboxProps, item?: FlexboxItem) {
   const context = useEditContext();
+  // const id = React.useRef(v1()).current;
+  // useActivateOnEffectActivator('xyzabc');
+  const { setId } = useActivateOnEffect();
   const { maxComponents } = props;
   const { getItems } = useItemHandlers();
-  const { insertItem } = useComponentSelectorActions(props);
+  const { deleteFlexboxItem } = useFlexboxDataHandlers();
+  const { insertItem, replaceItem } = useComponentSelectorActions(props, item);
   const addButton = {
     icon: 'add',
     name: 'add',
-    global: true,
-    isDisabled: () => !context.isEdit,
     handler: () => useComponentSelectorForm(props, insertItem),
   };
-  // If we have hit the max elements do not allow adding more items
+  const deleteButton = !item ? undefined : {
+    name: 'delete',
+    icon: 'delete',
+    handler: () => {
+      deleteFlexboxItem(item.uuid);
+      // Activate the current context after the delete (this context is the flexbox)
+      const items = getItems();
+      if (items.length) setId(items[0].uuid);
+      else context.activate();
+    },
+  };
+  const swapButton = !item ? undefined : {
+    name: 'swap',
+    icon: 'flip_camera_ios',
+    handler: () => useComponentSelectorForm(props, replaceItem),
+  };
+
+
+  const getFlexboxButtons = (nItems: Number) => (
+    // The flexbox itself only has an add button when empty (otherwise an add button.
+    // will be attached to each item).
+    nItems ? [] : [addButton]
+  );
+  const getItemButtons = (nItems: Number) => (
+    // An item only has an add button if we have not hit the maximum allowed items.
+    maxComponents && nItems >= maxComponents
+      ? [swapButton!, deleteButton!]
+      : [addButton, swapButton!, deleteButton!]
+  );
+
   return () => {
     if (!context.isEdit) return [];
-    const items = getItems();
-    return items.length > 0 ? [] : [addButton];
-
-    if (maxComponents && maxComponents <= items.length) {
-      return [];
-    }
-    return [addButton];
+    const nItems = getItems().length;
+    return item ? getItemButtons(nItems) : getFlexboxButtons(nItems);
   };
 }
-const useOnSwap = (props: EditFlexboxProps, item: FlexboxItem) => {
-  const { replaceItem } = useComponentSelectorActions(props, item);
-  const Form = useComponentSelectorForm(props, replaceItem);
-  return () => Form;
-};
-export { useGetMenuOptions, useFlexboxDataHandlers, useOnSwap };
+export { useGetMenuOptions, useFlexboxDataHandlers };

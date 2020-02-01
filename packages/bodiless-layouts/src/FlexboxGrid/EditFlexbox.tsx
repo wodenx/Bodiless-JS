@@ -12,12 +12,12 @@
  * limitations under the License.
  */
 
-import React, { useRef, FC, PropsWithChildren } from 'react';
+import React, { FC, PropsWithChildren } from 'react';
 import { arrayMove, SortEnd } from 'react-sortable-hoc';
 import { observer } from 'mobx-react-lite';
-import { v1 } from 'uuid';
+import { flowRight } from 'lodash';
 import {
-  ContextProvider, useContextActivator, withActivateOnEffect, withNode,
+  useContextActivator, withActivateOnEffect, withNode, withMenuOptions,
 } from '@bodiless/core';
 import { DesignableComponents } from '@bodiless/fclasses';
 import SortableChild from './SortableChild';
@@ -26,7 +26,6 @@ import {
   useItemHandlers,
   useFlexboxDataHandlers,
   useGetMenuOptions,
-  useOnSwap,
 } from './helpers';
 import { EditFlexboxProps, FlexboxItem } from './types';
 
@@ -46,57 +45,48 @@ const FlexboxActivator: React.FC = ({ children }) => (
 );
 
 const EditFlexbox: FC<EditFlexboxProps> = (props:EditFlexboxProps) => {
-  const uuid = useRef(v1());
   const { components, ui, snapData } = props;
   const items = useItemHandlers().getItems();
-  const getMenuOptions = useGetMenuOptions(props);
   const {
     onFlexboxItemResize,
     setFlexboxItems,
-    deleteFlexboxItem,
   } = useFlexboxDataHandlers();
 
   return (
-    <ContextProvider
-      name={`flex-${uuid.current}`}
-      getMenuOptions={getMenuOptions}
-    >
-      <FlexboxActivator>
-        <SortableContainer
-          onSortEnd={(sort: SortEnd) => {
-            const { oldIndex, newIndex } = sort;
-            setFlexboxItems(arrayMove(items, oldIndex, newIndex));
-          }}
-        >
-          {items.map(
-            (flexboxItem: FlexboxItem, index: number): React.ReactNode => {
-              if (!isAllowedComponent(components, flexboxItem.type)) {
-                return null;
-              }
-              const ChildComponent = components[flexboxItem.type];
-              return (
-                <SortableChild
-                  ui={ui}
-                  key={`node-${flexboxItem.uuid}`}
-                  index={index}
-                  flexboxItem={flexboxItem}
-                  snapData={snapData}
-                  onDelete={() => deleteFlexboxItem(flexboxItem.uuid)}
-                  onSwap={useOnSwap(props, flexboxItem)}
-                  onResizeStop={
+    <FlexboxActivator>
+      <SortableContainer
+        onSortEnd={(sort: SortEnd) => {
+          const { oldIndex, newIndex } = sort;
+          setFlexboxItems(arrayMove(items, oldIndex, newIndex));
+        }}
+      >
+        {items.map(
+          (flexboxItem: FlexboxItem, index: number): React.ReactNode => {
+            if (!isAllowedComponent(components, flexboxItem.type)) {
+              return null;
+            }
+            const ChildComponent = components[flexboxItem.type];
+            return (
+              <SortableChild
+                ui={ui}
+                key={`node-${flexboxItem.uuid}`}
+                index={index}
+                flexboxItem={flexboxItem}
+                snapData={snapData}
+                getMenuOptions={useGetMenuOptions(props, flexboxItem)}
+                onResizeStop={
                     flexboxItemProps => onFlexboxItemResize(flexboxItem.uuid, flexboxItemProps)
                   }
-                >
-                  <ChildNodeProvider nodeKey={flexboxItem.uuid}>
-                    <ChildComponent />
-                  </ChildNodeProvider>
-                </SortableChild>
-              );
-            },
-          )}
-        </SortableContainer>
-      </FlexboxActivator>
-    </ContextProvider>
+              >
+                <ChildNodeProvider nodeKey={flexboxItem.uuid}>
+                  <ChildComponent />
+                </ChildNodeProvider>
+              </SortableChild>
+            );
+          },
+        )}
+      </SortableContainer>
+    </FlexboxActivator>
   );
 };
 
@@ -106,5 +96,15 @@ EditFlexbox.defaultProps = {
   components: {},
 };
 
+const asEditFlexbox = flowRight(
+  withActivateOnEffect,
+  observer,
+  withMenuOptions({
+    useGetMenuOptions: (props: EditFlexboxProps) => useGetMenuOptions(props),
+    name: 'Flexbox',
+  }),
+  observer,
+);
+
 // Wrap the EditFlexbox in a wthActivateContext so we can activate new items
-export default withActivateOnEffect(observer(EditFlexbox));
+export default asEditFlexbox(EditFlexbox);

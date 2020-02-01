@@ -15,7 +15,7 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import throttle from 'lodash/throttle';
 import { ResizeCallback } from 're-resizable';
-import { useEditContext, TMenuOptionGetter } from '@bodiless/core';
+import { TMenuOptionGetter } from '@bodiless/core';
 import SlateSortableResizable, { UI as SortableResizableUI } from '../SlateSortableResizable';
 import {
   defaultSnapData, SnapData,
@@ -31,8 +31,7 @@ const FALLBACK_SNAP_CLASSNAME = 'w-full';
 type SortableChildProps = {
   flexboxItem: FlexboxItem;
   onResizeStop(props: FlexboxItemProps): void;
-  onDelete(): void;
-  onSwap: (newComponentName: string) => void;
+  getMenuOptions: TMenuOptionGetter;
   index: number;
   children: React.ReactNode;
   ui?: SortableResizableUI;
@@ -40,32 +39,10 @@ type SortableChildProps = {
   defaultSize?: { width: (number | string), height: (number | string) };
 };
 
-const useGetMenuOptions = (props: SortableChildProps) => {
-  const { onSwap, onDelete } = props;
-  const context = useEditContext();
-  const onDeleteWrapper = () => {
-    onDelete();
-    // Activate the current context after the delete (this context is the flexbox)
-    context.activate();
-  };
-  // const onSwapWrapper = () => alert('swap');
-  const deleteOption = {
-    name: 'delete',
-    icon: 'delete',
-    handler: onDeleteWrapper,
-  };
-  const swapOption = {
-    name: 'swap',
-    icon: 'flip_camera_ios',
-    handler: onSwap,
-  };
-  // @TODO Fix typing here
-  return (() => (context.isEdit ? [deleteOption, swapOption] : [])) as any as TMenuOptionGetter;
-};
 
 const SortableChild = (props: SortableChildProps) => {
   const {
-    onResizeStop, flexboxItem, onSwap, onDelete, snapData: snapRaw, ...restProps
+    onResizeStop, flexboxItem, snapData: snapRaw, ...restProps
   } = props;
   const snap = snapRaw || defaultSnapData;
   const {
@@ -144,7 +121,6 @@ const SortableChild = (props: SortableChildProps) => {
       size={size}
       minWidth={`${minWidth * 0.99}%`}
       className={snapClassName}
-      getMenuOptions={useGetMenuOptions(props)}
       {...restProps}
     />
   );
