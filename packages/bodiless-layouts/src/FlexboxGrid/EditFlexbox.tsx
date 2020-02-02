@@ -21,11 +21,8 @@ import {
 } from '@bodiless/core';
 import SortableChild from './SortableChild';
 import SortableContainer from './SortableContainer';
-import {
-  useItemHandlers,
-  useFlexboxDataHandlers,
-  useGetMenuOptions,
-} from './helpers';
+import { useItemHandlers, useFlexboxDataHandlers } from './model';
+import { useGetMenuOptions } from './helpers';
 import { EditFlexboxProps, FlexboxItem } from './types';
 
 const ChildNodeProvider = withNode<PropsWithChildren<{}>, any>(React.Fragment);

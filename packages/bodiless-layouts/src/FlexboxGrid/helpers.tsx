@@ -13,101 +13,11 @@
  */
 
 import * as React from 'react';
-import { v1 } from 'uuid';
-import {
-  contextMenuForm,
-  useEditContext, useNode,
-  useActivateOnEffect,
-} from '@bodiless/core';
+import { contextMenuForm, useEditContext, useActivateOnEffect } from '@bodiless/core';
 import ComponentSelector from '../ComponentSelector';
 import { ComponentSelectorUI, ComponentSelectorProps } from '../ComponentSelector/types';
-import {
-  EditFlexboxProps, FlexboxItem, FlexboxItemProps, FlexboxData,
-} from './types';
-
-type InsertContentNode = (componentName: string, afterItem?: FlexboxItem) => FlexboxItem;
-type SetFlexboxItems = (items: FlexboxItem[]) => void;
-type UpdateFlexboxItem = (flexboxItem: FlexboxItem) => void;
-type OnFlexboxItemResize = (
-  uuid: string,
-  props: FlexboxItemProps,
-) => void;
-type DeleteFlexboxItem = (uuid: string) => FlexboxItem | undefined;
-export interface FlexboxDataHandlers {
-  insertFlexboxItem: InsertContentNode;
-  setFlexboxItems: SetFlexboxItems;
-  updateFlexboxItem: UpdateFlexboxItem;
-  onFlexboxItemResize: OnFlexboxItemResize;
-  deleteFlexboxItem: DeleteFlexboxItem;
-}
-
-export function useItemHandlers() {
-  const { node } = useNode<FlexboxData>();
-  const getItems = () => {
-    const { items } = node.data;
-    return items || [];
-  };
-  const setItems = (items: FlexboxItem[]) => {
-    node.setData({ items });
-  };
-  return { getItems, setItems };
-}
-
-function useFlexboxDataHandlers(): FlexboxDataHandlers {
-  const { getItems, setItems } = useItemHandlers();
-  const findItem = (startItem?: Pick<FlexboxItem, 'uuid'>) => {
-    const items = getItems();
-    if (!startItem) return items.length;
-    const index = items.findIndex(
-      (item: FlexboxItem) => startItem!.uuid === item.uuid,
-    );
-    return index === -1 ? items.length : index;
-  };
-  const spliceItem = (start: number, deleteCount: number, newItem?: FlexboxItem) => {
-    const newItems = [...getItems()];
-    if (newItem) newItems.splice(start, deleteCount, newItem);
-    else newItems.splice(start, deleteCount);
-    setItems(newItems);
-  };
-  return {
-    insertFlexboxItem: (componentName: string, afterItem?: FlexboxItem) => {
-      const newItem = {
-        uuid: v1(),
-        wrapperProps: {},
-        type: componentName,
-      };
-      const index = findItem(afterItem);
-      spliceItem(index + 1, 0, newItem);
-      return newItem;
-    },
-    setFlexboxItems: setItems,
-    updateFlexboxItem: (flexboxItem: FlexboxItem) => {
-      const index = findItem(flexboxItem);
-      spliceItem(index, 1, flexboxItem);
-    },
-    onFlexboxItemResize: (uuid, itemProps) => {
-      const items = getItems();
-      const itemIndex = findItem({ uuid });
-      if (itemIndex < items.length) {
-        const currentFlexboxItem = items[itemIndex];
-        const updatedFlexboxItem: FlexboxItem = {
-          ...currentFlexboxItem,
-          wrapperProps: {
-            ...(currentFlexboxItem.wrapperProps || {}),
-            ...itemProps,
-          },
-        };
-        spliceItem(itemIndex, 1, updatedFlexboxItem);
-      }
-    },
-    deleteFlexboxItem: (uuid: string) => {
-      const index = findItem({ uuid });
-      spliceItem(index, 1);
-      const items = getItems();
-      return items[index] || items[items.length - 1];
-    },
-  };
-}
+import { EditFlexboxProps, FlexboxItem } from './types';
+import { useFlexboxDataHandlers, useItemHandlers } from './model';
 
 /**
  * Returns a component selector form.
