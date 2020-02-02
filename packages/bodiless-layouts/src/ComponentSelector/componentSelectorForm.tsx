@@ -2,8 +2,7 @@ import React from 'react';
 import { contextMenuForm } from '@bodiless/core';
 import { ComponentSelectorProps, ComponentSelectorUI } from './types';
 import ComponentSelector from '.';
-import { EditFlexboxProps } from 'src/FlexboxGrid/types';
-
+import { EditFlexboxProps } from '../FlexboxGrid/types';
 /**
  * Returns a component selector wrapped in a context menu form.
  *
@@ -12,7 +11,7 @@ import { EditFlexboxProps } from 'src/FlexboxGrid/types';
  */
 const componentSelectorForm = (
   // @TODO: Separate component selector props from edit flexbox props.
-  props: EditFlexboxProps, 
+  props: EditFlexboxProps,
   onSelect: ComponentSelectorProps['onSelect'],
 ) => contextMenuForm({
   initialValues: { selection: '' },
