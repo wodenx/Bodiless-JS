@@ -12,36 +12,12 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { contextMenuForm, useEditContext, useActivateOnEffect } from '@bodiless/core';
-import ComponentSelector from '../ComponentSelector';
-import { ComponentSelectorUI, ComponentSelectorProps } from '../ComponentSelector/types';
+import { useEditContext, useActivateOnEffect } from '@bodiless/core';
 import { EditFlexboxProps, FlexboxItem } from './types';
 import { useFlexboxDataHandlers, useItemHandlers } from './model';
+import { ComponentSelectorProps } from '../ComponentSelector/types';
+import componentSelectorForm from '../ComponentSelector/componentSelectorForm';
 
-/**
- * Returns a component selector form.
- *
- * @param props The props passed to the EditFlexbox
- * @param onSelect The action to perform when a component is selected.
- */
-const useComponentSelectorForm = (
-  props: EditFlexboxProps,
-  onSelect: ComponentSelectorProps['onSelect'],
-) => contextMenuForm({
-  initialValues: { selection: '' },
-  hasSubmit: false,
-})(
-  ({ ui, closeForm }) => (
-    <ComponentSelector
-      {...props}
-      ui={{ ...ui as ComponentSelectorUI, ...props.ui as ComponentSelectorUI }}
-      closeForm={closeForm}
-      onSelect={(...args) => { onSelect(...args); closeForm(); }}
-      components={Object.values(props.components)}
-    />
-  ),
-);
 
 /**
  * Returns actions which can be executed upon selecting a component in the
@@ -50,7 +26,7 @@ const useComponentSelectorForm = (
  * @param props The props provided to the FlexboxGrid
  * @param currentItem The currently selected item in the grid (optional);
  */
-export const useComponentSelectorActions = (
+const useComponentSelectorActions = (
   props: EditFlexboxProps,
   currentItem?: FlexboxItem,
 ) => {
@@ -83,7 +59,7 @@ function useGetMenuOptions(props: EditFlexboxProps, item?: FlexboxItem) {
   const addButton = {
     icon: 'add',
     name: 'add',
-    handler: () => useComponentSelectorForm(props, insertItem),
+    handler: () => componentSelectorForm(props, insertItem),
   };
   const deleteButton = !item ? undefined : {
     name: 'delete',
@@ -99,7 +75,7 @@ function useGetMenuOptions(props: EditFlexboxProps, item?: FlexboxItem) {
   const swapButton = !item ? undefined : {
     name: 'swap',
     icon: 'flip_camera_ios',
-    handler: () => useComponentSelectorForm(props, replaceItem),
+    handler: () => componentSelectorForm(props, replaceItem),
   };
 
 
@@ -121,4 +97,4 @@ function useGetMenuOptions(props: EditFlexboxProps, item?: FlexboxItem) {
     return item ? getItemButtons(nItems) : getFlexboxButtons(nItems);
   };
 }
-export { useGetMenuOptions, useFlexboxDataHandlers };
+export default useGetMenuOptions;

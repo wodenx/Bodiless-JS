@@ -22,7 +22,7 @@ import {
 import SortableChild from './SortableChild';
 import SortableContainer from './SortableContainer';
 import { useItemHandlers, useFlexboxDataHandlers } from './model';
-import { useGetMenuOptions } from './helpers';
+import useGetMenuOptions from './useGetMenuOptions';
 import { EditFlexboxProps, FlexboxItem } from './types';
 
 const ChildNodeProvider = withNode<PropsWithChildren<{}>, any>(React.Fragment);
