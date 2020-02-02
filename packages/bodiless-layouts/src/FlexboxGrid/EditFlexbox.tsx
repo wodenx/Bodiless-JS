@@ -17,9 +17,8 @@ import { arrayMove, SortEnd } from 'react-sortable-hoc';
 import { observer } from 'mobx-react-lite';
 import { flowRight } from 'lodash';
 import {
-  useContextActivator, withActivateOnEffect, withNode, withMenuOptions, withContextActivator,
+  withActivateOnEffect, withNode, withMenuOptions, withContextActivator,
 } from '@bodiless/core';
-import { DesignableComponents } from '@bodiless/fclasses';
 import SortableChild from './SortableChild';
 import SortableContainer from './SortableContainer';
 import {
@@ -31,13 +30,10 @@ import { EditFlexboxProps, FlexboxItem } from './types';
 
 const ChildNodeProvider = withNode<PropsWithChildren<{}>, any>(React.Fragment);
 
-function isAllowedComponent(
-  components: DesignableComponents,
-  type: string,
-): boolean {
-  return Boolean(components[type]);
-}
 
+/**
+ * An editable version of the Flexbox container.
+ */
 const EditFlexbox: FC<EditFlexboxProps> = (props:EditFlexboxProps) => {
   const { components, ui, snapData } = props;
   const items = useItemHandlers().getItems();
@@ -55,10 +51,8 @@ const EditFlexbox: FC<EditFlexboxProps> = (props:EditFlexboxProps) => {
     >
       {items.map(
         (flexboxItem: FlexboxItem, index: number): React.ReactNode => {
-          if (!isAllowedComponent(components, flexboxItem.type)) {
-            return null;
-          }
           const ChildComponent = components[flexboxItem.type];
+          if (!ChildComponent) return null;
           return (
             <SortableChild
               ui={ui}
