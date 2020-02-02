@@ -16,6 +16,7 @@ import React from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { flow } from 'lodash';
+import { asTestableTout } from '@bodiless/organisms';
 import Layout from '../../../components/Layout';
 import Tout from '../../../components/Tout';
 import {
@@ -30,22 +31,43 @@ import {
   asToutNoBodyNoTitle,
 } from '../../../components/Tout/token';
 
-const ToutHorizontal = flow(asToutDefaultStyle, asToutHorizontal)(Tout);
-const ToutHorizontalNoTitle = flow(asToutDefaultStyle, asToutHorizontal, asToutNoTitle)(Tout);
-const ToutVertical = flow(asToutDefaultStyle, asToutVertical)(Tout);
-const ToutVerticalNoTitle = flow(asToutDefaultStyle, asToutVertical, asToutNoTitle)(Tout);
+const ToutHorizontal = flow(
+  asTestableTout('tout-horizontal'),
+  asToutDefaultStyle,
+  asToutHorizontal,
+)(Tout);
+const ToutHorizontalNoTitle = flow(
+  asTestableTout('tout-horizontal-no-title'),
+  asToutDefaultStyle,
+  asToutHorizontal,
+  asToutNoTitle,
+)(Tout);
+const ToutVertical = flow(
+  asTestableTout('tout-vertical'),
+  asToutDefaultStyle,
+  asToutVertical,
+)(Tout);
+const ToutVerticalNoTitle = flow(
+  asTestableTout('tout-vertical-no-title'),
+  asToutDefaultStyle,
+  asToutVertical,
+  asToutNoTitle,
+)(Tout);
 const ToutVerticalNoTitleNoBody = flow(
+  asTestableTout('tout-vertical-no-title-no-body'),
   asToutDefaultStyle,
   asToutVertical,
   asToutNoBodyNoTitle,
 )(Tout);
 const ToutNoTitleNoBodyOverlayCta = flow(
+  asTestableTout('tout-no-title-no-body-overlay-cta'),
   asToutDefaultStyle,
   asToutVertical,
   asToutNoBodyNoTitle,
   asToutOverlayCta,
 )(Tout);
 const ToutOverlayTitleNoBodyNoCta = flow(
+  asTestableTout('tout-overlay-title-no-body-no-cta'),
   asToutDefaultStyle,
   asToutVertical,
   asToutOverlayTitle,
@@ -53,6 +75,7 @@ const ToutOverlayTitleNoBodyNoCta = flow(
   asToutNoCta,
 )(Tout);
 const ToutOverlaytTitleNoBodyOverlayCta = flow(
+  asTestableTout('tout-overlay-title-no-body-overlay-cta'),
   asToutDefaultStyle,
   asToutVertical,
   asToutOverlayTitle,
@@ -60,6 +83,7 @@ const ToutOverlaytTitleNoBodyOverlayCta = flow(
   asToutOverlayCta,
 )(Tout);
 const ToutOverlaytTitleNoBody = flow(
+  asTestableTout('tout-overlay-title-no-body'),
   asToutDefaultStyle,
   asToutVertical,
   asToutOverlayTitle,
@@ -74,7 +98,7 @@ export default props => (
         <div className="w-full">
           <ToutHorizontal nodeKey="horizontal" />
         </div>
-        <div className="w-full">
+        <div id="tout-2" className="w-full">
           <ToutHorizontalNoTitle nodeKey="horizontalNoTitle" />
         </div>
         <div className="w-full">
