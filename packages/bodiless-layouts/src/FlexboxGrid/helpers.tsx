@@ -103,7 +103,8 @@ function useFlexboxDataHandlers(): FlexboxDataHandlers {
     deleteFlexboxItem: (uuid: string) => {
       const index = findItem({ uuid });
       spliceItem(index, 1);
-      return index > 0 ? getItems()[index - 1] : undefined;
+      const items = getItems();
+      return items[index] || items[items.length - 1];
     },
   };
 }
@@ -179,9 +180,9 @@ function useGetMenuOptions(props: EditFlexboxProps, item?: FlexboxItem) {
     icon: 'delete',
     handler: () => {
       const newContextItem = deleteFlexboxItem(item.uuid);
-      // Set the context to the previous item in the flexbox (if it exists)
+      // Set the context to the next item in the flexbox (if it exists)
       // or to the flexbox itself (if not).
-      if (newContextItem) setId(newContextItem.uuid);
+      if (newContextItem !== undefined) setId(newContextItem.uuid);
       else context.activate();
     },
   };

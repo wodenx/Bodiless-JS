@@ -17,7 +17,7 @@ import { arrayMove, SortEnd } from 'react-sortable-hoc';
 import { observer } from 'mobx-react-lite';
 import { flowRight } from 'lodash';
 import {
-  useContextActivator, withActivateOnEffect, withNode, withMenuOptions,
+  useContextActivator, withActivateOnEffect, withNode, withMenuOptions, withContextActivator,
 } from '@bodiless/core';
 import { DesignableComponents } from '@bodiless/fclasses';
 import SortableChild from './SortableChild';
@@ -38,12 +38,6 @@ function isAllowedComponent(
   return Boolean(components[type]);
 }
 
-const FlexboxActivator: React.FC = ({ children }) => (
-  <div {...useContextActivator('onClick')}>
-    {children}
-  </div>
-);
-
 const EditFlexbox: FC<EditFlexboxProps> = (props:EditFlexboxProps) => {
   const { components, ui, snapData } = props;
   const items = useItemHandlers().getItems();
@@ -53,40 +47,38 @@ const EditFlexbox: FC<EditFlexboxProps> = (props:EditFlexboxProps) => {
   } = useFlexboxDataHandlers();
 
   return (
-    <FlexboxActivator>
-      <SortableContainer
-        onSortEnd={(sort: SortEnd) => {
-          const { oldIndex, newIndex } = sort;
-          setFlexboxItems(arrayMove(items, oldIndex, newIndex));
-        }}
-      >
-        {items.map(
-          (flexboxItem: FlexboxItem, index: number): React.ReactNode => {
-            if (!isAllowedComponent(components, flexboxItem.type)) {
-              return null;
-            }
-            const ChildComponent = components[flexboxItem.type];
-            return (
-              <SortableChild
-                ui={ui}
-                key={`node-${flexboxItem.uuid}`}
-                index={index}
-                flexboxItem={flexboxItem}
-                snapData={snapData}
-                getMenuOptions={useGetMenuOptions(props, flexboxItem)}
-                onResizeStop={
-                    flexboxItemProps => onFlexboxItemResize(flexboxItem.uuid, flexboxItemProps)
-                  }
-              >
-                <ChildNodeProvider nodeKey={flexboxItem.uuid}>
-                  <ChildComponent />
-                </ChildNodeProvider>
-              </SortableChild>
-            );
-          },
-        )}
-      </SortableContainer>
-    </FlexboxActivator>
+    <SortableContainer
+      onSortEnd={(sort: SortEnd) => {
+        const { oldIndex, newIndex } = sort;
+        setFlexboxItems(arrayMove(items, oldIndex, newIndex));
+      }}
+    >
+      {items.map(
+        (flexboxItem: FlexboxItem, index: number): React.ReactNode => {
+          if (!isAllowedComponent(components, flexboxItem.type)) {
+            return null;
+          }
+          const ChildComponent = components[flexboxItem.type];
+          return (
+            <SortableChild
+              ui={ui}
+              key={`node-${flexboxItem.uuid}`}
+              index={index}
+              flexboxItem={flexboxItem}
+              snapData={snapData}
+              getMenuOptions={useGetMenuOptions(props, flexboxItem)}
+              onResizeStop={
+                  flexboxItemProps => onFlexboxItemResize(flexboxItem.uuid, flexboxItemProps)
+                }
+            >
+              <ChildNodeProvider nodeKey={flexboxItem.uuid}>
+                <ChildComponent />
+              </ChildNodeProvider>
+            </SortableChild>
+          );
+        },
+      )}
+    </SortableContainer>
   );
 };
 
@@ -103,6 +95,7 @@ const asEditFlexbox = flowRight(
     useGetMenuOptions: (props: EditFlexboxProps) => useGetMenuOptions(props),
     name: 'Flexbox',
   }),
+  withContextActivator('onClick'),
   observer,
 );
 
