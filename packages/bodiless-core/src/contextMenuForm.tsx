@@ -56,7 +56,7 @@ const contextMenuForm = <D extends object>(options: Options<D>) => (
   renderFormBody: FormBodyRenderer<D>,
 ) => {
   const ContextMenuForm = ({ closeForm, ui, ...rest }: FormProps) => {
-    const { ComponentFormButton, ComponentFormCloseButton, ComponentFormSubmitButton, Icon } = getUI(ui);
+    const { ComponentFormCloseButton, ComponentFormSubmitButton } = getUI(ui);
     const { submitValues, initialValues, hasSubmit = true } = options;
     return (
       <Form
