@@ -69,7 +69,7 @@ if (bodilessDependencies.length < 1) {
 // Install local packages.
 const args = `install --no-package-lock --package-lock-only ${bodilessDependencies.join(' ')}`.split(' ');
 const child = spawn('npm', args, {
-  stdio: 'inherit',  
+  stdio: 'inherit',
 });
 
 child.on('close', code => {

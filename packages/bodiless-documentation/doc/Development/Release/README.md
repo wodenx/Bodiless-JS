@@ -42,7 +42,7 @@ At end of Sprint, a new 0.0.x package version should be published as follows.
    ```
    where `{x}` is the next *patch* version (eg 0.0.36 -> 0.0.37).
 
-1. Update the package-lock.json file in both the starter and test-site
+1. Update the package-lock.json file in both the starter and test-site sites
    as described [here](/Development/Release/UpdatePackages?id=updating-example-sites39-package-lockjson)
 
 1. Create a PR to master from the release branch.  PR title should be, eg:
