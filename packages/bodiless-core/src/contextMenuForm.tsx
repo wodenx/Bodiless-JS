@@ -24,6 +24,7 @@ const defaultUI = {
   ComponentFormLabel: 'label',
   ComponentFormButton: 'button',
   ComponentFormCloseButton: 'button',
+  ComponentFormSubmitButton: 'button',
   ComponentFormUnwrapButton: 'button',
   ComponentFormText: Text,
   ComponentFormError: 'div',
@@ -55,7 +56,7 @@ const contextMenuForm = <D extends object>(options: Options<D>) => (
   renderFormBody: FormBodyRenderer<D>,
 ) => {
   const ContextMenuForm = ({ closeForm, ui, ...rest }: FormProps) => {
-    const { ComponentFormButton, Icon } = getUI(ui);
+    const { ComponentFormButton, ComponentFormCloseButton, ComponentFormSubmitButton, Icon } = getUI(ui);
     const { submitValues, initialValues, hasSubmit = true } = options;
     return (
       <Form
@@ -68,14 +69,10 @@ const contextMenuForm = <D extends object>(options: Options<D>) => (
       >
         {({ formApi, formState }) => (
           <>
-            <ComponentFormButton
+            <ComponentFormCloseButton
               type="button"
               onClick={closeForm}
-              className="bl-float-right"
-              aria-label="Cancel"
-            >
-              <Icon>cancel</Icon>
-            </ComponentFormButton>
+            />
             {renderFormBody({
               closeForm,
               formApi,
@@ -84,11 +81,7 @@ const contextMenuForm = <D extends object>(options: Options<D>) => (
             })}
             {hasSubmit && !formState.invalid
             && (
-              <div className="bl-clearfix">
-                <ComponentFormButton type="submit" className="bl-float-right">
-                  <Icon>done</Icon>
-                </ComponentFormButton>
-              </div>
+              <ComponentFormSubmitButton />
             )
             }
           </>

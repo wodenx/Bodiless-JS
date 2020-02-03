@@ -20,7 +20,8 @@ import {
 } from '@bodiless/core';
 import {
   ComponentFormTitle, ComponentFormLabel, ComponentFormText, ComponentFormButton,
-  ComponentFormCloseButton, Icon, Div, ToolbarButton, ComponentFormUnwrapButton,
+  ComponentFormCloseButton, ComponentFormSubmitButton, Icon, Div, ToolbarButton,
+  ComponentFormUnwrapButton,
 } from '@bodiless/ui';
 import { flow } from 'lodash';
 
@@ -42,6 +43,7 @@ const ui = {
   ComponentFormButton,
   ComponentFormCloseButton,
   ComponentFormUnwrapButton,
+  ComponentFormSubmitButton,
   ComponentFormTitle,
   ComponentFormLabel,
   Icon,

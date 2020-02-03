@@ -16,9 +16,9 @@ import React, { FC, HTMLProps } from 'react';
 import { flow } from 'lodash';
 import { Text as BaseText } from 'informed';
 import {
-  stylable, addClasses, StylableProps, withoutProps, flowIf, hasProp, addProps,
+  stylable, addClasses, StylableProps, withoutProps, flowIf, hasProp, addProps, removeClasses,
 } from '@bodiless/fclasses';
-import { ButtonVariantProps } from '@bodiless/core';
+import { ButtonVariantProps, withChild } from '@bodiless/core';
 
 import './bodiless.index.css';
 import 'rc-tooltip/assets/bootstrap.css';
@@ -41,6 +41,16 @@ export const StyledLink = addClasses(
   'bl-text-primary hover:bl-underline',
 )(Anchor);
 
+export const Icon = flow(
+  addClasses('bl-rounded bl-p-grid-1 material-icons'),
+  withoutProps<ButtonVariantProps>(['isActive']),
+  addClasses('bl-text-3xl'),
+  flowIf(hasProp('isActive'))(
+    addClasses('bl-bg-primary'),
+  ),
+  addProps({ 'aria-hidden': true }),
+)(Span);
+
 export const ComponentFormTitle = addClasses(
   'bl-text-lg bl-font-bold bl-text-grey-100 bl-block bl-mb-grid-2',
 )(Title);
@@ -57,13 +67,24 @@ export const ComponentFormButton = addClasses(
   'bl-text-grey-200 bl-cursor-pointer hover:bl-text-green',
 )(Button);
 
-export const ComponentFormCloseButton = addClasses(
-  'bl-text-grey-200 bl-cursor-pointer hover:bl-text-red',
-)(Button);
-
 export const ComponentFormUnwrapButton = addClasses(
   'bl-absolute bl-bottom-0 bl-left-0 bl-mb-5 bl-ml-3 bl-cursor-pointer bl-underline',
 )(Button);
+
+export const ComponentFormCloseButton = flow(
+  addClasses('hover:bl-text-red bl-float-right'),
+  removeClasses('hover:bl-text-green'),
+  addProps({ 'aria-label': 'Cancel ' }),
+  withChild(() => <Icon>cancel</Icon>),
+)(ComponentFormButton);
+
+export const ComponentFormSubmitButton = (props: HTMLProps<HTMLButtonElement>) => (
+  <div className="bl-clearfix">
+    <ComponentFormButton className="bl-float-right" {...props}>
+      <Icon>done</Icon>
+    </ComponentFormButton>
+  </div>
+);
 
 export const ComponentFormError = addClasses(
   'bl-block bl-italic',
@@ -71,15 +92,6 @@ export const ComponentFormError = addClasses(
 
 export const SubmitButton: FC<HTMLProps<HTMLButtonElement> & StylableProps> = props => <ComponentFormButton type="submit" {...props} />;
 
-export const Icon = flow(
-  addClasses('bl-rounded bl-p-grid-1 material-icons'),
-  withoutProps<ButtonVariantProps>(['isActive']),
-  addClasses('bl-text-3xl'),
-  flowIf(hasProp('isActive'))(
-    addClasses('bl-bg-primary'),
-  ),
-  addProps({ 'aria-hidden': true }),
-)(Span);
 
 export const ToolbarButton = flow(
   withoutProps<ButtonVariantProps>(['isActive', 'isFirst', 'isDisabled']),
