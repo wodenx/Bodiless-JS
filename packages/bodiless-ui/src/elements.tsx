@@ -74,13 +74,13 @@ export const ComponentFormUnwrapButton = addClasses(
 export const ComponentFormCloseButton = flow(
   addClasses('hover:bl-text-red bl-float-right'),
   removeClasses('hover:bl-text-green'),
-  addProps({ 'aria-label': 'Cancel ' }),
+  addProps({ 'aria-label': 'Cancel' }),
   withChild(() => <Icon>cancel</Icon>),
 )(ComponentFormButton);
 
 export const ComponentFormSubmitButton = (props: HTMLProps<HTMLButtonElement>) => (
   <div className="bl-clearfix">
-    <ComponentFormButton className="bl-float-right" {...props}>
+    <ComponentFormButton aria-label="Submit" className="bl-float-right" {...props}>
       <Icon>done</Icon>
     </ComponentFormButton>
   </div>
