@@ -107,14 +107,14 @@ const Tout = asEditableTout(ToutClean);
  * @param id The id attribute to apply to the outer wrapper.
  */
 const asTestableTout = (id: string) => withDesign({
-  Wrapper: addProps({ id, 'data-tout-wrapper': true }),
-  ImageWrapper: addProps({ 'data-tout-image-wrapper': true }),
-  Image: addProps({ 'data-tout-image': true }),
-  ImageLink: addProps({ 'data-tout-image-link': true }),
-  ContentWrapper: addProps({ 'data-tout-content-wrapper': true }),
-  Title: addProps({ 'data-tout-title': true }),
-  Body: addProps({ 'data-tout-body': true }),
-  Link: addProps({ 'data-tout-link': true }),
+  Wrapper: addProps({ id, 'data-tout-element': 'wrapper' }),
+  ImageWrapper: addProps({ 'data-tout-element': 'image-wrapper' }),
+  Image: addProps({ 'data-tout-element': 'image' }),
+  ImageLink: addProps({ 'data-tout-element': 'image-link' }),
+  ContentWrapper: addProps({ 'data-tout-element': 'content-wrapper' }),
+  Title: addProps({ 'data-tout-element': 'title' }),
+  Body: addProps({ 'data-tout-element': 'body' }),
+  Link: addProps({ 'data-tout-element': 'link' }),
 });
 
 export default Tout;

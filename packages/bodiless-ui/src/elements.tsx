@@ -16,7 +16,7 @@ import React, { FC, HTMLProps } from 'react';
 import { flow } from 'lodash';
 import { Text as BaseText } from 'informed';
 import {
-  stylable, addClasses, StylableProps, withoutProps, flowIf, hasProp,
+  stylable, addClasses, StylableProps, withoutProps, flowIf, hasProp, addProps,
 } from '@bodiless/fclasses';
 import { ButtonVariantProps } from '@bodiless/core';
 
@@ -78,15 +78,17 @@ export const Icon = flow(
   flowIf(hasProp('isActive'))(
     addClasses('bl-bg-primary'),
   ),
+  addProps({ 'aria-hidden': true }),
 )(Span);
 
 export const ToolbarButton = flow(
   withoutProps<ButtonVariantProps>(['isActive', 'isFirst', 'isDisabled']),
-  addClasses('cursor-pointer bl-text-grey-200'),
+  addClasses('cursor-pointer bl-text-grey-200 block'),
   flowIf(hasProp('isDisabled'))(
     addClasses('bl-text-grey-600').removeClasses('bl-text-grey-200'),
   ),
-)(Div);
+  addProps({ type: 'button' }),
+)(Button);
 
 export const ResizeHandle = addClasses(
   'bl-block bl-text-2xl bl-absolute material-icons bl-z-1 bl-text-red bl-rotate-45deg bl-bottom-grid-0 bl-right-grid-0',

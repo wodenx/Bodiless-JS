@@ -35,6 +35,7 @@ export const getUI = (ui: UI = {}) => ({ ...defaultUI, ...ui });
 export type FormProps = {
   closeForm: () => void;
   ui?: UI;
+  'aria-label'?: string;
 };
 
 export type FormBodyProps<D> = FormProps & {
@@ -53,7 +54,7 @@ export type Options<D> = {
 const contextMenuForm = <D extends object>(options: Options<D>) => (
   renderFormBody: FormBodyRenderer<D>,
 ) => {
-  const ContextMenuForm = ({ closeForm, ui }: FormProps) => {
+  const ContextMenuForm = ({ closeForm, ui, ...rest }: FormProps) => {
     const { ComponentFormButton, Icon } = getUI(ui);
     const { submitValues, initialValues, hasSubmit = true } = options;
     return (
@@ -63,6 +64,7 @@ const contextMenuForm = <D extends object>(options: Options<D>) => (
           closeForm();
         }}
         initialValues={initialValues}
+        {...rest}
       >
         {({ formApi, formState }) => (
           <>
@@ -70,6 +72,7 @@ const contextMenuForm = <D extends object>(options: Options<D>) => (
               type="button"
               onClick={closeForm}
               className="bl-float-right"
+              aria-label="Cancel"
             >
               <Icon>cancel</Icon>
             </ComponentFormButton>

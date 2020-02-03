@@ -53,10 +53,10 @@ export type UI = {
 export type IContextMenuProps = {
   children?: ReactNode;
   options: TMenuOption[];
-  className?: string;
-  onDispose?: (wasSubmitted: boolean) => void;
+  // className?: string;
+  // onDispose?: (wasSubmitted: boolean) => void;
   ui?: UI;
-};
+} & HTMLProps<HTMLElement>;
 
 export type IContextMenuItemProps = {
   ui?: UI
