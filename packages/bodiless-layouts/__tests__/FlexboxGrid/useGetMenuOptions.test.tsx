@@ -23,7 +23,7 @@ describe('useGetMenuOptions', () => {
   beforeEach(() => {
     // @ts-ignore
     useEditContext.mockReturnValue({ isEdit: true });
-  })
+  });
 
   it('Returns no buttons when edit mode is off', () => {
     // @ts-ignore
