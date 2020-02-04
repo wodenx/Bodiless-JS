@@ -74,7 +74,9 @@ export function useFlexboxDataHandlers(): FlexboxDataHandlers {
     setFlexboxItems: setItems,
     updateFlexboxItem: (flexboxItem: FlexboxItem) => {
       const index = findItem(flexboxItem);
-      spliceItem(index, 1, flexboxItem);
+      if (index < getItems().length) {
+        spliceItem(index, 1, flexboxItem);
+      }
     },
     onFlexboxItemResize: (uuid, itemProps) => {
       const items = getItems();
@@ -93,6 +95,7 @@ export function useFlexboxDataHandlers(): FlexboxDataHandlers {
     },
     deleteFlexboxItem: (uuid: string) => {
       const index = findItem({ uuid });
+      if (index >= getItems().length) return undefined;
       spliceItem(index, 1);
       const items = getItems();
       return items[index] || items[items.length - 1];

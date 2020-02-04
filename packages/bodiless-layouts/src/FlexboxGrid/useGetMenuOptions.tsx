@@ -18,7 +18,6 @@ import { useFlexboxDataHandlers, useItemHandlers } from './model';
 import { ComponentSelectorProps } from '../ComponentSelector/types';
 import componentSelectorForm from '../ComponentSelector/componentSelectorForm';
 
-
 /**
  * Returns actions which can be executed upon selecting a component in the
  * component selector.
@@ -27,7 +26,6 @@ import componentSelectorForm from '../ComponentSelector/componentSelectorForm';
  * @param currentItem The currently selected item in the grid (optional);
  */
 const useComponentSelectorActions = (
-  props: EditFlexboxProps,
   currentItem?: FlexboxItem,
 ) => {
   const { insertFlexboxItem, updateFlexboxItem } = useFlexboxDataHandlers();
@@ -55,7 +53,7 @@ function useGetMenuOptions(props: EditFlexboxProps, item?: FlexboxItem) {
   const { maxComponents } = props;
   const { getItems } = useItemHandlers();
   const { deleteFlexboxItem } = useFlexboxDataHandlers();
-  const { insertItem, replaceItem } = useComponentSelectorActions(props, item);
+  const { insertItem, replaceItem } = useComponentSelectorActions(item);
   const addButton = {
     icon: 'add',
     name: 'add',
