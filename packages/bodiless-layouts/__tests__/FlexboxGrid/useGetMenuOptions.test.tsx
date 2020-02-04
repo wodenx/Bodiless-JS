@@ -1,63 +1,156 @@
-import { Fragment } from 'react';
-import { useEditContext } from '@bodiless/core';
+import { Fragment, FC } from 'react';
+import { useEditContext, TMenuOption } from '@bodiless/core';
+import { DesignableComponents } from '@bodiless/fclasses';
+import { EditFlexboxProps } from '../../src/FlexboxGrid/types';
+import componentSelectorForm from '../../src/ComponentSelector/componentSelectorForm';
+import { useItemHandlers, useFlexboxDataHandlers } from '../../src/FlexboxGrid/model';
+import useGetMenuOptions from '../../src/FlexboxGrid/useGetMenuOptions';
 
-// Prepare mock for componentSelectorForm.
+jest.mock('@bodiless/core');
 jest.mock('../../src/ComponentSelector/componentSelectorForm');
-const componentSelectorForm = require('../../src/ComponentSelector/componentSelectorForm').default;
-
 jest.mock('../../src/FlexboxGrid/model');
-const { useItemHandlers, useFlexboxDataHandlers } = require('../../src/FlexboxGrid/model');
 
-const useGetMenuOptions = require('../../src/FlexboxGrid/useGetMenuOptions').default;
-
-const Foo = () => Fragment;
-const Bar = () => Fragment;
+const Foo: FC = Fragment;
+const Bar: FC = Fragment;
+const components: DesignableComponents = { Foo, Bar };
+const item = {
+  uuid: 'foo',
+  type: 'Foo',
+  wrapperProps: {},
+};
 
 describe('useGetMenuOptions', () => {
-  function getMenuOptions() {
-    const props = {
-      components: [Foo, Bar],
-    };
-    return useGetMenuOptions(props)();
+  function setIsEdit(isEdit: boolean) {
+    (useEditContext as jest.Mock).mockReturnValue(
+      { ...useEditContext(), isEdit },
+    );
   }
-  beforeEach(() => {
-    // @ts-ignore
-    useEditContext.mockReturnValue({ isEdit: true });
-  });
 
-  it('Returns no buttons when edit mode is off', () => {
-    // @ts-ignore
-    useEditContext.mockReturnValue({ isEdit: false });
-    const options = getMenuOptions();
-    expect(options).toHaveLength(0);
-  });
 
-  it('Returns no buttons for the flexbox when it is not empty', () => {
-    const { getItems } = useItemHandlers();
-    getItems.mockReturnValue([{
-      uuid: 'foo',
-      type: 'Foo',
-    }]);
-    const options = getMenuOptions();
-    expect(options).toHaveLength(0);
-  });
-  it('Returns a single add button for the flexbox when it is empty', () => {
-    const { getItems } = useItemHandlers();
-    getItems.mockReturnValue([]);
-    const { insertFlexboxItem } = useFlexboxDataHandlers();
-    const props = {
-      components: [Foo, Bar],
-    };
-    const options = useGetMenuOptions(props)();
-    expect(options.length).toBe(1);
-    expect(options[0].name).toBe('add');
-    options[0].handler();
+  function invokeAction(button: TMenuOption, selection: string) {
+    // @ts-ignore
+    button.handler();
     expect(componentSelectorForm).toHaveBeenCalledTimes(1);
-    expect(componentSelectorForm.mock.calls[0][0]).toEqual(props);
-    const action = componentSelectorForm.mock.calls[0][1];
-    action(null, 'Bar');
-    expect(insertFlexboxItem).toHaveBeenCalledTimes(1);
-    expect(insertFlexboxItem.mock.calls[0][0]).toBe('Bar');
-    expect(insertFlexboxItem.mock.calls[0][1]).toBeUndefined();
+    expect((componentSelectorForm as jest.Mock).mock.calls[0][0].components).toEqual(components);
+    const action = (componentSelectorForm as jest.Mock).mock.calls[0][1];
+    action(null, selection);
+  }
+
+  function expectDataHandlerCall(method: Function, args: any[]) {
+    const mockedMethod = method as jest.Mock;
+    expect(mockedMethod).toHaveBeenCalledTimes(1);
+    args.forEach((arg, index) => {
+      expect(mockedMethod.mock.calls[0][index]).toEqual(arg);
+    });
+  }
+
+  beforeEach(() => {
+    setIsEdit(true);
+    jest.clearAllMocks();
+  });
+
+  describe('item getMenuOptions', () => {
+    function getMenuOptions(maxComponents?: number) {
+      const props: EditFlexboxProps = {
+        components,
+      };
+      if (maxComponents) {
+        props.maxComponents = maxComponents;
+      }
+      return useGetMenuOptions(props, item)();
+    }
+
+    beforeEach(() => {
+      const { getItems } = useItemHandlers();
+      // @ts-ignore jest mock methods don't exist on mocked imports.
+      getItems.mockReturnValue([
+        {
+          uuid: 'foo',
+          type: 'Foo',
+        },
+        {
+          uuid: 'bar',
+          type: 'Bar',
+        },
+      ]);
+    });
+
+    it('Returns no buttons when edit mode is off', () => {
+      setIsEdit(false);
+      const options = getMenuOptions();
+      expect(options).toHaveLength(0);
+    });
+
+    it('Returns an add button', () => {
+      const { insertFlexboxItem } = useFlexboxDataHandlers();
+      const options = getMenuOptions(3);
+      const addButton = options.find(option => option.name === 'add');
+      expect(addButton).not.toBeUndefined();
+      invokeAction(addButton!, 'Baz');
+      expectDataHandlerCall(insertFlexboxItem, ['Baz', item]);
+    });
+
+    it('Does not return an add button when flexbox is full', () => {
+      const options = getMenuOptions(2);
+      const addButton = options.find(option => option.name === 'add');
+      expect(addButton).toBeUndefined();
+    });
+
+    it('Returns a delete button', () => {
+      const { deleteFlexboxItem } = useFlexboxDataHandlers();
+      const options = getMenuOptions();
+      const button = options.find(option => option.name === 'delete');
+      expect(button).not.toBeUndefined();
+      // @ts-ignore
+      button.handler();
+      expectDataHandlerCall(deleteFlexboxItem, ['foo']);
+    });
+
+    it('Returns a swap button', () => {
+      const { updateFlexboxItem } = useFlexboxDataHandlers();
+      const options = getMenuOptions();
+      const button = options.find(option => option.name === 'swap');
+      expect(button).not.toBeUndefined();
+      invokeAction(button!, 'Bar');
+      expectDataHandlerCall(updateFlexboxItem, [{ ...item, type: 'Bar' }]);
+    });
+  });
+
+
+  describe('flexbox getMenuOptions', () => {
+    function getMenuOptions() {
+      const props = {
+        components,
+      };
+      return useGetMenuOptions(props)();
+    }
+
+    it('Returns no buttons when edit mode is off', () => {
+      setIsEdit(false);
+      const options = getMenuOptions();
+      expect(options).toHaveLength(0);
+    });
+
+    it('Returns no buttons for the flexbox when it is not empty', () => {
+      const { getItems } = useItemHandlers();
+      // @ts-ignore jest mock methods don't exist on mocked imports.
+      getItems.mockReturnValue([{
+        uuid: 'foo',
+        type: 'Foo',
+      }]);
+      const options = getMenuOptions();
+      expect(options).toHaveLength(0);
+    });
+    it('Returns a single add button for the flexbox when it is empty', () => {
+      const { getItems } = useItemHandlers();
+      // @ts-ignore jest mock methods don't exist on mocked imports.
+      getItems.mockReturnValue([]);
+      const { insertFlexboxItem } = useFlexboxDataHandlers();
+      const options = getMenuOptions();
+      expect(options.length).toBe(1);
+      expect(options[0].name).toBe('add');
+      invokeAction(options[0], 'Bar');
+      expectDataHandlerCall(insertFlexboxItem, ['Bar']);
+    });
   });
 });
