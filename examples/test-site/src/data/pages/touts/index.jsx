@@ -74,6 +74,15 @@ const ToutOverlayTitleNoBodyNoCta = flow(
   asToutNoBody,
   asToutNoCta,
 )(Tout);
+const ToutOverlayTitleNoBodyNoCta2 = flow(
+  asTestableTout('tout-overlay-title-no-body-no-cta=2'),
+  asToutDefaultStyle,
+  asToutVertical,
+  asToutOverlayTitle,
+  asToutNoBody,
+  asToutNoCta,
+)(Tout);
+
 const ToutOverlaytTitleNoBodyOverlayCta = flow(
   asTestableTout('tout-overlay-title-no-body-overlay-cta'),
   asToutDefaultStyle,
@@ -120,7 +129,7 @@ export default props => (
           <ToutVerticalNoTitleNoBody nodeKey="verticalNoTitleNoBody" />
         </div>
         <div className="w-full lg:w-1/3">
-          <ToutOverlayTitleNoBodyNoCta nodeKey="overlayTitleNoBodyNoCta2" />
+          <ToutOverlayTitleNoBodyNoCta2 nodeKey="overlayTitleNoBodyNoCta2" />
         </div>
         <div className="w-full lg:w-1/3">
           <ToutOverlaytTitleNoBody nodeKey="overlayTitleNoBody" />
