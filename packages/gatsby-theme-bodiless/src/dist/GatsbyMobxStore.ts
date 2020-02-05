@@ -165,7 +165,6 @@ class Item {
         .then(() => this.updateState(ItemStateEvent.EndPostData));
     };
     if (this.shouldSave()) {
-      postData(preparePostData());
       this.dispose = reaction(preparePostData, postData, {
         delay: 2000,
       });
