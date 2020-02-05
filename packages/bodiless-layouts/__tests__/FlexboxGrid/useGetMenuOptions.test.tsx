@@ -6,9 +6,23 @@ import componentSelectorForm from '../../src/ComponentSelector/componentSelector
 import { useItemHandlers, useFlexboxDataHandlers } from '../../src/FlexboxGrid/model';
 import useGetMenuOptions from '../../src/FlexboxGrid/useGetMenuOptions';
 
-jest.mock('@bodiless/core');
 jest.mock('../../src/ComponentSelector/componentSelectorForm');
 jest.mock('../../src/FlexboxGrid/model');
+
+const editContext = {
+  activate: jest.fn(),
+  isEdit: true,
+};
+const activateOnEffect = {
+  setId: jest.fn(),
+};
+const contextMenuFormInner = jest.fn();
+jest.mock('@bodiless/core', () => ({
+  useEditContext: jest.fn(() => editContext),
+  useActivateOnEffect: jest.fn(() => activateOnEffect),
+  useNode: jest.fn(),
+  contextMenuForm: jest.fn(() => contextMenuFormInner),
+}));
 
 const Foo: FC = Fragment;
 const Bar: FC = Fragment;
