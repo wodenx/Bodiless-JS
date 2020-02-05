@@ -11,3 +11,6 @@ const activateOnEffect = {
 export const useActivateOnEffect = () => activateOnEffect;
 
 export const useNode = jest.fn();
+
+const contextMenuFormInner = jest.fn();
+export const contextMenuForm = jest.fn(() => contextMenuFormInner);
