@@ -72,7 +72,7 @@ function useGetMenuOptions(props: EditFlexboxProps, item?: FlexboxItem) {
   };
   const swapButton = !item ? undefined : {
     name: 'swap',
-    icon: 'flip_camera_ios',
+    icon: 'repeat',
     handler: () => componentSelectorForm(props, replaceItem),
   };
 
