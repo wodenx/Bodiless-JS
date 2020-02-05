@@ -16,7 +16,6 @@ import React from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { flow } from 'lodash';
-import { asTestableTout } from '@bodiless/organisms';
 import Layout from '../../../components/Layout';
 import Tout from '../../../components/Tout';
 import {
@@ -32,42 +31,35 @@ import {
 } from '../../../components/Tout/token';
 
 const ToutHorizontal = flow(
-  asTestableTout('tout-horizontal'),
   asToutDefaultStyle,
   asToutHorizontal,
 )(Tout);
 const ToutHorizontalNoTitle = flow(
-  asTestableTout('tout-horizontal-no-title'),
   asToutDefaultStyle,
   asToutHorizontal,
   asToutNoTitle,
 )(Tout);
 const ToutVertical = flow(
-  asTestableTout('tout-vertical'),
   asToutDefaultStyle,
   asToutVertical,
 )(Tout);
 const ToutVerticalNoTitle = flow(
-  asTestableTout('tout-vertical-no-title'),
   asToutDefaultStyle,
   asToutVertical,
   asToutNoTitle,
 )(Tout);
 const ToutVerticalNoTitleNoBody = flow(
-  asTestableTout('tout-vertical-no-title-no-body'),
   asToutDefaultStyle,
   asToutVertical,
   asToutNoBodyNoTitle,
 )(Tout);
 const ToutNoTitleNoBodyOverlayCta = flow(
-  asTestableTout('tout-no-title-no-body-overlay-cta'),
   asToutDefaultStyle,
   asToutVertical,
   asToutNoBodyNoTitle,
   asToutOverlayCta,
 )(Tout);
 const ToutOverlayTitleNoBodyNoCta = flow(
-  asTestableTout('tout-overlay-title-no-body-no-cta'),
   asToutDefaultStyle,
   asToutVertical,
   asToutOverlayTitle,
@@ -75,7 +67,6 @@ const ToutOverlayTitleNoBodyNoCta = flow(
   asToutNoCta,
 )(Tout);
 const ToutOverlaytTitleNoBodyOverlayCta = flow(
-  asTestableTout('tout-overlay-title-no-body-overlay-cta'),
   asToutDefaultStyle,
   asToutVertical,
   asToutOverlayTitle,
@@ -83,7 +74,6 @@ const ToutOverlaytTitleNoBodyOverlayCta = flow(
   asToutOverlayCta,
 )(Tout);
 const ToutOverlaytTitleNoBody = flow(
-  asTestableTout('tout-overlay-title-no-body'),
   asToutDefaultStyle,
   asToutVertical,
   asToutOverlayTitle,
@@ -96,34 +86,34 @@ export default props => (
       <h1 className="text-3xl font-bold">touts</h1>
       <div className="flex flex-wrap my-3">
         <div className="w-full">
-          <ToutHorizontal nodeKey="horizontal" />
-        </div>
-        <div id="tout-2" className="w-full">
-          <ToutHorizontalNoTitle nodeKey="horizontalNoTitle" />
+          <ToutHorizontal nodeKey="horizontal" id="tout-horizontal" />
         </div>
         <div className="w-full">
-          <ToutNoTitleNoBodyOverlayCta nodeKey="noTitleNoBodyOverlayCta" />
+          <ToutHorizontalNoTitle nodeKey="horizontalNoTitle" id="tout-horizontal-no-title" />
         </div>
         <div className="w-full">
-          <ToutOverlayTitleNoBodyNoCta nodeKey="overlayTitlenBodyNoCta" />
+          <ToutNoTitleNoBodyOverlayCta nodeKey="noTitleNoBodyOverlayCta" id="tout-no-title-no-body-overlay-cta" />
         </div>
         <div className="w-full">
-          <ToutOverlaytTitleNoBodyOverlayCta nodeKey="overlayTitleNoBodyOverlayCta" />
+          <ToutOverlayTitleNoBodyNoCta nodeKey="overlayTitlenBodyNoCta" id="tout-overlay-title-no-body-no-cta" />
+        </div>
+        <div className="w-full">
+          <ToutOverlaytTitleNoBodyOverlayCta nodeKey="overlayTitleNoBodyOverlayCta" id="tout-overlay-title-no-body-overlay-cta" />
         </div>
         <div className="w-full lg:w-1/3">
-          <ToutVerticalNoTitle nodeKey="verticalNoTitle" />
+          <ToutVerticalNoTitle nodeKey="verticalNoTitle" id="tout-vertical-no-title" />
         </div>
         <div className="w-full lg:w-1/3">
           <ToutVertical nodeKey="vertical" />
         </div>
         <div className="w-full lg:w-1/3">
-          <ToutVerticalNoTitleNoBody nodeKey="verticalNoTitleNoBody" />
+          <ToutVerticalNoTitleNoBody nodeKey="verticalNoTitleNoBody" id="tout-vertical-no-title-no-body" />
         </div>
         <div className="w-full lg:w-1/3">
-          <ToutOverlayTitleNoBodyNoCta nodeKey="overlayTitleNoBodyNoCta2" />
+          <ToutOverlayTitleNoBodyNoCta nodeKey="overlayTitleNoBodyNoCta2" id="tout-overlay-title-no-body-no-cta-2" />
         </div>
         <div className="w-full lg:w-1/3">
-          <ToutOverlaytTitleNoBody nodeKey="overlayTitleNoBody" />
+          <ToutOverlaytTitleNoBody nodeKey="overlayTitleNoBody" id="tout-overlay-title-no-body" />
         </div>
       </div>
     </Layout>
