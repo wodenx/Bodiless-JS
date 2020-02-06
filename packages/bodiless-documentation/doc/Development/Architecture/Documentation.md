@@ -70,18 +70,19 @@ by
 
 Because documentation is assembled from different packages, the final order of items
 can be hard to predict.  In order to control structure more precisely, you can create a 
-`bodiless.docs.toc.json` file (this should reside at the to level of yoru project). The
-format of this file is similar to that of the `bodiless.docs.json` file described above,
+`bodiless.docs.toc.js` file (this should reside at the to level of yoru project). This
+module should contain a single default export: a function which returns a javascript object
+whose structure is similar to that of the `bodiless.docs.json` file described above,
 except that the values of each key should be blank. For example:
-```json
+```js
 {
-	"About": {
-		"GettingStarted.md": "",
+	About: {
+		'GettingStarted.md': '',
 	},
-	"Components": {
-	"Design": {},
-	"Development": {
-	"Tools": {},
+	Components: {
+	Design: {},
+	Development: {},
+	Tools: {},
 }
 ```
 This will ensure that the order of the top-level categories is fixed, and that the first
@@ -89,6 +90,11 @@ item in the "About" category is "GettingStarted.md". The contents of each catego
 as the actual documentation to insert at "GettingStarted.md", will be determined by the
 individual packages supplying documentation.  Thus, you can specify an order for the things
 you care about, and let the documentation builder fill in the remaining documentaiton.
+
+Note that the default ordering is supplied by a `defaultToc` function exported
+by the `@bodiless/documentation` package. You can import this into your
+site-level `bodiless.docs.toc.js` and modify the object at will--making it easy
+to extend existing structure.
 
 ### Known issues
 
