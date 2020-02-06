@@ -143,6 +143,24 @@ class Item {
     return resourcePath;
   }
 
+  private enableDataTracking() {
+    if (this.shouldSave()) {
+      const preparePostData = () => (this.state === ItemState.Dirty ? this.data : null);
+      // Post this.data back to filesystem if item state is dirty.
+      const postData = (data: {} | null) => {
+        if (!data) {
+          return;
+        }
+        this.updateState(ItemStateEvent.BeginPostData);
+        this.store.client.savePath(this.getResoucePath(), data)
+          .then(() => this.updateState(ItemStateEvent.EndPostData));
+      };
+      this.dispose = reaction(preparePostData, postData, {
+        delay: 2000,
+      });
+    }
+  }
+
   constructor(
     store: GatsbyMobxStore,
     key: string,
@@ -151,24 +169,9 @@ class Item {
   ) {
     this.store = store;
     this.key = key;
+    this.enableDataTracking();
     this.setData(initialData);
     this.updateState(event);
-
-    const preparePostData = () => (this.state === ItemState.Dirty ? this.data : null);
-    // Post this.data back to filesystem if item state is dirty.
-    const postData = (data: {} | null) => {
-      if (!data) {
-        return;
-      }
-      this.updateState(ItemStateEvent.BeginPostData);
-      this.store.client.savePath(this.getResoucePath(), data)
-        .then(() => this.updateState(ItemStateEvent.EndPostData));
-    };
-    if (this.shouldSave()) {
-      this.dispose = reaction(preparePostData, postData, {
-        delay: 2000,
-      });
-    }
   }
 
   update(data = {}, event = ItemStateEvent.UpdateFromBrowser) {
@@ -275,16 +278,20 @@ export default class GatsbyMobxStore {
     return storeValue || dataValue || {};
   };
 
+  @action setItem = (key: string, item: Item) => {
+    this.store.set(key, item);
+  };
+
   /**
    * Mobx action saves or updates items to GatsbyMobxStore.store.
    */
-  @action setNode = (keyPath: string[], value = {}, event = ItemStateEvent.UpdateFromBrowser) => {
+  setNode = (keyPath: string[], value = {}, event = ItemStateEvent.UpdateFromBrowser) => {
     const key = keyPath.join(nodeChildDelimiter);
     const item = this.store.get(key);
     if (item) {
       item.update(value, event);
     } else {
-      this.store.set(key, new Item(this, key, value, event));
+      this.setItem(key, new Item(this, key, value, event));
     }
   };
 }
