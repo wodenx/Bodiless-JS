@@ -77,7 +77,7 @@ child.on('close', code => {
     console.log(`Local packages install errored with code ${code}`);
     process.exit(code);
   } else {
-    console.log('Updated local packge.json');
+    console.log('Updated local package.json');
   }
   fs.copySync('../../package-lock.json', './package-lock.json');
   const child$ = spawn('npm', ['install'], {
