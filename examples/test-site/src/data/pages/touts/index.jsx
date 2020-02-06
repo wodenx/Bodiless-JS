@@ -66,14 +66,6 @@ const ToutOverlayTitleNoBodyNoCta = flow(
   asToutNoBody,
   asToutNoCta,
 )(Tout);
-const ToutOverlayTitleNoBodyNoCta2 = flow(
-  asTestableTout('tout-overlay-title-no-body-no-cta=2'),
-  asToutDefaultStyle,
-  asToutVertical,
-  asToutOverlayTitle,
-  asToutNoBody,
-  asToutNoCta,
-)(Tout);
 
 const ToutOverlaytTitleNoBodyOverlayCta = flow(
   asToutDefaultStyle,
