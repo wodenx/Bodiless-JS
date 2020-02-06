@@ -105,7 +105,7 @@ export default props => (
           <ToutVerticalNoTitle nodeKey="verticalNoTitle" id="tout-vertical-no-title" />
         </div>
         <div className="w-full lg:w-1/3">
-          <ToutVertical nodeKey="vertical" />
+          <ToutVertical nodeKey="vertical" id="tout-vertical" />
         </div>
         <div className="w-full lg:w-1/3">
           <ToutVerticalNoTitleNoBody nodeKey="verticalNoTitleNoBody" id="tout-vertical-no-title-no-body" />
