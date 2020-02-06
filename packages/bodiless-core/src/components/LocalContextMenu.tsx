@@ -41,7 +41,7 @@ const LocalContextMenu: FC = ({ children }) => {
   return (
     <Tooltip
       visible={isInnermostLocalMenu && options.length > 0}
-      overlay={<Menu aria-label="Menu for me" options={options} />}
+      overlay={<Menu options={options} />}
       trigger={[]}
       destroyTooltipOnHide
       placement="bottom"
