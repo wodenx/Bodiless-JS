@@ -19,7 +19,7 @@ import { flow } from 'lodash';
 import fs from 'fs-extra';
 // import cleanSymlinks from './cleanSymlinks';
 import locateFiles from './locateFiles';
-import { withTreeFromFile, withTree, prependPath } from './tree';
+import { withTreeFromFile } from './tree';
 import writeSymlinksFromTree from './writeSymlinksFromTree';
 import { writeSideBars, writeNavBar } from './createBar';
 import defaultToc from './defaultToc';
@@ -63,10 +63,18 @@ const blDocsBuild = async () => {
   ]);
 
   // Then the tres are combined into a single tree with the nameSpace as the top level folder.
-  const updates = nameSpaces.map(
-    (nameSpace, i) => withTree(prependPath(nameSpace)(pathsList[i])),
+  // const updates = nameSpaces.map(
+  //   (nameSpace, i) => {
+  //     //console.log(nameSpace, pathsList[i]);
+  //     console.log(prependPath(nameSpace)(pathsList[i]));
+  //     return withTree(prependPath(nameSpace)(pathsList[i]));
+  //   },
+  // );
+  const paths: Tree = nameSpaces.reduce(
+    (acc, nameSpace, i) => ({ ...acc, [nameSpace]: pathsList[i] }),
+    {},
   );
-  const paths: Tree = flow(updates)({});
+  // const paths: Tree = flow(updates)({});
 
   // Now we use the tree we created above to write symlinks, sidebar and navbar.
   console.log('Writing symlinks');
@@ -76,19 +84,19 @@ const blDocsBuild = async () => {
       loc: docPath,
     });
   } catch (error) {
-    console.log(error, 'writing symlinks');
+    console.log(error.name, 'writing symlinks');
   }
   console.log('Writing sidebars');
   try {
     await writeSideBars(docPath, paths);
   } catch (error) {
-    console.log(error, 'writing sidebars');
+    console.log(error.name, 'writing sidebars');
   }
   console.log('Writing navbar');
   try {
     await writeNavBar(docPath, paths);
   } catch (error) {
-    console.log(error, 'writing navbar');
+    console.log(error.name, 'writing navbar');
   }
   console.log('Done');
 };

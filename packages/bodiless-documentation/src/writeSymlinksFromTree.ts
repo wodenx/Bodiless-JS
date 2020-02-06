@@ -24,6 +24,7 @@ type Props = {
 };
 const writeSymlinksFromTree = (props: Props) => {
   const { paths, loc } = props;
+  console.log('loc', loc, Object.keys(paths));
   const promises = [] as Promise<any>[];
   Object.keys(paths).forEach((key:string) => {
     try {
@@ -40,16 +41,19 @@ const writeSymlinksFromTree = (props: Props) => {
         }
       } else {
         const filePath = path.join(loc, key);
+        let relPath;
+        // const docPath = (branch.paths as string).replace(/^[^/]+/, '');
+        const docPath = (branch.paths as string);
         try {
           if (process.env.BODILESS_DOCS_COPYFILES === '1') {
-            const relPath = path.relative(process.cwd(), branch.paths as string);
+            relPath = path.relative(process.cwd(), docPath);
             fs.copyFileSync(relPath, filePath);
           } else {
-            const relPath = path.relative(loc, branch.paths as string);
+            relPath = path.relative(loc, docPath);
             fs.ensureSymlinkSync(relPath, filePath);
           }
         } catch (error) {
-          console.log(error, key);
+          console.log(error.name, key, filePath, relPath);
         }
       }
     } catch (error) {

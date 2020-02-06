@@ -46,7 +46,7 @@ const createBar = (
       const branch = paths[key] as Tree;
       const subLines = depth > 0 || !branch['README.md'] ? createBar(paths[key] as Tree, [...parent, key], depth - 1, false, indent + 1) : '';
       if (branch['README.md']) {
-        line = `${linePrefix}* [${name}](${pathPrefix}${link}/)\n`;
+        line = `${linePrefix}* [${name}](/${pathPrefix}${link}/)\n`;
         // If we have subLines but we have no README then do not add the tree item
       } else if (subLines) {
         line = `${linePrefix}* ${name}\n`;
