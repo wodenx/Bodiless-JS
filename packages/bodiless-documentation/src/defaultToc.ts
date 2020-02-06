@@ -33,4 +33,4 @@ const toc = {
     'Contributing.md': '',
   },
 };
-export default () => toc;
+export default () => ({ '': toc });

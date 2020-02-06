@@ -19,28 +19,28 @@ import { flow } from 'lodash';
 import fs from 'fs-extra';
 // import cleanSymlinks from './cleanSymlinks';
 import locateFiles from './locateFiles';
-import { withTreeFromFile } from './tree';
+import { withTreeFromFile, withTree, prependPath } from './tree';
 import writeSymlinksFromTree from './writeSymlinksFromTree';
 import { writeSideBars, writeNavBar } from './createBar';
 import defaultToc from './defaultToc';
+import { Tree } from './type';
 
-const buildSubTree = async (toc: object, namespace: string) => {
+const buildSubTree = async (toc: any, namespace: string) => {
   // We start by using locateFiles and withTreeFromFile to build up an array of TreeHO and
   // at the same time we clean up the symlinks
-  const results = await locateFiles({
+  const updates = await locateFiles({
     filePattern: new RegExp(`${namespace}.docs.json$`),
     // filePattern: /docs.json$/,
     startingRoot: './',
     action: withTreeFromFile,
   });
-  const updates = results;
-  const paths = flow(updates)(toc);
+  const paths = flow(updates)(toc) as Tree;
   return paths;
 };
 
 const blDocsBuild = async () => {
   const docPath = './doc';
-  let toc;
+  let toc: any;
   try {
     const tocPath = path.resolve('./bodiless.docs.toc.js');
     // eslint-disable-next-line global-require
@@ -49,11 +49,26 @@ const blDocsBuild = async () => {
     console.warn('No local TOC. Falling back on bodiless default.');
     toc = defaultToc();
   }
+
+  console.log('Building documentation tree');
+  // The top level keys of the toc are namespaces defining which docs.json files to parse.
+  // All packages are scanned for files matching `${namespace}.docs.json` - and a tree is
+  // created for each namespace.
+  const nameSpaces = Object.getOwnPropertyNames(toc);
+  const buildPromises = nameSpaces.map(ns => buildSubTree(toc[ns], ns));
   const pathsList = await Promise.all([
-    buildSubTree(toc, ''),
-    fs.emptyDir(docPath),
+    ...buildPromises,
+    // Need to cast this to preserve type of pathsList. We are discarding the last value anyway.
+    fs.emptyDir(docPath) as any as Promise<Tree>,
   ]);
-  const paths = pathsList[0];
+
+  // Then the tres are combined into a single tree with the nameSpace as the top level folder.
+  const updates = nameSpaces.map(
+    (nameSpace, i) => withTree(prependPath(nameSpace)(pathsList[i])),
+  );
+  const paths: Tree = flow(updates)({});
+
+  // Now we use the tree we created above to write symlinks, sidebar and navbar.
   console.log('Writing symlinks');
   try {
     await writeSymlinksFromTree({
