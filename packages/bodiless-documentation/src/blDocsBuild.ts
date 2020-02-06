@@ -24,6 +24,20 @@ import writeSymlinksFromTree from './writeSymlinksFromTree';
 import { writeSideBars, writeNavBar } from './createBar';
 import defaultToc from './defaultToc';
 
+const buildSubTree = async (toc: object, namespace: string) => {
+  // We start by using locateFiles and withTreeFromFile to build up an array of TreeHO and
+  // at the same time we clean up the symlinks
+  const results = await locateFiles({
+    filePattern: new RegExp(`${namespace}.docs.json$`),
+    // filePattern: /docs.json$/,
+    startingRoot: './',
+    action: withTreeFromFile,
+  });
+  const updates = results;
+  const paths = flow(updates)(toc);
+  return paths;
+};
+
 const blDocsBuild = async () => {
   const docPath = './doc';
   let toc;
@@ -35,22 +49,11 @@ const blDocsBuild = async () => {
     console.warn('No local TOC. Falling back on bodiless default.');
     toc = defaultToc();
   }
-  // const tocPath = './bodiless.docs.toc.json';
-  // const toc = fs.existsSync(tocPath) ? fs.readJSONSync(tocPath) : {};
-  // We start by using locateFiles and withTreeFromFile to build up an array of TreeHO and
-  // at the same time we clean up the symlinks
-  const results = await Promise.all([
-    locateFiles({
-      filePattern: /docs.json$/,
-      startingRoot: './',
-      action: withTreeFromFile,
-    }),
+  const pathsList = await Promise.all([
+    buildSubTree(toc, ''),
     fs.emptyDir(docPath),
-    // Then we use the TreeOH (in updates) to create a Tree,
-    // which we use to write the symlinks and make the nav and side bars.
   ]);
-  const updates = results[0];
-  const paths = flow(updates)(toc);
+  const paths = pathsList[0];
   console.log('Writing symlinks');
   try {
     await writeSymlinksFromTree({
