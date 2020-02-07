@@ -17,7 +17,7 @@ import { arrayMove, SortEnd } from 'react-sortable-hoc';
 import { observer } from 'mobx-react-lite';
 import { flowRight } from 'lodash';
 import {
-  withActivateOnEffect, withNode, withMenuOptions, withContextActivator,
+  withActivateOnEffect, withNode, withMenuOptions,
 } from '@bodiless/core';
 import SortableChild from './SortableChild';
 import SortableContainer from './SortableContainer';
@@ -86,7 +86,6 @@ const asEditFlexbox = flowRight(
     useGetMenuOptions: (props: EditFlexboxProps) => useGetMenuOptions(props),
     name: 'Flexbox',
   }),
-  withContextActivator('onClick'),
   observer,
 );
 
