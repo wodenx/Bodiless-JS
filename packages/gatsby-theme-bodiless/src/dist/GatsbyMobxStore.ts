@@ -57,6 +57,7 @@ enum ItemState {
   Clean,
   Dirty,
   Flushing,
+  Locked,
 }
 
 enum ItemStateEvent {
@@ -83,7 +84,8 @@ class Item {
     const { ___meta: metaData } = data;
     // We want to reject data if it was created by this client
     const isAuthor = metaData !== undefined && metaData.author === this.store.storeId;
-    return !isAuthor;
+    const isClean = this.state === ItemState.Clean;
+    return !isAuthor && isClean;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -112,7 +114,8 @@ class Item {
         this.state = ItemState.Dirty;
         break;
       case ItemStateEvent.UpdateFromServer:
-        this.state = ItemState.Clean;
+        // If an update happens from the server
+        // Then we do not update state
         break;
       case ItemStateEvent.BeginPostData:
         this.state = ItemState.Flushing;
@@ -120,7 +123,15 @@ class Item {
       case ItemStateEvent.EndPostData:
         // If an update happens while flushing, the status will be set to dirty.
         // In this case we don't want to reset it to clean.
-        this.state = this.state === ItemState.Dirty ? ItemState.Dirty : ItemState.Clean;
+        if (this.state === ItemState.Dirty) {
+          break;
+        }
+        // Lock the item for a period of time before setting it to clean
+        // So that mitigate the problem with stale data coming from the server
+        this.state = ItemState.Locked;
+        setTimeout(() => {
+          this.state = this.state === ItemState.Locked ? ItemState.Clean : this.state;
+        }, 10000);
         break;
       default:
         throw new Error('Invalid item event specified.');
@@ -190,6 +201,10 @@ class Item {
         throw new Error('Invalid item event specified.');
     }
   }
+
+  isPending() {
+    return this.state === ItemState.Dirty || this.state === ItemState.Flushing;
+  }
 }
 
 /**
@@ -219,7 +234,7 @@ export default class GatsbyMobxStore {
 
   private getPendingItems() {
     return Array.from(this.store.values())
-      .filter(item => item.state !== ItemState.Clean);
+      .filter(item => item.isPending());
   }
 
   setNodeProvider(nodeProvider: DataSource) {
