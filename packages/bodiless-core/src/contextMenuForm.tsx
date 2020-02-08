@@ -72,6 +72,7 @@ const contextMenuForm = <D extends object>(options: Options<D>) => (
             <ComponentFormCloseButton
               type="button"
               onClick={closeForm}
+              aria-label="Cancel"
             />
             {renderFormBody({
               closeForm,
@@ -81,7 +82,7 @@ const contextMenuForm = <D extends object>(options: Options<D>) => (
             })}
             {hasSubmit && !formState.invalid
             && (
-              <ComponentFormSubmitButton />
+              <ComponentFormSubmitButton aria-label="Submit" />
             )
             }
           </>
