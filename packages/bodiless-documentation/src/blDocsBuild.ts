@@ -20,7 +20,7 @@ import fs from 'fs-extra';
 // import cleanSymlinks from './cleanSymlinks';
 import locateFiles from './locateFiles';
 import { withTreeFromFile } from './tree';
-import writeSymlinksFromTree from './writeSymlinksFromTree';
+import writeSymlinksFromTree, { writeResources } from './writeSymlinksFromTree';
 import { writeSideBars, writeNavBar } from './createBar';
 import defaultToc from './defaultToc';
 import { Tree } from './type';
@@ -71,8 +71,8 @@ const blDocsBuild = async () => {
   //   },
   // );
   const paths: Tree = nameSpaces.reduce(
-    (acc, nameSpace, i) => ({ ...acc, [nameSpace]: pathsList[i] }),
-    {},
+    (acc, nameSpace, i) => (i === 0 ? acc : { ...acc, [nameSpace]: pathsList[i] }),
+    pathsList[0],
   );
   // const paths: Tree = flow(updates)({});
 
@@ -97,6 +97,12 @@ const blDocsBuild = async () => {
     await writeNavBar(docPath, paths);
   } catch (error) {
     console.log(error.name, 'writing navbar');
+  }
+  console.log('Writing resources');
+  try {
+    await writeResources(docPath);
+  } catch (error) {
+    console.log(error, 'writing navbar');
   }
   console.log('Done');
 };
