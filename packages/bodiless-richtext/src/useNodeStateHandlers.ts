@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 Johnson & Johnson
+ * Copyright © 2020 Johnson & Johnson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import isEqual from 'react-fast-compare';
 import { useNode } from '@bodiless/core';
 import { Change } from './Type';
 import MobxStateContainer from './MobxStateContainer';
+import { findDeletedNodeKeys } from './RichTextNodeKeys';
 
 type Data = {
   document: object;
@@ -76,6 +77,14 @@ const useOnChange: TUseOnChange = ({ onChange }) => {
       !node.data.document
       || !isEqual(node.data.document, jsonValue.document)
     ) {
+      if (node.data.document) {
+        const nodeValue = Value.fromJSON({ document: node.data.document });
+        const deletedNodeKeys = findDeletedNodeKeys(nodeValue, value);
+        deletedNodeKeys.forEach(key$ => {
+          const nodePath = node.path.concat(key$);
+          node.delete(nodePath);
+        });
+      }
       node.setData({ document: jsonValue.document! });
     }
     if (onChange) {

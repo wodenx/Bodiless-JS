@@ -28,6 +28,7 @@ const asSlateCustomComponent = <P extends WithNodeProps>(Component: CT<P>) => ({
   const actions = {
     // tslint: disable-next-line:no-unused-vars
     setNode: (path: string[], data: any) => setComponentData(data),
+    deleteNode: () => { throw new Error('not implemented'); },
   };
   const contentNode = new DefaultContentNode(actions, getters, 'slatenode');
   return (

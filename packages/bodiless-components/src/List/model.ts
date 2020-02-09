@@ -26,6 +26,7 @@ export const useItemsAccessors = () => {
     // We provide a default element for top level lists.
     getItems: () => node.data.items || ['default'],
     setItems: (items: string[]) => node.setData({ ...node.data, items }),
+    deleteItem: () => node.delete(),
   };
 };
 
@@ -34,8 +35,9 @@ export const useItemsAccessors = () => {
  * an "unwrap" handler if there is only one item in the list.
  */
 const useDeleteItem = ({ unwrap }: Pick<Props, 'unwrap'>) => {
-  const { getItems, setItems } = useItemsAccessors();
+  const { getItems, setItems, deleteItem } = useItemsAccessors();
   return (item: string) => {
+    deleteItem();
     if (getItems().length > 1) {
       const items = getItems();
       setItems(items.filter(item$ => item$ !== item));

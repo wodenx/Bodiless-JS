@@ -50,11 +50,15 @@ export function useItemHandlers() {
   const setItems = (items: FlexboxItem[]) => {
     node.setData({ items });
   };
-  return { getItems, setItems };
+  const deleteItem = (uuid: string) => {
+    const path$ = node.path.concat(uuid);
+    node.delete(path$);
+  };
+  return { getItems, setItems, deleteItem };
 }
 
 function useFlexboxDataHandlers(): FlexboxDataHandlers {
-  const { getItems, setItems } = useItemHandlers();
+  const { getItems, setItems, deleteItem } = useItemHandlers();
   return {
     insertFlexboxItem: (componentName: string, uuid: string|undefined) => {
       const items = getItems();
@@ -101,6 +105,7 @@ function useFlexboxDataHandlers(): FlexboxDataHandlers {
       const itemIndex = items.findIndex(
         (flexboxItem: FlexboxItem) => uuid === flexboxItem.uuid,
       );
+      deleteItem(uuid);
       if (itemIndex !== -1) {
         const newItems = [...items];
         newItems.splice(itemIndex, 1);
