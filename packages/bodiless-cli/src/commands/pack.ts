@@ -98,11 +98,11 @@ export default class Pack extends Command {
     'skip-install': commandFlags.boolean({
       description: 'Only pack, do not install.',
     }),
-    'force': commandFlags.boolean({
+    force: commandFlags.boolean({
       char: 'f',
       description: 'Install packages even if not current dependencies',
     }),
-    'site': commandFlags.string({
+    site: commandFlags.string({
       description: 'Path to the site into which you wish to install packages. Defaults to current directory',
     }),
   };

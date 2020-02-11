@@ -38,7 +38,7 @@ const copyOrLinkFile = (docPath: string, filePath: string) => {
     if (process.env.BODILESS_DOCS_COPYFILES === '1') {
       relPath = path.relative(process.cwd(), docPath);
       return fs.copy(relPath, filePath, { overwrite: false });
-    } 
+    }
     relPath = path.relative(path.dirname(filePath), docPath);
     return fs.ensureSymlink(relPath, filePath);
   } catch (error) {
