@@ -32,7 +32,6 @@ type Props = {
  * @param filePath The path of the target document relative to `process.cwd`
  */
 const copyOrLinkFile = (docPath: string, filePath: string) => {
-  console.log(docPath, filePath);
   let relPath;
   try {
     if (process.env.BODILESS_DOCS_COPYFILES === '1') {
@@ -42,7 +41,7 @@ const copyOrLinkFile = (docPath: string, filePath: string) => {
     relPath = path.relative(path.dirname(filePath), docPath);
     return fs.ensureSymlink(relPath, filePath);
   } catch (error) {
-    console.log(error, filePath, relPath);
+    console.warn('Error writing', filePath, relPath, error);
     return Promise.resolve();
   }
 };
@@ -54,7 +53,7 @@ const copyOrLinkFile = (docPath: string, filePath: string) => {
  * @param props.loc The path of the root of the target doc hierarchy, relative to `process.cwd`
  * @param props.paths The `Tree` object describing the hierarchy and source file locations.
  */
-const writeSymlinksFromTree = (props: Props) => {
+const writeTree = (props: Props) => {
   const { paths, loc } = props;
   const promises = [] as Promise<any>[];
   Object.keys(paths).forEach(async (key:string) => {
@@ -66,9 +65,9 @@ const writeSymlinksFromTree = (props: Props) => {
       if (typeof paths[key] === 'object') {
         try {
           fs.ensureDirSync(branch.loc);
-          promises.push(writeSymlinksFromTree(branch as Props));
+          promises.push(writeTree(branch as Props));
         } catch (error) {
-          console.log(error, key);
+          console.warn('Error creating directory', branch, loc, error);
         }
       } else {
         const filePath = path.join(loc, key);
@@ -76,7 +75,7 @@ const writeSymlinksFromTree = (props: Props) => {
         await copyOrLinkFile(docPath, filePath);
       }
     } catch (error) {
-      console.log('error', error);
+      console.warn('Error writing key', key, error);
     }
   });
   return Promise.all(promises);
@@ -98,5 +97,4 @@ const writeResources = (loc: string) => {
   ));
 };
 
-export default writeSymlinksFromTree;
-export { writeResources };
+export { writeTree, writeResources };

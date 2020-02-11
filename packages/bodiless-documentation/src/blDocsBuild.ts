@@ -20,7 +20,7 @@ import fs from 'fs-extra';
 // import cleanSymlinks from './cleanSymlinks';
 import locateFiles from './locateFiles';
 import { withTreeFromFile } from './tree';
-import writeSymlinksFromTree, { writeResources } from './writeSymlinksFromTree';
+import { writeTree, writeResources } from './write';
 import { writeSideBars, writeNavBar } from './createBar';
 import defaultToc from './defaultToc';
 import { Tree } from './type';
@@ -61,48 +61,38 @@ const blDocsBuild = async () => {
     // Need to cast this to preserve type of pathsList. We are discarding the last value anyway.
     fs.emptyDir(docPath) as any as Promise<Tree>,
   ]);
-
-  // Then the tres are combined into a single tree with the nameSpace as the top level folder.
-  // const updates = nameSpaces.map(
-  //   (nameSpace, i) => {
-  //     //console.log(nameSpace, pathsList[i]);
-  //     console.log(prependPath(nameSpace)(pathsList[i]));
-  //     return withTree(prependPath(nameSpace)(pathsList[i]));
-  //   },
-  // );
   const paths: Tree = nameSpaces.reduce(
     (acc, nameSpace, i) => (i === 0 ? acc : { ...acc, [nameSpace]: pathsList[i] }),
     pathsList[0],
   );
-  // const paths: Tree = flow(updates)({});
 
   // Now we use the tree we created above to write symlinks, sidebar and navbar.
   console.log('Writing symlinks');
   try {
-    await writeSymlinksFromTree({
+    await writeTree({
       paths,
       loc: docPath,
     });
   } catch (error) {
-    console.log(error.name, 'writing symlinks');
+    console.warn('Error writing symlinks', error);
   }
   console.log('Writing sidebars');
   try {
     await writeSideBars(docPath, paths);
   } catch (error) {
-    console.log(error.name, 'writing sidebars');
+    console.warn('Error writing sidebars', error);
   }
   console.log('Writing navbar');
   try {
     await writeNavBar(docPath, paths);
   } catch (error) {
-    console.log(error.name, 'writing navbar');
+    console.warn('Error writing navbar', error);
   }
   console.log('Writing resources');
   try {
     await writeResources(docPath);
   } catch (error) {
-    console.log(error, 'writing navbar');
+    console.warn('Error writing navbar', error);
   }
   console.log('Done');
 };

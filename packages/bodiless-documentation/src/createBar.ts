@@ -18,7 +18,10 @@ import { Tree } from './type';
 
 const niceName = (s: string) => s
   .replace(/[a-z0-9]([A-Z])/g, m => `${m[0]}_${m[1]}`)
-  .replace(/_/g, ' ');
+  .replace(/_/g, ' ')
+  .split(' ')
+  .map(word => `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`)
+  .join(' ');
 
 /**
  * createBar works to generate markdown used in _sidebar and _navbar from
