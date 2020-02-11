@@ -57,3 +57,5 @@ variables:
     env:
         APP_VOLUME: '/app/volume'
         CHOKIDAR_USEPOLLING: true
+        # Ensure cypress cache is writable
+        CYPRESS_CACHE_FOLDER: '/app/volume/.cache'
