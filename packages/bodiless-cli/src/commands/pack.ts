@@ -70,7 +70,7 @@ const getDepsToReplace = (map: PackageMap, explicitPackages?: string[], force: b
   const packageJson = fs.readFileSync(path.join('.', 'package.json'));
   const packageJsonData = JSON.parse(packageJson.toString());
   const { dependencies, devDependencies } = packageJsonData;
-  let depNames = [...Object.keys(dependencies), ...Object.keys(devDependencies)];
+  let depNames = [...Object.keys(dependencies || {}), ...Object.keys(devDependencies || {})];
   if (explicitPackages) {
     depNames = force ? explicitPackages : intersection(explicitPackages, depNames);
   }
