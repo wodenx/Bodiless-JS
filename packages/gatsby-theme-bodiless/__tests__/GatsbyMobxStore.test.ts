@@ -14,56 +14,33 @@
 
 import GatsbyMobxStore from '../src/dist/GatsbyMobxStore';
 
-const generateData = (name: string, data: any, clientId?: string) => {
-  let data$ = data;
-  if (clientId) {
-    data$ = {
-      ___meta: {
-        author: clientId,
-      },
-      ...data,
-    };
-  }
-  return {
-    Page: {
-      edges: [
-        {
-          node: {
-            name,
-            content: JSON.stringify(data$),
-          },
+const generateData = (name: string, data: any) => ({
+  Page: {
+    edges: [
+      {
+        node: {
+          name,
+          content: JSON.stringify(data),
         },
-      ],
-    },
-  };
-};
+      },
+    ],
+  },
+});
 
 const dataSource = {
   slug: 'slug',
 };
 
 describe('GatsbyMobxStore', () => {
-  describe('when it receives data originated from different client', () => {
+  describe('when it receives data from backend', () => {
     it('accepts the data', () => {
       const store = new GatsbyMobxStore(dataSource);
       const data = generateData('foo', { text: 'bar' });
       store.updateData(data);
-      const data$0 = generateData('foo', { text: 'bar2' }, 'ClientA');
+      const data$0 = generateData('foo', { text: 'bar2' });
       store.updateData(data$0);
       const node$0 = store.getNode(['Page', 'foo']);
       expect(node$0.text).toBe('bar2');
-    });
-  });
-  describe('when it receives data originated from the same client', () => {
-    it('rejects the data', () => {
-      const store = new GatsbyMobxStore(dataSource);
-      const data = generateData('foo', { text: 'bar' });
-      store.updateData(data);
-      const thisClientId = store.storeId;
-      const data$0 = generateData('foo', { text: 'bar2' }, thisClientId);
-      store.updateData(data$0);
-      const node$0 = store.getNode(['Page', 'foo']);
-      expect(node$0.text).toBe('bar');
     });
   });
 });

@@ -24,8 +24,6 @@ const tmp = require('tmp');
 const path = require('path');
 const Page = require('./page');
 const Logger = require('./logger');
-const processPayload = require('./processPayload');
-
 
 const backendPrefix = process.env.GATSBY_BACKEND_PREFIX || '/___backend';
 const backendFilePath = process.env.BODILESS_BACKEND_DATA_FILE_PATH || '';
@@ -561,10 +559,9 @@ class Backend {
       .post((req, res) => {
         // @todo: refactor 2nd argument.
         const page = Backend.getPage(Backend.getPath(req));
-        const payload = processPayload(req);
         logger.log(`Start post content for:${page.file}`);
         page
-          .write(payload)
+          .write(req.body)
           .then(data => {
             logger.log('Sending', data);
             res.send(data);

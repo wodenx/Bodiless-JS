@@ -17,7 +17,6 @@ import {
   observable, action, reaction, IReactionDisposer,
 } from 'mobx';
 import { AxiosPromise } from 'axios';
-import { v1 } from 'uuid';
 // import isEqual from 'react-fast-compare';
 import BackendClient from './BackendClient';
 import addPageLeaver from './addPageLeaver';
@@ -49,10 +48,6 @@ type Client = {
   savePath(resourcePath: string, data: any): AxiosPromise<any>;
 };
 
-type MetaData = {
-  author: string;
-};
-
 enum ItemState {
   Clean,
   Dirty,
@@ -74,24 +69,13 @@ class Item {
 
   key: string;
 
-  metaData?: MetaData;
-
   store: GatsbyMobxStore;
 
   dispose?: IReactionDisposer;
 
-  private shouldAccept(data: any) {
-    const { ___meta: metaData } = data;
-    // We want to reject data if it was created by this client
-    const isAuthor = metaData !== undefined && metaData.author === this.store.storeId;
+  private shouldAccept() {
     const isClean = this.state === ItemState.Clean;
-    return !isAuthor && isClean;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  private reduceMeta(data: any) {
-    const { ___meta, ...rest } = data;
-    return rest;
+    return isClean;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -192,8 +176,8 @@ class Item {
         this.updateState(event);
         break;
       case ItemStateEvent.UpdateFromServer:
-        if (this.shouldAccept(data)) {
-          this.setData(this.reduceMeta(data));
+        if (this.shouldAccept()) {
+          this.setData(data);
           this.updateState(event);
         }
         break;
@@ -223,12 +207,9 @@ export default class GatsbyMobxStore {
 
   data: any;
 
-  storeId: string;
-
   constructor(nodeProvider: DataSource) {
     this.setNodeProvider(nodeProvider);
-    this.storeId = v1();
-    this.client = new BackendClient({ clientId: this.storeId });
+    this.client = new BackendClient();
     addPageLeaver(this.getPendingItems.bind(this));
   }
 
