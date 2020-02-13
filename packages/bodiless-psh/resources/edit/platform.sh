@@ -200,7 +200,7 @@ default_deploy () {
   ${CMD_GIT} config user.name "${APP_GIT_USER}"
 }
 
-default prepare_install () {
+default_prepare_install () {
   cd ${APP_VOLUME}
   mkdir -p ${NPM_CACHE_DIR}
   echo "Creating .npmrc"
