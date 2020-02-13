@@ -18,4 +18,5 @@ export enum ItemStateEvent {
   UpdateFromBrowser,
   BeginPostData,
   EndPostData,
+  StoreReaction,
 }
