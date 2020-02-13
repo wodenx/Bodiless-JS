@@ -12,12 +12,10 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
  ##
-
 set -e
 
-if [ -z "$1" ]; then
-  echo "Usage: sh platform.sh start|deploy"
-  exit
+if [[ -f platform.custom.sh ]]; then
+  source platform.custom.sh
 fi
 
 # Expects the following env variables:
@@ -28,12 +26,32 @@ fi
 # PLATFORM_APP_DIR - the absolute path to the application directory. provided by platform.sh
 # PLATFORM_BRANCH - the name of the Git branch. provided by platform.sh
 # PLATFORM_ROUTES - describes the routes defined in psh environment. provided by platform.sh
-
 CMD_GIT=/usr/bin/git
 TMP_DIR=${APP_VOLUME}/../tmp
 ROOT_DIR=${APP_VOLUME}/root
 GIT_REMOTE_URL=https://${APP_GIT_USER}:${APP_GIT_PW}@${APP_GIT_REMOTE_URL##https://}
 NPM_CACHE_DIR=${APP_VOLUME}/.npm
+
+invoke () {
+  if [[ $(type $1 2>&1) =~ "function" ]]; then
+    echo "Begin $1 at $(date)"
+    $1
+    echo "End $1 at $(date)"
+  else
+    cmd="default_$1"
+    if [[ $(type $cmd 2>&1) =~ 'function' ]]; then 
+      echo "Begin $cmd at $(date)"
+      $cmd
+      echo "End $cmd at $(date)"
+    fi
+  fi
+}
+
+invoke_all () {
+  invoke "prepare_$1"
+  invoke "$1"
+  invoke "finalize_$1"
+}
 
 check_vars () {
   if [ \
@@ -55,19 +73,10 @@ get_current_branch () {
 }
 
 install () {
-  mkdir -p ${NPM_CACHE_DIR}
-  echo "Creating .npmrc"
-  echo "cache = ${NPM_CACHE_DIR}" > .npmrc
-
-  cd ${ROOT_DIR}
 
   bash ${PLATFORM_APP_DIR}/platform.custom.sh install
 
   ${CMD_GIT} checkout  package-lock.json
-}
-
-build () {
-  bash ${PLATFORM_APP_DIR}/platform.custom.sh build
 }
 
 rebase () {
@@ -138,22 +147,6 @@ incremental_deploy () {
   fi
 }
 
-full_deploy () {
-  echo "Performing full deploy, branch is ${PLATFORM_BRANCH}"
-  rm -rf ${ROOT_DIR}
-  if [[ ${PLATFORM_BRANCH} =~ ^pr- ]]; then
-    ${CMD_GIT} clone ${GIT_REMOTE_URL} ${ROOT_DIR}
-    cd ${ROOT_DIR}
-    ID=$(echo $PLATFORM_BRANCH | sed s/pr-//g)
-    git fetch origin pull/${ID}/head:${PLATFORM_BRANCH}
-    git checkout ${PLATFORM_BRANCH}
-  else
-    ${CMD_GIT} clone -b ${PLATFORM_BRANCH} ${GIT_REMOTE_URL} ${ROOT_DIR}
-    cd ${ROOT_DIR}
-  fi
-  ${CMD_GIT} config user.email "${APP_GIT_USER_EMAIL}"
-  ${CMD_GIT} config user.name "${APP_GIT_USER}"
-}
 
 check_branch () {
   if [[ ${PLATFORM_BRANCH} =~ ^pr- ]]; then
@@ -167,8 +160,10 @@ check_branch () {
   return 0
 }
 
-predeploy () {
-  # Exit of on a PR branch and not on GitHub
+
+# Always run before the psh deploy hook.
+_before_deploy () {
+  # Exit if on a PR branch and not on GitHub
   if ! check_branch; then
     echo 'Invalid branch; skipping edit environment deploy'
     exit
@@ -187,27 +182,54 @@ predeploy () {
   pm2 stop frontend && pm2 stop backend || true
 }
 
-postdeploy () {
+# Default implementation of 
+default_deploy () {
+  echo "Performing full deploy, branch is ${PLATFORM_BRANCH}"
+  rm -rf ${ROOT_DIR}
+  if [[ ${PLATFORM_BRANCH} =~ ^pr- ]]; then
+    ${CMD_GIT} clone ${GIT_REMOTE_URL} ${ROOT_DIR}
+    cd ${ROOT_DIR}
+    ID=$(echo $PLATFORM_BRANCH | sed s/pr-//g)
+    git fetch origin pull/${ID}/head:${PLATFORM_BRANCH}
+    git checkout ${PLATFORM_BRANCH}
+  else
+    ${CMD_GIT} clone -b ${PLATFORM_BRANCH} ${GIT_REMOTE_URL} ${ROOT_DIR}
+    cd ${ROOT_DIR}
+  fi
+  ${CMD_GIT} config user.email "${APP_GIT_USER_EMAIL}"
+  ${CMD_GIT} config user.name "${APP_GIT_USER}"
+}
+
+default prepare_install () {
+  cd ${APP_VOLUME}
+  mkdir -p ${NPM_CACHE_DIR}
+  echo "Creating .npmrc"
+  echo "cache = ${NPM_CACHE_DIR}" > .npmrc
+  cd ${ROOT_DIR}
+}
+
+default_install () {
+  npm ci
+  npm run prestart
+}
+
+# Default final step after p.sh deploy hook.
+_after_deploy () {
   pm2 restart backend && pm2 restart frontend || pm2 start ${PLATFORM_APP_DIR}/ecosystem.config.js
 }
 
-if [ "$1" = "deploy" ]; then
-  echo "DEPLOY AT $(date)"
-  predeploy
-  if [ -d ${ROOT_DIR}/.git ]; then
-    # TODO: Install only when necessary.
-    # last_hash=$(git rev-parse HEAD)
-    incremental_deploy
-    # if [[ ! -z $(git diff --shortstat $last_hash -- package-lock.json) ]]
-    install
-    # fi
-  else
-    full_deploy
-    install
-  fi
-  build
-  postdeploy
-elif [ "$1" = "start" ]; then
+
+# Default implementation of p.sh build hook
+default_build () {
+  echo "Creating symlinks for .config and .pm2"
+  rm -rf .config
+  rm -rf .pm2
+  ln -s ${APP_VOLUME}/.config .config
+  ln -s ${APP_VOLUME}/.pm2 .pm2
+}
+
+# Default implementaiton of p.sh start command
+default_start () {
   if ! check_branch; then
       echo 'Invalid branch: not starting edit app'
       exec sleep infinity
@@ -215,18 +237,13 @@ elif [ "$1" = "start" ]; then
       echo "Starting application on ${date}"
       exec pm2 start --no-daemon ${PLATFORM_APP_DIR}/ecosystem.config.js
   fi
-elif [ "$1" = "build" ]; then
-  echo "APP BUILD AT $(date)"
-  echo "Creating symlinks for .config and .pm2"
-  rm -rf .config
-  rm -rf .pm2
-  ln -s ${APP_VOLUME}/.config .config
-  ln -s ${APP_VOLUME}/.pm2 .pm2
-elif [ "$1" = "fresh" ]; then
-  echo "FRESH INSTALL AT $(date)"
-  predeploy
-  full_deploy
-  install
-  build
-  postdeploy
+}
+
+if [[ $1 = "deploy" ]]; then
+  _before_deploy
+  invoke_all deploy
+  invoke_all install
+  _after_deploy
+else
+  invoke_all $1
 fi
