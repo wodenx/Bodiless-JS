@@ -47,12 +47,6 @@ invoke () {
   fi
 }
 
-invoke_all () {
-  invoke "prepare_$1"
-  invoke "$1"
-  invoke "finalize_$1"
-}
-
 check_vars () {
   if [ \
     -z "${APP_VOLUME}" \
@@ -70,13 +64,6 @@ check_vars () {
 get_current_branch () {
   branch_name="$(git symbolic-ref HEAD 2>/dev/null)"
   echo ${branch_name##refs/heads/}
-}
-
-install () {
-
-  bash ${PLATFORM_APP_DIR}/platform.custom.sh install
-
-  ${CMD_GIT} checkout  package-lock.json
 }
 
 rebase () {
@@ -147,44 +134,8 @@ incremental_deploy () {
   fi
 }
 
-
-check_branch () {
-  if [[ ${PLATFORM_BRANCH} =~ ^pr- ]]; then
-    if [[ ${GIT_REMOTE_URL} =~ github\.com ]]; then
-      return 0
-    else
-      echo "Edit environments for PR branches are only enabled on GitHub"
-      return 1
-    fi
-  fi
-  return 0
-}
-
-
-# Always run before the psh deploy hook.
-_before_deploy () {
-  # Exit if on a PR branch and not on GitHub
-  if ! check_branch; then
-    echo 'Invalid branch; skipping edit environment deploy'
-    exit
-  fi
-  check_vars
-  mkdir -p ${APP_VOLUME}/.config
-  mkdir -p ${APP_VOLUME}/.pm2
-  # pm2 is launched in our start hook, but sometimes we get here before
-  # it has fully initialized.  We need to wait for it to be listening
-  # before trying to stop the frontend.  Otherwise we create a pm2 god-daemon
-  # which causes builds to be stuck.
-  node ${PLATFORM_APP_DIR}/waitForPM2.js
-
-  # wait 2 seconds to work around pm2 daemon issue.
-  sleep 2
-  pm2 stop frontend && pm2 stop backend || true
-}
-
-# Default implementation of 
-default_deploy () {
-  echo "Performing full deploy, branch is ${PLATFORM_BRANCH}"
+full_deploy () {
+  echo "Full deploy, branch is ${PLATFORM_BRANCH}"
   rm -rf ${ROOT_DIR}
   if [[ ${PLATFORM_BRANCH} =~ ^pr- ]]; then
     ${CMD_GIT} clone ${GIT_REMOTE_URL} ${ROOT_DIR}
@@ -200,24 +151,31 @@ default_deploy () {
   ${CMD_GIT} config user.name "${APP_GIT_USER}"
 }
 
-default_prepare_install () {
+init_npm () {
+  echo "Creating npm cache dir"
   cd ${APP_VOLUME}
   mkdir -p ${NPM_CACHE_DIR}
   echo "Creating .npmrc"
   echo "cache = ${NPM_CACHE_DIR}" > .npmrc
-  cd ${ROOT_DIR}
+  if [ $APP_NPM_REGISTRY ] && [ $APP_NPM_AUTH ] && [ $APP_NPM_NAMESPACE ]; then
+    echo "NPM Private registry for $APP_NPM_NAMESPACE is $APP_NPM_REGISTRY"
+    bash -c 'echo NPM Auth token is ${APP_NPM_AUTH:0:50}...'
+    echo "$APP_NPM_NAMESPACE:registry=https:${APP_NPM_REGISTRY}" > .npmrc
+    echo "${APP_NPM_REGISTRY}:_authToken=${APP_NPM_AUTH}" >> .npmrc
+  fi
 }
 
-default_install () {
-  npm ci
-  npm run prestart
+check_branch () {
+  if [[ ${PLATFORM_BRANCH} =~ ^pr- ]]; then
+    if [[ ${GIT_REMOTE_URL} =~ github\.com ]]; then
+      return 0
+    else
+      echo "Edit environments for PR branches are only enabled on GitHub"
+      return 1
+    fi
+  fi
+  return 0
 }
-
-# Default final step after p.sh deploy hook.
-_after_deploy () {
-  pm2 restart backend && pm2 restart frontend || pm2 start ${PLATFORM_APP_DIR}/ecosystem.config.js
-}
-
 
 # Default implementation of p.sh build hook
 default_build () {
@@ -239,11 +197,48 @@ default_start () {
   fi
 }
 
-if [[ $1 = "deploy" ]]; then
-  _before_deploy
-  invoke_all deploy
-  invoke_all install
-  _after_deploy
-else
-  invoke_all $1
-fi
+# Always run before the psh deploy hook.
+_setup_deploy () {
+  # Exit if on a PR branch and not on GitHub
+  if ! check_branch; then
+    echo 'Invalid branch; skipping edit environment deploy'
+    exit
+  fi
+  check_vars
+  mkdir -p ${APP_VOLUME}/.config
+  mkdir -p ${APP_VOLUME}/.pm2
+  # pm2 is launched in our start hook, but sometimes we get here before
+  # it has fully initialized.  We need to wait for it to be listening
+  # before trying to stop the frontend.  Otherwise we create a pm2 god-daemon
+  # which causes builds to be stuck.
+  node ${PLATFORM_APP_DIR}/waitForPM2.js
+
+  # wait 2 seconds to work around pm2 daemon issue.
+  sleep 2
+  pm2 stop frontend && pm2 stop backend || true
+}
+
+# Default implementation of psh deploy hook (fresh clone and prepare npm)
+default_deploy () {
+  full_deploy
+  init_npm
+  cd ${ROOT_DIR}
+}
+
+# Default implementation of finalize psh deploy hook.
+default_finalize_deploy () {
+  npm ci
+  npm run prestart
+}
+
+# Final step after p.sh deploy hook.
+_teardown_deploy () {
+  pm2 restart backend && pm2 restart frontend || pm2 start ${PLATFORM_APP_DIR}/ecosystem.config.js
+}
+
+# _setup/_teardown are not hooks; they implement internal logic we never want overridden.
+invoke "_setup_$1"
+invoke "prepare_$1"
+invoke "$1"
+invoke "finalize_$1"
+invoke "_teardown_$1"

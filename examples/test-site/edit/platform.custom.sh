@@ -12,7 +12,7 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
  ##
-install () {
+finalize_deploy () {
   npm run bootstrap -- --ci
   npm run build:packages -- --concurrency 1
   npm run build:env-vars
