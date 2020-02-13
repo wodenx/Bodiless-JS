@@ -157,7 +157,7 @@ init_npmrc () {
   if [ $APP_NPM_REGISTRY ] && [ $APP_NPM_AUTH ] && [ $APP_NPM_NAMESPACE ]; then
     echo "NPM Private registry for $APP_NPM_NAMESPACE is $APP_NPM_REGISTRY"
     bash -c 'echo NPM Auth token is ${APP_NPM_AUTH:0:50}...'
-    echo "$APP_NPM_NAMESPACE:registry=https:${APP_NPM_REGISTRY}" > .npmrc
+    echo "$APP_NPM_NAMESPACE:registry=https:${APP_NPM_REGISTRY}" >> .npmrc
     echo "${APP_NPM_REGISTRY}:_authToken=${APP_NPM_AUTH}" >> .npmrc
   fi
 }
@@ -179,8 +179,10 @@ default_build () {
   echo "Creating symlinks for .config and .pm2"
   rm -rf .config
   rm -rf .pm2
+  rm -rf .cache
   ln -s ${APP_VOLUME}/.config .config
   ln -s ${APP_VOLUME}/.pm2 .pm2
+  ln -s ${APP_VOLUME}/.cache .cache
   init_npmrc
 }
 
@@ -205,6 +207,7 @@ _setup_deploy () {
   check_vars
   mkdir -p ${APP_VOLUME}/.config
   mkdir -p ${APP_VOLUME}/.pm2
+  mkdir -p ${APP_VOLUME}/.cache
   # pm2 is launched in our start hook, but sometimes we get here before
   # it has fully initialized.  We need to wait for it to be listening
   # before trying to stop the frontend.  Otherwise we create a pm2 god-daemon

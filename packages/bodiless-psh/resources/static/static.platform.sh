@@ -2,13 +2,15 @@ if [ -f static.platform.custom.sh ]; then
   source static.platform.custom.sh
 fi
 
-default_install () {
+default_prepare_build () {
   npm ci
 }
 
 default_build () {
-  echo 'default build'
   npm run build
+}
+
+default_finalize_build () {
   #robots.txt preparation
   export PSH_URL_REPLACER_SRC_FILE=$PLATFORM_DOCUMENT_ROOT/robots.txt
   export PSH_URL_REPLACER_TMP_FILE=$PLATFORM_DOCUMENT_ROOT/../static/robots_pshtmp.txt
