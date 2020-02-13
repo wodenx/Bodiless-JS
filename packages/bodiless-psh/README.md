@@ -147,6 +147,17 @@ You can verify that the variable was created properly by executing, eg:
   +-----------------+---------------------------+
   ```
 
+#### Optional: Configure an NPM Private Registry
+
+If you wish to install packages from a private registry, you may do so. The
+packages to be installed must be namespaced. Set the following 3 environment
+variables on p.sh. All variables should be visible at both build and run time:
+- `env:APP_NPM_REGISTRY`: the full path to your registry, eg
+  `//my-artifactory.com//api/npm/my-registry/`.
+- `env:APP_NPM_AUTH`: Ypur NPM authentication token. This should be marked as sensitive.
+- `env:APP_NPM_NAMESPACE`: The namespace of the packages in your private
+  regsitry, eg `@mynamespace`.
+
 ### Step 4. Configure the platform.sh Git Service integration.
 
 Platform.sh provides out-of-the-box integrations with many popular Git service providers.
@@ -300,6 +311,8 @@ Are you sure you want to continue? [y/N] y
   is created and deployed to platform.sh. *Note you must first push the branch to bitbucket*.
 - Issue a PR to your repository and verify that the PR branch is deployed (note that only
   the static environment will be build for PR's on Bitbucket).
+
+
 
 ## Building and Deploying
 
