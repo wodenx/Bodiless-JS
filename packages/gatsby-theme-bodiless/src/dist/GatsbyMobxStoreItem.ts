@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 Johnson & Johnson
+ * Copyright © 2020 Johnson & Johnson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,6 @@ import {
 import GatsbyMobxStore from './GatsbyMobxStore';
 import { ItemStateEvent } from './types';
 
-type MetaData = {
-  author: string;
-};
-
 enum ItemState {
   Clean,
   Dirty,
@@ -40,24 +36,13 @@ export default class GatsbyMobxStoreItem {
 
   key: string;
 
-  metaData?: MetaData;
-
   store: GatsbyMobxStore;
 
   dispose?: IReactionDisposer;
 
-  private shouldAccept(data: any) {
-    const { ___meta: metaData } = data;
-    // We want to reject data if it was created by this client
-    const isAuthor = metaData !== undefined && metaData.author === this.store.storeId;
+  private shouldAccept() {
     const isClean = this.state === ItemState.Clean;
-    return !isAuthor && isClean;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  private reduceMeta(data: any) {
-    const { ___meta, ...rest } = data;
-    return rest;
+    return isClean;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -158,8 +143,8 @@ export default class GatsbyMobxStoreItem {
         this.updateState(event);
         break;
       case ItemStateEvent.UpdateFromServer:
-        if (this.shouldAccept(data)) {
-          this.setData(this.reduceMeta(data));
+        if (this.shouldAccept()) {
+          this.setData(data);
           this.updateState(event);
         }
         break;

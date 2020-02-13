@@ -1,5 +1,5 @@
 /**
- * Copyright © 2020 Johnson & Johnson
+ * Copyright © 2019 Johnson & Johnson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ import isEqual from 'react-fast-compare';
 import { useNode } from '@bodiless/core';
 import { Change } from './Type';
 import MobxStateContainer from './MobxStateContainer';
-import { findDeletedNodeKeys } from './RichTextNodeKeys';
 
 type Data = {
   document: object;
@@ -40,9 +39,6 @@ type TUseNodeStateHandlers = (
 ) => {
   value: Value;
   onChange: TOnChange;
-};
-type MobxState = {
-  [key: string]: any;
 };
 
 const stateContainer = React.createContext<MobxStateContainer>(
@@ -77,14 +73,6 @@ const useOnChange: TUseOnChange = ({ onChange }) => {
       !node.data.document
       || !isEqual(node.data.document, jsonValue.document)
     ) {
-      if (node.data.document) {
-        const nodeValue = Value.fromJSON({ document: node.data.document });
-        const deletedNodeKeys = findDeletedNodeKeys(nodeValue, value);
-        deletedNodeKeys.forEach(key$ => {
-          const nodePath = node.path.concat(key$);
-          node.delete(nodePath);
-        });
-      }
       node.setData({ document: jsonValue.document! });
     }
     if (onChange) {
@@ -96,10 +84,10 @@ const useOnChange: TUseOnChange = ({ onChange }) => {
 
 // Create the value prop (gets current editor value from state).
 const useValue: TUseValue = ({ initialValue }) => {
-  const { state } = useStateContainer();
+  const { get: getValue } = useStateContainer();
   const { node } = useNode<Data>();
   const key = (node.path as string[]).join('$');
-  let { [key]: oldValue } = state as MobxState;
+  let oldValue = getValue(key);
   if (!oldValue) {
     oldValue = Value.fromJSON(
       node.data.document ? { document: node.data.document } : initialValue,
