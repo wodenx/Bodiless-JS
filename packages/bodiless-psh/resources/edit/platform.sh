@@ -151,10 +151,7 @@ full_deploy () {
   ${CMD_GIT} config user.name "${APP_GIT_USER}"
 }
 
-init_npm () {
-  echo "Creating npm cache dir"
-  cd ${APP_VOLUME}
-  mkdir -p ${NPM_CACHE_DIR}
+init_npmrc () {
   echo "Creating .npmrc"
   echo "cache = ${NPM_CACHE_DIR}" > .npmrc
   if [ $APP_NPM_REGISTRY ] && [ $APP_NPM_AUTH ] && [ $APP_NPM_NAMESPACE ]; then
@@ -184,6 +181,7 @@ default_build () {
   rm -rf .pm2
   ln -s ${APP_VOLUME}/.config .config
   ln -s ${APP_VOLUME}/.pm2 .pm2
+  init_npmrc
 }
 
 # Default implementaiton of p.sh start command
@@ -221,7 +219,6 @@ _setup_deploy () {
 # Default implementation of psh deploy hook (fresh clone and prepare npm)
 default_deploy () {
   full_deploy
-  init_npm
   cd ${ROOT_DIR}
 }
 
