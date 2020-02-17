@@ -37,6 +37,7 @@ describe('GatsbyMobxStoreItem', () => {
   beforeEach(() => {
     pendingRequests = [];
     jest.useFakeTimers();
+    jest.clearAllTimers();
     jest.clearAllMocks();
   });
   describe('when item is created', () => {
@@ -73,6 +74,7 @@ describe('GatsbyMobxStoreItem', () => {
       expect(savePathMock.mock.calls[0][1]).toStrictEqual(data);
       // fulfill the first request
       await pendingRequests[0].resolve(true);
+      jest.runAllTimers();
       // fulfill the second request
       await pendingRequests[1].resolve(true);
       expect(savePathMock.mock.calls.length).toBe(2);
