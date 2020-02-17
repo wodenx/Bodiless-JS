@@ -15,6 +15,7 @@
 import GatsbyMobxStoreItem from '../src/dist/GatsbyMobxStoreItem';
 import GatsbyMobxStore from '../src/dist/GatsbyMobxStore';
 import BackendClient from '../src/dist/BackendClient';
+import { ItemStateEvent } from '../src/dist/types';
 
 const deletePathMock = jest.fn();
 let pendingRequests: any[] = [];
@@ -35,6 +36,16 @@ const dataSource = {
   slug: 'slug',
 };
 
+const defaultData = {
+  foo: 'bar',
+};
+
+const createItem = (key?: string, data?: any) => {
+  const key$ = key || 'Page$foo$bar';
+  const data$ = data || defaultData;
+  return new GatsbyMobxStoreItem(new GatsbyMobxStore(dataSource), key$, data$);
+};
+
 describe('GatsbyMobxStoreItem', () => {
   beforeEach(() => {
     pendingRequests = [];
@@ -44,27 +55,18 @@ describe('GatsbyMobxStoreItem', () => {
   });
   describe('when item is created', () => {
     it('should send the item data to the server', async () => {
-      const key = 'Page$foo$bar';
-      const data = {
-        foo: 'bar',
-      };
-      // eslint-disable-next-line no-new
-      new GatsbyMobxStoreItem(new GatsbyMobxStore(dataSource), key, data);
+      createItem();
       jest.runAllTimers();
       // fulfill the request
       await pendingRequests[0].resolve(true);
       expect(savePathMock.mock.calls.length).toBe(1);
       expect(savePathMock.mock.calls[0][0]).toBe('pages/foo$bar');
-      expect(savePathMock.mock.calls[0][1]).toStrictEqual(data);
+      expect(savePathMock.mock.calls[0][1]).toStrictEqual(defaultData);
     });
   });
   describe('when item is created and then updated by browser', () => {
     it('should not send the second request to the server until the first request is finished', async () => {
-      const key = 'Page$foo$bar';
-      const data = {
-        foo: 'bar',
-      };
-      const item = new GatsbyMobxStoreItem(new GatsbyMobxStore(dataSource), key, data);
+      const item = createItem();
       jest.runAllTimers();
       const data1 = {
         foo1: 'bar1',
@@ -73,7 +75,7 @@ describe('GatsbyMobxStoreItem', () => {
       jest.runAllTimers();
       expect(savePathMock.mock.calls.length).toBe(1);
       expect(savePathMock.mock.calls[0][0]).toBe('pages/foo$bar');
-      expect(savePathMock.mock.calls[0][1]).toStrictEqual(data);
+      expect(savePathMock.mock.calls[0][1]).toStrictEqual(defaultData);
       // fulfill the first request
       await pendingRequests[0].resolve(true);
       jest.runAllTimers();
@@ -84,11 +86,49 @@ describe('GatsbyMobxStoreItem', () => {
       expect(savePathMock.mock.calls[1][1]).toStrictEqual(data1);
     });
   });
+  describe('when item is updated by browser', () => {
+    it('should be locked for a period of time and reject updates from server', async () => {
+      const item = createItem();
+      jest.runAllTimers();
+      // fulfill the request
+      await pendingRequests[0].resolve(true);
+      const data1 = {
+        foo: 'bar1',
+      };
+      item.update(data1, ItemStateEvent.UpdateFromServer);
+      expect(item.data).toStrictEqual(defaultData);
+    });
+    it('should be unlocked after period of time and accept updates from server', async () => {
+      const item = createItem();
+      jest.runAllTimers();
+      // fulfill the request
+      await pendingRequests[0].resolve(true);
+      jest.runAllTimers();
+      const data1 = {
+        foo: 'bar1',
+      };
+      item.update(data1, ItemStateEvent.UpdateFromServer);
+      expect(item.data).toStrictEqual(data1);
+    });
+    it('should be pending before it is flushed', () => {
+      const item = createItem();
+      expect(item.isPending()).toBe(true);
+    });
+    it('should not be pending after it is flushed', async () => {
+      const item = createItem();
+      jest.runAllTimers();
+      // fulfill the request
+      await pendingRequests[0].resolve(true);
+      expect(item.isPending()).toBe(false);
+    });
+  });
   describe('delete', () => {
-    it('should invoke backendClient delete', () => {
-      const item = new GatsbyMobxStoreItem(new GatsbyMobxStore(dataSource), 'Page$foo$bar');
-      item.delete();
-      expect(deletePathMock.mock.calls[0][0]).toBe('pages/foo$bar');
+    describe('when item is deleted from browser', () => {
+      it('should invoke backendClient delete', () => {
+        const item = new GatsbyMobxStoreItem(new GatsbyMobxStore(dataSource), 'Page$foo$bar');
+        item.delete();
+        expect(deletePathMock.mock.calls[0][0]).toBe('pages/foo$bar');
+      });
     });
   });
 });
