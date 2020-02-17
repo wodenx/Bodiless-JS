@@ -13,6 +13,7 @@
  */
 
 import GatsbyMobxStore from '../src/dist/GatsbyMobxStore';
+import { ItemStateEvent } from '../src/dist/types';
 
 const generateData = (name: string, data: any) => ({
   Page: {
@@ -41,6 +42,53 @@ describe('GatsbyMobxStore', () => {
       store.updateData(data$0);
       const node$0 = store.getNode(['Page', 'foo']);
       expect(node$0.text).toBe('bar2');
+    });
+  });
+  describe('when node is deleted by browser', () => {
+    it('should not be removed from store', () => {
+      const store = new GatsbyMobxStore(dataSource);
+      const keyPath = ['foo'];
+      store.setNode(keyPath, 'bar', ItemStateEvent.UpdateFromBrowser);
+      store.deleteNode(keyPath);
+      const node = store.getNode(keyPath);
+      expect(node).toBeDefined();
+    });
+    it('should return empty data', () => {
+      const store = new GatsbyMobxStore(dataSource);
+      const keyPath = ['foo'];
+      store.setNode(keyPath, 'bar', ItemStateEvent.UpdateFromBrowser);
+      store.deleteNode(keyPath);
+      const node = store.getNode(keyPath);
+      expect(node).toStrictEqual({});
+    });
+    it('should not be overwritten by data received from server for a period of time', () => {
+      const store = new GatsbyMobxStore(dataSource);
+      const keyPath = ['foo'];
+      store.setNode(keyPath, 'bar', ItemStateEvent.UpdateFromBrowser);
+      store.deleteNode(keyPath);
+      store.setNode(keyPath, 'bar', ItemStateEvent.UpdateFromServer);
+      const node = store.getNode(keyPath);
+      expect(node).toStrictEqual({});
+    });
+    it('should be overwritten by data received from server after a period of time', () => {
+      jest.useFakeTimers();
+      const store = new GatsbyMobxStore(dataSource);
+      const keyPath = ['foo'];
+      store.setNode(keyPath, 'bar', ItemStateEvent.UpdateFromBrowser);
+      store.deleteNode(keyPath);
+      jest.runAllTimers();
+      store.setNode(keyPath, 'bar', ItemStateEvent.UpdateFromServer);
+      const node = store.getNode(keyPath);
+      expect(node).toBe('bar');
+    });
+    it('should be overwritten by data received from browser', () => {
+      const store = new GatsbyMobxStore(dataSource);
+      const keyPath = ['foo'];
+      store.setNode(keyPath, 'bar', ItemStateEvent.UpdateFromBrowser);
+      store.deleteNode(keyPath);
+      store.setNode(keyPath, 'bar', ItemStateEvent.UpdateFromBrowser);
+      const node = store.getNode(keyPath);
+      expect(node).toStrictEqual('bar');
     });
   });
 });

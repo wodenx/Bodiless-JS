@@ -65,7 +65,7 @@ export default class GatsbyMobxStore {
 
   slug: string | null = null;
 
-  data: any;
+  data: any = {};
 
   constructor(nodeProvider: DataSource) {
     this.setNodeProvider(nodeProvider);

@@ -54,7 +54,7 @@ export default class GatsbyMobxStoreItem {
     // we do not want to save data for these pages
     const resourcePath = this.getResoucePath();
     const isPreviewTemplatePage = resourcePath.includes(path.join('pages', '___templates'));
-    return saveEnabled && !isPreviewTemplatePage;
+    return saveEnabled && !isPreviewTemplatePage && !this.isDeleted;
   }
 
   @action private setData(data: any) {
@@ -68,14 +68,19 @@ export default class GatsbyMobxStoreItem {
   @action private updateState(event: ItemStateEvent) {
     switch (event) {
       case ItemStateEvent.UpdateFromBrowser:
+        this.isDeleted = false;
         if (this.state === ItemState.Clean || this.state === ItemState.Locked) {
           this.scheduleDataPost();
         }
         this.setState(ItemState.Queued);
         break;
+      case ItemStateEvent.DeleteFromBrowser:
+        this.isDeleted = true;
+        this.setState(ItemState.Flushing);
+        this.scheduleDelete();
+        break;
       case ItemStateEvent.UpdateFromServer:
-        // If an update happens from the server
-        // Then we do not update state
+        this.isDeleted = false;
         break;
       case ItemStateEvent.OnPostTimeout:
         if (this.state === ItemState.Queued) {
@@ -129,12 +134,35 @@ export default class GatsbyMobxStoreItem {
     }
   }
 
+  private deleteData() {
+    if (this.shouldSave()) {
+      this.store.client.deletePath(this.getResoucePath())
+        .then(() => this.updateState(ItemStateEvent.OnPostEnd));
+    } else {
+      this.updateState(ItemStateEvent.OnPostEnd);
+    }
+  }
+
   private scheduleDataPost() {
     if (this.postTimeout !== undefined) {
       clearTimeout(this.postTimeout);
     }
     this.postTimeout = setTimeout(() => {
       this.updateState(ItemStateEvent.OnPostTimeout);
+    }, 500);
+  }
+
+  private cancelDataPost() {
+    if (this.postTimeout !== undefined) {
+      clearTimeout(this.postTimeout);
+    }
+  }
+
+  private scheduleDelete() {
+    this.cancelDataPost();
+    this.store.client.deletePath(this.getResoucePath());
+    setTimeout(() => {
+      this.deleteData();
     }, 500);
   }
 
@@ -162,7 +190,6 @@ export default class GatsbyMobxStoreItem {
   update(data = {}, event = ItemStateEvent.UpdateFromBrowser) {
     switch (event) {
       case ItemStateEvent.UpdateFromBrowser:
-        this.isDeleted = false;
         this.setData(data);
         this.updateState(event);
         break;
@@ -178,8 +205,7 @@ export default class GatsbyMobxStoreItem {
   }
 
   delete() {
-    this.isDeleted = true;
-    this.store.client.deletePath(this.getResoucePath());
+    this.updateState(ItemStateEvent.DeleteFromBrowser);
   }
 
   isPending() {
