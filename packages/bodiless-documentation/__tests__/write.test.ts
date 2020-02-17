@@ -14,9 +14,9 @@
 
 import path from 'path';
 import fs from 'fs-extra';
-import writeSymlinksFromTree from '../lib/writeSymlinksFromTree';
+import { writeTree } from '../lib/write';
 
-describe('writeSymlinksFromTree', () => {
+describe('writeTree', () => {
   const testPath = '/tmp/bdawrite';
   const symlinkTarget = path.join(testPath, 'target');
   beforeEach(() => {
@@ -29,7 +29,7 @@ describe('writeSymlinksFromTree', () => {
   });
   it('should create symlink at base level', (done:Function) => {
     const tree = { test1: symlinkTarget };
-    writeSymlinksFromTree({
+    writeTree({
       paths: tree,
       loc: testPath,
     }).then(() => {

@@ -72,7 +72,7 @@ const writeTree = (props: Props) => {
       } else {
         const filePath = path.join(loc, key);
         const docPath = (branch.paths as string);
-        await copyOrLinkFile(docPath, filePath);
+        promises.push(copyOrLinkFile(docPath, filePath));
       }
     } catch (error) {
       console.warn('Error writing key', key, error);
