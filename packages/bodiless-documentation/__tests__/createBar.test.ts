@@ -20,7 +20,7 @@ describe('createNav', () => {
       'test1.md': 'test1.md',
     };
     const navBar = createNavBar(paths); // createNavbar(paths);
-    expect(navBar).toBe('  * [Test1](\/test1)\n');
+    expect(navBar).toBe('  * [Test1](/test1)\n');
   });
   it('makes names more friendly', () => {
     const paths = {
@@ -38,7 +38,7 @@ describe('createNav', () => {
       },
     };
     const navBar = createNavBar(paths); // createNavbar(paths);
-    expect(navBar).toBe('  * [Test1](\/test1/)\n');
+    expect(navBar).toBe('  * [Test1](/test1/)\n');
   });
   it('Should add a non link if there is no README in the folder', () => {
     const paths = {
@@ -47,7 +47,7 @@ describe('createNav', () => {
       },
     };
     const navBar = createNavBar(paths); // createNavbar(paths);
-    expect(navBar).toBe('  * Test1\n    * [Test2](\/test1/test2)\n');
+    expect(navBar).toBe('  * Test1\n    * [Test2](/test1/test2)\n');
   });
   it('should not add a 3rd level item', () => {
     const paths = {
@@ -83,7 +83,7 @@ describe('createNav', () => {
       },
     };
     const navBar = createNavBar(paths); // createNavbar(paths);
-    expect(navBar).toBe('  * Test1\n    * [Test2](\/test1/test2)\n');
+    expect(navBar).toBe('  * Test1\n    * [Test2](/test1/test2)\n');
   });
   it('Should add an indent for any second level item that is another folder', () => {
     const paths = {
@@ -94,7 +94,7 @@ describe('createNav', () => {
       },
     };
     const navBar = createNavBar(paths); // createNavbar(paths);
-    expect(navBar).toBe('  * Test1\n    * [Test2](\/test1/test2/)\n');
+    expect(navBar).toBe('  * Test1\n    * [Test2](/test1/test2/)\n');
   });
   it('Should ignore assets', () => {
     const paths = {
