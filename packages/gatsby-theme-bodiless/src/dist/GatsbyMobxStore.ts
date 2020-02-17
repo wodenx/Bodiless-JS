@@ -129,7 +129,7 @@ export default class GatsbyMobxStore {
   getNode = (keyPath: string[]) => {
     const key = keyPath.join(nodeChildDelimiter);
     const item = this.store.get(key);
-    const storeValue = item ? item.data : null;
+    const storeValue = item && !item.isDeleted ? item.data : null;
     const dataValue = this.data[key];
     return storeValue || dataValue || {};
   };

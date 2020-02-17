@@ -26,7 +26,7 @@ export const useItemsAccessors = () => {
     // We provide a default element for top level lists.
     getItems: () => node.data.items || ['default'],
     setItems: (items: string[]) => node.setData({ ...node.data, items }),
-    deleteItem: (item: string) => node.delete(item),
+    deleteItem: (item: string) => node.delete(node.path.concat(item)),
   };
 };
 

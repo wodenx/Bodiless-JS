@@ -162,6 +162,7 @@ export default class GatsbyMobxStoreItem {
   update(data = {}, event = ItemStateEvent.UpdateFromBrowser) {
     switch (event) {
       case ItemStateEvent.UpdateFromBrowser:
+        this.isDeleted = false;
         this.setData(data);
         this.updateState(event);
         break;
