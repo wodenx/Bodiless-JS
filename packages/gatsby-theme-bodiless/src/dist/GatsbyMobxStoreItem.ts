@@ -14,7 +14,7 @@
 
 import path from 'path';
 import {
-  observable, action, reaction, IReactionDisposer,
+  observable, action,
 } from 'mobx';
 // eslint-disable-next-line import/no-cycle
 import GatsbyMobxStore from './GatsbyMobxStore';
@@ -22,9 +22,9 @@ import { ItemStateEvent } from './types';
 
 enum ItemState {
   Clean,
-  Dirty,
   Flushing,
   Locked,
+  Queued,
 }
 
 export default class GatsbyMobxStoreItem {
@@ -38,7 +38,9 @@ export default class GatsbyMobxStoreItem {
 
   store: GatsbyMobxStore;
 
-  dispose?: IReactionDisposer;
+  lockTimeout?: NodeJS.Timeout;
+
+  postTimeout?: NodeJS.Timeout;
 
   private shouldAccept() {
     const isClean = this.state === ItemState.Clean;
@@ -59,30 +61,42 @@ export default class GatsbyMobxStoreItem {
     this.data = data;
   }
 
+  @action private setState(state: ItemState) {
+    this.state = state;
+  }
+
   @action private updateState(event: ItemStateEvent) {
     switch (event) {
       case ItemStateEvent.UpdateFromBrowser:
-        this.state = ItemState.Dirty;
+        if (this.state === ItemState.Clean || this.state === ItemState.Locked) {
+          this.scheduleDataPost();
+        }
+        this.setState(ItemState.Queued);
         break;
       case ItemStateEvent.UpdateFromServer:
         // If an update happens from the server
         // Then we do not update state
         break;
-      case ItemStateEvent.BeginPostData:
-        this.state = ItemState.Flushing;
+      case ItemStateEvent.OnPostTimeout:
+        if (this.state === ItemState.Queued) {
+          this.setState(ItemState.Flushing);
+          this.postData();
+        }
         break;
-      case ItemStateEvent.EndPostData:
-        // If an update happens while flushing, the status will be set to dirty.
-        // In this case we don't want to reset it to clean.
-        if (this.state === ItemState.Dirty) {
+      case ItemStateEvent.OnPostEnd:
+        if (this.state === ItemState.Queued) {
+          this.scheduleDataPost();
           break;
         }
         // Lock the item for a period of time before setting it to clean
         // So that mitigate the problem with stale data coming from the server
-        this.state = ItemState.Locked;
-        setTimeout(() => {
-          this.state = this.state === ItemState.Locked ? ItemState.Clean : this.state;
-        }, 10000);
+        this.setState(ItemState.Locked);
+        this.setLockTimeout();
+        break;
+      case ItemStateEvent.OnLockTimeout:
+        if (this.state === ItemState.Locked) {
+          this.state = ItemState.Clean;
+        }
         break;
       default:
         throw new Error('Invalid item event specified.');
@@ -105,22 +119,32 @@ export default class GatsbyMobxStoreItem {
     return resourcePath;
   }
 
-  private enableDataTracking() {
+  // Post this.data back to filesystem if item state is dirty.
+  private postData() {
     if (this.shouldSave()) {
-      const preparePostData = () => (this.state === ItemState.Dirty ? this.data : null);
-      // Post this.data back to filesystem if item state is dirty.
-      const postData = (data: {} | null) => {
-        if (!data) {
-          return;
-        }
-        this.updateState(ItemStateEvent.BeginPostData);
-        this.store.client.savePath(this.getResoucePath(), data)
-          .then(() => this.updateState(ItemStateEvent.EndPostData));
-      };
-      this.dispose = reaction(preparePostData, postData, {
-        delay: 2000,
-      });
+      this.store.client.savePath(this.getResoucePath(), this.data)
+        .then(() => this.updateState(ItemStateEvent.OnPostEnd));
+    } else {
+      this.updateState(ItemStateEvent.OnPostEnd);
     }
+  }
+
+  private scheduleDataPost() {
+    if (this.postTimeout !== undefined) {
+      clearTimeout(this.postTimeout);
+    }
+    this.postTimeout = setTimeout(() => {
+      this.updateState(ItemStateEvent.OnPostTimeout);
+    }, 500);
+  }
+
+  private setLockTimeout() {
+    if (this.lockTimeout !== undefined) {
+      clearTimeout(this.lockTimeout);
+    }
+    this.lockTimeout = setTimeout(() => {
+      this.updateState(ItemStateEvent.OnLockTimeout);
+    }, 10000);
   }
 
   constructor(
@@ -131,7 +155,6 @@ export default class GatsbyMobxStoreItem {
   ) {
     this.store = store;
     this.key = key;
-    this.enableDataTracking();
     this.setData(initialData);
     this.updateState(event);
   }
@@ -159,6 +182,6 @@ export default class GatsbyMobxStoreItem {
   }
 
   isPending() {
-    return this.state === ItemState.Dirty || this.state === ItemState.Flushing;
+    return this.state === ItemState.Flushing || this.state === ItemState.Queued;
   }
 }

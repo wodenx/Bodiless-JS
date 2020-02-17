@@ -16,6 +16,7 @@
 export enum ItemStateEvent {
   UpdateFromServer,
   UpdateFromBrowser,
-  BeginPostData,
-  EndPostData,
+  OnLockTimeout,
+  OnPostEnd,
+  OnPostTimeout,
 }
