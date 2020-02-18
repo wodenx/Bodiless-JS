@@ -15,6 +15,13 @@
 import GatsbyMobxStore from '../src/dist/GatsbyMobxStore';
 import { ItemStateEvent } from '../src/dist/types';
 
+jest.mock('../src/dist/BackendClient', () => () => ({
+  savePath: jest.fn().mockResolvedValue(true),
+  deletePath: jest.fn().mockResolvedValue(true),
+}));
+
+const flushPromises = () => new Promise(setImmediate);
+
 const generateData = (name: string, data: any) => ({
   Page: {
     edges: [
@@ -70,12 +77,17 @@ describe('GatsbyMobxStore', () => {
       const node = store.getNode(keyPath);
       expect(node).toStrictEqual({});
     });
-    it('should be overwritten by data received from server after a period of time', () => {
+    it('should be overwritten by data received from server after a period of time', async () => {
       jest.useFakeTimers();
       const store = new GatsbyMobxStore(dataSource);
       const keyPath = ['foo'];
       store.setNode(keyPath, 'bar', ItemStateEvent.UpdateFromBrowser);
       store.deleteNode(keyPath);
+      // run timer to trigger delete request
+      jest.runAllTimers();
+      // flush promises to wait until delete is finished
+      await flushPromises();
+      // run timer to unlock the item
       jest.runAllTimers();
       store.setNode(keyPath, 'bar', ItemStateEvent.UpdateFromServer);
       const node = store.getNode(keyPath);

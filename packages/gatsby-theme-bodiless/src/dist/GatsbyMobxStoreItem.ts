@@ -54,7 +54,7 @@ export default class GatsbyMobxStoreItem {
     // we do not want to save data for these pages
     const resourcePath = this.getResoucePath();
     const isPreviewTemplatePage = resourcePath.includes(path.join('pages', '___templates'));
-    return saveEnabled && !isPreviewTemplatePage && !this.isDeleted;
+    return saveEnabled && !isPreviewTemplatePage;
   }
 
   @action private setData(data: any) {
@@ -65,7 +65,7 @@ export default class GatsbyMobxStoreItem {
     this.state = state;
   }
 
-  @action private updateState(event: ItemStateEvent) {
+  private updateState(event: ItemStateEvent) {
     switch (event) {
       case ItemStateEvent.UpdateFromBrowser:
         this.isDeleted = false;
@@ -126,7 +126,7 @@ export default class GatsbyMobxStoreItem {
 
   // Post this.data back to filesystem if item state is dirty.
   private postData() {
-    if (this.shouldSave()) {
+    if (this.shouldSave() && !this.isDeleted) {
       this.store.client.savePath(this.getResoucePath(), this.data)
         .then(() => this.updateState(ItemStateEvent.OnPostEnd));
     } else {
@@ -160,7 +160,6 @@ export default class GatsbyMobxStoreItem {
 
   private scheduleDelete() {
     this.cancelDataPost();
-    this.store.client.deletePath(this.getResoucePath());
     setTimeout(() => {
       this.deleteData();
     }, 500);
