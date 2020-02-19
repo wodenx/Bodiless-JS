@@ -1,14 +1,13 @@
 # Design Element Basics
 
-In this guide, we will extend the gallery tutorial, apply some designs, and introduce some best practices of site building.
+In this guide, we will continue to the tutorial of the gallery and apply the some designs & best practices of site building.
 
-## 1. Create a Site
-[Create a new site](About/GettingStarted?id=creating-a-new-site) and launch the editor interface.
+## Prerequisites:
+* Complete the Site Build Basics](About/SiteBuildBasics) and launch the site's editor interface.
+* Alternative, if you want to fast-forward to this tutorial.  Copy over the [gallery-final folder & contents](https://github.com/johnsonandjohnson/Bodiless-JS/tree/master/examples/test-site/src/data/pages/gallery-final) and place in site at `src/data/pages/gallery`  Note: remember to rename the folder from gallery-final to gallery.
 
-## 2. Copy Gallery example to Site & Use Site's Simple Editor
+## 1. Covert the Gallery to use Site's Simple Editor
 In this step we are going to refactor the gallery page to use the predefined rich text editors that are provided by starter kit. There is no need to use simple editor defined at page level in the initial tutorial, and it is best practice to define the rich text editors a site uses at the site-wide, component level. There is no need to use simple editor defined at page level in the initial tutorial and its best practice to define rich text editors a site uses at component level.
-
-1. Copy over the [gallery-final folder & contents](https://github.com/johnsonandjohnson/Bodiless-JS/tree/master/examples/test-site/src/data/pages/gallery-final) and place in site at `src/data/pages/gallery`  Note: remember to rename the folder from gallery-final to gallery.
 
 1. Lets replace the SimpleEditor with Site's Basic editor as there is no need for a specific editor at page level. 
    * Replace `import withSimpleEditor from './withSimpleEditor';`  
@@ -19,7 +18,7 @@ In this step we are going to refactor the gallery page to use the predefined ric
    * Delete the file `withSimpleEditor.tsx`
 1. Run your site and visit the gallery page (http://localhost:8000/gallery) and it should run exactly like it did in examples/test site with slightly different choices for the Rich Text Editor in the body of the gallery page. 
 
-## 3. Create the Gallery as reusable component to be used within site.
+## 2. Create the Gallery as reusable component to be used within site.
 If you have components which may appear on more than one page in your site, its best practice to place them in `src/components` so they can be reused by any page/template.  While you could theoretically import them from another page, keeping reusable components organized in one place makes a site much easier to maintain.
 
 1. Create a folder call Gallery in `src/components`
@@ -28,7 +27,7 @@ If you have components which may appear on more than one page in your site, its 
 1. Change the import on the page to import Gallery & GalleryTile from `../../../components/Gallery`
 1. Run your site and visit the gallery page (http://localhost:8000/gallery) and it should run exactly like it did in examples/test site. 
 
-## 4. Create a reuseable Primary Header for the site 
+## 3. Create a reuseable Primary Header for the site 
 Within `data/pages/gallery/index.jsx` (gallery page) & `data/pages/index.jsx` (homepage) you can see we use the same primary header `h1`.  Let's make this primary header a shared component. This way if we change the style of the primary header, it will apply throughout the site instead of having to be fixed on each page. 
 
 1. In `src/componets/Elements.token.ts` lets define a new H1 Primary Header
@@ -48,7 +47,7 @@ Within `data/pages/gallery/index.jsx` (gallery page) & `data/pages/index.jsx` (h
     ```
 1. Visit the homepage & gallery page (http://localhost:8000/gallery) and both H1 titles should be bold.
 
-## 5.  Create a reuseable Primary Header Image for the site 
+## 4.  Create a reuseable Primary Header Image for the site 
 The header image is also a case where we could create a more flexible linkable image header.  Let's go ahead and create a component that we can reuse and apply the [design api](Design/DesignSystem) to make some variations.
 
 * The header on the homepage is a simple full width image.
@@ -187,7 +186,7 @@ Let's create a HeaderImage folder in `/src/components` and create two files with
     ```
     We have already touched the `elements.token.ts` file in a previous step but you can see these tokens use the same [FClasses](Development/Architecture/FClasses) that the components are using and add styling via `addClasses`. 
 
-## 6. Let's use that Header Image Component both on the front page and gallery page.
+## 5. Let's use that Header Image Component both on the front page and gallery page.
 
 1. On the homepage, import in the `HeaderImage` and tokens, and remove the previous local HeaderImage definition:
 
