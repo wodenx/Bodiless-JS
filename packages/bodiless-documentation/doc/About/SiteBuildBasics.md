@@ -5,7 +5,7 @@ This section describes how to work with BodilessJS to build out a basic editable
 > Note: The API's described below are under active development and are subject to change.
 
 ## Create a Site
-To begin, [Create a new site](About/GettingStarted?id=creating-a-new-site) and start your own site to develop in.
+To begin, follow the directions to [create a new site](About/GettingStarted?id=creating-a-new-site) and all the pages we create in this tutorial will be in this new site.
 
 ## Creating pages
 
