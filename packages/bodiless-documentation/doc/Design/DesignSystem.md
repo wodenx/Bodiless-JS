@@ -1,6 +1,6 @@
 # DesignSystem
 
-The Bodiless DesignSystem is a hybrid approach of using Atomic Design and Pattern Lab model to implement a reusable design system in React. It allows us to utilize Reacts higher-order component (HOC) for reusing component logic at more granular layer. It will implement utility layer which is the core styling of the site with the element tokens that add design to single HTML element. Continuing this logic, the component tokens consists of more compex HOCs that apply design. All the element tokens & component tokens can be easily reused/extended to meet the design requirements without changing how/which components are used by the more complex/advanced HOCs.
+The BodilessJS Design System is a hybrid approach of using Atomic Design and Pattern Lab model to implement a reusable design system in React. It allows us to utilize Reacts higher-order component (HOC) for reusing component logic at more granular layer. It will implement utility layer which is the core styling of the site with the element tokens that add design to single HTML element. Continuing this logic, the component tokens consists of more complex HOCs that apply design. All the element tokens & component tokens can be easily reused/extended to meet the design requirements without changing how/which components are used by the more complex/advanced HOCs.
 
 The suggested design system is to structure your system in the following way:
 
@@ -8,11 +8,11 @@ The suggested design system is to structure your system in the following way:
 
 Utility class produced by tailwind, they should be as unambiguous as possible.
 
-The bodiless test site uses default tailwind https://tailwindcss.com/ for this layer.
+The BodilessJS examples/test & examples/starter site uses default tailwind https://tailwindcss.com/ for this layer.
 
 ## Element Tokens
 
-Element Tokens are HOC that add utility classes to a single HTML element. *By convention all Elemnt Tokens start with as.*
+Element Tokens are HOC that add utility classes to a single HTML element. *By convention all Element Tokens start with `as`.*
 
 ``` js
 const asHeader1 = addClasses('text-4xl font-bold');
@@ -20,7 +20,7 @@ const asHeader1 = addClasses('text-4xl font-bold');
 
 ## Component Tokens
 
- Are HOC that use the applyDesign to add Tokens (or replace) the base elements in a component. *By convention all Components Tokens start with as.*
+ Are HOC that use the applyDesign to add Tokens (or replace) the base elements in a component. *By convention all Components Tokens start with `as`.*
 
 ``` js
 const asToutPink = withDesign({
@@ -31,7 +31,7 @@ const asToutPink = withDesign({
 
 ## Component
 
-React components that use the Bodiless Design system and are built in way that they are easily shared/reusable.
+React components that use the BodilessJS Design system and are built in way that they are easily shared/reusable.
 
 For example, Touts can be reused as is, with some possible addition site specific styling and all use the same underlying Tout from @bodiless/organisms.
 
@@ -80,7 +80,7 @@ const ToutVerticalNoTitleNoBody = flow(
 
 ```
 
-This combination should be done at the point of use, such as in the page file where the component is placed.  The HOC and the basic component are the sharable items not there composition.
+This combination should be done at the point of use, such as in the page file where the component is placed.  The HOC and the basic component are the shareable items not there composition.
 
 Here is a flow diagram of creating a Horizontal Tout:
 ![](./ToutHorizontalDefaultFlow.svg)
