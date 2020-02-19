@@ -39,13 +39,24 @@ Within `data/pages/gallery/index.jsx` (gallery page) & `data/pages/index.jsx` (h
     )(H1);
     ````
 1. Remember to add imports needed & export this new component.
+
 1. Change the imports on both gallery index.jsx & homepage page index.jsx and remove the current PrimaryHeader definitions.
-1. Run your site and visit the homepage & gallery page (http://localhost:8000/gallery) and it should run exactly like it did in example site except the gallery title is not bold. 
+
+1. Run your site and visit the homepage & gallery page (http://localhost:8000/gallery) and it should run exactly like it did prior, except the gallery title is not bold. 
+
 1. In `src/componets/Elements.token.ts` add a tailwind to class to asBold. 
     ```
     const asBold = addClasses('font-bold');
     ```
 1. Visit the homepage & gallery page (http://localhost:8000/gallery) and both H1 titles should be bold.
+
+The Element tokens add a design (utility classes) to a single HTML element via simplistic HOC.  This will allow it:
+* to be easily reused throughout the site.
+* ensure consistency.
+* easily extendable and modifiable.
+* and even publish in future as a package to share within a brand.
+
+**TIP**: By convention all Element Tokens start with `as`.
 
 ## 4.  Create a reuseable Primary Header Image for the site 
 The header image is also a case where we could create a more flexible linkable image header.  Let's go ahead and create a component that we can reuse and apply the [design api](Design/DesignSystem) to make some variations.
@@ -56,7 +67,7 @@ The header image is also a case where we could create a more flexible linkable i
 Lets create a `HeaderImage` that is full-width, linkable image with a token that gives the option to remove the link.
 
 1. Create HeaderImage folder
-Let's create a HeaderImage folder in `/src/components` and create two files within this folder `index.tsx` & `token.tsx`.  This is a best practice to start creating components in this manner.  The index.tsx contains your definition of what your component does and token.tsx contains definitions of how your component looks.
+Let's create a HeaderImage folder in `/src/components` and create two files within this folder `index.tsx` & `token.tsx`.  This is a best practice to start creating components in this manner.  The index.tsx contains the template defining how your component functions and token.tsx contains the design elements control how your component looks.
 
 1. Lets start work on the `index.tsx` and get the imports setup.  This is pretty self explanatory. If you forget one you will be warned and it won't work!
     ```
@@ -77,24 +88,31 @@ Let's create a HeaderImage folder in `/src/components` and create two files with
     } from '@bodiless/components';
     import { withNode } from '@bodiless/core';
     ```
-1. The first step is to define all the  individual sub-components of our HeaderImage and ensure that they are stylable.  This will allow us to replace or modify the individual components within this component. 
+1. The first step is to define all the  individual sub-components of our HeaderImage and ensure that they are stylable. 
+While this isn't required, we recommend using the [FClasses](Development/Architecture/FClasses) functionality so that in future it will allow us to easily replace or modify the individual components with either new/modified function or design.
 
-   * The HeaderImageComponents define each individual component as Styleable Props. 
-   * The headerImageStart:HeaderImageComponents defines what each component is. 
+   * The HeaderImageComponents define each individual component as Styleable Props.  StylableProps
+
+
     ```
     export type HeaderImageComponents = {
       ImageWrapper: ComponentType<StylableProps>,
       ImageLink: ComponentType<StylableProps>,
       Image: ComponentType<StylableProps>,
     };
-
+    ```
+    
+   * The headerImageStart:HeaderImageComponents defines what each component is. 
+    ```
     const headerImageStart:HeaderImageComponents = {
       ImageWrapper: Div,
       ImageLink: A,
       Image: Img,
     };
+    
     type Props = DesignableComponentsProps<HeaderImageComponents> & { };
     ```
+
 1. Next, let's define what the component will render--this is really the base template for our component.  As you can see, It will render a linked image in a div wrapper.
     ```
     const HeaderImageBase: FC<Props> = ({ components }) => {
