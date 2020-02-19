@@ -41,8 +41,8 @@ export function useItemHandlers() {
   const setItems = (items: FlexboxItem[]) => {
     node.setData({ items });
   };
-  const deleteItem = (uuid: string) => {
-    const path$ = node.path.concat(uuid);
+  const deleteItem = (uuid?: string) => {
+    const path$ = uuid ? node.path.concat(uuid) : node.path;
     node.delete(path$);
   };
   return { getItems, setItems, deleteItem };
@@ -103,6 +103,9 @@ export function useFlexboxDataHandlers(): FlexboxDataHandlers {
       spliceItem(index, 1);
       const items = getItems();
       deleteItem(uuid);
+      if (getItems().length === 0) {
+        deleteItem();
+      }
       return items[index] || items[items.length - 1];
     },
   };

@@ -32,7 +32,7 @@ export default class GatsbyMobxStoreItem {
 
   @observable state: ItemState = ItemState.Clean;
 
-  isDeleted = false;
+  @observable isDeleted = false;
 
   key: string;
 
