@@ -14,7 +14,7 @@
 
 import path from 'path';
 import fs from 'fs-extra';
-import { writeTree } from '../lib/write';
+import { writeTree, symlinkFile } from '../lib/write';
 
 describe('writeTree', () => {
   const testPath = '/tmp/bdawrite';
@@ -32,7 +32,7 @@ describe('writeTree', () => {
     writeTree({
       paths: tree,
       loc: testPath,
-    }).then(() => {
+    }, symlinkFile).then(() => {
       expect(fs.existsSync(path.join(testPath, 'test1'))).toBe(true);
       done();
     });

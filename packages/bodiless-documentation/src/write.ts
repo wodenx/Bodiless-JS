@@ -23,22 +23,33 @@ type Props = {
   loc: string,
 };
 
+type Copier = (docPath: string, filePath: string) => Promise<void>;
+
 /**
- * Copies or symlinks a documentation file or resource to a location within the docs structure.
- * Whether a file is copied or symlinked is determined by the `BODILESS_DOCS_COPYFILES` environment
- * variable.
+ * Copies a documentation file or resource to a location within the docs structure.
  *
  * @param docPath The absolute path of the source document.
  * @param filePath The path of the target document relative to `process.cwd`
  */
-const copyOrLinkFile = (docPath: string, filePath: string) => {
-  let relPath;
+const copyFile: Copier = (docPath: string, filePath: string) => {
+  const relPath = path.relative(process.cwd(), docPath);
   try {
-    if (process.env.BODILESS_DOCS_COPYFILES === '1') {
-      relPath = path.relative(process.cwd(), docPath);
-      return fs.copy(relPath, filePath, { overwrite: false });
-    }
-    relPath = path.relative(path.dirname(filePath), docPath);
+    return fs.copy(relPath, filePath, { overwrite: false });
+  } catch (error) {
+    console.warn('Error writing', filePath, relPath, error);
+    return Promise.resolve();
+  }
+};
+
+/**
+ * Symlinks a documentation file or resource to a location within the docs structure.
+ *
+ * @param docPath The absolute path of the source document.
+ * @param filePath The path of the target document relative to `process.cwd`
+ */
+const symlinkFile: Copier = (docPath: string, filePath: string) => {
+  const relPath = path.relative(path.dirname(filePath), docPath);
+  try {
     return fs.ensureSymlink(relPath, filePath);
   } catch (error) {
     console.warn('Error writing', filePath, relPath, error);
@@ -53,7 +64,7 @@ const copyOrLinkFile = (docPath: string, filePath: string) => {
  * @param props.loc The path of the root of the target doc hierarchy, relative to `process.cwd`
  * @param props.paths The `Tree` object describing the hierarchy and source file locations.
  */
-const writeTree = (props: Props) => {
+const writeTree = (props: Props, copier: Copier) => {
   const { paths, loc } = props;
   const promises = [] as Promise<any>[];
   Object.keys(paths).forEach(async (key:string) => {
@@ -65,14 +76,14 @@ const writeTree = (props: Props) => {
       if (typeof paths[key] === 'object') {
         try {
           fs.ensureDirSync(branch.loc);
-          promises.push(writeTree(branch as Props));
+          promises.push(writeTree(branch as Props, copier));
         } catch (error) {
           console.warn('Error creating directory', branch, loc, error);
         }
       } else {
         const filePath = path.join(loc, key);
         const docPath = (branch.paths as string);
-        promises.push(copyOrLinkFile(docPath, filePath));
+        promises.push(copier(docPath, filePath));
       }
     } catch (error) {
       console.warn('Error writing key', key, error);
@@ -87,14 +98,16 @@ const writeTree = (props: Props) => {
  *
  * @param loc The path of the root directory of the docs tree, relative to `process.cwd`.
  */
-const writeResources = (loc: string) => {
+const writeResources = (loc: string, copier: Copier) => {
   const resourceDir = path.dirname(require.resolve(path.join('..', 'resources', 'index.html')));
   const resources = fs.readdirSync(resourceDir)
     .filter(fn => fs.statSync(path.join(resourceDir, fn)).isFile());
-  return resources.map(fn => copyOrLinkFile(
+  return resources.map(fn => copier(
     path.join(resourceDir, fn),
     path.join(loc, fn),
   ));
 };
 
-export { writeTree, writeResources };
+export {
+  writeTree, writeResources, copyFile, symlinkFile,
+};

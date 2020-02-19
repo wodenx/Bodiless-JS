@@ -20,7 +20,9 @@ import fs from 'fs-extra';
 // import cleanSymlinks from './cleanSymlinks';
 import locateFiles from './locateFiles';
 import { withTreeFromFile } from './tree';
-import { writeTree, writeResources } from './write';
+import {
+  writeTree, writeResources, copyFile, symlinkFile,
+} from './write';
 import { writeSideBars, writeNavBar } from './createBar';
 import defaultToc from './defaultToc';
 import { Tree } from './type';
@@ -39,6 +41,7 @@ const buildSubTree = async (toc: any, namespace: string) => {
 };
 
 const blDocsBuild = async () => {
+  const copier = process.env.BODILESS_DOCS_COPYFILES ? copyFile : symlinkFile;
   const docPath = './doc';
   let toc: any;
   try {
@@ -72,7 +75,7 @@ const blDocsBuild = async () => {
     await writeTree({
       paths,
       loc: docPath,
-    });
+    }, copier);
   } catch (error) {
     console.warn('Error writing symlinks', error);
   }
@@ -90,7 +93,7 @@ const blDocsBuild = async () => {
   }
   console.log('Writing resources');
   try {
-    await writeResources(docPath);
+    await writeResources(docPath, copier);
   } catch (error) {
     console.warn('Error writing navbar', error);
   }
