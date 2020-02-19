@@ -3,7 +3,7 @@
 In this guide, we will extend the gallery tutorial, apply some designs, and introduce some best practices of site building.
 
 ## 1. Create a Site
-[Create a new site](https://johnsonandjohnson.github.io/Bodiless-JS/#/About/GettingStarted?id=creating-a-new-site) and launch the editor interface.
+[Create a new site](About/GettingStarted?id=creating-a-new-site) and launch the editor interface.
 
 ## 2. Copy Gallery example to Site & Use Site's Simple Editor
 In this step we are going to refactor the gallery page to use the predefined rich text editors that are provided by starter kit. There is no need to use simple editor defined at page level in the initial tutorial, and it is best practice to define the rich text editors a site uses at the site-wide, component level. There is no need to use simple editor defined at page level in the initial tutorial and its best practice to define rich text editors a site uses at component level.
@@ -49,7 +49,7 @@ Within `data/pages/gallery/index.jsx` (gallery page) & `data/pages/index.jsx` (h
 1. Visit the homepage & gallery page (http://localhost:8000/gallery) and both H1 titles should be bold.
 
 ## 5.  Create a reuseable Primary Header Image for the site 
-The header image is also a case where we could create a more flexible linkable image header.  Let's go ahead and create a component that we can reuse and apply the [design api](https://johnsonandjohnson.github.io/Bodiless-JS/#/Design/DesignSystem) to make some variations.
+The header image is also a case where we could create a more flexible linkable image header.  Let's go ahead and create a component that we can reuse and apply the [design api](Design/DesignSystem) to make some variations.
 
 * The header on the homepage is a simple full width image.
 * The header on the gallery page is linkable image. 
@@ -96,7 +96,7 @@ Let's create a HeaderImage folder in `/src/components` and create two files with
     };
     type Props = DesignableComponentsProps<HeaderImageComponents> & { };
     ```
-1. Next, let's define what the component will render--this is really the base template for our compoennt.  As you can see, It will render a linked image in a div wrapper.
+1. Next, let's define what the component will render--this is really the base template for our component.  As you can see, It will render a linked image in a div wrapper.
     ```
     const HeaderImageBase: FC<Props> = ({ components }) => {
       const {
@@ -180,9 +180,12 @@ Let's create a HeaderImage folder in `/src/components` and create two files with
 
     ```
 
-1. We also need a new token of rounded corners that would be useful to a token, so place this `Elements.token.ts` file:
-`const asImageRounded = addClasses('rounded-lg');`
-and remember to export it.
+1. Note, above we used a new token describing rounded corners (`asImageRounded`).  This would belong to the design system of the site, and should be placed in an `Elements.token.ts` file:
+
+    ```
+    const asImageRounded = addClasses('rounded-lg');
+    ```
+    We have already touched the `elements.token.ts` file in a previous step but you can see these tokens use the same [FClasses](Development/Architecture/FClasses) that the components are using and add styling via `addClasses`. 
 
 ## 6. Let's use that Header Image Component both on the front page and gallery page.
 
@@ -226,6 +229,10 @@ and remember to export it.
 
 1. Visit the homepage & gallery page (http://localhost:8000 & http://localhost:8000/gallery) and homepage should be full width image and gallery should be linkable image.
 
-While this is simple component, imagine that a request came in that all images headers on all pages, should not have rounded corners.  You delete one element token out of asHeaderImageDefaultStyle and it takes effect on any Header Image in use on any page using this style and doesn't require going through each page.
+While this is simple component, proceeding in this manner gives us a few benefits: 
 
-For more information, read about [FClasses](https://johnsonandjohnson.github.io/Bodiless-JS/#/Development/Architecture/FClasses) you will also find you can removeClasses, replace Components with another Component (replaceWith) allowing great flexibility is using other components or varying existing components.
+* Imagine that a request came in that all images headers on all pages, should not have rounded corners.  You delete one element token out of asHeaderImageDefaultStyle and it takes effect on any `HeaderImage` in use on any page using this style and doesn't require going through each page.
+* Another benefit is this simplyifies your styling and eliminates the normal css cascade. 
+* Future changes also eliminates the risk that unintended elements may get the change.  We can safely remove the rounded corners of the header image and leave other images used elsewhere with rounded corners.
+
+For more information, read about [FClasses](Development/Architecture/FClasses) you will also find you can removeClasses, replace Components with another Component (replaceWith) allowing great flexibility is using other components or varying existing components.
