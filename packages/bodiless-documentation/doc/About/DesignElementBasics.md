@@ -1,16 +1,16 @@
 # Design Element Basics
 
-In this guide, we will continue to the tutorial of the gallery and apply the some designs & best practices of site building.
+In this guide, we will extend the gallery tutorial, apply some designs, and introduce some best practices of site building.
 
 ## 1. Create a Site
 [Create a new site](https://johnsonandjohnson.github.io/Bodiless-JS/#/About/GettingStarted?id=creating-a-new-site) and launch the editor interface.
 
 ## 2. Copy Gallery example to Site & Use Site's Simple Editor
-This step we are going to copy over the tutorial that was created in the [Site Build Basics guide](https://johnsonandjohnson.github.io/Bodiless-JS/#/About/SiteBuildBasics) and having it use the site's predefined rich text editors that are provided by starter kit. There is no need to use simple editor defined at page level in the initial tutorial and its best practice to define rich text editors a site uses at component level.
+In this step we are going to refactor the gallery page to use the predefined rich text editors that are provided by starter kit. There is no need to use simple editor defined at page level in the initial tutorial, and it is best practice to define the rich text editors a site uses at the site-wide, component level. There is no need to use simple editor defined at page level in the initial tutorial and its best practice to define rich text editors a site uses at component level.
 
 1. Copy over the [gallery-final folder & contents](https://github.com/johnsonandjohnson/Bodiless-JS/tree/master/examples/test-site/src/data/pages/gallery-final) and place in site at `src/data/pages/gallery`  Note: remember to rename the folder from gallery-final to gallery.
 
-1. Lets replace the SimpleEditor with Site's Basic editor as there is no need to use specific editor at page level. 
+1. Lets replace the SimpleEditor with Site's Basic editor as there is no need for a specific editor at page level. 
    * Replace `import withSimpleEditor from './withSimpleEditor';`  
      with `import { asEditorBasic } from '../../../components/Editors';`
    * Replace `const Body = withSimpleEditor('body', 'Body')(Fragment);`
@@ -20,7 +20,7 @@ This step we are going to copy over the tutorial that was created in the [Site B
 1. Run your site and visit the gallery page (http://localhost:8000/gallery) and it should run exactly like it did in examples/test site with slightly different choices for the Rich Text Editor in the body of the gallery page. 
 
 ## 3. Create the Gallery as reusable component to be used within site.
-If you are going to have component reusable for a page or template, its best to have them placed in `src/components` so they can be reused by any page/template.  While you could import them from another page, it's not best practice and makes future finding and maintaining hard finding components within a page.
+If you have components which may appear on more than one page in your site, its best practice to place them in `src/components` so they can be reused by any page/template.  While you could theoretically import them from another page, keeping reusable components organized in one place makes a site much easier to maintain.
 
 1. Create a folder call Gallery in `src/components`
 1. Move the Gallery.tsx & CaptionedImage.tsx to the `/src/components/Gallery` folder
@@ -29,7 +29,7 @@ If you are going to have component reusable for a page or template, its best to 
 1. Run your site and visit the gallery page (http://localhost:8000/gallery) and it should run exactly like it did in examples/test site. 
 
 ## 4. Create a reuseable Primary Header for the site 
-Within `data/pages/gallery/index.jsx` (gallery page) & `data/pages/index.jsx` (homepage) you can see we use the similar primary L1 header.  Let's move the primary header h1 to be shared. This way if we change the style of h1 primary header it will apply throughout the site instead of having to fix each page. 
+Within `data/pages/gallery/index.jsx` (gallery page) & `data/pages/index.jsx` (homepage) you can see we use the same primary header `h1`.  Let's make this primary header a shared component. This way if we change the style of the primary header, it will apply throughout the site instead of having to be fixed on each page. 
 
 1. In `src/componets/Elements.token.ts` lets define a new H1 Primary Header
     ```
@@ -49,12 +49,12 @@ Within `data/pages/gallery/index.jsx` (gallery page) & `data/pages/index.jsx` (h
 1. Visit the homepage & gallery page (http://localhost:8000/gallery) and both H1 titles should be bold.
 
 ## 5.  Create a reuseable Primary Header Image for the site 
-The header image is also a case where we could create a more flexible linkable image header.  Let's go ahead and create a component that we can reuse and apply the design api to make some variations.
+The header image is also a case where we could create a more flexible linkable image header.  Let's go ahead and create a component that we can reuse and apply the [design api](https://johnsonandjohnson.github.io/Bodiless-JS/#/Design/DesignSystem) to make some variations.
 
 * The header on the homepage is a simple full width image.
 * The header on the gallery page is linkable image. 
 
-Lets create a HeaderImage that is fill width linkable image with a stylized token that gives option to remove the link.
+Lets create a `HeaderImage` that is full-width, linkable image with a token that gives the option to remove the link.
 
 1. Create HeaderImage folder
 Let's create a HeaderImage folder in `/src/components` and create two files within this folder `index.tsx` & `token.tsx`.  This is a best practice to start creating components in this manner.  The index.tsx contains your definition of what your component does and token.tsx contains definitions of how your component looks.
@@ -78,7 +78,8 @@ Let's create a HeaderImage folder in `/src/components` and create two files with
     } from '@bodiless/components';
     import { withNode } from '@bodiless/core';
     ```
-1. The first step is to setup that every individual component is stylable and then define what that component is.  This will allow us to replace or modify the individual components within this component. 
+1. The first step is to define all the  individual sub-components of our HeaderImage and ensure that they are stylable.  This will allow us to replace or modify the individual components within this component. 
+
    * The HeaderImageComponents define each individual component as Styleable Props. 
    * The headerImageStart:HeaderImageComponents defines what each component is. 
     ```
@@ -93,9 +94,9 @@ Let's create a HeaderImage folder in `/src/components` and create two files with
       ImageLink: A,
       Image: Img,
     };
-    type Props = DesignableComponentsProps<ToutComponents> & { };
+    type Props = DesignableComponentsProps<HeaderImageComponents> & { };
     ```
-1. Next, lets generate how the component will render. It will generate an linked image in a div wrapper.
+1. Next, let's define what the component will render--this is really the base template for our compoennt.  As you can see, It will render a linked image in a div wrapper.
     ```
     const HeaderImageBase: FC<Props> = ({ components }) => {
       const {
@@ -113,13 +114,21 @@ Let's create a HeaderImage folder in `/src/components` and create two files with
       );
     };
     ```
-1. Now, lets combine the individual elements we have with the designable interface so they can take the Design prop. We are also wrapping it with withNode() to ensure that all its children have a unique location to store their data: 
+    
+    Note that the actual sub-components here are *injected*; that is, they are passed into the component via a `components` prop.  We defined the defaults for these components above (`headerImageStart`), but we will actually render whatever we are passed. 
+    
+1. However, the usual pattern is not to pass these components directly.  Instead, let's wrap our component with `designable` to allow consumers  to provide styling through *higher order components* (HOC's) which will be applied to the defaults. (Note, you should already be familiar with the use if `withNode` to provide your component with a place to store its data).
+ 
     ```
     const HeaderImageClean = flow(
       designable(headerImageStart),
       withNode,
     )(HeaderImageBase);
-
+    ```
+    
+   Next, lets pass in some HOC's via withDesign to make our component editable.
+   
+    ```
     const asEditableHeaderImage = flow(
       withDesign({
         Image: asBodilessImage('headerimage'),
@@ -127,6 +136,11 @@ Let's create a HeaderImage folder in `/src/components` and create two files with
       }),
     );
     ```
+    
+    withDesign takes an object whose keys are the names of the subcomponents which belong to our HeaderImage, and whose values are higher-order components which should be applied to each. As you'll see below, these HOC's often carry elements of styling, and correspond to the "tokens" of a design system. Here, they apply functionality, but the pattern is the same.
+
+    Note that these HOC's (or tokens) are defined at the site level. For now, they are just pass-through's to the core Bodiless utilities - but in many cases you will want to customize these at the site level (for example, to provide a different image selector, or a link with an editable target attribute.)
+
 1.  Lastly, lets combine these together and export. 
     ```
     const HeaderImage = asEditableHeaderImage(HeaderImageClean);
@@ -134,10 +148,11 @@ Let's create a HeaderImage folder in `/src/components` and create two files with
     export default HeaderImage;
     ```
     
-1. Turning our focus to the `token.tsx`, this is where we will define what the component will look like and abstract the design here.  We start with the imports and then export to 2 different designs styles with:
-* asHeaderImageDefaultStyle being a full width image, with rounded corners
-* AsHeaderImageNotLinkable simply removes the Linkable image.
+1. Turning our focus to the `token.tsx`, this is where we will define some variations on what the component will look like .  We start with the imports and then export two different stylings, with
+    * `asHeaderImageDefaultStyle` being a full width image, with rounded corners
+    * `asHeaderImageNotLinkable` simply removing the link from the image.
 
+    Note that these HOC's themselves can be considered "tokens" which describe design elements which can be applied to our HeaderImage as a whole.
 
 
     ```
@@ -171,7 +186,7 @@ and remember to export it.
 
 ## 6. Let's use that Header Image Component both on the front page and gallery page.
 
-1. On the homepage, import in the HeaderImage and styled Headers and remove the previous local HeaderImage definition:
+1. On the homepage, import in the `HeaderImage` and tokens, and remove the previous local HeaderImage definition:
 
     ```
     import HeaderImage from '../../components/HeaderImage';
@@ -190,7 +205,7 @@ and remember to export it.
     
     with ```<HomePageHeaderImage />```
 
-2. On the gallery, import in the HeaderImage and styled Headers and remove the previous local HeaderImage definition:
+1. On the gallery, import in the `HeaderImage` and tokens, and remove the previous local `HeaderImage` definition:
 
     ```
     import HeaderImage from '../../../components/HeaderImage';
