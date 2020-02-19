@@ -3,8 +3,8 @@
 In this guide, we will continue to the tutorial of the gallery and apply the some designs & best practices of site building.
 
 ## Prerequisites:
-* Complete the Site Build Basics](About/SiteBuildBasics) and launch the site's editor interface.
-* Alternative, if you want to fast-forward to this tutorial.  Copy over the [gallery-final folder & contents](https://github.com/johnsonandjohnson/Bodiless-JS/tree/master/examples/test-site/src/data/pages/gallery-final) and place in site at `src/data/pages/gallery`  Note: remember to rename the folder from gallery-final to gallery.
+* Complete the [Site Build Basics](About/SiteBuildBasics) and launch the site's editor interface.
+* Alternative, if you want to fast-forward to this tutorial.  Copy over the [gallery-final folder & contents](https://github.com/johnsonandjohnson/Bodiless-JS/tree/master/examples/test-site/src/data/pages/gallery-final) and place in a [new site](About/GettingStarted?id=creating-a-new-site) at `src/data/pages/gallery` and launch the site's editor interface.  Note: remember to rename the folder from gallery-final to gallery.
 
 ## 1. Covert the Gallery to use Site's Simple Editor
 In this step we are going to refactor the gallery page to use the predefined rich text editors that are provided by starter kit. There is no need to use simple editor defined at page level in the initial tutorial, and it is best practice to define the rich text editors a site uses at the site-wide, component level. There is no need to use simple editor defined at page level in the initial tutorial and its best practice to define rich text editors a site uses at component level.
