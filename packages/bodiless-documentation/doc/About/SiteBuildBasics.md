@@ -2,9 +2,10 @@
 
 This section describes how to work with BodilessJS to build out a basic editable site. A standalone Gatsby starter will be released soon, but for now you can work with the example/test site in the core monorepo. 
 
-To begin, create a site branch in the repository and work within `/examples/test-site`. All paths in the section below are relative to this directory.
-
 > Note: The API's described below are under active development and are subject to change.
+
+## Create a Site
+To begin, [Create a new site](About/GettingStarted?id=creating-a-new-site) and start your own site to develop in.
 
 ## Creating pages
 
