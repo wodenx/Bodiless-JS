@@ -481,10 +481,10 @@ Finally, replace the main content of `Gallery` with the flexbox grid.
 
 Now remove the following from `index.tsx`:
 ```
-<div className="flex mt-2">
-  <CaptionedImage nodeKey="image1" className="w-1/2 mx-2" />
-  <CaptionedImage nodeKey="image2" className="w-1/2 mx-2"/>
-</div>
+<Gallery nodeKey="gallery">
+  <GalleryTile nodeKey="tile1" />
+  <GalleryTile nodeKey="tile2" />
+</Gallery>
 ```
 And replace with:
 ```
