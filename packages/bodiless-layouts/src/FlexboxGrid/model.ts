@@ -103,9 +103,6 @@ export function useFlexboxDataHandlers(): FlexboxDataHandlers {
       spliceItem(index, 1);
       const items = getItems();
       deleteItem(uuid);
-      if (getItems().length === 0) {
-        deleteItem();
-      }
       return items[index] || items[items.length - 1];
     },
   };

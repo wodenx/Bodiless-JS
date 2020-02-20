@@ -59,6 +59,7 @@ export default class GatsbyMobxStoreItem {
 
   @action private setData(data: any) {
     this.data = data;
+    this.isDeleted = false;
   }
 
   @action private setState(state: ItemState) {
@@ -68,19 +69,16 @@ export default class GatsbyMobxStoreItem {
   private updateState(event: ItemStateEvent) {
     switch (event) {
       case ItemStateEvent.UpdateFromBrowser:
-        this.isDeleted = false;
         if (this.state === ItemState.Clean || this.state === ItemState.Locked) {
           this.scheduleDataPost();
         }
         this.setState(ItemState.Queued);
         break;
       case ItemStateEvent.DeleteFromBrowser:
-        this.isDeleted = true;
         this.setState(ItemState.Flushing);
         this.scheduleDelete();
         break;
       case ItemStateEvent.UpdateFromServer:
-        this.isDeleted = false;
         break;
       case ItemStateEvent.OnPostTimeout:
         if (this.state === ItemState.Queued) {
@@ -88,7 +86,7 @@ export default class GatsbyMobxStoreItem {
           this.postData();
         }
         break;
-      case ItemStateEvent.OnPostEnd:
+      case ItemStateEvent.OnRequestEnd:
         if (this.state === ItemState.Queued) {
           this.scheduleDataPost();
           break;
@@ -128,28 +126,33 @@ export default class GatsbyMobxStoreItem {
   private postData() {
     if (this.shouldSave() && !this.isDeleted) {
       this.store.client.savePath(this.getResoucePath(), this.data)
-        .then(() => this.updateState(ItemStateEvent.OnPostEnd));
+        .then(() => this.updateState(ItemStateEvent.OnRequestEnd));
     } else {
-      this.updateState(ItemStateEvent.OnPostEnd);
+      this.updateState(ItemStateEvent.OnRequestEnd);
     }
   }
 
   private deleteData() {
     if (this.shouldSave()) {
       this.store.client.deletePath(this.getResoucePath())
-        .then(() => this.updateState(ItemStateEvent.OnPostEnd));
+        .then(() => this.updateState(ItemStateEvent.OnRequestEnd));
     } else {
-      this.updateState(ItemStateEvent.OnPostEnd);
+      this.updateState(ItemStateEvent.OnRequestEnd);
     }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private scheduleRequest(request: Function) {
+    return setTimeout(() => {
+      request();
+    }, 500);
   }
 
   private scheduleDataPost() {
     if (this.postTimeout !== undefined) {
       clearTimeout(this.postTimeout);
     }
-    this.postTimeout = setTimeout(() => {
-      this.updateState(ItemStateEvent.OnPostTimeout);
-    }, 500);
+    this.postTimeout = this.scheduleRequest(() => this.updateState(ItemStateEvent.OnPostTimeout));
   }
 
   private cancelDataPost() {
@@ -160,9 +163,7 @@ export default class GatsbyMobxStoreItem {
 
   private scheduleDelete() {
     this.cancelDataPost();
-    setTimeout(() => {
-      this.deleteData();
-    }, 500);
+    this.scheduleRequest(() => this.deleteData());
   }
 
   private setLockTimeout() {
@@ -204,6 +205,7 @@ export default class GatsbyMobxStoreItem {
   }
 
   delete() {
+    this.isDeleted = true;
     this.updateState(ItemStateEvent.DeleteFromBrowser);
   }
 
