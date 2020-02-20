@@ -58,198 +58,178 @@ The Element tokens add a design (utility classes) to a single HTML element via s
 
 **TIP**: By convention all Element Tokens start with `as`.
 
-## 4.  Create a reuseable Primary Header Image for the site 
-The header image is also a case where we could create a more flexible linkable image header.  Let's go ahead and create a component that we can reuse and apply the [design api](Design/DesignSystem) to make some variations.
+## 4. Modify Captioned Image to use Design Interface
+The 'CaptionedImage' is small component that is has wrapper around Image & Body text. Let's go ahead and apply the [design api](Design/DesignSystem) to make it more flexible and reusable.
 
-* The header on the homepage is a simple full width image.
-* The header on the gallery page is linkable image. 
+1. Within `CaptionedImage.tsx`, the first step is to define all the  individual sub-components of our `CaptionedImage` and ensure that they are stylable (unless for some reason they shouldn't be.)  While this isn't required, we recommend using the [FClasses](Development/Architecture/FClasses) functionality so that in future it will allow us to easily replace or modify the individual components with either new/modified function or design.
 
-Lets create a `HeaderImage` that is full-width, linkable image with a token that gives the option to remove the link.
-
-1. Create HeaderImage folder
-Let's create a HeaderImage folder in `/src/components` and create two files within this folder `index.tsx` & `token.tsx`.  This is a best practice to start creating components in this manner.  The index.tsx contains the template defining how your component functions and token.tsx contains the design elements control how your component looks.
-
-1. Lets start work on the `index.tsx` and get the imports setup.  This is pretty self explanatory. If you forget one you will be warned and it won't work!
-    ```
-    import React from 'react';
-    import { flow } from 'lodash';
-    import {
-      withDesign,
-      designable,
-      DesignableComponentsProps,
-      Div,
-      A,
-      Img,
-      StylableProps,
-    } from '@bodiless/fclasses';
-    import {
-      asBodilessImage,
-      asBodilessLink,
-    } from '@bodiless/components';
-    import { withNode } from '@bodiless/core';
-    ```
-1. The first step is to define all the  individual sub-components of our HeaderImage and ensure that they are stylable. 
-While this isn't required, we recommend using the [FClasses](Development/Architecture/FClasses) functionality so that in future it will allow us to easily replace or modify the individual components with either new/modified function or design.
-
-   * The HeaderImageComponents define each individual component as Styleable Props.  StylableProps
-
+   * The CaptionedImageComponents define each individual component as Styleable Props.  
+       * StylableProps is defining that you will be passing FClasses to this component. 
 
     ```
-    export type HeaderImageComponents = {
-      ImageWrapper: ComponentType<StylableProps>,
-      ImageLink: ComponentType<StylableProps>,
+    export type CaptionedImageComponents = {
+      Wrapper: ComponentType<StylableProps>,
       Image: ComponentType<StylableProps>,
+      Body: ComponentType<StylableProps>,
     };
     ```
     
-   * The headerImageStart:HeaderImageComponents defines what each component is. 
+   * The captionedImageStart:CaptionedImageComponents defines what each component is. 
     ```
-    const headerImageStart:HeaderImageComponents = {
-      ImageWrapper: Div,
-      ImageLink: A,
+    const captionedImageStart:CaptionedImageComponents = {
+      Wrapper: Section,
       Image: Img,
+      Body: Div,
     };
-    
-    type Props = DesignableComponentsProps<HeaderImageComponents> & { };
+
+    type Props = DesignableComponentsProps<CaptionedImageComponents> & { };
     ```
 
-1. Next, let's define what the component will render--this is really the base template for our component.  As you can see, It will render a linked image in a div wrapper.
+1. Next, let's define what the component will render--this is really the base template for our component.  By combining what is defined above with this layout, it will render an image & div in a section as the wrapper.
     ```
-    const HeaderImageBase: FC<Props> = ({ components }) => {
+    const CaptionedImageBase: FC<Props> = ({ components }) => {
       const {
-        ImageWrapper,
+        Wrapper,
         Image,
-        ImageLink,
+        Body,
       } = components;
 
       return (
-        <ImageWrapper>
-          <ImageLink>
-            <Image />
-          </ImageLink>
-        </ImageWrapper>
+        <Wrapper>
+          <Image />
+          <Body />
+        </Wrapper>
       );
     };
     ```
     
-    Note that the actual sub-components here are *injected*; that is, they are passed into the component via a `components` prop.  We defined the defaults for these components above (`headerImageStart`), but we will actually render whatever we are passed. 
+    Note: that the actual sub-components here are *injected*; that is, they are passed into the component via a `components` prop.  We defined the defaults for these components above (`captionedImageStart`), but we will actually render whatever we are passed. 
     
 1. However, the usual pattern is not to pass these components directly.  Instead, let's wrap our component with `designable` to allow consumers  to provide styling through *higher order components* (HOC's) which will be applied to the defaults. (Note, you should already be familiar with the use if `withNode` to provide your component with a place to store its data).
  
     ```
-    const HeaderImageClean = flow(
-      designable(headerImageStart),
+    const CaptionedImageClean = flow(
+      designable(captionedImageStart),
       withNode,
-    )(HeaderImageBase);
+    )(CaptionedImageBase);
     ```
     
    Next, lets pass in some HOC's via withDesign to make our component editable.
    
     ```
-    const asEditableHeaderImage = flow(
+    const asCaptionedImage = flow(
       withDesign({
-        Image: asBodilessImage('headerimage'),
-        ImageLink: asBodilessLink('imagelink'),
+        Image: asBodilessImage('image'),
+        Body: asEditorBasic(
+          'body',
+          'Caption',
+        ),
       }),
     );
     ```
     
-    withDesign takes an object whose keys are the names of the subcomponents which belong to our HeaderImage, and whose values are higher-order components which should be applied to each. As you'll see below, these HOC's often carry elements of styling, and correspond to the "tokens" of a design system. Here, they apply functionality, but the pattern is the same.
+    withDesign takes an object whose keys are the names of the subcomponents which belong to our CaptionedImage, and whose values are higher-order components which should be applied to each. As you'll see below, these HOC's often carry elements of styling, and correspond to the "tokens" of a design system. Here, they apply functionality, but the pattern is the same.
 
-    Note that these HOC's (or tokens) are defined at the site level. For now, they are just pass-through's to the core Bodiless utilities - but in many cases you will want to customize these at the site level (for example, to provide a different image selector, or a link with an editable target attribute.)
+    Note, that these HOC's (or tokens) are defined at the site level. For now, they are just pass-through's to the core Bodiless utilities - but in many cases you will want to customize these at the site level (for example, to provide a different image selector, or a link with an editable target attribute.)
 
 1.  Lastly, lets combine these together and export. 
     ```
-    const HeaderImage = asEditableHeaderImage(HeaderImageClean);
+    const CaptionedImage = asCaptionedImage(CaptionedImageClean);
+    export default CaptionedImage;
+    export {
+      CaptionedImage,
+      CaptionedImageClean,
+      asCaptionedImage,
+    };
+    ```
 
-    export default HeaderImage;
+1. Final step in this file, is make sure the imports are correct. This is pretty self explanatory. If you forget one you will be warned and it won't work!
+    ```
+    import React, { FC } from 'react';
+    import { asBodilessImage } from '@bodiless/components';
+    import { withNode } from '@bodiless/core';
+    import {
+      withDesign,
+      designable,
+      DesignableComponentsProps,
+      Div,
+      Section,
+      Img,
+      StylableProps,
+    } from '@bodiless/fclasses';
+    import { flow } from 'lodash';
+    import { asEditorBasic } from '../Editors';
     ```
     
-1. Turning our focus to the `token.tsx`, this is where we will define some variations on what the component will look like .  We start with the imports and then export two different stylings, with
-    * `asHeaderImageDefaultStyle` being a full width image, with rounded corners
-    * `asHeaderImageNotLinkable` simply removing the link from the image.
-
-    Note that these HOC's themselves can be considered "tokens" which describe design elements which can be applied to our HeaderImage as a whole.
-
+1. The redesigned `ImageCaptioned.tsx` contains the template defining how your component functions, but has no design or styling of the component. Let's create a `token.tsx` and put in a few design elements to define some variations on what the component could use.
 
     ```
-    import React from 'react';
-    import { flow } from 'lodash';
     import {
       withDesign,
       addClasses,
-      remove,
     } from '@bodiless/fclasses';
-    import { asImageRounded } from '../Elements.token';
 
-    export const asHeaderImageDefaultStyle = withDesign({
-      ImageWrapper: addClasses('relative'),
-      ImageLink: addClasses(''),
-      Image: flow(
-        addClasses('m-0 w-full h-auto'),
-        asImageRounded,
-      ),
+    const asImageTile = withDesign({
+      Wrapper: addClasses('mx-2 border-8'),
+      Image: addClasses('w-full'),
     });
+    
+    export {
+      asImageTile,
+    }
+    ```
+    
+    These Component Tokens are really no different than Element tokens except they apply to multiple subcomponents. In the `asImageTile`, you can see we added margin, border to the wrapper and made sure the image shows full-width.
+    
+    Note that these HOC's themselves can be considered "tokens" which describe design elements which can be applied to our `CaptionedImage` as a whole.
+    
+    **TIP**: By convention all Component Tokens start with `as`.
+    
 
-    export const asHeaderImageNotLinkable = withDesign({
-      ImageLink: remove,
-    });
+## 5. Let's use that CaptionedImage & PrimaryHeader on the homepage.
+
+Let's take the two components we have and updated and show the flexibility. The `CaptionedImage` caption could be replaced with Header H1 component.
+
+1. On the homepage, import in the `CaptionedImage` and define this new variation.
 
     ```
-
-1. Note, above we used a new token describing rounded corners (`asImageRounded`).  This would belong to the design system of the site, and should be placed in an `Elements.token.ts` file:
-
-    ```
-    const asImageRounded = addClasses('rounded-lg');
-    ```
-    We have already touched the `elements.token.ts` file in a previous step but you can see these tokens use the same [FClasses](Development/Architecture/FClasses) that the components are using and add styling via `addClasses`. 
-
-## 5. Let's use that Header Image Component both on the front page and gallery page.
-
-1. On the homepage, import in the `HeaderImage` and tokens, and remove the previous local HeaderImage definition:
-
-    ```
-    import HeaderImage from '../../components/HeaderImage';
-    import { asHeaderImageDefaultStyle, asHeaderImageNoLink } from '../../components/HeaderImage/token';
-
-    const HomePageHeaderImage = flow(asHeaderImageDefaultStyle, asHeaderImageNoLink)(HeaderImage);
+    import { asCaptionedImage, CaptionedImage } from '../../components/Gallery-Design/CaptionedImage';
+    
+    const PageHeader = flow(
+      asCaptionedImage,
+      withDesign({
+        Body: replaceWith(PrimaryHeader),
+      }),
+    )(CaptionedImage);
     ```
 
-    and replace
+    You can see we modified the HOC's `withDesign` and replaced the body (previously defined `asBasicEditor` rendering as div) to the basic editable rendering as H1.
+    
+    Within the homepage remove the combination of HeaderImage & PrimaryHeader and add the PageHeader as it renders an editable image as well as the H1.
 
     ```
       <div className="flex my-3 w-full">
         <HeaderImage />
       </div>
+      <PrimaryHeader />
     ```
     
-    with ```<HomePageHeaderImage />```
-
-1. On the gallery, import in the `HeaderImage` and tokens, and remove the previous local `HeaderImage` definition:
-
+    and replace with 
+    
     ```
-    import HeaderImage from '../../../components/HeaderImage';
-    import { asHeaderImageDefaultStyle } from '../../../components/HeaderImage/token';
-
-    const GalleryHeaderImage = asHeaderImageDefaultStyle(HeaderImage);
-    ```
-
-    and replace 
-
-    ```
-      <div className="flex my-3 w-full">
-        <HeaderImage />
-      </div>
+      <PageHeader />
     ```
     
-    with ```<GalleryHeaderImage />```
+    Reload the homepage and make sure it renders as expected!
 
 1. Visit the homepage & gallery page (http://localhost:8000 & http://localhost:8000/gallery) and homepage should be full width image and gallery should be linkable image.
 
-While this is simple component, proceeding in this manner gives us a few benefits: 
+While these are simple token and components we are wrapping in the design, proceeding in this manner as the components grow in either functionality or complexity gives us a few benefits: 
 
-* Imagine that a request came in that all images headers on all pages, should not have rounded corners.  You delete one element token out of asHeaderImageDefaultStyle and it takes effect on any `HeaderImage` in use on any page using this style and doesn't require going through each page.
-* Another benefit is this simplyifies your styling and eliminates the normal css cascade. 
-* Future changes also eliminates the risk that unintended elements may get the change.  We can safely remove the rounded corners of the header image and leave other images used elsewhere with rounded corners.
+* Separation of concern:  the design is separated from what the component is defined as.
+* Simplified Styling: this simplyifies styling of components and eliminates the normal css cascade that builds and grows over time.
+* Isolation: it keeps the styling isolated to the specific item minimizing the risk of affecting other non-related items. 
+
+These benefits apply during the build and future changes benefit as well.  For example, if there is a request to change a rendered H1 to H2 for SEO purposes, the styling or look won't be affected.
 
 For more information, read about [FClasses](Development/Architecture/FClasses) you will also find you can removeClasses, replace Components with another Component (replaceWith) allowing great flexibility is using other components or varying existing components.
