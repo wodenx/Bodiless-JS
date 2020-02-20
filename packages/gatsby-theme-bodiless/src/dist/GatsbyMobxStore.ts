@@ -12,14 +12,16 @@
  * limitations under the License.
  */
 
-import path from 'path';
 import {
-  observable, action, reaction, IReactionDisposer,
+  observable, action,
 } from 'mobx';
 import { AxiosPromise } from 'axios';
 // import isEqual from 'react-fast-compare';
 import BackendClient from './BackendClient';
-
+import addPageLeaver from './addPageLeaver';
+// eslint-disable-next-line import/no-cycle
+import Item from './GatsbyMobxStoreItem';
+import { ItemStateEvent } from './types';
 
 export type DataSource = {
   slug: string,
@@ -34,7 +36,7 @@ type GatsbyNode = {
 
 export type GatsbyData = {
   [collection: string]: {
-    edges: [GatsbyNode];
+    edges: GatsbyNode[];
   };
 };
 
@@ -48,85 +50,6 @@ type Client = {
   savePath(resourcePath: string, data: any): AxiosPromise<any>;
 };
 
-class Item {
-  @observable data = {};
-
-  @observable dirty = false;
-
-  store: GatsbyMobxStore;
-
-  dispose?: IReactionDisposer;
-
-  lockTimeout?: NodeJS.Timeout;
-
-  unLock() {
-    this.lockTimeout = setTimeout(() => {
-      this.dirty = false;
-    }, 5000);
-  }
-
-  lock() {
-    this.dirty = true;
-    if (this.lockTimeout !== undefined) {
-      clearTimeout(this.lockTimeout);
-    }
-  }
-
-  constructor(
-    store: GatsbyMobxStore,
-    key: string,
-    initialData = {},
-    save = true,
-  ) {
-    const saveEnabled = (process.env.BODILESS_BACKEND_SAVE_ENABLED || '1') === '1';
-    this.store = store;
-    this.data = initialData;
-    this.dirty = save;
-    const preparePostData = () => (this.dirty ? this.data : null);
-
-    // Extract the collection name (query alias) from the left-side of the key name.
-    const [collection, ...rest] = key.split('$');
-    // Re-join the rest of the key's right-hand side.
-    const fileName = rest.join('$');
-
-    // The query alias (collection) determines the filesystem location
-    // where to store the JSON data files.
-    const resourcePath = collection === 'Page'
-      ? path.join('pages', this.store.slug || '', fileName)
-      : path.join('site', fileName);
-
-    // Post this.data back to filesystem if dirty flag is true.
-    const postData = (data: {} | null) => {
-      if (!data) {
-        return;
-      }
-
-      // TODO: Don't hardcode 'pages' and provide mechanism for shared (cross-page) content.
-      // const resourcePath = path.join('pages', this.store.slug || '', fileName);
-      this.lock();
-      this.store.client.savePath(resourcePath, data).then(() => this.unLock());
-    };
-    // Determine if the resource path is for a page created for preview purposes
-    // we do not want to save data for these pages
-    const isPreviewTemplatePage = resourcePath.includes(path.join('pages', '___templates'));
-    if (saveEnabled && !isPreviewTemplatePage) {
-      postData(preparePostData());
-      this.dispose = reaction(preparePostData, postData, {
-        delay: 500,
-      });
-    }
-  }
-
-  @action update(data = {}, save = true) {
-    if (save) {
-      this.dirty = true;
-      this.data = data;
-    } else if (!this.dirty) {
-      this.data = data;
-    }
-  }
-}
-
 /**
  * Query names returned by GraphQL as object keys, with query results
  * contained in the edges property.
@@ -135,7 +58,7 @@ class Item {
  */
 
 export default class GatsbyMobxStore {
-  @observable store = new Map();
+  @observable store = new Map<string, Item>();
 
   client: Client;
 
@@ -146,6 +69,12 @@ export default class GatsbyMobxStore {
   constructor(nodeProvider: DataSource) {
     this.setNodeProvider(nodeProvider);
     this.client = new BackendClient();
+    addPageLeaver(this.getPendingItems.bind(this));
+  }
+
+  private getPendingItems() {
+    return Array.from(this.store.values())
+      .filter(item => item.isPending());
   }
 
   setNodeProvider(nodeProvider: DataSource) {
@@ -184,7 +113,7 @@ export default class GatsbyMobxStore {
             !existingData
             || JSON.stringify(existingData.data) !== JSON.stringify(data)
           ) {
-            this.setNode([key], data, false);
+            this.setNode([key], data, ItemStateEvent.UpdateFromServer);
           }
         } catch (e) {
           // console.log(e);
@@ -196,7 +125,7 @@ export default class GatsbyMobxStore {
 
   getKeys = () => Array.from(this.store.keys());
 
-  getNode = (keyPath: [string]) => {
+  getNode = (keyPath: string[]) => {
     const key = keyPath.join(nodeChildDelimiter);
     const item = this.store.get(key);
     const storeValue = item ? item.data : null;
@@ -204,16 +133,20 @@ export default class GatsbyMobxStore {
     return storeValue || dataValue || {};
   };
 
+  @action setItem = (key: string, item: Item) => {
+    this.store.set(key, item);
+  };
+
   /**
    * Mobx action saves or updates items to GatsbyMobxStore.store.
    */
-  @action setNode = (keyPath: [string], value = {}, save = true) => {
+  setNode = (keyPath: string[], value = {}, event = ItemStateEvent.UpdateFromBrowser) => {
     const key = keyPath.join(nodeChildDelimiter);
     const item = this.store.get(key);
     if (item) {
-      item.update(value, save);
+      item.update(value, event);
     } else {
-      this.store.set(key, new Item(this, key, value, save));
+      this.setItem(key, new Item(this, key, value, event));
     }
   };
 }
