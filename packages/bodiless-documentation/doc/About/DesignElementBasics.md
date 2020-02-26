@@ -1,56 +1,28 @@
 # Design Element Basics
 
-In this guide, we will continue to the gallery tutorial to apply some designs
-and implement some best practices. We will also introduce the Bodielss Design
-API. This is an opinionated set of tools and patterns for applying an extensible
-design system to a React site. It is nspired by principles functional css,
-atomic design and other functional programming paradigms (eg composition through
-higher order components). You can read more about it here, but at a very high
-level, it abstracts the building blocks of a design system - utility classes,
-tokens, elements and components -- to the site level, and allows a site builder
-to combine and compose them to style a site in a consistent manner -- or, to
-take an existing design system and extend or customize it to meet specific site
-needs.
+In this guide, we will continue to the gallery tutorial to apply some designs and implement some best practices. We will also introduce the BodilessJS Design API. This is an opinionated set of tools and patterns for applying an extensible design system to a React site. It is inspired by principles functional css, atomic design and other functional programming paradigms (e.g., composition through higher order components). You can read more about it here, but at a very high level, it abstracts the building blocks of a design system - utility classes, tokens, elements and components -- to the site level, and allows a site builder to combine and compose them to style a site in a consistent manner -- or, to
+take an existing design system and extend or customize it to meet specific site needs.
 
 ## Prerequisites:
-* Complete the [Site Build Basics](About/SiteBuildBasics) and launch the site's
-  editor interface.
-* Alternatively, if you want to fast-forward to this tutorial, copy over the
-  [gallery-final folder & contents](https://github.com/johnsonandjohnson/Bodiless-JS/tree/master/examples/test-site/src/data/pages/gallery-final)
-  and place in a [new site](About/GettingStarted?id=creating-a-new-site) at
-  `src/data/pages/gallery` and launch the site's editor interface. Note:
-  remember to rename the folder from `gallery-final` to `gallery`.
+* Complete the [Site Build Basics](About/SiteBuildBasics) and launch the site's editor interface.
+* Alternatively, if you want to fast-forward to this tutorial, copy over the [gallery-final folder & contents (https://github.com/johnsonandjohnson/Bodiless-JS/tree/master/examples/test-site/src/data/pages/gallery-final) and place in a [new site](About/GettingStarted?id=creating-a-new-site) at `src/data/pages/gallery` and launch the site's editor interface. Note: remember to rename the folder from `gallery-final` to `gallery`.
 
 ## 1. Convert the Gallery to use Site's Simple Editor
-In this step we are going to refactor the gallery page to use a rich text editor
-that is defined at site level, rather than a custom editor defined at page
-level. In general, the types of editors available on a site should be
-standardized to provide a consistent user experience. There is rarely a need for
-custom editors on individual pages. The Bodiless Starterprovides a set of
-predefined editors which can be customized to suit the needs of your site, but
-here we use one as-is.
+In this step we are going to refactor the gallery page to use a rich text editor that is defined at site level, rather than a custom editor defined at page level. In general, the types of editors available on a site should be standardized to provide a consistent user experience. There is rarely a need for custom editors on individual pages. The BodilessJS Starter provides a set of predefined editors which can be customized to suit the needs of your site, but here we use one as-is.
 
-1. Replace `import withSimpleEditor from './withSimpleEditor';`  
-     with `import { asEditorBasic } from '../../../components/Editors';`
+1. Replace `import withSimpleEditor from './withSimpleEditor';` 
+   with `import { asEditorBasic } from '../../../components/Editors';`
 1. Replace `const Body = withSimpleEditor('body', 'Body')(Fragment);`
-     with `const Body = asEditorBasic('body', 'Body')(Fragment);`
+   with `const Body = asEditorBasic('body', 'Body')(Fragment);`
 1. Repeat above steps in `CaptionedImage.tsx`
 1. Delete the file `withSimpleEditor.tsx`
-1. Run your site and visit the gallery page (http://localhost:8000/gallery) and
-   it should run exactly as it did before, with slightly different choices for
-   the Rich Text Editor in the body of the gallery page.
+1. Run your site and visit the gallery page (http://localhost:8000/gallery) and it should run exactly as it did before, with slightly different choices for the Rich Text Editor in the body of the gallery page.
 
-Note that our rich text editor is exported as a *higher order component*
-(`asEditorBasic`) rather than as a regular component. This allows it to be
-treated like any other design token, as a set of behaviors which can be applied
-along with other tokens to a variety of components.
+Note: that our rich text editor is exported as a *higher order component* (`asEditorBasic`) rather than as a regular component. This allows it to be treated like any other design token, as a set of behaviors which can be applied along with other tokens to a variety of components.
 
 ## 2. Make the Gallery reusable.
-If you have components which may appear on more than one page in your site, its
-best practice to place them in `src/components` so they can be reused by any
-page/template. While you could theoretically import them from another page,
-keeping reusable components organized in one place makes a site much easier to
-maintain.
+If you have components which may appear on more than one page in your site, its best practice to place them in `src/components` so they can be reused by any page/template. While you could theoretically import them from another page,
+keeping reusable components organized in one place makes a site much easier to maintain.
 
 1. Create a folder called Gallery in `src/components`
 1. Move the `Gallery.tsx` & `CaptionedImage.tsx` files to the
@@ -58,15 +30,10 @@ maintain.
 1. Rename `Gallery.tsx` -> `index.tsx` 
 1. Change the import on the page to import `Gallery` & `GalleryTile` from
    `../../../components/Gallery`
-1. Run your site and visit the gallery page (http://localhost:8000/gallery) and
-   it should run exactly as it did before.
+1. Run your site and visit the gallery page (http://localhost:8000/gallery) and it should run exactly as it did before.
 
 ## 3. Create a re-useable Primary Header for the site 
-Within `data/pages/gallery/index.jsx` (gallery page) & `data/pages/index.jsx`
-(homepage) you can see we use the same primary header `h1`. Let's make this
-primary header a shared component. This way if we change the style of the
-primary header, it will apply throughout the site instead of having to be fixed
-on each page.
+Within `data/pages/gallery/index.jsx` (gallery page) & `data/pages/index.jsx` (homepage) you can see we use the same primary header `h1`. Let's make this primary header a shared component. This way if we change the style of the primary header, it will apply throughout the site instead of having to be fixed on each page.
 
 1. In `src/components/Elements.token.ts` lets define a new H1 Primary Header
     ```
@@ -78,23 +45,17 @@ on each page.
     ````
 1. Remember to add imports needed & export this new component.
 
-1. Change the imports on both gallery index.jsx & homepage page index.jsx and
-   remove the current PrimaryHeader definitions.
+1. Change the imports on both gallery index.jsx & homepage page index.jsx and remove the current PrimaryHeader definitions.
 
-1. Run your site and visit the homepage & gallery page
-   (http://localhost:8000/gallery) and it should run exactly as it did before,
-   except the gallery title is not bold.
+1. Run your site and visit the homepage & gallery page (http://localhost:8000/gallery) and it should run exactly as it did before, except the gallery title is not bold.
 
 1. In `src/componets/Elements.token.ts` add a tailwind to class to `asBold`. 
     ```
     const asBold = addClasses('font-bold');
     ```
-1. Visit the homepage & gallery page (http://localhost:8000/gallery) and both H1
-   titles should be bold.
+1. Visit the homepage & gallery page (http://localhost:8000/gallery) and both H1 titles should be bold.
 
-HOC's like `asBold()` apply a design token (expressed as a collection of utility
-classes) to a single HTML element. Every token in your design system should have
-a corresponding HOC. This will:
+HOC's like `asBold()` apply a design token (expressed as a collection of utility classes) to a single HTML element. Every token in your design system should have a corresponding HOC. This will:
 * allow them to be reused throughout the site.
 * ensure consistency.
 * make them easy to extend or modify.
@@ -104,9 +65,7 @@ a corresponding HOC. This will:
 
 ### Changing or customizing an element token
 
-Let's imagine tha the design system for your site was updated, to decrease the font-weight
-for "bold" text. If the `asBold()` token HOC is used consistently across your site, then
-implementing this change is as easy as replacing:
+Let's imagine that the design system for your site was updated, to decrease the font-weight for "bold" text. If the `asBold()` token HOC is used consistently across your site, then implementing this change is as easy as replacing:
 
     const asBold = addClasses('font-bold');
 
@@ -115,8 +74,7 @@ with
     const asBold = addClasses('font-semibold');
 
 
-Similarly - let's say you are extending or customizing a design system from another site
-and want to make the same change.  If the tokens of that design system are exported from
+Similarly - let's say you are extending or customizing a design system from another site and want to make the same change.  If the tokens of that design system are exported from
 a package, then in your own `Elements.token.tsx` you can simply:
 
     import { asBold as asBoldBase } from 'some-design-system';
@@ -128,19 +86,11 @@ a package, then in your own `Elements.token.tsx` you can simply:
 
 
 ## 4. Refactor `CaptionedImage` to use the BodilessJS Design API
-The `CaptionedImage` is a small component that is a wrapper around image & body
-text. Let's go ahead and apply the [design api](Design/DesignSystem) to make it
-more flexible and reusable.
+The `CaptionedImage` is a small component that is a wrapper around image & body text. Let's go ahead and apply the [BodilessJS design api](Design/DesignSystem) to make it more flexible and reusable.
 
-1. Within `CaptionedImage.tsx`, the first step is to define all the individual
-   sub-components of our `CaptionedImage` and ensure that they are *stylable*
-   via the [FClasses](Development/Architecture/FClasses) API. While the latter
-   isn't strictly required, we highly recommend this approach to styling with
-   functional css. It will make it easy to apply or extend design tokens by
-   adding and removing utility classes.
+1. Within `CaptionedImage.tsx`, the first step is to define all the individual sub-components of our `CaptionedImage` and ensure that they are *stylable* via the [FClasses](Development/Architecture/FClasses) API. While the latter isn't strictly required, we highly recommend this approach to styling with functional css. It will make it easy to apply or extend design tokens by adding and removing utility classes.
 
-   * First we define the expected type of each individual component. Here we
-     require that each be stylable via FClasses (ie, accept `StylableProps`).  
+   * First, we define the expected type of each individual component. Here we require that each be stylable via FClasses (i.e., accept `StylableProps`). 
 
         ```
         export type CaptionedImageComponents = {
@@ -150,8 +100,7 @@ more flexible and reusable.
         };
         ```
     
-   * Then we define what to render by default for each component; we use the
-   stylable versions of basic HTML elements exported by `@bodiless/fclasses`.
+   * Then we define what to render by default for each component; we use the stylable versions of basic HTML elements exported by `@bodiless/fclasses`.
         ```
         const captionedImageStart:CaptionedImageComponents = {
           Wrapper: Section,
@@ -162,10 +111,8 @@ more flexible and reusable.
         type Props = DesignableComponentsProps<CaptionedImageComponents> & { };
         ```
 
-1. Now that we have our sub-components, let's define how they go together to make
-   a captioned image. This is really the base template for our component.
-   Combining the defaults defined above with this layout, we will render an
-   `img` & `div` wrapped in a `section`.
+1. Now that we have our sub-components, let's define how they go together to make a captioned image. This is really the base template for our component.
+   Combining the defaults defined above with this layout, we will render an `img` & `div` wrapped in a `section`.
     ```
     const CaptionedImageBase: FC<Props> = ({ components }) => {
       const {
@@ -183,17 +130,9 @@ more flexible and reusable.
     };
     ```
     
-    Note: that the actual sub-components here are *injected*; that is, they are
-    passed into the component via a `components` prop. We defined the defaults
-    for these components above (`captionedImageStart`), but we will actually
-    render whatever we are passed.
+    Note: that the actual sub-components here are *injected*; that is, they are passed into the component via a `components` prop. We defined the defaults for these components above (`captionedImageStart`), but we will actually render whatever we are passed.
     
-1. The usual pattern, however, is not to pass these components directly.
-   Instead, let's wrap our component with `designable` to allow consumers to
-   provide styling through *higher order components* (HOC's) which will be
-   applied to the defaults. (Note, we are also using `withNode` to give our
-   component a place to store its data. You should already be familiar with this
-   pattern from the previous tutorial.)
+1. The usual pattern, however, is not to pass these components directly. Instead, let's wrap our component with `designable` to allow consumers to provide styling through *higher order components* (HOC's) which will be applied to the defaults. (Note, we are also using `withNode` to give our component a place to store its data. You should already be familiar with this pattern from the previous tutorial.)
  
     ```
     const CaptionedImageClean = flow(
@@ -202,8 +141,7 @@ more flexible and reusable.
     )(CaptionedImageBase);
     ```
     
-   Next, lets pass in some HOC's via `withDesign` to create a "Component Token"
-   which makes our component editable.
+   Next, lets pass in some HOC's via `withDesign` to create a "Component Token" which makes our component editable.
    
     ```
     const asEditableCaptionedImage = flow(
@@ -217,19 +155,9 @@ more flexible and reusable.
     );
     ```
     
-    `withDesign` takes an object whose keys are the names of the sub-components
-    which belong to our `CaptionedImage`, and whose values are higher-order
-    components which should be applied to each. As you'll see below, these HOC's
-    often carry elements of styling, and correspond to the "tokens" of a design
-    system. Here, they apply functionality, but the pattern is the same.
+    `withDesign` takes an object whose keys are the names of the sub-component which belong to our `CaptionedImage`, and whose values are higher-order components which should be applied to each. As you'll see below, these HOC's often carry elements of styling, and correspond to the "tokens" of a design system. Here, they apply functionality, but the pattern is the same.
 
-    Note, that these HOC's (`asBodilessImage` and `asEditorBasic`) are defined
-    at the site level. For now, they are just pass-through's to the core
-    Bodiless utilities - but in many cases you will want to customize them
-    further at site level (for example, to provide a different image selector,
-    or a rich text editor which uses site-specific components to render
-    formatted text). Using the site-level tokens here ensures that such changes
-    to the editorial interface are applied consistently across the site.
+    Note, that these HOC's (`asBodilessImage` and `asEditorBasic`) are defined at the site level. For now, they are just pass-through's to the core BodilessJS utilities - but in many cases you will want to customize them further at site level (for example, to provide a different image selector, or a rich text editor which uses site-specific components to render formatted text). Using the site-level tokens here ensures that such changes to the editorial interface are applied consistently across the site.
 
 1. Lastly, lets combine these together and export. 
     ```
@@ -243,21 +171,14 @@ more flexible and reusable.
     ```
   It's worth looking at exactly what we're exporting:
 
-  * `CaptionedImageClean` is the most basic version of our component. It will
-    serve as the base to which design tokens can be applied, and can be used in
-    contexts where we don't want to allow the content to be edited.
-  * `asEditableCaptionedImage` is a *component level* token which makes
-    our clean component editable, and can be applied wherever we do
-    want to allow the content to be edited.
-  * `CaptionedImage` combines the above and is exported for convenience,
-    since we expect that in most cases we'll want the component to be editable.
+  * `CaptionedImageClean` is the most basic version of our component. It will serve as the base to which design tokens can be applied, and can be used in contexts where we don't want to allow the content to be edited.
+  * `asEditableCaptionedImage` is a *component level* token which makes our clean component editable, and can be applied wherever we do want to allow the content to be edited.
+  * `CaptionedImage` combines the above and is exported for convenience, since we expect that in most cases we'll want the component to be editable.
 
-  Note that we have not, as yet, applied any styling or design tokens.
+  Note, that we have not, as yet, applied any styling or design tokens.
     
 
-1. As a final step in this file, we make sure the imports are correct. This is
-   pretty self explanatory. If you forget one you will be warned and it won't
-   work!
+1. As a final step in this file, we make sure the imports are correct. This is pretty self explanatory. If you forget one you will be warned and it won't work!
     ```
     import React, { FC } from 'react';
     import { asBodilessImage } from '@bodiless/components';
@@ -278,8 +199,7 @@ more flexible and reusable.
 
 ## 5. Combine `CaptionedImage` & `PrimaryHeader` on the homepage.
 
-Let's take the components we have just created and combine them. Imagine that our design
-calls for a page header block on the homepage with image and a header text.
+Let's take the components we have just created and combine them. Imagine that our design calls for a page header block on the homepage with image and a header text.
 
 1. On the homepage, import the `CaptionedImage` component and define this new variation:
 
@@ -287,20 +207,15 @@ calls for a page header block on the homepage with image and a header text.
     import { CaptionedImage } from '../../components/Gallery-Design/CaptionedImage';
     
     const PageHeader = flow(
-d      withDesign({
+      withDesign({
         Body: replaceWith(PrimaryHeader),
       }),
     )(CaptionedImage);
     ```
 
-    You can see we "modified the design" of the original captioned image,
-    replacomg the body (previously defined as a `div` wrapped in
-    `asBasicEditor`) with our `PrimaryHeader.
+    You can see we "modified the design" of the original captioned image, replacing the body (previously defined as a `div` wrapped in `asBasicEditor`) with our `PrimaryHeader.
 
-    Note the use of the `replaceWith` HOC here.  Remember that the object passed to `withDesign`
-    is always a set of higher-order components.  In most cases you will just want to use these to
-    apply styling to the default elemetns defined in the component's design.  For example, we
-    might have written:
+    Note the use of the `replaceWith` HOC here.  Remember that the object passed to `withDesign` is always a set of higher-order components.  In most cases you will just want to use these to apply styling to the default elements defined in the component's design.  For example, we might have written:
     ```
     const PageHeader = flow(
        withDesign({
@@ -325,32 +240,20 @@ d      withDesign({
       <PageHeader />
     ```
     
-    Reload the homepage and make sure it renders as expected. We could take this
-    step farther and move our `HeaderImage` to `src/components` and reuse it
-    across all the pages. It could also have linkable header image, apply the
-    title over the image, etc. We will leave this as exercise for you to do on
-    your own.
+    Reload the homepage and make sure it renders as expected. We could take this step farther and move our `HeaderImage` to `src/components` and reuse it across all the pages. It could also have linkable header image, apply the title over the image, etc. We will leave this as exercise for you to do on your own.
 
-While this a simple component we are wrapping in the design, proceeding in this
-manner as the components grow in either functionality or complexity gives us a
-few benefits:
+While this a simple component we are wrapping in the design, proceeding in this manner as the components grow in either functionality or complexity gives us a few benefits:
 
 * Design is separated from the internal markup of the component.
-* Simplified Styling: this simplifies styling of components and eliminates the
-  normal css cascade that builds and grows over time.
-* Isolation: it keeps the styling isolated to the specific item minimizing the
-  risk of affecting other non-related items.
+* Simplified Styling: this simplifies styling of components and eliminates the normal css cascade that builds and grows over time.
+* Isolation: it keeps the styling isolated to the specific item minimizing the risk of affecting other non-related items.
 * Reuseability as is or with extending.
 
-These benefits apply during the initial build and future changes benefit as
-well. For example, if there is a request to change a rendered H1 to H2 for SEO
-purposes, this can easily be achieved.
+These benefits apply during the initial build and future changes benefit as well. For example, if there is a request to change a rendered H1 to H2 for SEO purposes, this can easily be achieved.
 
 ## 6. Continue with wrapping the `Gallery` with Design API
 
-1. The current files in Gallery folder contain the templates defining how your
-   component functions. Let's create a `token.tsx` and move the design styles to
-   a separate file.
+1. The current files in Gallery folder contain the templates defining how your component functions. Let's create a `token.tsx` and move the design styles to a separate file.
 
     ```
     import {
@@ -388,18 +291,11 @@ purposes, this can easily be achieved.
     }
     ```
     
-    These HOC's themselves can be considered "Component Tokens" which describe design
-    elements which can be applied to the components as a whole. In other words,
-    "Component Tokens" are no different than normal Element tokens except they apply
-    to multiple sub-components. In `asImageTile`, you can see we added
-    margin, border to the wrapper and made sure the image shows full-width. All
-    tokens here were taken from the existing `Gallery/index.tsx` file.
+    These HOC's themselves can be considered "Component Tokens" which describe design elements which can be applied to the components as a whole. In other words, "Component Tokens" are no different than normal Element tokens except they apply to multiple sub-components. In `asImageTile`, you can see we added margin, border to the wrapper and made sure the image shows full-width. All tokens here were taken from the existing `Gallery/index.tsx` file.
     
     **TIP**: By convention all Component Tokens start with `as`.
 
-1. Let's update the `Gallery/index.tsx` and use the component tokens in place of
-   the current styling. In addition, let's wrap the Gallery Component in the
-   Design API as well, using the same method we just did.
+1. Let's update the `Gallery/index.tsx` and use the component tokens in place of the current styling. In addition, let's wrap the Gallery Component in the Design API as well, using the same method we just did.
 
     ```
     import React, { FC } from 'react';
@@ -504,7 +400,6 @@ purposes, this can easily be achieved.
 
 All of this should look familiar now and shouldn't need more explanation.
 
-The `Gallery` naming & functionality remained the same so there is no need to
-update the gallery page.
+The `Gallery` naming & functionality remained the same so there is no need to update the gallery page.
 
 For more information, read about [FClasses](Development/Architecture/FClasses).
