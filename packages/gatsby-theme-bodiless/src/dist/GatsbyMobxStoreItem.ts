@@ -20,7 +20,7 @@ import {
 import GatsbyMobxStore from './GatsbyMobxStore';
 import { ItemStateEvent } from './types';
 
-enum ItemState {
+export enum ItemState {
   Clean,
   Flushing,
   Locked,
@@ -176,5 +176,9 @@ export default class GatsbyMobxStoreItem {
 
   isPending() {
     return this.state === ItemState.Flushing || this.state === ItemState.Queued;
+  }
+
+  isClean() {
+    return this.state === ItemState.Clean;
   }
 }
