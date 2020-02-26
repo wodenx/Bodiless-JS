@@ -127,7 +127,7 @@ a package, then in your own `Elements.token.tsx` you can simply:
     );
 
 
-## 4. Refactor `CaptionedImage` to use the Bodiless Design API
+## 4. Refactor `CaptionedImage` to use the BodilessJS Design API
 The `CaptionedImage` is a small component that is a wrapper around image & body
 text. Let's go ahead and apply the [design api](Design/DesignSystem) to make it
 more flexible and reusable.
@@ -162,7 +162,7 @@ more flexible and reusable.
         type Props = DesignableComponentsProps<CaptionedImageComponents> & { };
         ```
 
-1. Now that we have our subcomonents, let's define how they go together to make
+1. Now that we have our sub-components, let's define how they go together to make
    a captioned image. This is really the base template for our component.
    Combining the defaults defined above with this layout, we will render an
    `img` & `div` wrapped in a `section`.
@@ -217,7 +217,7 @@ more flexible and reusable.
     );
     ```
     
-    `withDesign` takes an object whose keys are the names of the subcomponents
+    `withDesign` takes an object whose keys are the names of the sub-components
     which belong to our `CaptionedImage`, and whose values are higher-order
     components which should be applied to each. As you'll see below, these HOC's
     often carry elements of styling, and correspond to the "tokens" of a design
@@ -391,7 +391,7 @@ purposes, this can easily be achieved.
     These HOC's themselves can be considered "Component Tokens" which describe design
     elements which can be applied to the components as a whole. In other words,
     "Component Tokens" are no different than normal Element tokens except they apply
-    to multiple subcomponents. In `asImageTile`, you can see we added
+    to multiple sub-components. In `asImageTile`, you can see we added
     margin, border to the wrapper and made sure the image shows full-width. All
     tokens here were taken from the existing `Gallery/index.tsx` file.
     
