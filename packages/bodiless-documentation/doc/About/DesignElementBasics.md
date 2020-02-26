@@ -1,6 +1,6 @@
 # Design Element Basics
 
-In this guide, we will continue to the gallery tutorial to apply some designs and implement some best practices. We will also introduce the BodilessJS Design API. This is an opinionated set of tools and patterns for applying an extensible design system to a React site. It is inspired by principles functional css, atomic design and other functional programming paradigms (e.g., composition through higher order components). You can read more about it here, but at a very high level, it abstracts the building blocks of a design system - utility classes, tokens, elements and components -- to the site level, and allows a site builder to combine and compose them to style a site in a consistent manner -- or, to
+In this guide, we will continue to the gallery tutorial to apply some designs and implement some best practices. We will also introduce the Bodiless Design API. This is an opinionated set of tools and patterns for applying an extensible design system to a React site. It is inspired by principles functional css, atomic design and other functional programming paradigms (e.g., composition through higher order components). You can read more about it here, but at a very high level, it abstracts the building blocks of a design system - utility classes, tokens, elements and components -- to the site level, and allows a site builder to combine and compose them to style a site in a consistent manner -- or, to
 take an existing design system and extend or customize it to meet specific site needs.
 
 ## Prerequisites:
@@ -8,7 +8,7 @@ take an existing design system and extend or customize it to meet specific site 
 * Alternatively, if you want to fast-forward to this tutorial, copy over the [gallery-final folder & contents (https://github.com/johnsonandjohnson/Bodiless-JS/tree/master/examples/test-site/src/data/pages/gallery-final) and place in a [new site](About/GettingStarted?id=creating-a-new-site) at `src/data/pages/gallery` and launch the site's editor interface. Note: remember to rename the folder from `gallery-final` to `gallery`.
 
 ## 1. Convert the Gallery to use Site's Simple Editor
-In this step we are going to refactor the gallery page to use a rich text editor that is defined at site level, rather than a custom editor defined at page level. In general, the types of editors available on a site should be standardized to provide a consistent user experience. There is rarely a need for custom editors on individual pages. The BodilessJS Starter provides a set of predefined editors which can be customized to suit the needs of your site, but here we use one as-is.
+In this step we are going to refactor the gallery page to use a rich text editor that is defined at site level, rather than a custom editor defined at page level. In general, the types of editors available on a site should be standardized to provide a consistent user experience. There is rarely a need for custom editors on individual pages. The Bodiless Starter provides a set of predefined editors which can be customized to suit the needs of your site, but here we use one as-is.
 
 1. Replace `import withSimpleEditor from './withSimpleEditor';` 
    with `import { asEditorBasic } from '../../../components/Editors';`
@@ -85,8 +85,8 @@ a package, then in your own `Elements.token.tsx` you can simply:
     );
 
 
-## 4. Refactor `CaptionedImage` to use the BodilessJS Design API
-The `CaptionedImage` is a small component that is a wrapper around image & body text. Let's go ahead and apply the [BodilessJS design api](Design/DesignSystem) to make it more flexible and reusable.
+## 4. Refactor `CaptionedImage` to use the Bodiless Design API
+The `CaptionedImage` is a small component that is a wrapper around image & body text. Let's go ahead and apply the [Bodiless design api](Design/DesignSystem) to make it more flexible and reusable.
 
 1. Within `CaptionedImage.tsx`, the first step is to define all the individual sub-components of our `CaptionedImage` and ensure that they are *stylable* via the [FClasses](Development/Architecture/FClasses) API. While the latter isn't strictly required, we highly recommend this approach to styling with functional css. It will make it easy to apply or extend design tokens by adding and removing utility classes.
 
@@ -157,7 +157,7 @@ The `CaptionedImage` is a small component that is a wrapper around image & body 
     
     `withDesign` takes an object whose keys are the names of the sub-component which belong to our `CaptionedImage`, and whose values are higher-order components which should be applied to each. As you'll see below, these HOC's often carry elements of styling, and correspond to the "tokens" of a design system. Here, they apply functionality, but the pattern is the same.
 
-    Note, that these HOC's (`asBodilessImage` and `asEditorBasic`) are defined at the site level. For now, they are just pass-through's to the core BodilessJS utilities - but in many cases you will want to customize them further at site level (for example, to provide a different image selector, or a rich text editor which uses site-specific components to render formatted text). Using the site-level tokens here ensures that such changes to the editorial interface are applied consistently across the site.
+    Note, that these HOC's (`asBodilessImage` and `asEditorBasic`) are defined at the site level. For now, they are just pass-through's to the core Bodiless utilities - but in many cases you will want to customize them further at site level (for example, to provide a different image selector, or a rich text editor which uses site-specific components to render formatted text). Using the site-level tokens here ensures that such changes to the editorial interface are applied consistently across the site.
 
 1. Lastly, lets combine these together and export. 
     ```
