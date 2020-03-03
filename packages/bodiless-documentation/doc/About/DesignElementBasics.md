@@ -351,7 +351,9 @@ a header text.
     it across all the pages. It could also have linkable header image, apply the title
     over the image, etc. We will leave this as exercise for you to do on your own.
 
-While this a simple component we are wrapping in the design, proceeding in this manner as the components grow in either functionality or complexity gives us a few benefits:
+While this a simple component we are wrapping in the design, proceeding in this
+manner as the components grow in either functionality or complexity gives us a
+few benefits:
 
 * Design is separated from the internal markup of the component.
 * Simplified Styling: this simplifies styling of components and eliminates the normal css cascade that builds and grows over time.
