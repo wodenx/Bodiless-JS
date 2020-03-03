@@ -347,7 +347,8 @@ While this a simple component we are wrapping in the design, proceeding in this 
 
 * Design is separated from the internal markup of the component.
 * Simplified Styling: this simplifies styling of components and eliminates the normal css cascade that builds and grows over time.
-* Isolation: it keeps the styling isolated to the specific item minimizing the risk of affecting other non-related items.
+* Isolation: it keeps the styling isolated to the specific item minimizing the risk
+of affecting other non-related items.
 * Reuseability as is or with extending.
 
 These benefits apply during the initial build and future changes benefit as well.
