@@ -314,7 +314,9 @@ a header text.
     )(CaptionedImage);
     ```
 
-    You can see we "modified the design" of the original captioned image, replacing the body (previously defined as a `div` wrapped in `asBasicEditor`) with our `PrimaryHeader.
+    You can see we "modified the design" of the original captioned image, replacing
+    the body (previously defined as a `div` wrapped in `asBasicEditor`) with our
+    `PrimaryHeader.
 
     Note the use of the `replaceWith` HOC here.  Remember that the object passed to `withDesign` is always a set of higher-order components.  In most cases you will just want to use these to apply styling to the default elements defined in the component's design.  For example, we might have written:
     ```
