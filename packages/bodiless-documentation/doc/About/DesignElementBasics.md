@@ -356,7 +356,8 @@ manner as the components grow in either functionality or complexity gives us a
 few benefits:
 
 * Design is separated from the internal markup of the component.
-* Simplified Styling: this simplifies styling of components and eliminates the normal css cascade that builds and grows over time.
+* Simplified Styling: this simplifies styling of components and eliminates the normal
+css cascade that builds and grows over time.
 * Isolation: it keeps the styling isolated to the specific item minimizing the risk
 of affecting other non-related items.
 * Reuseability as is or with extending.
