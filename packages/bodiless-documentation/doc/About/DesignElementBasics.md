@@ -298,7 +298,9 @@ to make it more flexible and reusable.
 
 ## 5. Combine `CaptionedImage` & `PrimaryHeader` on the homepage.
 
-Let's take the components we have just created and combine them. Imagine that our design calls for a page header block on the homepage with image and a header text.
+Let's take the components we have just created and combine them. Imagine
+that our design calls for a page header block on the homepage with image and
+a header text.
 
 1. On the homepage, import the `CaptionedImage` component and define this new variation:
 
