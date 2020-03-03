@@ -354,7 +354,9 @@ These benefits apply during the initial build and future changes benefit as well
 
 ## 6. Continue with wrapping the `Gallery` with Design API
 
-1. The current files in Gallery folder contain the templates defining how your component functions. Let's create a `token.tsx` and move the design styles to a separate file.
+1. The current files in Gallery folder contain the templates defining how
+your component functions. Let's create a `token.tsx` and move the
+design styles to a separate file.
 
     ```
     import {
