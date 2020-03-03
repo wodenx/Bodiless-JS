@@ -200,7 +200,10 @@ to make it more flexible and reusable.
     };
     ```
     
-    Note: that the actual sub-components here are *injected*; that is, they are passed into the component via a `components` prop. We defined the defaults for these components above (`captionedImageStart`), but we will actually render whatever we are passed.
+    Note: that the actual sub-components here are *injected*; that is, they
+    are passed into the component via a `components` prop. We defined
+    the defaults for these components above (`captionedImageStart`), but
+    we will actually render whatever we are passed.
     
 1. The usual pattern, however, is not to pass these components directly.
    Instead, let's wrap our component with `designable` to allow consumers to
