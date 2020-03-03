@@ -392,7 +392,12 @@ These benefits apply during the initial build and future changes benefit as well
     }
     ```
     
-    These HOC's themselves can be considered "Component Tokens" which describe design elements which can be applied to the components as a whole. In other words, "Component Tokens" are no different than normal Element tokens except they apply to multiple sub-components. In `asImageTile`, you can see we added margin, border to the wrapper and made sure the image shows full-width. All tokens here were taken from the existing `Gallery/index.tsx` file.
+    These HOC's themselves can be considered "Component Tokens" which describe
+    design elements which can be applied to the components as a whole. In other
+    words, "Component Tokens" are no different than normal Element tokens except
+    they apply to multiple sub-components. In `asImageTile`, you can see we added
+    margin, border to the wrapper and made sure the image shows full-width. All tokens
+    here were taken from the existing `Gallery/index.tsx` file.
     
     **TIP**: By convention all Component Tokens start with `as`.
 
