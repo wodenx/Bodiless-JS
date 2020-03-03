@@ -350,7 +350,9 @@ While this a simple component we are wrapping in the design, proceeding in this 
 * Isolation: it keeps the styling isolated to the specific item minimizing the risk of affecting other non-related items.
 * Reuseability as is or with extending.
 
-These benefits apply during the initial build and future changes benefit as well. For example, if there is a request to change a rendered H1 to H2 for SEO purposes, this can easily be achieved.
+These benefits apply during the initial build and future changes benefit as well.
+For example, if there is a request to change a rendered H1 to H2 for SEO purposes,
+this can easily be achieved.
 
 ## 6. Continue with wrapping the `Gallery` with Design API
 
