@@ -396,7 +396,9 @@ These benefits apply during the initial build and future changes benefit as well
     
     **TIP**: By convention all Component Tokens start with `as`.
 
-1. Let's update the `Gallery/index.tsx` and use the component tokens in place of the current styling. In addition, let's wrap the Gallery Component in the Design API as well, using the same method we just did.
+1. Let's update the `Gallery/index.tsx` and use the component tokens in place
+of the current styling. In addition, let's wrap the Gallery Component in the
+Design API as well, using the same method we just did.
 
     ```
     import React, { FC } from 'react';
