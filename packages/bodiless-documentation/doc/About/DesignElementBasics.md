@@ -295,7 +295,9 @@ to make it more flexible and reusable.
 
 ## 5. Combine `CaptionedImage` & `PrimaryHeader` on the homepage.
 
-Let's take the components we have just created and combine them. Imagine that our design calls for a page header block on the homepage with image and a header text.
+Let's take the components we have just created and combine them. Imagine that
+our design calls for a page header block on the homepage with image and a header
+text.
 
 1. On the homepage, import the `CaptionedImage` component and define this new variation:
 
@@ -309,9 +311,14 @@ Let's take the components we have just created and combine them. Imagine that ou
     )(CaptionedImage);
     ```
 
-    You can see we "modified the design" of the original captioned image, replacing the body (previously defined as a `div` wrapped in `asBasicEditor`) with our `PrimaryHeader.
+    You can see we "modified the design" of the original captioned image,
+    replacing the body (previously defined as a `div` wrapped in
+    `asBasicEditor`) with our `PrimaryHeader.
 
-    Note the use of the `replaceWith` HOC here.  Remember that the object passed to `withDesign` is always a set of higher-order components.  In most cases you will just want to use these to apply styling to the default elements defined in the component's design.  For example, we might have written:
+    Note the use of the `replaceWith` HOC here. Remember that the object passed
+    to `withDesign` is always a set of higher-order components. In most cases
+    you will just want to use these to apply styling to the default elements
+    defined in the component's design. For example, we might have written:
     ```
     const PageHeader = flow(
        withDesign({
@@ -336,20 +343,32 @@ Let's take the components we have just created and combine them. Imagine that ou
       <PageHeader />
     ```
     
-    Reload the homepage and make sure it renders as expected. We could take this step farther and move our `HeaderImage` to `src/components` and reuse it across all the pages. It could also have linkable header image, apply the title over the image, etc. We will leave this as exercise for you to do on your own.
+    Reload the homepage and make sure it renders as expected. We could take this
+    step farther and move our `HeaderImage` to `src/components` and reuse it
+    across all the pages. It could also have linkable header image, apply the
+    title over the image, etc. We will leave these as exercises for you to do on
+    your own.
 
-While this a simple component we are wrapping in the design, proceeding in this manner as the components grow in either functionality or complexity gives us a few benefits:
+While this a simple component we are wrapping in the design, proceeding in this
+manner as the components grow in either functionality or complexity gives us a
+few benefits:
 
 * Design is separated from the internal markup of the component.
-* Simplified Styling: this simplifies styling of components and eliminates the normal css cascade that builds and grows over time.
-* Isolation: it keeps the styling isolated to the specific item minimizing the risk of affecting other non-related items.
+* Simplified Styling: this simplifies styling of components and eliminates the
+  normal css cascade that builds and grows over time.
+* Isolation: it keeps the styling isolated to the specific item minimizing the
+  risk of affecting other non-related items.
 * Reuseability as is or with extending.
 
-These benefits apply during the initial build and future changes benefit as well. For example, if there is a request to change a rendered H1 to H2 for SEO purposes, this can easily be achieved.
+These benefits apply during the initial build and future changes benefit as
+well. For example, if there is a request to change a rendered `h1` to `h2` for
+SEO purposes, this can easily be achieved.
 
 ## 6. Continue with wrapping the `Gallery` with Design API
 
-1. The current files in Gallery folder contain the templates defining how your component functions. Let's create a `token.tsx` and move the design styles to a separate file.
+1. The current files in Gallery folder contain the templates defining how your
+   component functions. Let's create a `token.tsx` and move the design styles to
+   a separate file.
 
     ```
     import {
@@ -368,14 +387,14 @@ These benefits apply during the initial build and future changes benefit as well
     });
 
     const asBlueBorder = withDesign({
-        Wrapper: addClasses('border-blue-400'),
+      Wrapper: addClasses('border-blue-400'),
     });
 
     const asRedBorder = withDesign({
       Wrapper: addClasses('border-red-400'),
     });
     const asGreenBorder = withDesign({
-        Wrapper: addClasses('border-green-400'),
+      Wrapper: addClasses('border-green-400'),
     });
 
     export {
@@ -387,11 +406,20 @@ These benefits apply during the initial build and future changes benefit as well
     }
     ```
     
-    These HOC's themselves can be considered "Component Tokens" which describe design elements which can be applied to the components as a whole. In other words, "Component Tokens" are no different than normal Element tokens except they apply to multiple sub-components. In `asImageTile`, you can see we added margin, border to the wrapper and made sure the image shows full-width. All tokens here were taken from the existing `Gallery/index.tsx` file.
+    These HOC's themselves can be considered "Component Tokens". Like normal
+    Element TOkens, they express units of design, but here these are applied to
+    complex components ("molecules" or "organisms" in the parlance of Atomic
+    Design) rather than indiviual elements ("atoms"). In other words, "Component
+    Tokens" are no different than normal Element tokens except they apply to
+    multiple sub-components. In `asImageTile`, you can see we added margin,
+    border to the wrapper and made sure the image shows full-width. All tokens
+    here were taken from the existing `Gallery/index.tsx` file.
     
     **TIP**: By convention all Component Tokens start with `as`.
 
-1. Let's update the `Gallery/index.tsx` and use the component tokens in place of the current styling. In addition, let's wrap the Gallery Component in the Design API as well, using the same method we just did.
+1. Let's update the `Gallery/index.tsx` and use the component tokens in place of
+   the current styling. In addition, let's wrap the Gallery Component in the
+   Design API as well, using the same method we just did.
 
     ```
     import React, { FC } from 'react';
@@ -468,7 +496,6 @@ These benefits apply during the initial build and future changes benefit as well
       <FlexboxGrid nodeKey="body" design={galleryDesign} />
     );
 
-
     const GalleryClean = flow(
       designable(galleryStart),
       withNode,
@@ -496,6 +523,7 @@ These benefits apply during the initial build and future changes benefit as well
 
 All of this should look familiar now and shouldn't need more explanation.
 
-The `Gallery` naming & functionality remained the same so there is no need to update the gallery page.
+The `Gallery` naming & functionality remained the same so there is no need to
+update the gallery page.
 
 For more information, read about [FClasses](Development/Architecture/FClasses).
