@@ -346,7 +346,10 @@ a header text.
       <PageHeader />
     ```
     
-    Reload the homepage and make sure it renders as expected. We could take this step farther and move our `HeaderImage` to `src/components` and reuse it across all the pages. It could also have linkable header image, apply the title over the image, etc. We will leave this as exercise for you to do on your own.
+    Reload the homepage and make sure it renders as expected. We could take
+    this a step farther and move our `HeaderImage` to `src/components` and reuse
+    it across all the pages. It could also have linkable header image, apply the title
+    over the image, etc. We will leave this as exercise for you to do on your own.
 
 While this a simple component we are wrapping in the design, proceeding in this manner as the components grow in either functionality or complexity gives us a few benefits:
 
