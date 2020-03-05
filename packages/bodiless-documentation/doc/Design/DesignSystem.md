@@ -58,7 +58,7 @@ styleguide. For example, here are the colors defined for the Bodiless admin UI:
 
 ### Element Tokens
 
-In BodilessJS "elements" are single HTML elements, roughly corresponding to
+In Bodiless "elements" are single HTML elements, roughly corresponding to
 "atoms" in the parlance of Atomic Design. *Element Tokens* are HOC that apply
 discrete design attributes to a single element, usually by applying one or more
 utility classes.
