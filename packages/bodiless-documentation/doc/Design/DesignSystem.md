@@ -95,7 +95,7 @@ const asPrimaryHeader = flow(
 
 ### Component Tokens
 
-BodilessJS extends the notion of design tokens to components which are larger
+Bodiless extends the notion of design tokens to components which are larger
 than simple elements ("molecules", "organisms", "templates" and even "pages" in
 atomic design lingo, though we don't draw much of a distinction among them). A
 "Component Token" is usually a colletion of element tokens which should be applied
