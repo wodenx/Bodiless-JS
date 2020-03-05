@@ -136,7 +136,7 @@ const asToutPink = flow(
 ### "Behavioral" Tokens
 
 In most design systems, tokens are used to express visual design attributes.
-BodilessJS extends this idea to include tokens which add units of
+Bodiless extends this idea to include tokens which add units of
 *functionality* or *behavior* to a component. This allows behaviors to be
 defined uniformly across the site and applied to components of different kinds.
 Such "behavioral" tokens can be applied at the Element or Component layer.
