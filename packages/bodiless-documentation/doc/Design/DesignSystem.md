@@ -29,7 +29,7 @@ curvature, typography, etc. They represent the primitive *options* available in 
 design system. These classes should be as unambiguous as possible, and should
 always have the same effect wherever they are applied.
 
-The BodilessJS starter-kit uses the *Tailwind* defaults to generate
+The Bodiless starter-kit uses the *Tailwind* defaults to generate
 this layer. This should be customized for any new site using values from the site's
 styleguide. For example, here are the colors defined for the Bodiless admin UI:
 ```js
