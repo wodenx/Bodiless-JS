@@ -158,7 +158,7 @@ const asEditableTout = withDesign({
 
 `asEditableTout` can now be composed with other tout tokens to make an editable
 version of all the different tout variants on your site, using standard editors
-for ecac
+for each composed text element.
 
 ## Applying Tokens to Components
 
