@@ -24,7 +24,7 @@ In Bodiless, we construct design tokens in three layers:
 
 The lowest level of the system consists of CSS "Utility Classes", usually
 produced by a functional CSS library like [Tailwind](https://tailwindcss.com/).
-These represent the smallest units of design: things like color pallette, border
+These represent the smallest units of design: things like color palette, border
 curvature, typography, etc. They represent the primitive *options* available in your
 design system. These classes should be as unambiguous as possible, and should
 always have the same effect wherever they are applied.
