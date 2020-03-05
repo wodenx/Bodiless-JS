@@ -15,7 +15,7 @@ elements and compound components. In most cases, the design token HOC's leverage
 classes.
 
 A compound component using this API will expose a styling API (a `design` prop) which
-describes the UI elements of which it is compoesed. Consumers then supply a
+describes the UI elements of which it is composed. Consumers then supply a
 list of higher-order components which should be applied to each element to modify
 its appearence or behavior. The framework allows nested wrapping of components
 to selectively extend or override individual elements. It also provides a tool
