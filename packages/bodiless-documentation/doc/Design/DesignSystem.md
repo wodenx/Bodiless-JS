@@ -18,7 +18,7 @@ very well defined in the
 > Design tokens are the visual design atoms of the design system — specifically,
 they are named entities that store visual design attributes.
 
-In BodilessJS, we construct design tokens in three layers:
+In Bodiless, we construct design tokens in three layers:
 
 ### Utility Classes
 
