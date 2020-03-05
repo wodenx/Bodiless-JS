@@ -150,7 +150,7 @@ be leveraged to make behavioral Component Tokens, eg:
 
 ```js
 import { asEditorSimple, asEditorBasic } from 'my-element-tokens';
-const asEditableTout = withDesigh({
+const asEditableTout = withDesign({
   Title: asEditorSimple('title', 'Enter title here'),
   Body: asEditorBasic('body', 'Enter body text here'),
 });
