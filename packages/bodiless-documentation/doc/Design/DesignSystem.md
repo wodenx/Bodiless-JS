@@ -276,7 +276,7 @@ hands on experience, you can proceed to the
 documentation for the [Design API](../Development/Architecture/FClasses).
 
 For reference, here is a flow diagram showing how utility classes, element
-tokens, compoennt tokens and components are composed to create a basic,
+tokens, component tokens and components are composed to create a basic,
 horizontal tout:
 
 ![](./ToutHorizontalDefaultFlow.svg)
