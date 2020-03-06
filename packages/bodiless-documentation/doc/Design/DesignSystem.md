@@ -30,18 +30,18 @@ very well defined in the
 > Design tokens are the visual design atoms of the design system — specifically,
 they are named entities that store visual design attributes.
 
-In BodilessJS, we construct design tokens in three layers:
+In Bodiless, we construct design tokens in three layers:
 
 ### Utility Classes
 
 The lowest level of the system consists of CSS "Utility Classes", usually
 produced by a functional CSS library like [Tailwind](https://tailwindcss.com/).
-These represent the smallest units of design: things like color pallette, border
+These represent the smallest units of design: things like color palette, border
 curvature, typography, etc. They represent the primitive *options* available in your
 design system. These classes should be as unambiguous as possible, and should
 always have the same effect wherever they are applied.
 
-The BodilessJS starter-kit uses the *Tailwind* defaults to generate
+The Bodiless starter-kit uses the *Tailwind* defaults to generate
 this layer. This should be customized for any new site using values from the site's
 styleguide. For example, here are the colors defined for the Bodiless admin UI:
 ```js
@@ -70,7 +70,7 @@ styleguide. For example, here are the colors defined for the Bodiless admin UI:
 
 ### Element Tokens
 
-In BodilessJS "elements" are single HTML elements, roughly corresponding to
+In Bodiless "elements" are single HTML elements, roughly corresponding to
 "atoms" in the parlance of Atomic Design. *Element Tokens* are HOC that apply
 discrete design attributes to a single element, usually by applying one or more
 utility classes.
@@ -107,7 +107,7 @@ const asPrimaryHeader = flow(
 
 ### Component Tokens
 
-BodilessJS extends the notion of design tokens to components which are larger
+Bodiless extends the notion of design tokens to components which are larger
 than simple elements ("molecules", "organisms", "templates" and even "pages" in
 atomic design lingo, though we don't draw much of a distinction among them). A
 "Component Token" is usually a colletion of element tokens which should be applied
@@ -148,7 +148,7 @@ const asToutPink = flow(
 ### "Behavioral" Tokens
 
 In most design systems, tokens are used to express visual design attributes.
-BodilessJS extends this idea to include tokens which add units of
+Bodiless extends this idea to include tokens which add units of
 *functionality* or *behavior* to a component. This allows behaviors to be
 defined uniformly across the site and applied to components of different kinds.
 Such "behavioral" tokens can be applied at the Element or Component layer.
@@ -162,7 +162,7 @@ be leveraged to make behavioral Component Tokens, eg:
 
 ```js
 import { asEditorSimple, asEditorBasic } from 'my-element-tokens';
-const asEditableTout = withDesigh({
+const asEditableTout = withDesign({
   Title: asEditorSimple('title', 'Enter title here'),
   Body: asEditorBasic('body', 'Enter body text here'),
 });
@@ -170,7 +170,7 @@ const asEditableTout = withDesigh({
 
 `asEditableTout` can now be composed with other tout tokens to make an editable
 version of all the different tout variants on your site, using standard editors
-for ecac
+for each composed text element.
 
 ## Applying Tokens to Components
 
@@ -288,7 +288,7 @@ hands on experience, you can proceed to the
 documentation for the [Design API](../Development/Architecture/FClasses).
 
 For reference, here is a flow diagram showing how utility classes, element
-tokens, compoennt tokens and components are composed to create a basic,
+tokens, component tokens and components are composed to create a basic,
 horizontal tout:
 
 ![](./ToutHorizontalDefaultFlow.svg)
