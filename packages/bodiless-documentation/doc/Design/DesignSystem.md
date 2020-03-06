@@ -9,6 +9,18 @@ consistently across a site. All tokens can be independently extended to meet
 specific design requirements without changing the overall design system, and
 without altering the internal structure of complex components.
 
+## Pre-requisites
+
+To get the most out of this document, you should have a basic familiarity with:
+
+* Atomic Design, Design Systems and Design Tokens
+* "Functional" or "Atomic" CSS
+* Fundamental principles of functional programming
+* React Higher Order Components.
+
+There are many excellent web resources on these topics, and we encourage you to
+read a few articles if any of these concepts are foreign to you.
+
 ## Design Tokens
 
 The building blocks of a Bodiless Design System are *Design Tokens*. These are
