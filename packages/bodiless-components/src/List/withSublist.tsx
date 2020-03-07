@@ -25,8 +25,8 @@ import { FinalProps as ListProps, ListDesignableComponents } from './types';
  */
 const withSublistToggle = (Sublist: ComponentType<ListProps>) => (
   (Item: ComponentType<PropsWithChildren<{}>> | string) => {
-    const ItemWithSublist: FC<ListProps> = ({ children, unwrap, nodeKey, ...rest }) => (
-      <Item {...rest}>
+    const ItemWithSublist: FC<ListProps> = ({ children, unwrap }) => (
+      <Item>
         {children}
         <Sublist unwrap={unwrap} nodeKey="sublist" />
       </Item>
