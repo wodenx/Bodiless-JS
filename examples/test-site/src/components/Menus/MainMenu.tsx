@@ -11,17 +11,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import { flow } from 'lodash';
+import React, { ComponentType } from 'react';
+import { flow, pick } from 'lodash';
 import {
   addClasses,
   addProps,
   removeClasses,
   withDesign,
+  replaceWith,
+  stylable,
+  HOC,
+  withoutProps,
 } from '@bodiless/fclasses';
 import {
   asEditable,
   List,
+  withSublist,
+  Link,
+  Editable,
+  asEditableList,
+  withLinkToggle,
 } from '@bodiless/components';
 import {
   asHorizontalMenu,
@@ -30,7 +39,8 @@ import {
   asEditableMainSubMenu,
   withSubmenu,
 } from '@bodiless/organisms';
-import { asExceptMobile } from '../Elements.token';
+import { withNode, withNodeKey } from '@bodiless/core';
+import { asExceptMobile, asEditableLink } from '../Elements.token';
 
 const asWhiteColoredLink = flow(
   removeClasses('bl-text-primary hover:bl-underline'),
@@ -41,6 +51,62 @@ const withLinkStyles = withDesign({
   ActiveLink: flow(asWhiteColoredLink, withActivePageStyles),
   Link: asWhiteColoredLink,
 });
+
+const sublistPropsToKeep = [
+  'children',
+  'unwrap', 
+  'nodeKey',
+  'design',
+];
+
+const keepProps = (propsToKeep?: string[]) => <P extends object>(Component: ComponentType<P>) => (props: P) => {
+  console.log('keepProps', Object.keys(props));
+  const newProps = propsToKeep ? pick(props, propsToKeep) : props;
+  return <Component {...newProps as P}  />;
+}
+  
+// const LinkTitle = (props: any) => (
+//   <Link nodeKey="link" {...props}><Editable nodeKey="text" placeholder="Item" /></Link>
+// );
+// /**
+//  * This is an editable list using our simple editable title.
+//  */
+// const EditableLinkList = flow(
+//   keepProps(sublistPropsToKeep),
+//   asEditableList,
+//   withDesign({
+//     Title: flow(
+//       replaceWith(LinkTitle),
+//       asWhiteColoredLink,
+//       addClasses('pl-5'),
+//     ),
+//     // Wrapper: flow(stylable, addClasses('pl-5')),
+//   }),
+// )(List);
+
+type AsEditable = (nodeKey?: string, placeholder?: string) => HOC;
+
+// TODO Export this from bodiless-components?
+const withEditableTitle = (editable: AsEditable) => withDesign({
+  Title: flow(
+    asEditableLink('title-link'),
+    withLinkToggle,
+    withNode,
+    withNodeKey('title'),
+    editable('text', 'Menu Item'),
+  ) as HOC,
+});
+
+const EditableLinkList = flow(
+  keepProps(sublistPropsToKeep),
+  asEditableList,
+  withEditableTitle(asEditable),
+  withDesign({
+    Wrapper: flow(stylable, addClasses('pl-5')),
+    Title: withLinkStyles,
+  }),
+)(List);
+
 const withMenuStyles = addClasses('hover:bg-teal-500 text-white text-left min-w-100 leading-loose text-sm px-2');
 const withTealBackground = addClasses('bg-teal-600');
 const withLimitedHeightStyles = addClasses('overflow-y-hidden max-h-menu-row');
@@ -62,6 +128,8 @@ const MenuSubList = flow(
   }),
 )(List);
 
+const CompoundMenuSubList = withSublist(EditableLinkList)(MenuSubList);
+
 const MenuList = flow(
   asEditableMainMenu(asEditable),
   asHorizontalMenu,
@@ -80,4 +148,4 @@ const MenuList = flow(
   asExceptMobile,
 )(List);
 
-export default withSubmenu(MenuSubList)(MenuList);
+export default withSubmenu(CompoundMenuSubList)(MenuList);
