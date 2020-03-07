@@ -11,25 +11,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { ComponentType, PropsWithChildren, FC } from 'react';
-import { flow, pick } from 'lodash';
+import React from 'react';
+import { flow } from 'lodash';
 import {
   addClasses,
   addProps,
   removeClasses,
   withDesign,
   stylable,
-  HOC,
 } from '@bodiless/fclasses';
 import {
   asEditable,
   List,
-  asEditableList,
-  withLinkToggle,
-  ListProps,
-  withToggleTo,
-  withToggleButton,
-  ListDesignableComponents,
 } from '@bodiless/components';
 import {
   asHorizontalMenu,
@@ -38,8 +31,8 @@ import {
   asEditableMainSubMenu,
   withSubmenu,
 } from '@bodiless/organisms';
-import { withNode, withNodeKey } from '@bodiless/core';
-import { asExceptMobile, asEditableLink } from '../Elements.token';
+import { asExceptMobile } from '../Elements.token';
+import { asColumnSubList, withColumnSubList } from './ColumnSubList';
 
 const asWhiteColoredLink = flow(
   removeClasses('bl-text-primary hover:bl-underline'),
@@ -72,40 +65,8 @@ const MenuSubList = flow(
   }),
 )(List);
 
-// TODO: THis is hackery to get rid of unwanted rc-menu props. Find a better way.
-const sublistPropsToKeep = [
-  'children',
-  'unwrap',
-  'nodeKey',
-  'design',
-];
-
-/**
- * HOC to remove all but the specified props.
- */
-const pickProps = (propsToPick?: string[]) => (
-  <P extends object>(Component: ComponentType<P>) => (props: P) => {
-    const newProps = propsToPick ? pick(props, propsToPick) : props;
-    return <Component {...newProps as P} />;
-  }
-);
-
-// TODO Export these from bodiless-components?
-type AsEditable = (nodeKey?: string, placeholder?: string) => HOC;
-const withEditableTitle = (editable: AsEditable) => withDesign({
-  Title: flow(
-    asEditableLink('title-link'),
-    withLinkToggle,
-    withNode,
-    withNodeKey('title'),
-    editable('text', 'Menu Item'),
-  ) as HOC,
-});
-
 const ColumnSubList = flow(
-  pickProps(sublistPropsToKeep),
-  asEditableList,
-  withEditableTitle(asEditable),
+  asColumnSubList,
   withDesign({
     Wrapper: flow(stylable, addClasses('pl-5')),
     // @ts-ignore
@@ -113,34 +74,8 @@ const ColumnSubList = flow(
   }),
 )(List);
 
-// TODO: Make this generic: allow alternate component to render the item with sublist.
-// This duplicates a lot of the code in withSublist.  We need to improve that code
-// so that it adds an "ItemWithSublist" component to the design.
-const withColumnSublistToggle = (Sublist: ComponentType<ListProps>) => (
-  (Item: ComponentType<PropsWithChildren<{}>> | string) => {
-    const ItemWithSublist: FC<ListProps> = ({
-      children, unwrap, nodeKey, ...rest
-    }) => (
-      <Item {...rest}>
-        {children}
-        <Sublist unwrap={unwrap} nodeKey="sublist" />
-      </Item>
-    );
-    // TODO: Why is this type-cast necessary?
-    return withToggleTo(Item)(addClasses('inline-block')(ItemWithSublist as ComponentType));
-  }
-);
-
-const withColumnSublist = (Sublist: ComponentType<ListProps>) => (
-  withDesign<ListDesignableComponents>({
-    ItemMenuOptionsProvider: withToggleButton({ icon: 'playlist_add' }),
-    Item: withColumnSublistToggle(Sublist),
-  })
-);
-
-
 // @ts-ignore
-const CompoundMenuSubList = withColumnSublist(ColumnSubList)(MenuSubList);
+const CompoundMenuSubList = withColumnSubList(ColumnSubList)(MenuSubList);
 
 const MenuList = flow(
   asEditableMainMenu(asEditable),
