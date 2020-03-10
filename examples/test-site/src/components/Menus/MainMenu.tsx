@@ -48,6 +48,7 @@ const withMenuStyles = addClasses('hover:bg-teal-500 text-white text-left min-w-
 const withTealBackground = addClasses('bg-teal-600');
 const withLimitedHeightStyles = addClasses('overflow-y-hidden max-h-menu-row');
 const withSubmenuStyles = addClasses('-ml-2');
+
 const MenuSubList = flow(
   asEditableMainSubMenu(asEditable),
   asHorizontalSubMenu,
@@ -68,7 +69,7 @@ const MenuSubList = flow(
 const ColumnSubList = flow(
   asColumnSubList,
   withDesign({
-    Wrapper: flow(stylable, addClasses('pl-5')),
+    Wrapper: flow(stylable, addClasses('flex flex-col pl-5 ')),
     // @ts-ignore
     Title: withLinkStyles,
   }),
