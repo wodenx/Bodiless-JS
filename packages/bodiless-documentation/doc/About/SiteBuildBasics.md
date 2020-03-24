@@ -1,11 +1,15 @@
 # Site Building Basics
 
-This section describes how to work with BodilessJS to build out a basic editable site. A standalone Gatsby starter will be released soon, but for now you can work with the example/test site in the core monorepo. 
+This section describes how to work with BodilessJS to build out a basic editable
+site. A standalone Gatsby starter will be released soon, but for now you must
+clone the Bodiless monorepo to create a new site.
 
 > Note: The API's described below are under active development and are subject to change.
 
 ## Create a Site
-To begin, follow the directions to [create a new site](./GettingStarted?id=creating-a-new-site) and all the pages we create in this tutorial will be in this new site.
+To begin, follow the directions to
+[create a new site](./GettingStarted?id=creating-a-new-site) and all the pages
+we create in this tutorial will be in this new site.
 
 ## Creating pages
 
@@ -51,7 +55,8 @@ A few things to note:
 1. Styling uses [Tailwind](https://tailwindcss.com).  *More about this later*.
 
 Now start the development server (`npm run start`) and navigate to
-`localhost:8005/gallery`. This is just a basic Gatsby page - nothing remarkable yet (except Gatsby itself, of course!).
+`localhost:8000/gallery`. This is just a basic Gatsby page - nothing remarkable
+yet (except Gatsby itself, of course!).
 
 ### Creating pages from the UI
 
