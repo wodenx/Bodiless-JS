@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { ComponentType } from 'react';
+import { ComponentType, HTMLProps } from 'react';
 import { StylableProps, DesignableComponentsProps } from '@bodiless/fclasses';
 
 export type FilterByGroupComponents = {
@@ -23,4 +23,12 @@ export type FilterByGroupComponents = {
   Filter: ComponentType<StylableProps>,
 };
 
+export type FilterComponents = {
+  FilterWrapper: ComponentType<StylableProps>,
+  FilterCategory: ComponentType<StylableProps>,
+  FilterGroupItem: ComponentType<StylableProps & HTMLProps<HTMLInputElement>>,
+  FilterGroupWrapper: ComponentType<StylableProps>,
+};
+
 export type FilterByGroupProps = DesignableComponentsProps<FilterByGroupComponents>;
+export type FilterProps = DesignableComponentsProps<FilterComponents>;

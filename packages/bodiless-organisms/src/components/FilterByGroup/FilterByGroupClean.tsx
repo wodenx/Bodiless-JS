@@ -15,6 +15,7 @@
 import React, { FC } from 'react';
 import { flow } from 'lodash';
 import { designable, Div, A } from '@bodiless/fclasses';
+import Filter from './Filter';
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
 
 const FilterByGroupComponentsStart:FilterByGroupComponents = {
@@ -22,7 +23,7 @@ const FilterByGroupComponentsStart:FilterByGroupComponents = {
   FilterWrapper: Div,
   ContentWrapper: Div,
   ResetButton: A,
-  Filter: Div,
+  Filter: Filter,
 };
 
 const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children }) => {
