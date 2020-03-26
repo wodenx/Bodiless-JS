@@ -20,7 +20,7 @@ export type FilterByGroupComponents = {
   FilterWrapper: ComponentType<StylableProps>,
   ContentWrapper: ComponentType<StylableProps>,
   ResetButton: ComponentType<StylableProps>,
-  Filter: ComponentType<StylableProps>,
+  Filter: ComponentType<StylableProps & FilterProps>,
 };
 
 export type FilterComponents = {

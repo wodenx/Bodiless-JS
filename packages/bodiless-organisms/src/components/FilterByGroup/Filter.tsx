@@ -14,19 +14,25 @@
 
 import React, { FC } from 'react';
 import { flow } from 'lodash';
-import { designable, withDesign, addProps, addClasses, Div, H3, Input, Label } from '@bodiless/fclasses';
+import {
+  designable,
+  withDesign,
+  addClasses,
+  Div,
+  H3,
+  Input,
+  Label,
+} from '@bodiless/fclasses';
 import { FilterComponents, FilterProps } from './types';
 
 const FilterByGroupComponentsStart:FilterComponents = {
   FilterWrapper: Div,
   FilterCategory: H3,
   FilterGroupWrapper: Div,
-  FilterGroupItem: flow(
-    addProps({ 'type': 'radio' }),
-  )(Input),
+  FilterGroupItem: Input,
 };
 
-const Filter: FC<FilterProps> = ({ components, children }) => {
+const FilterBase: FC<FilterProps> = ({ components }) => {
   const {
     FilterWrapper,
     FilterCategory,
@@ -41,15 +47,15 @@ const Filter: FC<FilterProps> = ({ components, children }) => {
       </FilterCategory>
       <FilterGroupWrapper>
         <div className="flex p-2 items-center">
-          <FilterGroupItem name="group-item" value="group-item-1" id="group-item-1" />
+          <FilterGroupItem type="radio" name="group-item" value="group-item-1" id="group-item-1" />
           <Label htmlFor="group-item-1">group-item-1</Label>
         </div>
         <div className="flex p-2 items-center">
-          <FilterGroupItem name="group-item" value="group-item-2" id="group-item-2" />
+          <FilterGroupItem type="radio" name="group-item" value="group-item-2" id="group-item-2" />
           <Label htmlFor="group-item-2">group-item-2</Label>
         </div>
         <div className="flex p-2 items-center">
-          <FilterGroupItem name="group-item" value="group-item-3" id="group-item-3" />
+          <FilterGroupItem type="radio" name="group-item" value="group-item-3" id="group-item-3" />
           <Label htmlFor="group-item-3">group-item-2</Label>
         </div>
       </FilterGroupWrapper>
@@ -59,15 +65,15 @@ const Filter: FC<FilterProps> = ({ components, children }) => {
       </FilterCategory>
       <FilterGroupWrapper>
         <div className="flex p-2 items-center">
-          <FilterGroupItem name="group-item" value="group-item-2-1" id="group-item-2-1" />
+          <FilterGroupItem type="radio" name="group-item" value="group-item-2-1" id="group-item-2-1" />
           <Label htmlFor="group-item-2-1">group-item-2-1</Label>
         </div>
         <div className="flex p-2 items-center">
-          <FilterGroupItem name="group-item" value="group-item-2-2" id="group-item-2-2" />
+          <FilterGroupItem type="radio" name="group-item" value="group-item-2-2" id="group-item-2-2" />
           <Label htmlFor="group-item-2-2">group-item-2-2</Label>
         </div>
         <div className="flex p-2 items-center">
-          <FilterGroupItem name="group-item" value="group-item-2-3" id="group-item-2-3" />
+          <FilterGroupItem type="radio" name="group-item" value="group-item-2-3" id="group-item-2-3" />
           <Label htmlFor="group-item-2-3">group-item-2-3</Label>
         </div>
       </FilterGroupWrapper>
@@ -77,7 +83,7 @@ const Filter: FC<FilterProps> = ({ components, children }) => {
 
 const FilterClean = flow(
   designable(FilterByGroupComponentsStart),
-)(Filter);
+)(FilterBase);
 
 const asBodilessFilter = withDesign({
   FilterCategory: addClasses('font-bold'),
