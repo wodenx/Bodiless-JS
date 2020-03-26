@@ -14,15 +14,8 @@
 
 import React, { FC } from 'react';
 import { flow } from 'lodash';
+import { designable, Div, A } from '@bodiless/fclasses';
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
-import {
-  // withDesign,
-  designable,
-  Div,
-  A,
-  // StylableProps,
-  // addProps,
-} from '@bodiless/fclasses';
 
 const FilterByGroupComponentsStart:FilterByGroupComponents = {
   Wrapper: Div,
@@ -32,7 +25,7 @@ const FilterByGroupComponentsStart:FilterByGroupComponents = {
   Filter: Div,
 };
 
-const FilterByGroupBase: FC<FilterByGroupProps> = ({ components }) => {
+const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children }) => {
   const {
     Wrapper,
     FilterWrapper,
@@ -48,6 +41,7 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components }) => {
         <Filter />
       </FilterWrapper>
       <ContentWrapper>
+        {children}
       </ContentWrapper>
     </Wrapper>
   );

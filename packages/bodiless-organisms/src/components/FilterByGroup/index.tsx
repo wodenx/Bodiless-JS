@@ -14,6 +14,4 @@
 
 import FilterByGroupClean from './FilterByGroupClean';
 
-export {
-  FilterByGroupClean
-}
+export default FilterByGroupClean;

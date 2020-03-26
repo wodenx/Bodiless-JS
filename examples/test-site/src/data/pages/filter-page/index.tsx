@@ -23,8 +23,7 @@ export default (props: any) => (
     <Layout>
       <h1 className="text-3xl font-bold">Filter Demo Page</h1>
       <div className="my-10">
-        <FilterByGroup>
-        </FilterByGroup>
+        <FilterByGroup />
       </div>
     </Layout>
   </Page>
