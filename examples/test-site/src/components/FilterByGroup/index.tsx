@@ -13,7 +13,7 @@
  */
 
 import { flow } from 'lodash';
-import { FilterByGroupClean } from '@bodiless/organisms';
+import { FilterByGroupClean, asTestableFilterByGroup } from '@bodiless/organisms';
 import { withDesign, addClasses } from '@bodiless/fclasses';
 import { asTextColorPrimary } from '../Elements.token';
 
@@ -25,6 +25,7 @@ const asFilterByGroup = flow(
     ResetButton: asTextColorPrimary,
     Filter: addClasses('p-2'),
   }),
+  asTestableFilterByGroup,
 );
 
 const FilterByGroup = asFilterByGroup(FilterByGroupClean);

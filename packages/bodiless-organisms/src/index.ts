@@ -67,12 +67,15 @@ export {
 } from './components/Touts.tokens';
 
 export {
+  asTestableFilterByGroup,
+  FilterByGroupClean,
+} from './components/FilterByGroup';
+
+export {
   asBurgerSubMenu,
   asEditableBurgerSubMenu,
   BurgerMenuClean,
   withBurgerSubmenu,
 };
-
-export { FilterByGroupClean } from './components/FilterByGroup';
 
 export { Slider };

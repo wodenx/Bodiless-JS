@@ -13,5 +13,9 @@
  */
 
 import FilterByGroupClean from './FilterByGroupClean';
+import asTestableFilterByGroup from './asTestableFilterByGroup';
 
-export default FilterByGroupClean;
+export {
+  FilterByGroupClean,
+  asTestableFilterByGroup,
+};
