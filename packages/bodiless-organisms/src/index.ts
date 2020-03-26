@@ -73,4 +73,6 @@ export {
   withBurgerSubmenu,
 };
 
+export { FilterByGroupClean } from './components/FilterByGroup';
+
 export { Slider };
