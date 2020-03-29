@@ -12,34 +12,72 @@
  * limitations under the License.
  */
 
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { flow } from 'lodash';
-import { designable, Div, A } from '@bodiless/fclasses';
-import FilterGroups from './Filter';
+import { designable, Div, Button, Label, H3, Input } from '@bodiless/fclasses';
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
 
 const FilterByGroupComponentsStart:FilterByGroupComponents = {
   Wrapper: Div,
   FilterWrapper: Div,
   ContentWrapper: Div,
-  ResetButton: A,
-  Filter: FilterGroups,
+  ResetButton: Button,
+  Filter: Div,
+  FilterCategory: H3,
+  FilterGroupsWrapper: Div,
+  FilterGroupItem: Input,
+  FilterInputWrapper: Div,
 };
 
-const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children }) => {
+const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...rest }) => {
   const {
     Wrapper,
     FilterWrapper,
     ContentWrapper,
     ResetButton,
     Filter,
+    FilterCategory,
+    FilterGroupItem,
+    FilterGroupsWrapper,
+    FilterInputWrapper,
   } = components;
 
+  const testTags = [
+    {
+      category: 'Filter Category 1',
+      groups: ['group-item-1', 'group-item-2', 'group-item-3'],
+    },
+    {
+      category: 'Filter Category 2',
+      groups: ['group-item-2-1', 'group-item-2-2', 'group-item-2-3'],
+    },
+    {
+      category: 'Filter Category 3',
+      groups: ['group-item-3-1', 'group-item-3-2', 'group-item-3-3'],
+    },
+  ];
+
+  const [selectedItem, setSelectedItem] = useState('');
+
   return (
-    <Wrapper>
+    <Wrapper {...rest}>
       <FilterWrapper>
-        <ResetButton />
-        <Filter />
+        <ResetButton onClick={() => setSelectedItem('')}>Reset</ResetButton>
+        <Filter>
+          { testTags.map(filter => (
+            <React.Fragment key={filter.category}>
+              <FilterCategory>{ filter.category }</FilterCategory>
+              <FilterGroupsWrapper>
+                {filter.groups.map(group => (
+                  <FilterInputWrapper key={group}>
+                    <FilterGroupItem type="radio" name="filter-item" value={group} id={group} onChange={() => setSelectedItem(group)} checked={selectedItem === group} />
+                    <Label htmlFor={group}>{ group }</Label>
+                  </FilterInputWrapper>
+                ))}
+              </FilterGroupsWrapper>
+            </React.Fragment>
+          )) }
+        </Filter>
       </FilterWrapper>
       <ContentWrapper>
         {children}

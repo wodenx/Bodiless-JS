@@ -19,17 +19,16 @@ export type FilterByGroupComponents = {
   Wrapper: ComponentType<StylableProps>,
   FilterWrapper: ComponentType<StylableProps>,
   ContentWrapper: ComponentType<StylableProps>,
-  ResetButton: ComponentType<StylableProps>,
-  Filter: ComponentType<StylableProps & FilterProps>,
-};
-
-export type FilterComponents = {
-  FilterWrapper: ComponentType<StylableProps>,
+  ResetButton: ComponentType<StylableProps & HTMLProps<HTMLButtonElement>>,
+  Filter: ComponentType<StylableProps>,
   FilterCategory: ComponentType<StylableProps>,
   FilterGroupItem: ComponentType<StylableProps & HTMLProps<HTMLInputElement>>,
   FilterGroupsWrapper: ComponentType<StylableProps>,
   FilterInputWrapper: ComponentType<StylableProps>,
 };
 
+export type FilterComponentProps = {
+  tags: string[],
+}
+
 export type FilterByGroupProps = DesignableComponentsProps<FilterByGroupComponents>;
-export type FilterProps = DesignableComponentsProps<FilterComponents>;

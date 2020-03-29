@@ -22,8 +22,14 @@ const asFilterByGroup = flow(
     Wrapper: addClasses('p-2'),
     FilterWrapper: addClasses('mr-5'),
     ContentWrapper: addClasses('p-2'),
-    ResetButton: asTextColorPrimary,
+    ResetButton: flow(
+      addClasses('mb-4 underline'),
+      asTextColorPrimary
+    ),
     Filter: addClasses('p-2'),
+    FilterCategory: addClasses('font-bold'),
+    FilterGroupItem: addClasses('mr-3'),
+    FilterInputWrapper: addClasses('flex p-2 items-center'),
   }),
   asTestableFilterByGroup,
 );
