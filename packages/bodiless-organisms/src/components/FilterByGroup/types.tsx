@@ -23,7 +23,7 @@ export type FilterByGroupComponents = {
   Filter: ComponentType<StylableProps>,
   FilterCategory: ComponentType<StylableProps>,
   FilterGroupItem: ComponentType<StylableProps & HTMLProps<HTMLInputElement>>,
-  FilterGroupsWrapper: ComponentType<StylableProps>,
+  FilterGroupWrapper: ComponentType<StylableProps>,
   FilterInputWrapper: ComponentType<StylableProps>,
 };
 

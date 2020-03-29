@@ -26,7 +26,7 @@ const FilterByGroupComponentsStart:FilterByGroupComponents = {
   ResetButton: Button,
   Filter: Div,
   FilterCategory: H3,
-  FilterGroupsWrapper: Div,
+  FilterGroupWrapper: Div,
   FilterGroupItem: Input,
   FilterInputWrapper: Div,
 };
@@ -40,7 +40,7 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
     Filter,
     FilterCategory,
     FilterGroupItem,
-    FilterGroupsWrapper,
+    FilterGroupWrapper,
     FilterInputWrapper,
   } = components;
 
@@ -69,14 +69,14 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
           { testTags.map(filter => (
             <React.Fragment key={filter.category}>
               <FilterCategory>{ filter.category }</FilterCategory>
-              <FilterGroupsWrapper>
+              <FilterGroupWrapper>
                 {filter.groups.map(group => (
                   <FilterInputWrapper key={group}>
                     <FilterGroupItem type="radio" name="filter-item" value={group} id={group} onChange={() => setSelectedItem(group)} checked={selectedItem === group} />
                     <Label htmlFor={group}>{ group }</Label>
                   </FilterInputWrapper>
                 ))}
-              </FilterGroupsWrapper>
+              </FilterGroupWrapper>
             </React.Fragment>
           )) }
         </Filter>
