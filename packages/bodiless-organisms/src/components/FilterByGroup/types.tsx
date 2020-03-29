@@ -27,8 +27,4 @@ export type FilterByGroupComponents = {
   FilterInputWrapper: ComponentType<StylableProps>,
 };
 
-export type FilterComponentProps = {
-  tags: string[],
-}
-
 export type FilterByGroupProps = DesignableComponentsProps<FilterByGroupComponents>;

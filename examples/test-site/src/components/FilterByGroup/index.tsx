@@ -24,7 +24,7 @@ const asFilterByGroup = flow(
     ContentWrapper: addClasses('p-2'),
     ResetButton: flow(
       addClasses('mb-4 underline'),
-      asTextColorPrimary
+      asTextColorPrimary,
     ),
     Filter: addClasses('p-2'),
     FilterCategory: addClasses('font-bold'),

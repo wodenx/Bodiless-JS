@@ -14,7 +14,9 @@
 
 import React, { FC, useState } from 'react';
 import { flow } from 'lodash';
-import { designable, Div, Button, Label, H3, Input } from '@bodiless/fclasses';
+import {
+  designable, Div, Button, Label, H3, Input,
+} from '@bodiless/fclasses';
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
 
 const FilterByGroupComponentsStart:FilterByGroupComponents = {
