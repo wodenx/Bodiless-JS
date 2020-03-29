@@ -19,11 +19,11 @@ import { asTextColorPrimary } from '../Elements.token';
 
 const asFilterByGroup = flow(
   withDesign({
-    Wrapper: addClasses('p-2'),
-    FilterWrapper: addClasses('mr-5'),
-    ContentWrapper: addClasses('p-2'),
+    Wrapper: addClasses('flex'),
+    FilterWrapper: addClasses('mr-5 w-1/4 bg-gray-400 flex flex-col'),
+    ContentWrapper: addClasses('p-2 w-3/4'),
     ResetButton: flow(
-      addClasses('mb-4 underline'),
+      addClasses('mx-4 my-2 underline self-end'),
       asTextColorPrimary,
     ),
     Filter: addClasses('p-2'),
