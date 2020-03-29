@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { flow } from 'lodash';
 import {
   designable,
@@ -28,8 +28,9 @@ import { FilterComponents, FilterProps } from './types';
 const FilterByGroupComponentsStart:FilterComponents = {
   FilterWrapper: Div,
   FilterCategory: H3,
-  FilterGroupWrapper: Div,
+  FilterGroupsWrapper: Div,
   FilterGroupItem: Input,
+  FilterInputWrapper: Div,
 };
 
 const FilterBase: FC<FilterProps> = ({ components }) => {
@@ -37,46 +38,43 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     FilterWrapper,
     FilterCategory,
     FilterGroupItem,
-    FilterGroupWrapper,
+    FilterGroupsWrapper,
+    FilterInputWrapper,
   } = components;
+
+  const [selectedItem, setSelectedItem] = useState('');
+
+  const testTags = [
+    {
+      category: 'Filter Category 1',
+      groups: ['group-item-1', 'group-item-2', 'group-item-3'],
+    },
+    {
+      category: 'Filter Category 2',
+      groups: ['group-item-2-1', 'group-item-2-2', 'group-item-2-3'],
+    },
+    {
+      category: 'Filter Category 3',
+      groups: ['group-item-3-1', 'group-item-3-2', 'group-item-3-3'],
+    },
+  ];
 
   return (
     <FilterWrapper>
-      <FilterCategory>
-        Filter Category 1
-      </FilterCategory>
-      <FilterGroupWrapper>
-        <div className="flex p-2 items-center">
-          <FilterGroupItem type="radio" name="group-item" value="group-item-1" id="group-item-1" />
-          <Label htmlFor="group-item-1">group-item-1</Label>
-        </div>
-        <div className="flex p-2 items-center">
-          <FilterGroupItem type="radio" name="group-item" value="group-item-2" id="group-item-2" />
-          <Label htmlFor="group-item-2">group-item-2</Label>
-        </div>
-        <div className="flex p-2 items-center">
-          <FilterGroupItem type="radio" name="group-item" value="group-item-3" id="group-item-3" />
-          <Label htmlFor="group-item-3">group-item-2</Label>
-        </div>
-      </FilterGroupWrapper>
-
-      <FilterCategory>
-        Filter Category 2
-      </FilterCategory>
-      <FilterGroupWrapper>
-        <div className="flex p-2 items-center">
-          <FilterGroupItem type="radio" name="group-item" value="group-item-2-1" id="group-item-2-1" />
-          <Label htmlFor="group-item-2-1">group-item-2-1</Label>
-        </div>
-        <div className="flex p-2 items-center">
-          <FilterGroupItem type="radio" name="group-item" value="group-item-2-2" id="group-item-2-2" />
-          <Label htmlFor="group-item-2-2">group-item-2-2</Label>
-        </div>
-        <div className="flex p-2 items-center">
-          <FilterGroupItem type="radio" name="group-item" value="group-item-2-3" id="group-item-2-3" />
-          <Label htmlFor="group-item-2-3">group-item-2-3</Label>
-        </div>
-      </FilterGroupWrapper>
+      { testTags.map(filter => (
+        <React.Fragment key={filter.category}>
+          <FilterCategory>{ filter.category }</FilterCategory>
+          <FilterGroupsWrapper>
+            {filter.groups.map(group => (
+              <FilterInputWrapper key={group}>
+                <FilterGroupItem type="radio" name="group-item" value={group} id={group} onChange={() => setSelectedItem(group)} checked={selectedItem === group} />
+                <Label htmlFor={group}>{ group }</Label>
+              </FilterInputWrapper>
+            ))}
+          </FilterGroupsWrapper>
+        </React.Fragment>
+      )) }
+      <button type="button" onClick={() => setSelectedItem('')}>Reset</button>
     </FilterWrapper>
   );
 };
@@ -88,6 +86,7 @@ const FilterClean = flow(
 const asBodilessFilter = withDesign({
   FilterCategory: addClasses('font-bold'),
   FilterGroupItem: addClasses('mr-3'),
+  FilterInputWrapper: addClasses('flex p-2 items-center'),
 });
 
 export default asBodilessFilter(FilterClean);

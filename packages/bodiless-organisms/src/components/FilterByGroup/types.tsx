@@ -27,7 +27,8 @@ export type FilterComponents = {
   FilterWrapper: ComponentType<StylableProps>,
   FilterCategory: ComponentType<StylableProps>,
   FilterGroupItem: ComponentType<StylableProps & HTMLProps<HTMLInputElement>>,
-  FilterGroupWrapper: ComponentType<StylableProps>,
+  FilterGroupsWrapper: ComponentType<StylableProps>,
+  FilterInputWrapper: ComponentType<StylableProps>,
 };
 
 export type FilterByGroupProps = DesignableComponentsProps<FilterByGroupComponents>;
