@@ -17,6 +17,9 @@ import { asBodilessLink } from './Link';
 import Image, { asBodilessImage } from './Image';
 import NodeViewer from './NodeViewer';
 import withLinkToggle from './LinkToggle';
+import {asBodilessFilterItem} from './Filter/Item';
+import withFilterToggle from './Filter/FilterItemToggle';
+import { MyFormTest } from './Filter/InformedReactAutoComplete';
 import List from './List';
 import {
   FinalProps as ListProps,
@@ -68,4 +71,7 @@ export {
   asBodilessHelmet,
   withEditPlaceholder,
   withEvent,
+  withFilterToggle,
+  asBodilessFilterItem,
+  MyFormTest
 };
