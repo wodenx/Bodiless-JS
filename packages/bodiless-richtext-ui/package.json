@@ -1,5 +1,5 @@
 {
-  "name": "@bodiless/richtext-ui",
+  "name": "@dewen_li/richtext-ui",
   "version": "0.0.44",
   "description": "Default UI for Bodiless richtext components",
   "author": "Ivan Rudiuk <IRudiuk@its.jnj.com>",
@@ -23,9 +23,9 @@
     "clean": "rimraf \"lib/*\" && rimraf tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@bodiless/fclasses": "^0.0.44",
-    "@bodiless/richtext": "^0.0.44",
-    "@bodiless/ui": "^0.0.44",
+    "@dewen_li/fclasses": "^0.0.44",
+    "@dewen_li/richtext": "^0.0.44",
+    "@dewen_li/ui": "^0.0.44",
     "lodash": "^4.17.11"
   },
   "peerDependencies": {

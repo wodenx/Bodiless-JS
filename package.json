@@ -27,7 +27,7 @@
     "publish:from-package": "npm run build && lerna publish from-package --registry $NPM_REGISTRY",
     "scan": "ts-complexity --max-complexity 10 --pattern \"packages/**/src/**/*.ts(x)\"",
     "scan:target": "ts-complexity --max-complexity 1 --pattern",
-    "serve": "lerna run serve --scope @bodiless/test-site --stream",
+    "serve": "lerna run serve --scope @dewen_li/test-site --stream",
     "setup": "npm run bootstrap && npm run build:packages",
     "sites:pack": "lerna exec --no-private --stream -- npm pack",
     "sites:clone-local": "node ./scripts/sites-clone",
