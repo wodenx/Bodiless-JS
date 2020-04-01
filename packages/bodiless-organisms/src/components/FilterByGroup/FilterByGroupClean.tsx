@@ -47,33 +47,45 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
   const testTags = [
     {
       category: 'Filter Category 1',
-      groups: ['group-item-1', 'group-item-2', 'group-item-3'],
+      tags: [
+        {id: 'group-item-1', name: 'group-item-1'},
+        {id: 'group-item-2', name: 'group-item-2'},
+        {id: 'group-item-3', name: 'group-item-3'},
+      ],
     },
     {
       category: 'Filter Category 2',
-      groups: ['group-item-2-1', 'group-item-2-2', 'group-item-2-3'],
+      tags: [
+        {id: 'group-item-2-1', name: 'group-item-2-1'},
+        {id: 'group-item-2-2', name: 'group-item-2-2'},
+        {id: 'group-item-2-3', name: 'group-item-2-3'},
+      ],
     },
     {
       category: 'Filter Category 3',
-      groups: ['group-item-3-1', 'group-item-3-2', 'group-item-3-3'],
+      tags: [
+        {id: 'group-item-3-1', name: 'group-item-3-1'},
+        {id: 'group-item-3-2', name: 'group-item-3-2'},
+        {id: 'group-item-3-3', name: 'group-item-3-3'},
+      ],
     },
   ];
 
-  const [selectedItem, setSelectedItem] = useState('');
+  const [selectedTagName, setSelectedTag] = useState('');
 
   return (
     <Wrapper {...rest}>
       <FilterWrapper>
-        <ResetButton onClick={() => setSelectedItem('')}>Reset</ResetButton>
+        <ResetButton onClick={() => setSelectedTag('')}>Reset</ResetButton>
         <Filter>
           { testTags.map(filter => (
             <React.Fragment key={filter.category}>
               <FilterCategory>{ filter.category }</FilterCategory>
               <FilterGroupWrapper>
-                {filter.groups.map(group => (
-                  <FilterInputWrapper key={group}>
-                    <FilterGroupItem type="radio" name="filter-item" value={group} id={group} onChange={() => setSelectedItem(group)} checked={selectedItem === group} />
-                    <Label htmlFor={group}>{ group }</Label>
+                {filter.tags.map(tag => (
+                  <FilterInputWrapper key={tag.id}>
+                    <FilterGroupItem type="radio" name="filter-item" value={tag} id={tag.id} onChange={() => setSelectedTag(tag.name)} checked={selectedTagName === tag.name} />
+                    <Label htmlFor={tag.id}>{ tag.name }</Label>
                   </FilterInputWrapper>
                 ))}
               </FilterGroupWrapper>
