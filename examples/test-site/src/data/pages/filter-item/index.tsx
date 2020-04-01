@@ -19,6 +19,7 @@ import {
   Editable,
   asBodilessFilterItem,
   MyFormTest,
+  NonInformedReactTag,
 } from '@bodiless/components';
 import Layout from '../../../components/Layout';
 import { flow } from 'lodash';
@@ -49,9 +50,13 @@ export default (props: any) => (
         </TagableItem>
       </div>
     </Layout>
-    <div> MY Test of InformedReactAutoComplete:</div>
+    <h3> MY Test of InformedReactAutoComplete:</h3>
     <div className="my-3">
       <MyFormTest />
+    </div>
+    <h3> MY Test of NonInformedReactAutoComplete:</h3>
+    <div className="my-3">
+      <NonInformedReactTag />
     </div>
   </Page>
 );

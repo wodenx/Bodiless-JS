@@ -30,7 +30,7 @@
   "dependencies": {
     "@bodiless/core": "^0.0.43",
     "@bodiless/fclasses": "^0.0.43",
-    "informed": "^2.11.8",
+    "informed": "^3.6.1",
     "lodash": "^4.17.11"
   },
   "peerDependencies": {

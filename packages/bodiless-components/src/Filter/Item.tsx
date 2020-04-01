@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 Johnson & Johnson
+ * Copyright © 2020 Johnson & Johnson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
  //todo: rename to taggable
 
-import React, { HTMLProps } from 'react';
+import React, {HTMLProps, useState} from 'react';
 // @todo where this should liberary live? leave in bodiless-comp for now.
 import ReactTags from 'react-tag-autocomplete';
 import {
@@ -37,14 +37,14 @@ import { flowRight } from 'lodash';
 
 // Type of the data used by this component.
 export type Data = {
-  group: string;
+  tag: string;
 };
 
 // Type of the props accepted by this component.
-// Exclude the group from the props accepted as we write it.
+// Exclude the tag from the props accepted as we write it.
 type AProps = HTMLProps<HTMLAnchorElement>;
 
-export type Props = Pick<AProps, Exclude<keyof AProps, 'group'>> & {
+export type Props = Pick<AProps, Exclude<keyof AProps, 'tag'>> & {
   unwrap?: () => void;
 };
 
@@ -59,39 +59,45 @@ export const editButtonOptions: EditButtonOptions<Props, Data> = {
       ComponentFormText,
       ComponentFormUnwrapButton,
     } = getUI(formUi);
-    const viewGroupsHandler = (event: React.MouseEvent) => {
+    const viewTagsHandler = (event: React.MouseEvent) => {
       event.preventDefault();
       closeForm();
     };
-    let tags = [
-      { id: 1, name: 'Apples' },
-      { id: 2, name: 'Pears' },
-    ];
-    let suggestions = [
+    const [tags, setTags] = useState([
+      // { id: 1, name: 'Apples' },
+      // { id: 2, name: 'Pears' },
+    ]);
+
+    // @ts-ignore
+    const [suggestions, setSuggestions] = useState([
       { id: 3, name: 'Bananas' },
       { id: 4, name: 'Mangos' },
       { id: 5, name: 'Lemons' },
       { id: 6, name: 'Apricots' },
-    ];
+    ]);
     return (
       <>
         <ComponentFormTitle>Group</ComponentFormTitle>
-        <ComponentFormText field="group" id="group" />
+        <ComponentFormText field="tag" id="tag" />
          {/*// @TODO move this to ui and make it like ComponenetFormText? How? Lets leave it here for now. */}
         <ReactTags
           tags={tags}
           suggestions={suggestions}
+          noSuggestionsText={'No suggestions found'}
           handleDelete={i => {
-            tags.splice(i, 1);
+            setTags(tags.splice(i, 1));
+            console.log(tags);
           }}
-          handleAddition={tag => {
-            // @ts-ignore
+          handleAddition={tag  => {
+            let temp = [ ...tags, tag];
+            console.log(temp);
             // Needs to be wired into informed. Understand react forms tutorial use UseState react.
             // Do we need local state or not?
-            tags = [].concat(tags, tag)
+             // @ts-ignore
+            setTags(temp);
           }}
         />
-        <ComponentFormUnwrapButton type="button" onClick={viewGroupsHandler}>
+        <ComponentFormUnwrapButton type="button" onClick={viewTagsHandler}>
           View All Groups [Todo]
         </ComponentFormUnwrapButton>
       </>
@@ -102,7 +108,7 @@ export const editButtonOptions: EditButtonOptions<Props, Data> = {
 };
 
 const emptyValue = {
-  group: '',
+  tag: '',
 };
 // Composed hoc which creates editable version of the component.
 // Note - the order is important. In particular:
