@@ -30,7 +30,8 @@ type FilterByGroupContext = {
   selectedTag?: string,
   updateSelectedTag: React.Dispatch<React.SetStateAction<string>>,
   updateTags: React.Dispatch<React.SetStateAction<Tag[]>>,
-  deleteTag: (string?: string) => void,
+  deleteTag: (id?: string) => void,
+  getTagById: (id: string) => Tag | undefined,
 };
 
 const defaultContext: FilterByGroupContext = {
@@ -38,6 +39,7 @@ const defaultContext: FilterByGroupContext = {
   updateSelectedTag: () => '',
   updateTags: () => [],
   deleteTag: () => null,
+  getTagById: () => undefined,
 };
 
 const FilterByGroupContext = React.createContext<FilterByGroupContext>(defaultContext);
@@ -54,6 +56,7 @@ const FilterByGroupProvider: FC = ({ children }) => {
   const [selectedTag, updateSelectedTag] = useState('');
 
   const deleteTag = (id?: string) => updateTags(reject(tags, tag => tag.id === id));
+  const getTagById = (id: string) => tags.find(tag => tag.id === id);
 
   const providerValue: FilterByGroupContext = {
     tags,
@@ -61,6 +64,7 @@ const FilterByGroupProvider: FC = ({ children }) => {
     updateSelectedTag,
     updateTags,
     deleteTag,
+    getTagById,
   };
 
   return (
