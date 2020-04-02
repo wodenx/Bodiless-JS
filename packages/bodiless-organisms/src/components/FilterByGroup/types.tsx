@@ -21,6 +21,9 @@ export type FilterByGroupComponents = {
   ContentWrapper: ComponentType<StylableProps>,
   ResetButton: ComponentType<StylableProps & HTMLProps<HTMLButtonElement>>,
   Filter: ComponentType<StylableProps>,
+};
+
+export type FilterComponents = {
   FilterCategory: ComponentType<StylableProps>,
   FilterGroupItem: ComponentType<StylableProps & HTMLProps<HTMLInputElement>>,
   FilterGroupWrapper: ComponentType<StylableProps>,
@@ -28,3 +31,4 @@ export type FilterByGroupComponents = {
 };
 
 export type FilterByGroupProps = DesignableComponentsProps<FilterByGroupComponents>;
+export type FilterProps = DesignableComponentsProps<FilterComponents>;

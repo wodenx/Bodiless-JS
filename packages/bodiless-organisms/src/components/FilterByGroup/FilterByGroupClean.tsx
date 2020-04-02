@@ -12,23 +12,22 @@
  * limitations under the License.
  */
 
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { flow } from 'lodash';
 import {
-  designable, Div, Button, Label, H3, Input,
+  designable, Div, Button,
 } from '@bodiless/fclasses';
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
+import FilterClean from './Filter';
+
+import { FilterByGroupProvider } from './FilterByGroupProvider';
 
 const FilterByGroupComponentsStart:FilterByGroupComponents = {
   Wrapper: Div,
   FilterWrapper: Div,
   ContentWrapper: Div,
   ResetButton: Button,
-  Filter: Div,
-  FilterCategory: H3,
-  FilterGroupWrapper: Div,
-  FilterGroupItem: Input,
-  FilterInputWrapper: Div,
+  Filter: FilterClean,
 };
 
 const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...rest }) => {
@@ -38,65 +37,20 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
     ContentWrapper,
     ResetButton,
     Filter,
-    FilterCategory,
-    FilterGroupItem,
-    FilterGroupWrapper,
-    FilterInputWrapper,
   } = components;
 
-  const testTags = [
-    {
-      category: 'Filter Category 1',
-      tags: [
-        {id: 'group-item-1', name: 'group-item-1'},
-        {id: 'group-item-2', name: 'group-item-2'},
-        {id: 'group-item-3', name: 'group-item-3'},
-      ],
-    },
-    {
-      category: 'Filter Category 2',
-      tags: [
-        {id: 'group-item-2-1', name: 'group-item-2-1'},
-        {id: 'group-item-2-2', name: 'group-item-2-2'},
-        {id: 'group-item-2-3', name: 'group-item-2-3'},
-      ],
-    },
-    {
-      category: 'Filter Category 3',
-      tags: [
-        {id: 'group-item-3-1', name: 'group-item-3-1'},
-        {id: 'group-item-3-2', name: 'group-item-3-2'},
-        {id: 'group-item-3-3', name: 'group-item-3-3'},
-      ],
-    },
-  ];
-
-  const [selectedTagName, setSelectedTag] = useState('');
-
   return (
-    <Wrapper {...rest}>
-      <FilterWrapper>
-        <ResetButton onClick={() => setSelectedTag('')}>Reset</ResetButton>
-        <Filter>
-          { testTags.map(filter => (
-            <React.Fragment key={filter.category}>
-              <FilterCategory>{ filter.category }</FilterCategory>
-              <FilterGroupWrapper>
-                {filter.tags.map(tag => (
-                  <FilterInputWrapper key={tag.id}>
-                    <FilterGroupItem type="radio" name="filter-item" value={tag} id={tag.id} onChange={() => setSelectedTag(tag.name)} checked={selectedTagName === tag.name} />
-                    <Label htmlFor={tag.id}>{ tag.name }</Label>
-                  </FilterInputWrapper>
-                ))}
-              </FilterGroupWrapper>
-            </React.Fragment>
-          )) }
-        </Filter>
-      </FilterWrapper>
-      <ContentWrapper>
-        {children}
-      </ContentWrapper>
-    </Wrapper>
+    <FilterByGroupProvider>
+      <Wrapper {...rest}>
+        <FilterWrapper>
+          <ResetButton onClick={() => alert('Resetting...')}>Reset</ResetButton>
+          <Filter />
+        </FilterWrapper>
+        <ContentWrapper>
+          {children}
+        </ContentWrapper>
+      </Wrapper>
+    </FilterByGroupProvider>
   );
 };
 
