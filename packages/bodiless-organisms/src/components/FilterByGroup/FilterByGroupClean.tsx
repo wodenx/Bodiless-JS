@@ -20,6 +20,7 @@ import {
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
 import FilterClean from './Filter';
 
+import Tag from './FilterByGroupTag';
 import { withFilterByGroupProvider, useFilterByGroupContext } from './FilterByGroupProvider';
 
 const FilterByGroupComponentsStart:FilterByGroupComponents = {
@@ -39,12 +40,20 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
     Filter,
   } = components;
 
-  const { updateSelectedTag } = useFilterByGroupContext();
+  const {
+    tags,
+    updateSelectedTag,
+    updateTags,
+    deleteTag,
+    selectedTag,
+  } = useFilterByGroupContext();
 
   return (
     <Wrapper {...rest}>
       <FilterWrapper>
         <ResetButton onClick={() => updateSelectedTag('')}>Reset</ResetButton>
+        <ResetButton onClick={() => updateTags([...tags, new Tag('test')])}>Add</ResetButton>
+        <ResetButton onClick={() => deleteTag(selectedTag)}>Delete Selected</ResetButton>
         <Filter />
       </FilterWrapper>
       <ContentWrapper>

@@ -18,35 +18,49 @@ import React, {
   useContext,
   useState,
 } from 'react';
+import { reject } from 'lodash';
 
 type Tag = {
   id: string,
   name: string,
-  category?: string,
 };
 
 type FilterByGroupContext = {
   tags: Tag[],
   selectedTag?: string,
   updateSelectedTag: React.Dispatch<React.SetStateAction<string>>,
+  updateTags: React.Dispatch<React.SetStateAction<Tag[]>>,
+  deleteTag: (string?: string) => void,
 };
 
-const FilterByGroupContext = React.createContext<FilterByGroupContext>({ tags: [], updateSelectedTag: () => '' });
+const defaultContext: FilterByGroupContext = {
+  tags: [],
+  updateSelectedTag: () => '',
+  updateTags: () => [],
+  deleteTag: () => null,
+};
 
-export const FilterByGroupProvider: FC = ({ children }) => {
+const FilterByGroupContext = React.createContext<FilterByGroupContext>(defaultContext);
+const useFilterByGroupContext = () => useContext(FilterByGroupContext);
+
+const FilterByGroupProvider: FC = ({ children }) => {
   const defaultTags = [
     { id: 'group-item-1', name: 'group-item-1' },
     { id: 'group-item-2', name: 'group-item-2' },
-    { id: 'group-item-3', name: 'group-item-3', category: 'Test Category' },
+    { id: 'group-item-3', name: 'group-item-3' },
   ];
 
-  const [tags] = useState([...defaultTags]);
+  const [tags, updateTags] = useState([...defaultTags]);
   const [selectedTag, updateSelectedTag] = useState('');
+
+  const deleteTag = (id?: string) => updateTags(reject(tags, tag => tag.id === id));
 
   const providerValue: FilterByGroupContext = {
     tags,
     selectedTag,
     updateSelectedTag,
+    updateTags,
+    deleteTag,
   };
 
   return (
@@ -56,10 +70,15 @@ export const FilterByGroupProvider: FC = ({ children }) => {
   );
 };
 
-export const withFilterByGroupProvider = <P extends object>(Component: CT<P>) => (props: P) => (
+const withFilterByGroupProvider = <P extends object>(Component: CT<P>) => (props: P) => (
   <FilterByGroupProvider>
     <Component {...props} />
   </FilterByGroupProvider>
 );
 
-export const useFilterByGroupContext = () => useContext(FilterByGroupContext);
+export default FilterByGroupProvider;
+export {
+  FilterByGroupContext,
+  useFilterByGroupContext,
+  withFilterByGroupProvider,
+};

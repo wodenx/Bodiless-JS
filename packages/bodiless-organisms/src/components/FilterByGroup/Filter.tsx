@@ -43,7 +43,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
       <FilterGroupWrapper>
         {tags.map(tag => (
           <FilterInputWrapper key={tag.id}>
-            <FilterGroupItem type="radio" name="filter-item" value={tag.name} id={tag.id} onChange={() => updateSelectedTag(tag.name)} checked={selectedTag === tag.name} />
+            <FilterGroupItem type="radio" name="filter-item" value={tag.id} id={tag.id} onChange={() => updateSelectedTag(tag.id)} checked={selectedTag === tag.id} />
             <Label htmlFor={tag.id}>{ tag.name }</Label>
           </FilterInputWrapper>
         ))}
