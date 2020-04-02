@@ -27,7 +27,7 @@ const FilterComponentsStart:FilterComponents = {
   FilterInputWrapper: Div,
 };
 
-const FilterBase: FC<FilterProps> = ({ components, children }) => {
+const FilterBase: FC<FilterProps> = ({ components }) => {
   const {
     FilterCategory,
     FilterGroupItem,
