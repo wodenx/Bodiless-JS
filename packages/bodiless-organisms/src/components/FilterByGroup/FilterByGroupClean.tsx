@@ -20,7 +20,7 @@ import {
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
 import FilterClean from './Filter';
 
-import { FilterByGroupProvider } from './FilterByGroupProvider';
+import { withFilterByGroupProvider, useFilterByGroupContext } from './FilterByGroupProvider';
 
 const FilterByGroupComponentsStart:FilterByGroupComponents = {
   Wrapper: Div,
@@ -39,22 +39,23 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
     Filter,
   } = components;
 
+  const { updateSelectedTag } = useFilterByGroupContext();
+
   return (
-    <FilterByGroupProvider>
-      <Wrapper {...rest}>
-        <FilterWrapper>
-          <ResetButton onClick={() => alert('Resetting...')}>Reset</ResetButton>
-          <Filter />
-        </FilterWrapper>
-        <ContentWrapper>
-          {children}
-        </ContentWrapper>
-      </Wrapper>
-    </FilterByGroupProvider>
+    <Wrapper {...rest}>
+      <FilterWrapper>
+        <ResetButton onClick={() => updateSelectedTag('')}>Reset</ResetButton>
+        <Filter />
+      </FilterWrapper>
+      <ContentWrapper>
+        {children}
+      </ContentWrapper>
+    </Wrapper>
   );
 };
 
 const FilterByGroupClean = flow(
+  withFilterByGroupProvider,
   designable(FilterByGroupComponentsStart),
 )(FilterByGroupBase);
 

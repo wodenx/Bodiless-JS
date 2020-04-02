@@ -12,7 +12,12 @@
  * limitations under the License.
  */
 
-import React, { FC, useContext, useState } from 'react';
+import React, {
+  FC,
+  ComponentType as CT,
+  useContext,
+  useState,
+} from 'react';
 
 type Tag = {
   id: string,
@@ -50,5 +55,11 @@ export const FilterByGroupProvider: FC = ({ children }) => {
     </FilterByGroupContext.Provider>
   );
 };
+
+export const withFilterByGroupProvider = <P extends object>(Component: CT<P>) => (props: P) => (
+  <FilterByGroupProvider>
+    <Component {...props} />
+  </FilterByGroupProvider>
+);
 
 export const useFilterByGroupContext = () => useContext(FilterByGroupContext);
