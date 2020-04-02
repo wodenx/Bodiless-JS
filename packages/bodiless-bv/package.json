@@ -1,6 +1,6 @@
 {
   "name": "@dewen_li/bv",
-  "version": "0.0.44",
+  "version": "0.0.1",
   "description": "Provides bazaarvoice components.",
   "author": "Andrei Beliayeu <abeliaye@its.jnj.com>",
   "license": "Apache-2.0",
@@ -23,9 +23,9 @@
     "clean": "rimraf \"lib/*\" && rimraf tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@dewen_li/components": "^0.0.44",
-    "@dewen_li/core": "^0.0.44",
-    "@dewen_li/fclasses": "^0.0.44",
+    "@dewen_li/components": "^0.0.1",
+    "@dewen_li/core": "^0.0.1",
+    "@dewen_li/fclasses": "^0.0.1",
     "lodash": "^4.17.11"
   },
   "peerDependencies": {

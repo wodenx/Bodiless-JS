@@ -1,6 +1,6 @@
 {
   "name": "@dewen_li/organisms",
-  "version": "0.0.44",
+  "version": "0.0.1",
   "description": "Basic components to build out sites.",
   "author": "Ivan Rudiuk <IRudiuk@its.jnj.com>",
   "license": "Apache-2.0",
@@ -26,12 +26,12 @@
     "copy": "copyfiles -u 3 \"./src/components/MainMenu/*.css\" \"./lib/components/MainMenu/\""
   },
   "dependencies": {
-    "@dewen_li/bv": "^0.0.44",
-    "@dewen_li/components": "^0.0.44",
-    "@dewen_li/core": "^0.0.44",
-    "@dewen_li/fclasses": "^0.0.44",
-    "@dewen_li/richtext": "^0.0.44",
-    "@dewen_li/richtext-ui": "^0.0.44",
+    "@dewen_li/bv": "^0.0.1",
+    "@dewen_li/components": "^0.0.1",
+    "@dewen_li/core": "^0.0.1",
+    "@dewen_li/fclasses": "^0.0.1",
+    "@dewen_li/richtext": "^0.0.1",
+    "@dewen_li/richtext-ui": "^0.0.1",
     "@types/react-burger-menu": "^2.6.0",
     "lodash": "^4.17.11",
     "nuka-carousel": "^4.4.7",
