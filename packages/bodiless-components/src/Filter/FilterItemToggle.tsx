@@ -12,29 +12,28 @@
  * limitations under the License.
  */
 import { flowRight } from 'lodash';
-import {
-  ifEditable, withNode, ifReadOnly, withoutProps,
-} from '@bodiless/core';
-import { replaceWith, asComponent } from '@bodiless/fclasses';
-import { Fragment } from 'react';
-import { asBodilessFilterItem } from './Item';
-import { withToggleTo, withWrapOnSubmit } from '../Toggle';
+// import {
+//    withNode,
+// } from '@bodiless/core';
+// import { replaceWith, asComponent } from '@bodiless/fclasses';
+// import { Fragment } from 'react';
+// import { asBodilessFilterItem } from './Item';
+// import {  withWrapOnSubmit } from '../Toggle';
 
-const EmptyToggle = flowRight(
-  ifEditable(
-    withWrapOnSubmit,
-    asBodilessFilterItem(),
-    replaceWith(asComponent<JSX.IntrinsicElements['span']>('span')),
-  ),
-  ifReadOnly(
-    withNode,
-    withoutProps(['wrap']),
-  ),
-)(Fragment);
+// const EmptyToggle = flowRight(
+//   ifEditable(
+//     withWrapOnSubmit,
+//     asBodilessFilterItem(),
+//     replaceWith(asComponent<JSX.IntrinsicElements['span']>('span')),
+//   ),
+//   ifReadOnly(
+//     withNode,
+//     withoutProps(['wrap']),
+//   ),
+// )(Fragment);
 
 const withFilterToggle = flowRight(
-  withNode,
-  withToggleTo(EmptyToggle),
+//  withNode,
 );
 
 export default withFilterToggle;

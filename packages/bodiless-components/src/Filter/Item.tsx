@@ -12,11 +12,7 @@
  * limitations under the License.
  */
 
- //todo: rename to taggable
-
-import React, {HTMLProps, useState} from 'react';
-// @todo where this should liberary live? leave in bodiless-comp for now.
-import ReactTags from 'react-tag-autocomplete';
+import React, {HTMLProps} from 'react';
 import {
   EditButtonOptions,
   getUI,
@@ -34,89 +30,73 @@ import {
   withoutProps,
 } from '@bodiless/core';
 import { flowRight } from 'lodash';
+import { InformedReactTagField } from './InformedReactAutoComplete';
+import {Tag} from "react-tag-autocomplete";
 
 // Type of the data used by this component.
 export type Data = {
   tag: string;
 };
 
+// @todo: Using this is enough?
+type Props = HTMLProps<HTMLElement>;
+// @todo: OR do I need logic below copied from link? what is it doing?
 // Type of the props accepted by this component.
 // Exclude the tag from the props accepted as we write it.
-type AProps = HTMLProps<HTMLAnchorElement>;
+// type AProps = HTMLProps<HTMLAnchorElement>;
+//
+// export type Props = Pick<AProps, Exclude<keyof AProps, 'tag'>> & {
+//   unwrap?: () => void;
+// };
 
-export type Props = Pick<AProps, Exclude<keyof AProps, 'tag'>> & {
-  unwrap?: () => void;
+const editButtonOptions = (
+  suggestions: Tag[],
+): EditButtonOptions<Props, Data> => {
+  return {
+    icon: 'add',
+    name: 'Add',
+    renderForm: ({ ui: formUi, closeForm }) => {
+      const { ComponentFormTitle, ComponentFormUnwrapButton } = getUI(formUi);
+      const viewTagsHandler = (event: React.MouseEvent) => {
+        event.preventDefault();
+        closeForm();
+      };
+      return (
+        <>
+          <ComponentFormTitle>Group</ComponentFormTitle>
+          <InformedReactTagField suggestions={suggestions}  />
+          <ComponentFormUnwrapButton type="button" onClick={viewTagsHandler}>
+            View All Groups [Todo]
+          </ComponentFormUnwrapButton>
+        </>
+      );
+    },
+    global: false,
+    local: true,
+  };
 };
 
-
-// Options used to create an edit button.
-export const editButtonOptions: EditButtonOptions<Props, Data> = {
-  icon: 'add',
-  name: 'Add',
-  renderForm: ({ ui: formUi, closeForm }) => {
-    const {
-      ComponentFormTitle,
-      ComponentFormText,
-      ComponentFormUnwrapButton,
-    } = getUI(formUi);
-    const viewTagsHandler = (event: React.MouseEvent) => {
-      event.preventDefault();
-      closeForm();
-    };
-    const [tags, setTags] = useState([
-      // { id: 1, name: 'Apples' },
-      // { id: 2, name: 'Pears' },
-    ]);
-
-    // @ts-ignore
-    const [suggestions, setSuggestions] = useState([
-      { id: 3, name: 'Bananas' },
-      { id: 4, name: 'Mangos' },
-      { id: 5, name: 'Lemons' },
-      { id: 6, name: 'Apricots' },
-    ]);
-    return (
-      <>
-        <ComponentFormTitle>Group</ComponentFormTitle>
-        <ComponentFormText field="tag" id="tag" />
-         {/*// @TODO move this to ui and make it like ComponenetFormText? How? Lets leave it here for now. */}
-        <ReactTags
-          tags={tags}
-          suggestions={suggestions}
-          noSuggestionsText={'No suggestions found'}
-          handleDelete={i => {
-            setTags(tags.splice(i, 1));
-            console.log(tags);
-          }}
-          handleAddition={tag  => {
-            let temp = [ ...tags, tag];
-            console.log(temp);
-            // Needs to be wired into informed. Understand react forms tutorial use UseState react.
-            // Do we need local state or not?
-             // @ts-ignore
-            setTags(temp);
-          }}
-        />
-        <ComponentFormUnwrapButton type="button" onClick={viewTagsHandler}>
-          View All Groups [Todo]
-        </ComponentFormUnwrapButton>
-      </>
-    );
-  },
-  global: false,
-  local: true,
-};
 
 const emptyValue = {
-  tag: '',
+  tags: '',
 };
+
+// Allow us to pass suggestions to react tag field.
+// const withAutoCompleteSuggestions = (tags: Tag[]) => (TaggableComp: CT) => (
+//   props: any,
+// ) => {
+//   return (
+//     <TaggableComp suggestions={tags} {...props}/>
+//   );
+// };
+
 // Composed hoc which creates editable version of the component.
 // Note - the order is important. In particular:
 // - the node data handlers must be outermost
 // - anything relying on the context (activator, indicator) must be
 //   *after* `withEditButton()` as this establishes the context.
 // - withData must be *after* the data handlers are defiend.
-export const asBodilessFilterItem = (nodeKey?: string) =>
+export const asBodilessFilterItem = (nodeKey?: string, suggestions?: any) =>
   flowRight(
     // @ts-ignore: Types of parameters are incompatible.
     withNodeKey(nodeKey),
@@ -124,7 +104,7 @@ export const asBodilessFilterItem = (nodeKey?: string) =>
     withNodeDataHandlers(emptyValue),
     ifReadOnly(withoutProps(['setComponentData'])),
     ifEditable(
-      withEditButton(editButtonOptions),
+      withEditButton(editButtonOptions(suggestions)),
       withContextActivator('onClick'),
       withLocalContextMenu,
     ),

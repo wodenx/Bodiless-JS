@@ -11,30 +11,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  withFilterToggle,
+  // withFilterToggle,
   Editable,
+  withAutoCompleteSuggestions,
   asBodilessFilterItem,
-  MyFormTest,
-  NonInformedReactTag,
+  ReactTagSampleForm,
 } from '@bodiless/components';
 import Layout from '../../../components/Layout';
 import { flow } from 'lodash';
 import { stylable } from '@bodiless/fclasses';
 
-const Item = flow(asBodilessFilterItem(), stylable)('span');
+//const TagableItem = withFilterToggle(Item);
 
-const TagableItem = withFilterToggle(Item);
+const suggestions = [
+  { id: 3, name: 'Bananas' },
+  { id: 4, name: 'Mangos' },
+  { id: 5, name: 'Lemons' },
+  { id: 6, name: 'Apricots' },
+  { id: 7, name: 'not' },
+];
+const TagableItem = flow(
+  asBodilessFilterItem(undefined, suggestions),
+  stylable,
+)('span');
 
 // const validate = (value: string | any[]) => {
 //   return !value || value.length < 5
 //     ? 'Field must be at least five characters'
 //     : undefined;
 // };
-
 // @ts-ignore
 export default (props: any) => (
   <Page {...props}>
@@ -45,18 +54,14 @@ export default (props: any) => (
         that an end user to hide it with a filter.
       </p>
       <div className="my-3">
-        <TagableItem nodeKey="linktoggle1">
+        <TagableItem nodeKey="tags">
           <Editable nodeKey="text" placeholder="Editable Text" />
         </TagableItem>
       </div>
     </Layout>
     <h3> MY Test of InformedReactAutoComplete:</h3>
     <div className="my-3">
-      <MyFormTest />
-    </div>
-    <h3> MY Test of NonInformedReactAutoComplete:</h3>
-    <div className="my-3">
-      <NonInformedReactTag />
+      <ReactTagSampleForm suggestions={suggestions} />
     </div>
   </Page>
 );
