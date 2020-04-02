@@ -1,6 +1,6 @@
 {
   "name": "@dewen_li/richtext",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Provide Rich Text Component",
   "author": "Erik Summerfield <esummer3@its.jnj.com>",
   "license": "Apache-2.0",
@@ -27,11 +27,11 @@
     "postinstall": "node bin/apply-patches.js"
   },
   "dependencies": {
-    "@dewen_li/core": "^0.0.1",
-    "@dewen_li/fclasses": "^0.0.1",
-    "@emotion/core": "^10.0.14",
-    "@emotion/css": "^10.0.14",
-    "@emotion/styled": "^10.0.14",
+    "@dewen_li/core": "^0.0.2",
+    "@dewen_li/fclasses": "^0.0.2",
+    "@emotion/core": "^10.0.24",
+    "@emotion/css": "^10.0.24",
+    "@emotion/styled": "^10.0.24",
     "@material/react-material-icon": "^0.14.1",
     "immutable": "^4.0.0-rc.12",
     "immutable-js": "^0.3.1-6",
