@@ -13,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/johnsonandjohnson/bodiless-js.git"
+    "url": "https://github.com/dewen/bodiless-js.git"
   },
   "publishConfig": {
     "access": "public"

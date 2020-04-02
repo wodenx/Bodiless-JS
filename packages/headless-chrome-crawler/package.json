@@ -19,9 +19,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/johnsonandjohnson/bodiless-js.git"
+    "url": "https://github.com/dewen/bodiless-js.git"
   },
-  "homepage": "https://github.com/johnsonandjohnson/bodiless-js",
+  "homepage": "https://github.com/dewen/bodiless-js",
   "dependencies": {
     "debug": "^4.1.1",
     "jquery": "^3.3.1",
