@@ -23,9 +23,9 @@
     "clean": "rimraf \"lib/*\" && rimraf tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@dewen_li/fclasses": "^0.0.2",
-    "@dewen_li/richtext": "^0.0.2",
-    "@dewen_li/ui": "^0.0.2",
+    "@bodiless/fclasses": "^0.0.44",
+    "@bodiless/richtext": "^0.0.44",
+    "@bodiless/ui": "^0.0.44",
     "lodash": "^4.17.11"
   },
   "peerDependencies": {

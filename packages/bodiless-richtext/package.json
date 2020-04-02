@@ -27,8 +27,8 @@
     "postinstall": "node bin/apply-patches.js"
   },
   "dependencies": {
-    "@dewen_li/core": "^0.0.2",
-    "@dewen_li/fclasses": "^0.0.2",
+    "@bodiless/core": "^0.0.44",
+    "@bodiless/fclasses": "^0.0.44",
     "@emotion/core": "^10.0.24",
     "@emotion/css": "^10.0.24",
     "@emotion/styled": "^10.0.24",
