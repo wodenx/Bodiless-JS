@@ -1,6 +1,6 @@
 {
   "name": "@dewen_li/bv",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Provides bazaarvoice components.",
   "author": "Andrei Beliayeu <abeliaye@its.jnj.com>",
   "license": "Apache-2.0",
