@@ -12,11 +12,29 @@
  * limitations under the License.
  */
 
-import React, { FC } from 'react';
+import React, { FC, HTMLProps } from 'react';
 import { flow } from 'lodash';
 import {
-  designable, Div, H3, Input, Label,
+  stylable,
+  designable,
+  Div,
+  H3,
+  Input,
+  Label,
+  withDesign,
+  replaceWith,
+  addClasses,
 } from '@bodiless/fclasses';
+import {
+  List,
+  Editable,
+  asEditableList,
+  withBasicSublist,
+  // ListProps,
+  ListTitleProps,
+  useListItemAccessors,
+} from '@bodiless/components';
+import { useNode, useNodeDataHandlers } from '@bodiless/core';
 import { FilterComponents, FilterProps } from './types';
 import { useFilterByGroupContext } from './FilterByGroupProvider';
 
@@ -26,6 +44,64 @@ const FilterComponentsStart:FilterComponents = {
   FilterGroupItem: Input,
   FilterInputWrapper: Div,
 };
+
+const CategoryListTitle = (props: HTMLProps<HTMLHeadingElement> & ListTitleProps) => (
+  <H3 {...props}><Editable nodeKey="categoryListText" placeholder="Category Name" /></H3>
+);
+
+// const TagListTitle = ({ checked, onChange, ...rest }: HTMLProps<HTMLInputElement> & ListTitleProps ) => (
+//   <React.Fragment {...rest}>
+//     <Input type="radio" name="filter-item" value={tag.id} id={tag.id} onChange={onChange} checked={checked} />
+//     <Label htmlFor={tag.id}>
+//       <Editable nodeKey="tag" placeholder="Tag Name" />
+//     </Label>
+//   </React.Fragment>
+// );
+
+type Tag = {
+  id: string,
+  name: string,
+}
+
+type TagListTitleProps = {
+  tag: Tag,
+} & HTMLProps<HTMLInputElement> & ListTitleProps;
+
+const TagListTitle = ({ tag, onChange, checked, ...rest}: TagListTitleProps ) => {
+  const { getItems } = useListItemAccessors();
+  const { node } = useNode();
+  const { componentData } = useNodeDataHandlers();
+
+  console.log('Items: ', getItems());
+  console.log('node: ', node.data);
+  console.log('componentData: ', componentData);
+
+  return (
+    <Div {...rest} >
+      <Input type="radio" name="filter-item" value="test" id="test" />
+      <Label htmlFor="test">
+        <Editable nodeKey="tag" placeholder="Tag Name" />
+      </Label>
+    </Div>
+  )
+};
+
+const SimpleCategoryList = flow(
+  asEditableList,
+  withDesign({
+    Title: replaceWith(CategoryListTitle),
+  }),
+)(List);
+
+const SimpleTagList = flow(
+  asEditableList,
+  withDesign({
+    Title: replaceWith(TagListTitle),
+    Wrapper: flow(stylable, addClasses('pl-10')),
+  }),
+)(List);
+
+const FilterList = withBasicSublist(SimpleTagList)(SimpleCategoryList);
 
 const FilterBase: FC<FilterProps> = ({ components }) => {
   const {
@@ -39,6 +115,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
 
   return (
     <React.Fragment>
+      <FilterList nodeKey="filter" />
       <FilterCategory>Filter Category</FilterCategory>
       <FilterGroupWrapper>
         {tags.map(tag => (
