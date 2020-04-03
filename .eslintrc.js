@@ -42,6 +42,7 @@ module.exports = {
       { devDependencies: true },
     ],
     // "complexity": [ "error", 2 ]
+    "import/extensions": 0,
   },
   "env": {
     "browser": true,
