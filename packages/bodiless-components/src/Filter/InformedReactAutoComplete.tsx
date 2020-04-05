@@ -51,6 +51,13 @@ const useAccessors = () => {
     getTags: () => node.data.tags,
   };
 };
+
+/*
+ * Component to display all suggestions
+ *
+ * @Todo: now it's just displaying a list we need a popup or possibly bodiless accordion which we tried
+ *   but did not work.
+ */
 const AllSuggestions = ({ suggestions }: { suggestions: Tag[] }) => (
   <ul>
     {suggestions.map(s => (
@@ -86,7 +93,6 @@ const ReactTagField = (options: Options) => {
     suggestionDisabled: 'is-disabled',
   };
 
-  // @Todo: does not allow to add new tag?
   return (
     <>
       <ReactTags
