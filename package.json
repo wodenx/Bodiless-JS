@@ -27,7 +27,7 @@
     "publish:from-package": "npm run build && lerna publish from-package --registry $NPM_REGISTRY",
     "lerna:version": "lerna version patch && npm run lerna:postversion",
     "lerna:postversion": "chan release --group-changes $(node -p -e \"require('./lerna.json').version\") && git add CHANGELOG.md && git commit -m \"Update: changelog\" && git push --follow-tags",
-    "lerna:publish": "lerna publish from-git --yes --npm-client npm --dist-tag latest",
+    "lerna:publish": "lerna publish from-git --yes --dist-tag latest",
     "scan": "ts-complexity --max-complexity 10 --pattern \"packages/**/src/**/*.ts(x)\"",
     "scan:target": "ts-complexity --max-complexity 1 --pattern",
     "serve": "lerna run serve --scope @dewen_li/test-site --stream",
