@@ -18,7 +18,6 @@ import Image, { asBodilessImage } from './Image';
 import NodeViewer from './NodeViewer';
 import withLinkToggle from './LinkToggle';
 import {asBodilessFilterItem} from './Filter/Item';
-import withFilterToggle from './Filter/FilterItemToggle';
 import { ReactTagSampleForm } from './Filter/InformedReactAutoComplete';
 import List from './List';
 import {
@@ -71,7 +70,6 @@ export {
   asBodilessHelmet,
   withEditPlaceholder,
   withEvent,
-  withFilterToggle,
   asBodilessFilterItem,
   ReactTagSampleForm,
 };

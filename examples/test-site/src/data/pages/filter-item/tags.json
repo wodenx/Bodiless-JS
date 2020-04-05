@@ -1,12 +1,12 @@
 {
   "tags": [
     {
-      "id": 6,
-      "name": "Apricots"
-    },
-    {
       "id": 3,
       "name": "Bananas"
+    },
+    {
+      "id": 4,
+      "name": "Mangos"
     }
   ]
 }

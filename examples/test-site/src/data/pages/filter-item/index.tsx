@@ -36,7 +36,6 @@ const suggestions = [
 ];
 const TagableItem = flow(
   asBodilessFilterItem(undefined, suggestions),
-  stylable,
 )('span');
 
 // const validate = (value: string | any[]) => {

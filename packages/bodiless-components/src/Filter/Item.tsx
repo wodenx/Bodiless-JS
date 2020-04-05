@@ -35,7 +35,7 @@ import {Tag} from "react-tag-autocomplete";
 
 // Type of the data used by this component.
 export type Data = {
-  tag: string;
+  tags: Tag[];
 };
 
 // @todo: Using this is enough?
@@ -49,6 +49,7 @@ type Props = HTMLProps<HTMLElement>;
 //   unwrap?: () => void;
 // };
 
+
 const editButtonOptions = (
   suggestions: Tag[],
 ): EditButtonOptions<Props, Data> => {
@@ -56,18 +57,11 @@ const editButtonOptions = (
     icon: 'add',
     name: 'Add',
     renderForm: ({ ui: formUi, closeForm }) => {
-      const { ComponentFormTitle, ComponentFormUnwrapButton } = getUI(formUi);
-      const viewTagsHandler = (event: React.MouseEvent) => {
-        event.preventDefault();
-        closeForm();
-      };
+      const { ComponentFormTitle } = getUI(formUi);
       return (
         <>
-          <ComponentFormTitle>Group</ComponentFormTitle>
+          <ComponentFormTitle>Group Membership</ComponentFormTitle>
           <InformedReactTagField suggestions={suggestions}  />
-          <ComponentFormUnwrapButton type="button" onClick={viewTagsHandler}>
-            View All Groups [Todo]
-          </ComponentFormUnwrapButton>
         </>
       );
     },
@@ -96,9 +90,11 @@ const emptyValue = {
 // - anything relying on the context (activator, indicator) must be
 //   *after* `withEditButton()` as this establishes the context.
 // - withData must be *after* the data handlers are defiend.
-export const asBodilessFilterItem = (nodeKey?: string, suggestions?: any) =>
-  flowRight(
-    // @ts-ignore: Types of parameters are incompatible.
+export const asBodilessFilterItem = (nodeKey?: string, suggestions?: any) => {
+ console.log('in asBodilessFilterItem', nodeKey);
+  console.log('in asBodilessFilterItem', suggestions);
+
+  return flowRight(
     withNodeKey(nodeKey),
     withNode,
     withNodeDataHandlers(emptyValue),
@@ -109,6 +105,7 @@ export const asBodilessFilterItem = (nodeKey?: string, suggestions?: any) =>
       withLocalContextMenu,
     ),
     withData,
-  ) as Bodiless<Props, Props & Partial<WithNodeProps>>;
+  ) as Bodiless<Props, Props & Partial<WithNodeProps>>
+};
 const FilterItem = asBodilessFilterItem()('span');
 export default FilterItem;
