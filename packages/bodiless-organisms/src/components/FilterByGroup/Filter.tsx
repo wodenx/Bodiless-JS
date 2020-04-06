@@ -14,7 +14,7 @@
 
 /* eslint-disable arrow-body-style, max-len, @typescript-eslint/no-unused-vars */
 import React, { FC, HTMLProps, ComponentType as CT } from 'react';
-import { flow, flowRight, isEmpty } from 'lodash';
+import { flow, flowRight, isEmpty, unionBy, isEqual, xorWith } from 'lodash';
 import {
   stylable,
   designable,
@@ -36,7 +36,7 @@ import {
 } from '@bodiless/components';
 import { FilterComponents, FilterProps } from './types';
 import { useFilterByGroupContext } from './FilterByGroupProvider';
-import useItemsAccessors from './FilterTagsModel';
+import { useItemsAccessors } from './FilterTagsModel';
 
 import Tag from './FilterByGroupTag';
 
@@ -51,16 +51,84 @@ const CategoryListTitle = (props: HTMLProps<HTMLHeadingElement> & ListTitleProps
   <H3 {...props}><Editable nodeKey="categoryListText" placeholder="Category Name" /></H3>
 );
 
+const isArrayEqual = (x: any, y: any) => isEmpty(xorWith(x, y, isEqual));
+
 const withMeta = (
   nodeKey: string,
 ) => (Component: CT) => (props: any) => {
-  const { setTag, getTag, getChild } = useItemsAccessors();
-  const tag = getTag();
+  const { setTag, getTag, getSubnode } = useItemsAccessors();
 
-  if (isEmpty(tag.id) || isEmpty(tag.name)) {
-    const childNode = getChild(nodeKey);
-    setTag(new Tag(childNode.data.text));
+  const { tags, updateTags } = useFilterByGroupContext();
+  // console.log('All Tags (context): ', tags);
+
+  const tag = getTag();
+  // console.log('Tag from useItemsAccessors: ', {...tag});
+
+  const childNode = getSubnode(nodeKey);
+
+  if (isEmpty(tag.id)) {
+    const tag = new Tag(childNode.data.text || '');
+    // console.log('Creating new Tag: ', tag);
+    setTag(tag);
+
+    const allTags = unionBy([tag], tags, 'id');
+    // console.log('All Tags: ', allTags);
+
+    if (!isArrayEqual(allTags, tags)) {
+      // console.log('Arrays of Tags Are Not Equal');
+      updateTags(allTags);
+    }
+
+  } else if (isEmpty(tag.name) && childNode.data.text) {
+    // console.log('childNode.data.text: ', childNode.data.text);
+    tag.name = childNode.data.text || '';
+    setTag(tag);
+
+    const allTags = unionBy([tag], tags, 'id');
+    // console.log('All Tags (updated): ', allTags);
+
+    if (!isArrayEqual(allTags, tags)) {
+      // console.log('Arrays of Tags Are Not Equal');
+      updateTags(allTags);
+    }
+  } else {
+
+    if (tags.some(_tag => _tag.id === tag.id)) {
+      // console.log('Tag already in context');
+    } else {
+      // console.log('Adding tag to context');
+
+      const allTags = unionBy([tag], tags, 'id');
+      if (!isArrayEqual(allTags, tags)) {
+        updateTags(allTags);
+      }
+    }
   }
+
+
+  // if (isEmpty(tag.id) || isEmpty(tag.name)) {
+  //   const childNode = getSubnode(nodeKey);
+  //   const tag = new Tag(childNode.data.text);
+  //   setTag(tag);
+
+  //   if (!isArrayEqual(allTags, tags)) {
+  //     const allTags = unionBy([tag], tags, 'id');
+  //     console.log('Merged Tags: ', allTags);
+  //   }
+
+  //   // updateTags(allTags);
+  // }
+
+  return <Component {...props} />;
+};
+
+const withCategoryMeta = (
+  nodeKey?: string,
+) => (Component: CT) => (props: any) => {
+  // const { getTags } = useCategoryAccessors();
+
+  // const tags = getTags();
+  // console.log('All Tags: ', tags);
 
   return <Component {...props} />;
 };
@@ -94,12 +162,10 @@ const SimpleCategoryList = flow(
 
 const SimpleTagList = flow(
   asEditableList,
+
   withDesign({
     Title: replaceWith(TagListTitle),
-    Wrapper: flow(stylable, addClasses('pl-10')),
-    // Item: flow(
-    //   Set Node context here and consume it in Title
-    // )
+    Wrapper: flow(stylable, addClasses('pl-10'), withCategoryMeta()),
   }),
 )(List);
 

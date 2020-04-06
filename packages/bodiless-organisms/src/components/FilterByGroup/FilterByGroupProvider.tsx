@@ -14,24 +14,19 @@
 
 import React, {
   FC,
-  ComponentType as CT,
   useContext,
   useState,
 } from 'react';
 import { reject } from 'lodash';
-
-type Tag = {
-  id: string,
-  name: string,
-};
+import { TagType } from './types';
 
 type FilterByGroupContext = {
-  tags: Tag[],
+  tags: TagType[],
   selectedTag?: string,
   updateSelectedTag: React.Dispatch<React.SetStateAction<string>>,
-  updateTags: React.Dispatch<React.SetStateAction<Tag[]>>,
+  updateTags: React.Dispatch<React.SetStateAction<TagType[]>>,
   deleteTag: (id?: string) => void,
-  getTagById: (id: string) => Tag | undefined,
+  getTagById: (id: string) => TagType | undefined,
 };
 
 const defaultContext: FilterByGroupContext = {
@@ -45,12 +40,13 @@ const defaultContext: FilterByGroupContext = {
 const FilterByGroupContext = React.createContext<FilterByGroupContext>(defaultContext);
 const useFilterByGroupContext = () => useContext(FilterByGroupContext);
 
-const FilterByGroupProvider: FC = ({ children }) => {
-  const defaultTags = [
-    { id: 'group-item-1', name: 'group-item-1' },
-    { id: 'group-item-2', name: 'group-item-2' },
-    { id: 'group-item-3', name: 'group-item-3' },
-  ];
+type FBGContextOptions = {
+  name: string,
+  tags?: TagType[]
+};
+
+const FilterByGroupProvider: FC<FBGContextOptions> = ({ name, children }) => {
+  const defaultTags: TagType[] = [];
 
   const [tags, updateTags] = useState([...defaultTags]);
   const [selectedTag, updateSelectedTag] = useState('');
@@ -74,15 +70,8 @@ const FilterByGroupProvider: FC = ({ children }) => {
   );
 };
 
-const withFilterByGroupProvider = <P extends object>(Component: CT<P>) => (props: P) => (
-  <FilterByGroupProvider>
-    <Component {...props} />
-  </FilterByGroupProvider>
-);
-
 export default FilterByGroupProvider;
 export {
   FilterByGroupContext,
   useFilterByGroupContext,
-  withFilterByGroupProvider,
 };

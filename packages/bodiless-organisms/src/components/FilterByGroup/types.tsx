@@ -41,3 +41,19 @@ export type TagType = {
 export type EditableNodeData = {
   text: string,
 };
+
+export type FBGContextOptions = {
+  name?: string,
+  tags?: TagType[]
+};
+
+export type WithFilterByGroupOptions<P> = {
+  name?: string,
+  tags?: TagType[],
+};
+
+export interface FBGContextInterface {
+  name: string,
+  tags: TagType[],
+  spawn: (v: FBGContextOptions) => FBGContextInterface;
+};

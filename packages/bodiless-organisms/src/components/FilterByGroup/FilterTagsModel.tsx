@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 
+import { unionBy } from 'lodash';
 import { useNode } from '@bodiless/core';
 import { TagType, EditableNodeData } from './types';
 
@@ -21,7 +22,7 @@ const useItemsAccessors = () => {
   return {
     getTag: () => node.data || { id: '', name: '' },
     setTag: (tag: TagType) => node.setData(tag),
-    getChild: (nodeKey: string) => node.child<EditableNodeData>(nodeKey),
+    getSubnode: (nodeKey: string) => node.child<EditableNodeData>(nodeKey),
     deleteSubnode: (item?: string) => {
       const path$ = item ? node.path.concat(item) : node.path;
       return node.delete(path$);
@@ -29,4 +30,44 @@ const useItemsAccessors = () => {
   };
 };
 
-export default useItemsAccessors;
+type CategoryNode = {
+  tags: TagType[],
+  items: string[],
+}
+
+const useCategoryAccessors = () => {
+  const { node } = useNode<CategoryNode>();
+  // const categoryNode = node.child<CategoryNode>(nodeKey);
+
+  return {
+    getNode: () => node,
+    getSubnode: (nodeKey: string) => node.child<CategoryNode>(nodeKey),
+    setTags: (tags: Tag[]) => {
+      console.log('input tags: ', tags);
+      console.log('data Before: ', { ...node.data });
+      node.setData({...node.data, tags});
+      // console.log('data After: ', node.data);
+    },
+    getTags: () => node.data.tags || [],
+  }
+}
+
+const useAddItem = () => {
+  const { getTags, setTags } = useCategoryAccessors();
+  return (tag: TagType) => {
+    const tags = getTags();
+    const newTags = unionBy([{...tag}], tags, 'id');
+    
+    setTags(newTags);
+  };
+};
+
+const useItemsMutators = () => ({
+  addItem: useAddItem(),
+});
+
+export {
+  useCategoryAccessors,
+  useItemsAccessors,
+  useItemsMutators,
+};
