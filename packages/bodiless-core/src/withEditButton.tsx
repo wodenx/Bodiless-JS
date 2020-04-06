@@ -23,6 +23,8 @@ import { TMenuOptionGetter } from './Types/PageContextProviderTypes';
 
 export type FormBodyProps<D> = ContextMenuFormBodyProps<D> & {
   unwrap?: () => void;
+  // @todo: Make props a generic type.
+  props?: any;
 };
 export type FormBodyRenderer<D> = (p: FormBodyProps<D>) => ReactNode;
 
@@ -64,7 +66,7 @@ export const createMenuOptionHook = <P extends object, D extends object>({
       Object.assign(componentData, values);
       if (onSubmit) onSubmit();
     };
-    const render = (p: ContextMenuFormBodyProps<D>) => renderForm({ ...p, unwrap });
+    const render = (p: ContextMenuFormBodyProps<D>) => renderForm({ ...p, unwrap, props });
     const form = contextMenuForm({
       submitValues,
       initialValues: componentData,

@@ -17,7 +17,6 @@ import {
   EditButtonOptions,
   getUI,
   withEditButton,
-  withData,
   withContextActivator,
   withNode,
   withNodeDataHandlers,
@@ -38,51 +37,31 @@ export type Data = {
   tags: Tag[];
 };
 
-// @todo: Using this is enough?
+// @Todo: Determine if this type is necessary?
 type Props = HTMLProps<HTMLElement>;
-// @todo: OR do I need logic below copied from link? what is it doing?
-// Type of the props accepted by this component.
-// Exclude the tag from the props accepted as we write it.
-// type AProps = HTMLProps<HTMLAnchorElement>;
-//
-// export type Props = Pick<AProps, Exclude<keyof AProps, 'tag'>> & {
-//   unwrap?: () => void;
-// };
 
-
-const editButtonOptions = (
-  suggestions: Tag[],
-): EditButtonOptions<Props, Data> => {
-  return {
-    icon: 'add',
-    name: 'Add',
-    renderForm: ({ ui: formUi, closeForm }) => {
-      const { ComponentFormTitle } = getUI(formUi);
-      return (
-        <>
-          <ComponentFormTitle>Group Membership</ComponentFormTitle>
-          <InformedReactTagField suggestions={suggestions}  />
-        </>
-      );
-    },
-    global: false,
-    local: true,
-  };
+export const editButtonOptions: EditButtonOptions<Props, Data> = {
+  // @Todo: what icon should we use?
+  icon: 'add',
+  name: 'Add',
+  renderForm: ({ui: formUi, props: props}) => {
+    const { suggestions }  = props;
+    console.log('in render form', props);
+    const { ComponentFormTitle } = getUI(formUi);
+    return (
+      <>
+        <ComponentFormTitle>Group Membership</ComponentFormTitle>
+        <InformedReactTagField suggestions={suggestions} />
+      </>
+    );
+  },
+  global: false,
+  local: true,
 };
-
 
 const emptyValue = {
   tags: '',
 };
-
-// Allow us to pass suggestions to react tag field.
-// const withAutoCompleteSuggestions = (tags: Tag[]) => (TaggableComp: CT) => (
-//   props: any,
-// ) => {
-//   return (
-//     <TaggableComp suggestions={tags} {...props}/>
-//   );
-// };
 
 // Composed hoc which creates editable version of the component.
 // Note - the order is important. In particular:
@@ -90,21 +69,22 @@ const emptyValue = {
 // - anything relying on the context (activator, indicator) must be
 //   *after* `withEditButton()` as this establishes the context.
 // - withData must be *after* the data handlers are defiend.
+// @todo: revist review the markup produced by adding a tag: Determine what we need to do with withData?
+// @todo revisit suggestions as they need to be passed at runtime?
 export const asBodilessFilterItem = (nodeKey?: string, suggestions?: any) => {
  console.log('in asBodilessFilterItem', nodeKey);
   console.log('in asBodilessFilterItem', suggestions);
-
   return flowRight(
     withNodeKey(nodeKey),
     withNode,
     withNodeDataHandlers(emptyValue),
     ifReadOnly(withoutProps(['setComponentData'])),
     ifEditable(
-      withEditButton(editButtonOptions(suggestions)),
+      withEditButton(editButtonOptions),
       withContextActivator('onClick'),
       withLocalContextMenu,
     ),
-    withData,
+    withoutProps(['suggestions', 'componentData'])
   ) as Bodiless<Props, Props & Partial<WithNodeProps>>
 };
 const FilterItem = asBodilessFilterItem()('span');

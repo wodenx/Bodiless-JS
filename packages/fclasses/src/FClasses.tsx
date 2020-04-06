@@ -64,7 +64,7 @@ const modifyClasses = (operation: 'add' | 'remove') => (classes?: Classes) => {
 const addClasses = modifyClasses('add');
 
 /**
- * HOC which specifies that a list of classes shoudl be removed from the wrapped component's
+ * HOC which specifies that a list of classes should be removed from the wrapped component's
  * className.
  *
  * @param classes A string or array of classes to remove. If not specified, then *all* classes will

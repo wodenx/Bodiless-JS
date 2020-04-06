@@ -34,8 +34,9 @@ const suggestions = [
   { id: 6, name: 'Apricots' },
   { id: 7, name: 'not' },
 ];
+
 const TagableItem = flow(
-  asBodilessFilterItem(undefined, suggestions),
+  asBodilessFilterItem(),
 )('span');
 
 // const validate = (value: string | any[]) => {
@@ -53,7 +54,7 @@ export default (props: any) => (
         that an end user to hide it with a filter.
       </p>
       <div className="my-3">
-        <TagableItem nodeKey="tags">
+        <TagableItem nodeKey="tags" suggestions={suggestions}>
           <Editable nodeKey="text" placeholder="Editable Text" />
         </TagableItem>
       </div>
