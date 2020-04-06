@@ -12,18 +12,9 @@
  * limitations under the License.
  */
 
+/* eslint-disable arrow-body-style, max-len, @typescript-eslint/no-unused-vars */
 import React, { FC, HTMLProps, ComponentType as CT } from 'react';
-import { flow, flowRight } from 'lodash';
-import {
-  // withNode,
-  // withNodeDataHandlers,
-  // ifReadOnly,
-  // withNodeKey,
-  // withoutProps,
-  // withData,
-  useNode,
-  // useNodeDataHandlers,
-} from '@bodiless/core';
+import { flow, flowRight, isEmpty } from 'lodash';
 import {
   stylable,
   designable,
@@ -45,6 +36,7 @@ import {
 } from '@bodiless/components';
 import { FilterComponents, FilterProps } from './types';
 import { useFilterByGroupContext } from './FilterByGroupProvider';
+import useItemsAccessors from './FilterTagsModel';
 
 import Tag from './FilterByGroupTag';
 
@@ -59,34 +51,29 @@ const CategoryListTitle = (props: HTMLProps<HTMLHeadingElement> & ListTitleProps
   <H3 {...props}><Editable nodeKey="categoryListText" placeholder="Category Name" /></H3>
 );
 
-type TagType = {
-  id: string,
-  name: string,
-};
-
-type NodeData = {
-  text: string,
-};
-
 const withMeta = (
   nodeKey: string,
-  nodeCollection?: string | undefined,
 ) => (Component: CT) => (props: any) => {
-  const { node } = useNode(nodeCollection);
-  const childNode = node.child<NodeData>(nodeKey);
+  const { setTag, getTag, getChild } = useItemsAccessors();
+  const tag = getTag();
 
-  node.setData(new Tag(childNode.data.text));
+  if (isEmpty(tag.id) || isEmpty(tag.name)) {
+    const childNode = getChild(nodeKey);
+    setTag(new Tag(childNode.data.text));
+  }
 
   return <Component {...props} />;
 };
 
 const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) => {
-  const { node } = useNode<TagType>();
-  const tag = node.data;
+  const { getTag } = useItemsAccessors();
+  const tag = getTag();
+
+  const { selectedTag, updateSelectedTag } = useFilterByGroupContext();
 
   return (
     <Div {...props}>
-      <Input type="radio" name="filter-item" value={tag.name} id={tag.id} />
+      <Input type="radio" name="filter-item" value={tag.id} id={tag.id} onChange={() => updateSelectedTag(tag.id)} checked={selectedTag === tag.id} />
       <Label htmlFor={tag.id}>
         <Editable nodeKey="tag-title" placeholder="Tag Name" />
       </Label>
@@ -119,30 +106,36 @@ const SimpleTagList = flow(
 const FilterList = withBasicSublist(SimpleTagList)(SimpleCategoryList);
 
 const FilterBase: FC<FilterProps> = ({ components }) => {
-  const {
-    FilterCategory,
-    FilterGroupItem,
-    FilterGroupWrapper,
-    FilterInputWrapper,
-  } = components;
-
-  const { tags, selectedTag, updateSelectedTag } = useFilterByGroupContext();
+  // const {
+  //   FilterCategory,
+  //   FilterGroupItem,
+  //   FilterGroupWrapper,
+  //   FilterInputWrapper,
+  // } = components;
 
   return (
-    <React.Fragment>
-      <FilterList nodeKey="filter" />
-      <FilterCategory>Filter Category</FilterCategory>
-      <FilterGroupWrapper>
-        {tags.map(tag => (
-          <FilterInputWrapper key={tag.id}>
-            <FilterGroupItem type="radio" name="filter-item" value={tag.id} id={tag.id} onChange={() => updateSelectedTag(tag.id)} checked={selectedTag === tag.id} />
-            <Label htmlFor={tag.id}>{ tag.name }</Label>
-          </FilterInputWrapper>
-        ))}
-      </FilterGroupWrapper>
-    </React.Fragment>
+    <FilterList nodeKey="filter" />
+    // <FilterCategory>Filter Category</FilterCategory>
+    // <FilterGroupWrapper>
+    //   {tags.map(tag => (
+    //     <FilterInputWrapper key={tag.id}>
+    //       <FilterGroupItem type="radio" name="filter-item" value={tag.id} id={tag.id} onChange={() => updateSelectedTag(tag.id)} checked={selectedTag === tag.id} />
+    //       <Label htmlFor={tag.id}>{ tag.name }</Label>
+    //     </FilterInputWrapper>
+    //   ))}
+    // </FilterGroupWrapper>
   );
 };
+
+// <FilterCategory>Filter Category</FilterCategory>
+// <FilterGroupWrapper>
+//   {tags.map(tag => (
+//     <FilterInputWrapper key={tag.id}>
+//       <FilterGroupItem type="radio" name="filter-item" value={tag.id} id={tag.id} onChange={() => updateSelectedTag(tag.id)} checked={selectedTag === tag.id} />
+//       <Label htmlFor={tag.id}>{ tag.name }</Label>
+//     </FilterInputWrapper>
+//   ))}
+// </FilterGroupWrapper>
 
 const FilterClean = flow(
   designable(FilterComponentsStart),

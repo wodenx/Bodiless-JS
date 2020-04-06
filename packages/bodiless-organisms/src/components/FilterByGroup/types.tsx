@@ -32,3 +32,12 @@ export type FilterComponents = {
 
 export type FilterByGroupProps = DesignableComponentsProps<FilterByGroupComponents>;
 export type FilterProps = DesignableComponentsProps<FilterComponents>;
+
+export type TagType = {
+  id: string,
+  name: string,
+};
+
+export type EditableNodeData = {
+  text: string,
+};

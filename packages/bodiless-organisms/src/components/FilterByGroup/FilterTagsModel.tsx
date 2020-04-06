@@ -12,17 +12,21 @@
  * limitations under the License.
  */
 
-import { v4 } from 'uuid';
-import { TagType } from './types';
+import { useNode } from '@bodiless/core';
+import { TagType, EditableNodeData } from './types';
 
-class Tag implements TagType {
-  readonly id: string = v4();
+const useItemsAccessors = () => {
+  const { node } = useNode<TagType>();
 
-  name: string = '';
+  return {
+    getTag: () => node.data || { id: '', name: '' },
+    setTag: (tag: TagType) => node.setData(tag),
+    getChild: (nodeKey: string) => node.child<EditableNodeData>(nodeKey),
+    deleteSubnode: (item?: string) => {
+      const path$ = item ? node.path.concat(item) : node.path;
+      return node.delete(path$);
+    },
+  };
+};
 
-  constructor(name: string) {
-    this.name = name;
-  }
-}
-
-export default Tag;
+export default useItemsAccessors;
