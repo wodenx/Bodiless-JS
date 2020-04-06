@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.46](https://github.com/dewen/bodiless-js/compare/v0.0.45...v0.0.46) (2020-04-06)
+
+**Note:** Version bump only for package @dewen_li/fclasses
+
+
+
+
+
 ## [0.0.44](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.43...v0.0.44) (2020-03-26)
 
 **Note:** Version bump only for package @bodiless/fclasses

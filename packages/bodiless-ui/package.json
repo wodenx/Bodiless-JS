@@ -1,6 +1,6 @@
 {
   "name": "@dewen_li/ui",
-  "version": "0.0.45",
+  "version": "0.0.46",
   "description": "Common default UI elements for BodilessJS",
   "author": "Ivan Rudiuk <IRudiuk@its.jnj.com>",
   "license": "Apache-2.0",
