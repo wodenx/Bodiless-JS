@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.47](https://github.com/dewen/bodiless-js/compare/v0.0.46...v0.0.47) (2020-04-06)
+
+**Note:** Version bump only for package @dewen_li/layouts
+
+
+
+
+
 ## [0.0.46](https://github.com/dewen/bodiless-js/compare/v0.0.45...v0.0.46) (2020-04-06)
 
 **Note:** Version bump only for package @dewen_li/layouts
