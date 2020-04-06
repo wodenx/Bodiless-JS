@@ -28,7 +28,6 @@
     "publish:patch": "lerna version patch --conventional-commits",
     "publish:minor": "lerna version minor --conventional-commits",
     "publish:major": "lerna version major --conventional-commits",
-    "lerna:postversion": "chan release --group-changes $(node -p -e \"require('./lerna.json').version\") && git add CHANGELOG.md && git commit -m \"Update: changelog\" && git push --follow-tags",
     "lerna:publish": "lerna publish from-git --yes --dist-tag latest",
     "scan": "ts-complexity --max-complexity 10 --pattern \"packages/**/src/**/*.ts(x)\"",
     "scan:target": "ts-complexity --max-complexity 1 --pattern",
