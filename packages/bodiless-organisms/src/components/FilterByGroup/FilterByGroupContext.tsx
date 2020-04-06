@@ -12,9 +12,14 @@
  * limitations under the License.
  */
 
-import React, { FC, ConsumerProps, useContext, ComponentType as CT } from 'react';
+import React, {
+  FC,
+  ConsumerProps,
+  useContext,
+  ComponentType as CT,
+} from 'react';
 import { Observer } from 'mobx-react';
-import { 
+import {
   TagType,
   WithFilterByGroupOptions,
   FBGContextOptions,
@@ -25,7 +30,6 @@ import FilterByGroupStore from './FilterByGroupStore';
 const defaultFBGStore = new FilterByGroupStore();
 
 class FilterByGroupContext implements FBGContextInterface {
-
   readonly name: string = 'FilterByGroupContext';
 
   readonly tags: TagType[] = [];
@@ -60,7 +64,7 @@ class FilterByGroupContext implements FBGContextInterface {
   spawn(values: FBGContextOptions): FBGContextInterface {
     return new FilterByGroupContext(values, this);
   }
-};
+}
 
 const useFilterByGroupContext = () => useContext(FilterByGroupContext.context);
 
@@ -84,18 +88,15 @@ const FilterByGroupProvider: FC<FBGContextOptions> = ({
 const withFilterByGroupContext = <P extends object>({
   name,
   tags,
-}: WithFilterByGroupOptions<P>) => (Component: CT<P> | string) => (props: P) => {
-
-    return (
-      <FilterByGroupProvider name={name} tags={tags}>
-        <Component {...props} />
-      </FilterByGroupProvider>
-    );
-  };
+}: WithFilterByGroupOptions<P>) => (Component: CT<P> | string) => (props: P) => (
+  <FilterByGroupProvider name={name} tags={tags}>
+    <Component {...props} />
+  </FilterByGroupProvider>
+  );
 
 export default FilterByGroupContext;
 export {
   useFilterByGroupContext,
   withFilterByGroupContext,
   FilterByGroupProvider,
-}
+};

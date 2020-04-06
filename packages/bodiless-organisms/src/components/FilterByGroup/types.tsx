@@ -55,5 +55,5 @@ export type WithFilterByGroupOptions<P> = {
 export interface FBGContextInterface {
   name: string,
   tags: TagType[],
-  spawn: (v: FBGContextOptions) => FBGContextInterface;
-};
+  spawn: (v: FBGContextOptions) => FBGContextInterface,
+}

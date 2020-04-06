@@ -14,7 +14,14 @@
 
 /* eslint-disable arrow-body-style, max-len, @typescript-eslint/no-unused-vars */
 import React, { FC, HTMLProps, ComponentType as CT } from 'react';
-import { flow, flowRight, isEmpty, unionBy, isEqual, xorWith } from 'lodash';
+import {
+  flow,
+  flowRight,
+  isEmpty,
+  unionBy,
+  isEqual,
+  xorWith,
+} from 'lodash';
 import {
   stylable,
   designable,
@@ -31,7 +38,6 @@ import {
   Editable,
   asEditableList,
   withBasicSublist,
-  // ListProps,
   ListTitleProps,
 } from '@bodiless/components';
 import { FilterComponents, FilterProps } from './types';
@@ -57,81 +63,35 @@ const withMeta = (
   nodeKey: string,
 ) => (Component: CT) => (props: any) => {
   const { setTag, getTag, getSubnode } = useItemsAccessors();
-
   const { tags, updateTags } = useFilterByGroupContext();
-  // console.log('All Tags (context): ', tags);
-
   const tag = getTag();
-  // console.log('Tag from useItemsAccessors: ', {...tag});
-
   const childNode = getSubnode(nodeKey);
 
   if (isEmpty(tag.id)) {
-    const tag = new Tag(childNode.data.text || '');
-    // console.log('Creating new Tag: ', tag);
-    setTag(tag);
+    const newTag = new Tag(childNode.data.text || '');
+    const allTags = unionBy([newTag], tags, 'id');
 
-    const allTags = unionBy([tag], tags, 'id');
-    // console.log('All Tags: ', allTags);
+    setTag(newTag);
 
-    if (!isArrayEqual(allTags, tags)) {
-      // console.log('Arrays of Tags Are Not Equal');
-      updateTags(allTags);
-    }
-
+    if (!isArrayEqual(allTags, tags)) updateTags(allTags);
   } else if (isEmpty(tag.name) && childNode.data.text) {
-    // console.log('childNode.data.text: ', childNode.data.text);
     tag.name = childNode.data.text || '';
     setTag(tag);
 
     const allTags = unionBy([tag], tags, 'id');
-    // console.log('All Tags (updated): ', allTags);
 
-    if (!isArrayEqual(allTags, tags)) {
-      // console.log('Arrays of Tags Are Not Equal');
-      updateTags(allTags);
-    }
-  } else {
-
-    if (tags.some(_tag => _tag.id === tag.id)) {
-      // console.log('Tag already in context');
-    } else {
-      // console.log('Adding tag to context');
-
-      const allTags = unionBy([tag], tags, 'id');
-      if (!isArrayEqual(allTags, tags)) {
-        updateTags(allTags);
-      }
-    }
+    if (!isArrayEqual(allTags, tags)) updateTags(allTags);
+  } else if (!tags.some(_tag => _tag.id === tag.id)) {
+    const allTags = unionBy([tag], tags, 'id');
+    if (!isArrayEqual(allTags, tags)) updateTags(allTags);
   }
-
-
-  // if (isEmpty(tag.id) || isEmpty(tag.name)) {
-  //   const childNode = getSubnode(nodeKey);
-  //   const tag = new Tag(childNode.data.text);
-  //   setTag(tag);
-
-  //   if (!isArrayEqual(allTags, tags)) {
-  //     const allTags = unionBy([tag], tags, 'id');
-  //     console.log('Merged Tags: ', allTags);
-  //   }
-
-  //   // updateTags(allTags);
-  // }
 
   return <Component {...props} />;
 };
 
 const withCategoryMeta = (
   nodeKey?: string,
-) => (Component: CT) => (props: any) => {
-  // const { getTags } = useCategoryAccessors();
-
-  // const tags = getTags();
-  // console.log('All Tags: ', tags);
-
-  return <Component {...props} />;
-};
+) => (Component: CT) => (props: any) => (<Component {...props} />);
 
 const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) => {
   const { getTag } = useItemsAccessors();

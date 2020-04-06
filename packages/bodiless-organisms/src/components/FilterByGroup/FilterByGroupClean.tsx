@@ -22,7 +22,7 @@ import FilterClean from './Filter';
 
 import Tag from './FilterByGroupTag';
 import { useFilterByGroupContext } from './FilterByGroupProvider';
-import { withFilterByGroupContext, useFilterByGroupContext as useContext } from './FilterByGroupContext';
+import { withFilterByGroupContext } from './FilterByGroupContext';
 
 const FilterByGroupComponentsStart:FilterByGroupComponents = {
   Wrapper: Div,
@@ -50,9 +50,6 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
     getTagById,
   } = useFilterByGroupContext();
 
-  const { name } = useContext();
-  console.log(name)
-
   return (
     <Wrapper {...rest}>
       <FilterWrapper>
@@ -63,8 +60,14 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
       </FilterWrapper>
       <ContentWrapper>
         {children}
-        <strong>Selected Tag: </strong> {JSON.stringify(getTagById(selectedTag || ''), null, 2)} <br />
-        <strong>All Tags: </strong> <br /> {JSON.stringify(tags, null, 2)}
+        <Div>
+          <strong>Selected Tag: </strong>
+          {JSON.stringify(getTagById(selectedTag || ''), null, 2)}
+          <br />
+          <strong>All Tags: </strong>
+          <br />
+          {JSON.stringify(tags, null, 2)}
+        </Div>
       </ContentWrapper>
     </Wrapper>
   );

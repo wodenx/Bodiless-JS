@@ -45,7 +45,7 @@ type FBGContextOptions = {
   tags?: TagType[]
 };
 
-const FilterByGroupProvider: FC<FBGContextOptions> = ({ name, children }) => {
+const FilterByGroupProvider: FC<FBGContextOptions> = ({ children }) => {
   const defaultTags: TagType[] = [];
 
   const [tags, updateTags] = useState([...defaultTags]);
