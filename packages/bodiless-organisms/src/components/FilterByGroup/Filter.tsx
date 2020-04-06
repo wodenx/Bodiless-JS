@@ -12,8 +12,18 @@
  * limitations under the License.
  */
 
-import React, { FC, HTMLProps } from 'react';
-import { flow } from 'lodash';
+import React, { FC, HTMLProps, ComponentType as CT } from 'react';
+import { flow, flowRight } from 'lodash';
+import {
+  // withNode,
+  // withNodeDataHandlers,
+  // ifReadOnly,
+  // withNodeKey,
+  // withoutProps,
+  // withData,
+  useNode,
+  // useNodeDataHandlers,
+} from '@bodiless/core';
 import {
   stylable,
   designable,
@@ -32,11 +42,11 @@ import {
   withBasicSublist,
   // ListProps,
   ListTitleProps,
-  useListItemAccessors,
 } from '@bodiless/components';
-import { useNode, useNodeDataHandlers } from '@bodiless/core';
 import { FilterComponents, FilterProps } from './types';
 import { useFilterByGroupContext } from './FilterByGroupProvider';
+
+import Tag from './FilterByGroupTag';
 
 const FilterComponentsStart:FilterComponents = {
   FilterCategory: H3,
@@ -49,42 +59,44 @@ const CategoryListTitle = (props: HTMLProps<HTMLHeadingElement> & ListTitleProps
   <H3 {...props}><Editable nodeKey="categoryListText" placeholder="Category Name" /></H3>
 );
 
-// const TagListTitle = ({ checked, onChange, ...rest }: HTMLProps<HTMLInputElement> & ListTitleProps ) => (
-//   <React.Fragment {...rest}>
-//     <Input type="radio" name="filter-item" value={tag.id} id={tag.id} onChange={onChange} checked={checked} />
-//     <Label htmlFor={tag.id}>
-//       <Editable nodeKey="tag" placeholder="Tag Name" />
-//     </Label>
-//   </React.Fragment>
-// );
-
-type Tag = {
+type TagType = {
   id: string,
   name: string,
-}
+};
 
-type TagListTitleProps = {
-  tag: Tag,
-} & HTMLProps<HTMLInputElement> & ListTitleProps;
+type NodeData = {
+  text: string,
+};
 
-const TagListTitle = ({ tag, onChange, checked, ...rest}: TagListTitleProps ) => {
-  const { getItems } = useListItemAccessors();
-  const { node } = useNode();
-  const { componentData } = useNodeDataHandlers();
+const withMeta = (
+  nodeKey: string,
+  nodeCollection?: string | undefined,
+) => (Component: CT) => (props: any) => {
+  const { node } = useNode(nodeCollection);
+  const childNode = node.child<NodeData>(nodeKey);
 
-  console.log('Items: ', getItems());
-  console.log('node: ', node.data);
-  console.log('componentData: ', componentData);
+  node.setData(new Tag(childNode.data.text));
+
+  return <Component {...props} />;
+};
+
+const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) => {
+  const { node } = useNode<TagType>();
+  const tag = node.data;
 
   return (
-    <Div {...rest} >
-      <Input type="radio" name="filter-item" value="test" id="test" />
-      <Label htmlFor="test">
-        <Editable nodeKey="tag" placeholder="Tag Name" />
+    <Div {...props}>
+      <Input type="radio" name="filter-item" value={tag.name} id={tag.id} />
+      <Label htmlFor={tag.id}>
+        <Editable nodeKey="tag-title" placeholder="Tag Name" />
       </Label>
     </Div>
-  )
+  );
 };
+
+const TagListTitle = flowRight(
+  withMeta('tag-title'),
+)(TagListTitleBase);
 
 const SimpleCategoryList = flow(
   asEditableList,
@@ -98,6 +110,9 @@ const SimpleTagList = flow(
   withDesign({
     Title: replaceWith(TagListTitle),
     Wrapper: flow(stylable, addClasses('pl-10')),
+    // Item: flow(
+    //   Set Node context here and consume it in Title
+    // )
   }),
 )(List);
 

@@ -26,10 +26,14 @@ const asFilterByGroup = flow(
       addClasses('mx-4 my-2 underline self-end'),
       asTextColorPrimary,
     ),
-    Filter: addClasses('p-2'),
-    FilterCategory: addClasses('font-bold'),
-    FilterGroupItem: addClasses('mr-3'),
-    FilterInputWrapper: addClasses('flex p-2 items-center'),
+    Filter: flow(
+      withDesign({
+        FilterCategory: addClasses('font-bold'),
+        FilterGroupItem: addClasses('mr-3'),
+        FilterInputWrapper: addClasses('flex p-2 items-center'),
+      }),
+      addClasses('p-2'),
+    ),
   }),
   asTestableFilterByGroup,
 );
