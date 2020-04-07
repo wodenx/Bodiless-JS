@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 
+import { flow } from 'lodash';
 import {
   withDesign,
   addProps,
@@ -22,11 +23,15 @@ const asTestableFilterByGroup = withDesign({
   FilterWrapper: addProps({ 'data-filter-by-group': 'filter-wrapper' }),
   ContentWrapper: addProps({ 'data-filter-by-group': 'content-wrapper' }),
   ResetButton: addProps({ 'aria-label': 'Reset Button' }),
-  Filter: addProps({ 'data-filter-by-group': 'filter' }),
-  FilterCategory: addProps({ 'data-filter-by-group': 'filter-category' }),
-  FilterGroupItem: addProps({ 'aria-label': 'Radio Button Select' }),
-  FilterGroupWrapper: addProps({ 'data-filter-by-group': 'filter-group-wrapper' }),
-  FilterInputWrapper: addProps({ 'data-filter-by-group': 'filter-input-wrapper' }),
+  Filter: flow(
+    withDesign({
+      FilterCategory: addProps({ 'data-filter-by-group': 'filter-category' }),
+      FilterGroupItem: addProps({ 'aria-label': 'Radio Button Select' }),
+      FilterGroupWrapper: addProps({ 'data-filter-by-group': 'filter-group-wrapper' }),
+      FilterInputWrapper: addProps({ 'data-filter-by-group': 'filter-input-wrapper' }),
+    }),
+    addProps({ 'data-filter-by-group': 'filter' }),
+  ),
 });
 
 export default asTestableFilterByGroup;

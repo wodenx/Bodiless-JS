@@ -14,21 +14,16 @@
 
 /* eslint-disable arrow-body-style, max-len, @typescript-eslint/no-unused-vars */
 import React, { FC, HTMLProps, ComponentType as CT } from 'react';
+import { flow, isEmpty } from 'lodash';
 import {
-  flow,
-  flowRight,
-  isEmpty,
-} from 'lodash';
-import {
-  stylable,
   designable,
   Div,
   H3,
+  Ul,
   Input,
   Label,
   withDesign,
   replaceWith,
-  addClasses,
 } from '@bodiless/fclasses';
 import {
   List,
@@ -45,14 +40,10 @@ import Tag from './FilterByGroupTag';
 
 const FilterComponentsStart:FilterComponents = {
   FilterCategory: H3,
-  FilterGroupWrapper: Div,
+  FilterGroupWrapper: Ul,
   FilterGroupItem: Input,
   FilterInputWrapper: Div,
 };
-
-const CategoryListTitle = (props: HTMLProps<HTMLHeadingElement> & ListTitleProps) => (
-  <H3 {...props}><Editable nodeKey="categoryListText" placeholder="Category Name" /></H3>
-);
 
 const withTagMeta = <P extends object>(nodeKey: string) => (
   Component: CT<P> | string,
@@ -78,72 +69,65 @@ const withTagMeta = <P extends object>(nodeKey: string) => (
   return (<Component {...props} tag={tag} />);
 };
 
-const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps & withTagType) => {
-  const { tag, ...rest } = props;
-  const context = useFilterByGroupContext();
-  const { selectedTag } = useFilterByGroupContext();
-  const isTagSelected = Boolean(selectedTag && selectedTag.id === tag.id);
-
-  return (
-    <Div {...rest}>
-      <Input
-        type="radio"
-        name="filter-item"
-        value={tag.id}
-        id={tag.id}
-        onChange={() => context.setSelectedTag(tag)}
-        checked={isTagSelected}
-      />
-      <Label htmlFor={tag.id}>
-        <Editable nodeKey="tag-title" placeholder="Tag Name" />
-      </Label>
-    </Div>
-  );
-};
-
-const TagListTitle = flowRight(
-  withTagMeta('tag-title'),
-)(TagListTitleBase);
-
-const SimpleCategoryList = flow(
-  asEditableList,
-  withDesign({
-    Title: replaceWith(CategoryListTitle),
-  }),
-)(List);
-
-const SimpleTagList = flow(
-  asEditableList,
-  withDesign({
-    Title: replaceWith(TagListTitle),
-    Wrapper: flow(stylable, addClasses('pl-10')),
-  }),
-)(List);
-
-const FilterList = withBasicSublist(SimpleTagList)(SimpleCategoryList);
-
 const FilterBase: FC<FilterProps> = ({ components }) => {
-  // const {
-  //   FilterCategory,
-  //   FilterGroupItem,
-  //   FilterGroupWrapper,
-  //   FilterInputWrapper,
-  // } = components;
+  const {
+    FilterCategory,
+    FilterGroupItem,
+    FilterGroupWrapper,
+    FilterInputWrapper,
+  } = components;
 
-  const { allTags } = useFilterByGroupContext();
-  console.log('allTags: ', allTags);
+  const CategoryListTitle = (props: HTMLProps<HTMLHeadingElement> & ListTitleProps) => (
+    <FilterCategory {...props}><Editable nodeKey="categoryListText" placeholder="Category Name" /></FilterCategory>
+  );
+
+  const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps & withTagType) => {
+    const { tag, ...rest } = props;
+    const context = useFilterByGroupContext();
+    const { selectedTag } = useFilterByGroupContext();
+    const isTagSelected = Boolean(selectedTag && selectedTag.id === tag.id);
+
+    return (
+      <FilterInputWrapper {...rest}>
+        <FilterGroupItem
+          type="radio"
+          name="filter-item"
+          value={tag.id}
+          id={tag.id}
+          onChange={() => context.setSelectedTag(tag)}
+          checked={isTagSelected}
+        />
+        <Label htmlFor={tag.id}>
+          <Editable nodeKey="tag-title" placeholder="Tag Name" />
+        </Label>
+      </FilterInputWrapper>
+    );
+  };
+
+  const SimpleCategoryList = flow(
+    asEditableList,
+    withDesign({
+      Title: replaceWith(CategoryListTitle),
+    }),
+  )(List);
+
+  const SimpleTagList = flow(
+    asEditableList,
+    withDesign({
+      Title: flow(
+        replaceWith(TagListTitleBase),
+        withTagMeta('tag-title'),
+      ),
+      Wrapper: replaceWith(FilterGroupWrapper),
+    }),
+  )(List);
+
+  const FilterList = withBasicSublist(SimpleTagList)(SimpleCategoryList);
+
+  // const { allTags } = useFilterByGroupContext();
 
   return (
     <FilterList nodeKey="filter" />
-    // <FilterCategory>Filter Category</FilterCategory>
-    // <FilterGroupWrapper>
-    //   {tags.map(tag => (
-    //     <FilterInputWrapper key={tag.id}>
-    //       <FilterGroupItem type="radio" name="filter-item" value={tag.id} id={tag.id} onChange={() => updateSelectedTag(tag.id)} checked={selectedTag === tag.id} />
-    //       <Label htmlFor={tag.id}>{ tag.name }</Label>
-    //     </FilterInputWrapper>
-    //   ))}
-    // </FilterGroupWrapper>
   );
 };
 
