@@ -75,7 +75,6 @@ class FilterByGroupContext implements FBGContextInterface {
   }
 
   refresh() {
-    console.log('Refreshing context...');
     this.store.setActiveContext(this);
   }
 }
@@ -84,9 +83,9 @@ const useFilterByGroupContext = () => useContext(FilterByGroupContext.context);
 
 const FilterByGroupProvider: FC<FBGContextOptions> = ({
   children,
-  suggestions
+  suggestions,
 }) => {
-  const newValue = useFilterByGroupContext().spawn({suggestions});
+  const newValue = useFilterByGroupContext().spawn({ suggestions });
 
   return (
     <FilterByGroupContext.Provider value={newValue}>
@@ -97,7 +96,7 @@ const FilterByGroupProvider: FC<FBGContextOptions> = ({
 
 type WithFilterByGroupOptions<P> = {
   suggestions?: TagType[],
-}
+};
 
 const withFilterByGroupContext = <P extends object>({
   suggestions,

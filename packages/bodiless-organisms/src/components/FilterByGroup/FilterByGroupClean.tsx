@@ -88,8 +88,8 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
 };
 
 const suggestions = [
-  {id: '1', name: 'DefaultTag 1'},
-  {id: '2', name: 'DefaultTag 2'},
+  { id: '1', name: 'DefaultTag 1' },
+  { id: '2', name: 'DefaultTag 2' },
 ];
 
 const FilterByGroupClean = flow(
