@@ -67,7 +67,7 @@ const withTagMeta = <P extends object>(nodeKey: string) => (
     tag = new Tag(childNode.data.text || '');
     setTag(tag);
     context.addTag(tag);
-  } else if (isEmpty(tag.name) && childNode.data.text) {
+  } else if ((isEmpty(tag.name) && childNode.data.text) || (childNode.data.text && tag.name !== childNode.data.text)) {
     tag.name = childNode.data.text || '';
     setTag(tag);
     context.addTag(tag);
@@ -86,7 +86,14 @@ const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps & 
 
   return (
     <Div {...rest}>
-      <Input type="radio" name="filter-item" value={tag.id} id={tag.id} onChange={() => context.setSelectedTag(tag)} checked={isTagSelected} />
+      <Input
+        type="radio"
+        name="filter-item"
+        value={tag.id}
+        id={tag.id}
+        onChange={() => context.setSelectedTag(tag)}
+        checked={isTagSelected}
+      />
       <Label htmlFor={tag.id}>
         <Editable nodeKey="tag-title" placeholder="Tag Name" />
       </Label>
@@ -122,6 +129,9 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
   //   FilterGroupWrapper,
   //   FilterInputWrapper,
   // } = components;
+
+  const { allTags } = useFilterByGroupContext();
+  console.log('allTags: ', allTags);
 
   return (
     <FilterList nodeKey="filter" />

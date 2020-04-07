@@ -14,16 +14,19 @@
 
 import { action, observable } from 'mobx';
 import { unionBy } from 'lodash';
-import { TagType } from './types';
+import { TagType, FBGContextInterface } from './types';
 
 interface FBGStoreInterface {
   tags: TagType[],
   selectedTag: TagType | undefined,
   setSelectedTag(tag: TagType): void,
   addTag(tag: TagType): void,
+  setActiveContext(context?: FBGContextInterface): void,
 }
 
 class FBGStore implements FBGStoreInterface {
+  @observable activeContext: FBGContextInterface | undefined = undefined;
+
   @observable selectedTag: TagType | undefined = undefined;
 
   @observable tags: TagType[] = [];
@@ -34,6 +37,11 @@ class FBGStore implements FBGStoreInterface {
 
   @action addTag(tag: TagType) {
     this.tags = unionBy([tag], this.tags, 'id');
+  }
+
+  @action
+  setActiveContext(context?: FBGContextInterface) {
+    if (context) this.activeContext = context;
   }
 }
 

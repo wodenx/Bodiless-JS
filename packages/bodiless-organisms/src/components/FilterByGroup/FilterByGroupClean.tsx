@@ -35,6 +35,7 @@ const FilterByGroupComponentsStart:FilterByGroupComponents = {
 };
 
 const AddButton = addClasses('px-2 mb-2 border border-gray-600')(Button);
+const TagComponent = addClasses('px-3 my-2 mr-2 mb-2 border border-gray-600 inline-block')(Div);
 
 const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...rest }) => {
   const {
@@ -49,7 +50,11 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
   const context = useFilterByGroupContext();
 
   /* eslint-disable no-bitwise */
-  const addTag = () => context.addTag(new Tag(`#${(Math.random() * 0xFFFFFF << 0).toString(16)}`));
+  const addRandomTag = () => context.addTag(new Tag(`#${(Math.random() * 0xFFFFFF << 0).toString(16)}`));
+
+  const tagElements = allTags.map(tag => (
+    <TagComponent>{ tag.name }</TagComponent>
+  )).reverse();
 
   return (
     <Wrapper {...rest}>
@@ -60,7 +65,7 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
       <ContentWrapper>
         {children}
         <Div>
-          <AddButton onClick={() => addTag()}>Add Random Tag</AddButton>
+          <AddButton onClick={() => addRandomTag()}>Add Random Tag</AddButton>
           <br />
 
           <strong>Selected Tag: </strong>
@@ -69,9 +74,12 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
           </pre>
 
           <strong>All Tags: </strong>
-          <pre>
-            {JSON.stringify(allTags, null, 2)}
-          </pre>
+          <Div>
+            { tagElements }
+            <pre>
+              {JSON.stringify(allTags, null, 2)}
+            </pre>
+          </Div>
 
         </Div>
       </ContentWrapper>
@@ -79,9 +87,14 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
   );
 };
 
+const suggestions = [
+  {id: '1', name: 'DefaultTag 1'},
+  {id: '2', name: 'DefaultTag 2'},
+];
+
 const FilterByGroupClean = flow(
   observer,
-  withFilterByGroupContext(),
+  withFilterByGroupContext({ suggestions }),
   designable(FilterByGroupComponentsStart),
 )(FilterByGroupBase);
 

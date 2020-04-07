@@ -29,6 +29,8 @@ import FilterByGroupStore from './FilterByGroupStore';
 const defaultFBGStore = new FilterByGroupStore();
 
 class FilterByGroupContext implements FBGContextInterface {
+  readonly defaultSuggestions: TagType[] = [];
+
   private store: FilterByGroupStore = defaultFBGStore;
 
   static context = React.createContext(
@@ -43,9 +45,17 @@ class FilterByGroupContext implements FBGContextInterface {
 
   static Provider = FilterByGroupContext.context.Provider;
 
+  constructor(values?: FBGContextOptions) {
+    if (values && values.suggestions) {
+      this.defaultSuggestions = values.suggestions;
+    }
+
+    this.defaultSuggestions.forEach(subbestion => this.store.addTag(subbestion));
+  }
+
   /* eslint-disable class-methods-use-this */
-  spawn(): FBGContextInterface {
-    return new FilterByGroupContext();
+  spawn(values: FBGContextOptions): FBGContextInterface {
+    return new FilterByGroupContext(values);
   }
 
   setSelectedTag(tag?: TagType) {
@@ -63,14 +73,20 @@ class FilterByGroupContext implements FBGContextInterface {
   get allTags() {
     return this.store.tags;
   }
+
+  refresh() {
+    console.log('Refreshing context...');
+    this.store.setActiveContext(this);
+  }
 }
 
 const useFilterByGroupContext = () => useContext(FilterByGroupContext.context);
 
 const FilterByGroupProvider: FC<FBGContextOptions> = ({
   children,
+  suggestions
 }) => {
-  const newValue = useFilterByGroupContext().spawn();
+  const newValue = useFilterByGroupContext().spawn({suggestions});
 
   return (
     <FilterByGroupContext.Provider value={newValue}>
@@ -79,13 +95,17 @@ const FilterByGroupProvider: FC<FBGContextOptions> = ({
   );
 };
 
-const withFilterByGroupContext = <P extends object>() => (
-  Component: CT<P> | string,
-) => (props: P) => (
-  <FilterByGroupProvider>
+type WithFilterByGroupOptions<P> = {
+  suggestions?: TagType[],
+}
+
+const withFilterByGroupContext = <P extends object>({
+  suggestions,
+}: WithFilterByGroupOptions<P>) => (Component: CT<P> | string) => (props: P) => (
+  <FilterByGroupProvider suggestions={suggestions}>
     <Component {...props} />
   </FilterByGroupProvider>
-);
+  );
 
 export default FilterByGroupContext;
 export {

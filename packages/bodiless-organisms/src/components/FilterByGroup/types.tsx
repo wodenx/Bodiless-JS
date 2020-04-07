@@ -47,13 +47,15 @@ export type EditableNodeData = {
 };
 
 export type FBGContextOptions = {
-  tags?: TagType[]
+  suggestions?: TagType[],
 };
 
 export interface FBGContextInterface {
+  readonly defaultSuggestions: TagType[]
   readonly selectedTag: TagType | undefined,
   readonly allTags: TagType[],
   setSelectedTag: (tag?: TagType) => void,
   addTag: (tag: TagType) => void,
-  spawn: () => FBGContextInterface,
+  spawn: (instance: FBGContextOptions) => FBGContextInterface,
+  refresh: () => void,
 }
