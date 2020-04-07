@@ -60,7 +60,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
 
   const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) => {
     const context = useFilterByGroupContext();
-    const { selectedTag } = useFilterByGroupContext();
+    const { allTags, selectedTag } = useFilterByGroupContext();
     const { setTag, getTag, getSubnode } = useItemsAccessors();
     const titleTextNode = getSubnode('tag-title');
 
@@ -74,7 +74,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
       tag.name = titleTextNode.data.text || '';
       setTag(tag);
       context.addTag(tag);
-    } else if (!context.allTags.some(_tag => _tag.id === tag.id)) {
+    } else if (!allTags.some(_tag => _tag.id === tag.id)) {
       context.addTag(tag);
     }
 
