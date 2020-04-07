@@ -1,6 +1,6 @@
 {
   "name": "@dewen_li/gatsby-plugin-ssi",
-  "version": "0.0.47",
+  "version": "0.1.0",
   "description": "Gatsby plugin to add SSI elements onto a site.",
   "author": "Andrei Beliayeu <abeliaye@its.jnj.com>",
   "license": "Apache-2.0",
