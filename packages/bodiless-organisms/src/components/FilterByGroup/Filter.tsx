@@ -37,7 +37,7 @@ import {
   withBasicSublist,
   ListTitleProps,
 } from '@bodiless/components';
-import { FilterComponents, FilterProps } from './types';
+import { FilterComponents, FilterProps, withTagType } from './types';
 import { useFilterByGroupContext } from './FilterByGroupContext';
 import { useItemsAccessors } from './FilterTagsModel';
 
@@ -54,18 +54,19 @@ const CategoryListTitle = (props: HTMLProps<HTMLHeadingElement> & ListTitleProps
   <H3 {...props}><Editable nodeKey="categoryListText" placeholder="Category Name" /></H3>
 );
 
-const withMeta = (
-  nodeKey: string,
-) => (Component: CT) => (props: any) => {
+const withTagMeta = <P extends object>(nodeKey: string) => (
+  Component: CT<P> | string,
+) => (props: P) => {
   const { setTag, getTag, getSubnode } = useItemsAccessors();
   const context = useFilterByGroupContext();
-  const tag = getTag();
   const childNode = getSubnode(nodeKey);
 
+  let tag = getTag();
+
   if (isEmpty(tag.id)) {
-    const newTag = new Tag(childNode.data.text || '');
-    setTag(newTag);
-    context.addTag(newTag);
+    tag = new Tag(childNode.data.text || '');
+    setTag(tag);
+    context.addTag(tag);
   } else if (isEmpty(tag.name) && childNode.data.text) {
     tag.name = childNode.data.text || '';
     setTag(tag);
@@ -74,23 +75,17 @@ const withMeta = (
     context.addTag(tag);
   }
 
-  return <Component {...props} />;
+  return (<Component {...props} tag={tag} />);
 };
 
-const withCategoryMeta = (
-  nodeKey?: string,
-) => (Component: CT) => (props: any) => (<Component {...props} />);
-
-const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) => {
-  const { getTag } = useItemsAccessors();
-  const tag = getTag();
-
+const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps & withTagType) => {
+  const { tag, ...rest } = props;
   const context = useFilterByGroupContext();
   const { selectedTag } = useFilterByGroupContext();
   const isTagSelected = Boolean(selectedTag && selectedTag.id === tag.id);
 
   return (
-    <Div {...props}>
+    <Div {...rest}>
       <Input type="radio" name="filter-item" value={tag.id} id={tag.id} onChange={() => context.setSelectedTag(tag)} checked={isTagSelected} />
       <Label htmlFor={tag.id}>
         <Editable nodeKey="tag-title" placeholder="Tag Name" />
@@ -100,7 +95,7 @@ const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) =
 };
 
 const TagListTitle = flowRight(
-  withMeta('tag-title'),
+  withTagMeta('tag-title'),
 )(TagListTitleBase);
 
 const SimpleCategoryList = flow(
@@ -112,10 +107,9 @@ const SimpleCategoryList = flow(
 
 const SimpleTagList = flow(
   asEditableList,
-
   withDesign({
     Title: replaceWith(TagListTitle),
-    Wrapper: flow(stylable, addClasses('pl-10'), withCategoryMeta()),
+    Wrapper: flow(stylable, addClasses('pl-10')),
   }),
 )(List);
 

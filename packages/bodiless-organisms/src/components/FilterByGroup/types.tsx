@@ -38,6 +38,10 @@ export type TagType = {
   name: string,
 };
 
+export type withTagType = {
+  tag: TagType,
+};
+
 export type EditableNodeData = {
   text: string,
 };
