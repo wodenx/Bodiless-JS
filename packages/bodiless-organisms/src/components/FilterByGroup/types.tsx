@@ -43,17 +43,18 @@ export type EditableNodeData = {
 };
 
 export type FBGContextOptions = {
-  name?: string,
   tags?: TagType[]
 };
 
 export type WithFilterByGroupOptions<P> = {
-  name?: string,
   tags?: TagType[],
 };
 
 export interface FBGContextInterface {
-  name: string,
-  tags: TagType[],
-  spawn: (v: FBGContextOptions) => FBGContextInterface,
+  readonly tags: TagType[],
+  readonly selectedTag: TagType | undefined,
+  readonly allTags: TagType[],
+  setSelectedTag: (tag?: TagType) => void,
+  addTag: (tag: TagType) => void,
+  spawn: (instance: FBGContextOptions) => FBGContextInterface,
 }

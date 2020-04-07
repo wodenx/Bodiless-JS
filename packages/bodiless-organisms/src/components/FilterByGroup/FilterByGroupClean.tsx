@@ -14,15 +14,17 @@
 
 import React, { FC } from 'react';
 import { flow } from 'lodash';
+import { observer } from 'mobx-react-lite';
 import {
-  designable, Div, Button,
+  designable, Div, Button, addClasses,
 } from '@bodiless/fclasses';
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
 import FilterClean from './Filter';
-
 import Tag from './FilterByGroupTag';
-import { useFilterByGroupContext } from './FilterByGroupProvider';
-import { withFilterByGroupContext } from './FilterByGroupContext';
+import {
+  withFilterByGroupContext,
+  useFilterByGroupContext,
+} from './FilterByGroupContext';
 
 const FilterByGroupComponentsStart:FilterByGroupComponents = {
   Wrapper: Div,
@@ -31,6 +33,8 @@ const FilterByGroupComponentsStart:FilterByGroupComponents = {
   ResetButton: Button,
   Filter: FilterClean,
 };
+
+const AddButton = addClasses('px-2 mb-2 border border-gray-600')(Button);
 
 const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...rest }) => {
   const {
@@ -41,32 +45,34 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
     Filter,
   } = components;
 
-  const {
-    tags,
-    updateSelectedTag,
-    updateTags,
-    deleteTag,
-    selectedTag,
-    getTagById,
-  } = useFilterByGroupContext();
+  const { allTags, selectedTag } = useFilterByGroupContext();
+  const context = useFilterByGroupContext();
+
+  /* eslint-disable no-bitwise */
+  const addTag = () => context.addTag(new Tag(`#${(Math.random() * 0xFFFFFF << 0).toString(16)}`));
 
   return (
     <Wrapper {...rest}>
       <FilterWrapper>
-        <ResetButton onClick={() => updateSelectedTag('')}>Reset</ResetButton>
-        <ResetButton onClick={() => updateTags([...tags, new Tag('test')])}>Add</ResetButton>
-        <ResetButton onClick={() => deleteTag(selectedTag)}>Delete Selected</ResetButton>
+        <ResetButton onClick={() => context.setSelectedTag()}>Reset</ResetButton>
         <Filter />
       </FilterWrapper>
       <ContentWrapper>
         {children}
         <Div>
+          <AddButton onClick={() => addTag()}>Add Random Tag</AddButton>
+          <br />
+
           <strong>Selected Tag: </strong>
-          {JSON.stringify(getTagById(selectedTag || ''), null, 2)}
-          <br />
+          <pre>
+            {JSON.stringify(selectedTag, null, 2)}
+          </pre>
+
           <strong>All Tags: </strong>
-          <br />
-          {JSON.stringify(tags, null, 2)}
+          <pre>
+            {JSON.stringify(allTags, null, 2)}
+          </pre>
+
         </Div>
       </ContentWrapper>
     </Wrapper>
@@ -74,7 +80,8 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
 };
 
 const FilterByGroupClean = flow(
-  withFilterByGroupContext({ name: 'TestName' }),
+  observer,
+  withFilterByGroupContext({}),
   designable(FilterByGroupComponentsStart),
 )(FilterByGroupBase);
 

@@ -30,8 +30,6 @@ import FilterByGroupStore from './FilterByGroupStore';
 const defaultFBGStore = new FilterByGroupStore();
 
 class FilterByGroupContext implements FBGContextInterface {
-  readonly name: string = 'FilterByGroupContext';
-
   readonly tags: TagType[] = [];
 
   readonly parent: FilterByGroupContext | undefined;
@@ -40,7 +38,6 @@ class FilterByGroupContext implements FBGContextInterface {
 
   constructor(values?: FBGContextOptions, parent?: FilterByGroupContext) {
     if (values) {
-      if (values.name) this.name = values.name;
       if (values.tags) this.tags = values.tags;
     }
     if (parent) {
@@ -64,17 +61,31 @@ class FilterByGroupContext implements FBGContextInterface {
   spawn(values: FBGContextOptions): FBGContextInterface {
     return new FilterByGroupContext(values, this);
   }
+
+  setSelectedTag(tag?: TagType) {
+    this.store.setSelectedTag(tag);
+  }
+
+  addTag(tag: TagType) {
+    this.store.addTag(tag);
+  }
+
+  get selectedTag() {
+    return this.store.selectedTag;
+  }
+
+  get allTags() {
+    return this.store.tags;
+  }
 }
 
 const useFilterByGroupContext = () => useContext(FilterByGroupContext.context);
 
 const FilterByGroupProvider: FC<FBGContextOptions> = ({
-  name,
   tags,
   children,
 }) => {
   const newValue = useFilterByGroupContext().spawn({
-    name: name || 'Unknown',
     tags: tags || [],
   });
 
@@ -86,10 +97,9 @@ const FilterByGroupProvider: FC<FBGContextOptions> = ({
 };
 
 const withFilterByGroupContext = <P extends object>({
-  name,
   tags,
 }: WithFilterByGroupOptions<P>) => (Component: CT<P> | string) => (props: P) => (
-  <FilterByGroupProvider name={name} tags={tags}>
+  <FilterByGroupProvider tags={tags}>
     <Component {...props} />
   </FilterByGroupProvider>
   );
