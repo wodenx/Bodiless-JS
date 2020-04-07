@@ -21,7 +21,6 @@ import React, {
 import { Observer } from 'mobx-react';
 import {
   TagType,
-  WithFilterByGroupOptions,
   FBGContextOptions,
   FBGContextInterface,
 } from './types';
@@ -30,21 +29,7 @@ import FilterByGroupStore from './FilterByGroupStore';
 const defaultFBGStore = new FilterByGroupStore();
 
 class FilterByGroupContext implements FBGContextInterface {
-  readonly tags: TagType[] = [];
-
-  readonly parent: FilterByGroupContext | undefined;
-
   private store: FilterByGroupStore = defaultFBGStore;
-
-  constructor(values?: FBGContextOptions, parent?: FilterByGroupContext) {
-    if (values) {
-      if (values.tags) this.tags = values.tags;
-    }
-    if (parent) {
-      this.parent = parent;
-      this.store = parent.store;
-    }
-  }
 
   static context = React.createContext(
     new FilterByGroupContext() as FBGContextInterface,
@@ -58,8 +43,9 @@ class FilterByGroupContext implements FBGContextInterface {
 
   static Provider = FilterByGroupContext.context.Provider;
 
-  spawn(values: FBGContextOptions): FBGContextInterface {
-    return new FilterByGroupContext(values, this);
+  /* eslint-disable class-methods-use-this */
+  spawn(): FBGContextInterface {
+    return new FilterByGroupContext();
   }
 
   setSelectedTag(tag?: TagType) {
@@ -82,12 +68,9 @@ class FilterByGroupContext implements FBGContextInterface {
 const useFilterByGroupContext = () => useContext(FilterByGroupContext.context);
 
 const FilterByGroupProvider: FC<FBGContextOptions> = ({
-  tags,
   children,
 }) => {
-  const newValue = useFilterByGroupContext().spawn({
-    tags: tags || [],
-  });
+  const newValue = useFilterByGroupContext().spawn();
 
   return (
     <FilterByGroupContext.Provider value={newValue}>
@@ -96,13 +79,13 @@ const FilterByGroupProvider: FC<FBGContextOptions> = ({
   );
 };
 
-const withFilterByGroupContext = <P extends object>({
-  tags,
-}: WithFilterByGroupOptions<P>) => (Component: CT<P> | string) => (props: P) => (
-  <FilterByGroupProvider tags={tags}>
+const withFilterByGroupContext = <P extends object>() => (
+  Component: CT<P> | string,
+) => (props: P) => (
+  <FilterByGroupProvider>
     <Component {...props} />
   </FilterByGroupProvider>
-  );
+);
 
 export default FilterByGroupContext;
 export {

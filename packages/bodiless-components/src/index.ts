@@ -28,7 +28,6 @@ import asEditableList from './List/asEditableList';
 import asBasicSublist from './List/asBasicSublist';
 import withSublist, { withBasicSublist } from './List/withSublist';
 import withDeleteSublistOnUnwrap from './List/withDeleteSublistOnUnwrap';
-import { useItemsAccessors as useListItemAccessors } from './List/model';
 import {
   withMeta, withMetaTitle, withMetaHtml,
 } from './Meta/Meta';
@@ -58,7 +57,6 @@ export {
   ListProps,
   ListTitleProps,
   withListTitle,
-  useListItemAccessors,
   withToggle,
   withToggleTo,
   withToggleButton,

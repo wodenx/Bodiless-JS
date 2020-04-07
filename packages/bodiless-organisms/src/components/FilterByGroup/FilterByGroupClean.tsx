@@ -81,7 +81,7 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
 
 const FilterByGroupClean = flow(
   observer,
-  withFilterByGroupContext({}),
+  withFilterByGroupContext(),
   designable(FilterByGroupComponentsStart),
 )(FilterByGroupBase);
 

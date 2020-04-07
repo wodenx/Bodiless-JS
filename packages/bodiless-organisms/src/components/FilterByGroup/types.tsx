@@ -46,15 +46,10 @@ export type FBGContextOptions = {
   tags?: TagType[]
 };
 
-export type WithFilterByGroupOptions<P> = {
-  tags?: TagType[],
-};
-
 export interface FBGContextInterface {
-  readonly tags: TagType[],
   readonly selectedTag: TagType | undefined,
   readonly allTags: TagType[],
   setSelectedTag: (tag?: TagType) => void,
   addTag: (tag: TagType) => void,
-  spawn: (instance: FBGContextOptions) => FBGContextInterface,
+  spawn: () => FBGContextInterface,
 }
