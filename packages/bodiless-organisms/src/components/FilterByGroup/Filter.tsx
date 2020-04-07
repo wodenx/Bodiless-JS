@@ -13,7 +13,7 @@
  */
 
 /* eslint-disable arrow-body-style, max-len, @typescript-eslint/no-unused-vars */
-import React, { FC, HTMLProps, ComponentType as CT } from 'react';
+import React, { FC, HTMLProps } from 'react';
 import { flow, isEmpty } from 'lodash';
 import {
   designable,
@@ -30,9 +30,10 @@ import {
   Editable,
   asEditableList,
   withBasicSublist,
+  withListTitle,
   ListTitleProps,
 } from '@bodiless/components';
-import { FilterComponents, FilterProps, withTagType } from './types';
+import { FilterComponents, FilterProps } from './types';
 import { useFilterByGroupContext } from './FilterByGroupContext';
 import { useItemsAccessors } from './FilterTagsModel';
 
@@ -43,30 +44,6 @@ const FilterComponentsStart:FilterComponents = {
   FilterGroupWrapper: Ul,
   FilterGroupItem: Input,
   FilterInputWrapper: Div,
-};
-
-const withTagMeta = <P extends object>(nodeKey: string) => (
-  Component: CT<P> | string,
-) => (props: P) => {
-  const { setTag, getTag, getSubnode } = useItemsAccessors();
-  const context = useFilterByGroupContext();
-  const childNode = getSubnode(nodeKey);
-
-  let tag = getTag();
-
-  if (isEmpty(tag.id)) {
-    tag = new Tag(childNode.data.text || '');
-    setTag(tag);
-    context.addTag(tag);
-  } else if ((isEmpty(tag.name) && childNode.data.text) || (childNode.data.text && tag.name !== childNode.data.text)) {
-    tag.name = childNode.data.text || '';
-    setTag(tag);
-    context.addTag(tag);
-  } else if (!context.allTags.some(_tag => _tag.id === tag.id)) {
-    context.addTag(tag);
-  }
-
-  return (<Component {...props} tag={tag} />);
 };
 
 const FilterBase: FC<FilterProps> = ({ components }) => {
@@ -81,14 +58,31 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     <FilterCategory {...props}><Editable nodeKey="categoryListText" placeholder="Category Name" /></FilterCategory>
   );
 
-  const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps & withTagType) => {
-    const { tag, ...rest } = props;
+  const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) => {
     const context = useFilterByGroupContext();
     const { selectedTag } = useFilterByGroupContext();
+    const { setTag, getTag, getSubnode } = useItemsAccessors();
+    const titleTextNode = getSubnode('tag-title');
+
+    let tag = getTag();
+
+    if (isEmpty(tag.id)) {
+      tag = new Tag(titleTextNode.data.text || '');
+      setTag(tag);
+      context.addTag(tag);
+    } else if ((isEmpty(tag.name) && titleTextNode.data.text) || (titleTextNode.data.text && tag.name !== titleTextNode.data.text)) {
+      tag.name = titleTextNode.data.text || '';
+      setTag(tag);
+      context.addTag(tag);
+    } else if (!context.allTags.some(_tag => _tag.id === tag.id)) {
+      context.addTag(tag);
+    }
+
     const isTagSelected = Boolean(selectedTag && selectedTag.id === tag.id);
 
+
     return (
-      <FilterInputWrapper {...rest}>
+      <FilterInputWrapper {...props}>
         <FilterGroupItem
           type="radio"
           name="filter-item"
@@ -104,25 +98,20 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     );
   };
 
-  const SimpleCategoryList = flow(
+  const CategoryList = flow(
     asEditableList,
-    withDesign({
-      Title: replaceWith(CategoryListTitle),
-    }),
+    withListTitle(CategoryListTitle),
   )(List);
 
-  const SimpleTagList = flow(
+  const TagList = flow(
     asEditableList,
     withDesign({
-      Title: flow(
-        replaceWith(TagListTitleBase),
-        withTagMeta('tag-title'),
-      ),
+      Title: replaceWith(TagListTitleBase),
       Wrapper: replaceWith(FilterGroupWrapper),
     }),
   )(List);
 
-  const FilterList = withBasicSublist(SimpleTagList)(SimpleCategoryList);
+  const FilterList = withBasicSublist(TagList)(CategoryList);
 
   // const { allTags } = useFilterByGroupContext();
 

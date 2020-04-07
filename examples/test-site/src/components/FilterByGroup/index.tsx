@@ -20,18 +20,18 @@ import { asTextColorPrimary } from '../Elements.token';
 const asFilterByGroup = flow(
   withDesign({
     Wrapper: addClasses('flex'),
-    FilterWrapper: addClasses('mr-5 w-1/4 bg-gray-400 flex flex-col'),
+    FilterWrapper: addClasses('p-2 mr-5 w-1/4 bg-gray-400 flex flex-col'),
     ContentWrapper: addClasses('p-2 w-3/4'),
     ResetButton: flow(
-      addClasses('mx-4 my-2 underline self-end'),
+      addClasses('my-2 underline self-end'),
       asTextColorPrimary,
     ),
     Filter: flow(
       withDesign({
         FilterCategory: addClasses('font-bold'),
         FilterGroupItem: addClasses('mr-3'),
-        FilterInputWrapper: addClasses('flex p-2 items-center'),
-        FilterGroupWrapper: addClasses('m-2'),
+        FilterInputWrapper: addClasses('flex pb-2 items-center'),
+        FilterGroupWrapper: addClasses('m-2 pl-2'),
       }),
       addClasses('p-4'),
     ),
