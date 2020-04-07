@@ -1,7 +1,7 @@
 {
   "name": "@dewen_li/bv",
   "version": "0.0.47",
-  "description": "Provides bazaarvoice components. Rel v48",
+  "description": "Provides bazaarvoice components. Rel v51",
   "author": "Andrei Beliayeu <abeliaye@its.jnj.com>",
   "license": "Apache-2.0",
   "main": "lib/index.js",
