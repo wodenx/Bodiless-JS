@@ -6,7 +6,7 @@
   "lerna": "2.0.0",
   "command": {
     "publish": {
-      "allowBranch": "feat/automate_package_publication_on_github",
+      "allowBranch": "master",
       "message": "chore(release): publish %s"
     }
   },
