@@ -100,8 +100,8 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     );
   };
 
-  const { getTag } = useItemsAccessors();
-  console.log('TAG: ', getTag());
+  // const { getTag } = useItemsAccessors();
+  // console.log('TAG: ', getTag());
 
   const CategoryList = flow(
     asEditableList,

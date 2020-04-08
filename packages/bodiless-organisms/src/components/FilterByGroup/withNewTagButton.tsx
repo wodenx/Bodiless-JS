@@ -13,7 +13,7 @@
  */
 
 import React, { useState } from 'react';
-import ReactTags, { Tag } from 'react-tag-autocomplete';
+import { Tag } from 'react-tag-autocomplete';
 import {
   TMenuOption, withMenuOptions,
   contextMenuForm, getUI, useEditContext,
@@ -21,18 +21,18 @@ import {
 import { useFilterByGroupContext } from './FilterByGroupContext';
 import { FBGContextInterface } from './types';
 
-import './react-tags.css';
+// import './react-tags.css';
 
 type TMenuOptionGetter = () => TMenuOption[];
 
 type FormProps = {
   context: FBGContextInterface,
   onAdd: () => void,
-}
+};
 
 type TagButtonProps = {
   setTag?: (tag: Tag) => void,
-}
+};
 
 const tagSelectForm = ({ context, onAdd, setTag }: FormProps & TagButtonProps) => contextMenuForm({
   submitValues: (values: any) => {
@@ -45,13 +45,13 @@ const tagSelectForm = ({ context, onAdd, setTag }: FormProps & TagButtonProps) =
   },
 })(
   ({ ui, formApi }: any) => {
-    console.log('UI: ', ui);
     const pageContext = useEditContext();
     const {
       ComponentFormTitle,
       ComponentFormLabel,
       ComponentFormText,
       ComponentFormUnwrapButton,
+      ReactTags,
     } = getUI(ui);
 
     const { allTags } = context;
@@ -96,7 +96,6 @@ const withNewTagButton = ({ setTag }: TagButtonProps) => {
   const context = useFilterByGroupContext();
 
   const useGetMenuOptions = (props: any): TMenuOptionGetter => () => {
-    console.log('PROPS:', props);
     const { onAdd } = props;
 
     return (
@@ -108,7 +107,7 @@ const withNewTagButton = ({ setTag }: TagButtonProps) => {
         local: true,
       }]
     );
-  }
+  };
 
   return withMenuOptions({ useGetMenuOptions, name: 'tag' });
 };

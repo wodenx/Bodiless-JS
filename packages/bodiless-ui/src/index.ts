@@ -12,5 +12,6 @@
  * limitations under the License.
  */
 
+export * from './ReactTags';
 export * from './Spinner';
 export * from './elements';

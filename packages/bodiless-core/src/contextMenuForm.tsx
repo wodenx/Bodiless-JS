@@ -16,6 +16,7 @@ import React, { ReactNode } from 'react';
 import {
   Form, FormApi, FormState, Text,
 } from 'informed';
+import ReactTagsBase from 'react-tag-autocomplete';
 import { UI } from './Types/ContextMenuTypes';
 
 const defaultUI = {
@@ -29,6 +30,7 @@ const defaultUI = {
   ComponentFormText: Text,
   ComponentFormError: 'div',
   Form: 'div',
+  ReactTags: ReactTagsBase,
 };
 
 export const getUI = (ui: UI = {}) => ({ ...defaultUI, ...ui });
