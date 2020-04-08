@@ -33,6 +33,7 @@
     "@bodiless/richtext": "^0.0.43",
     "@bodiless/richtext-ui": "^0.0.43",
     "@types/react-burger-menu": "^2.6.0",
+    "@types/react-tag-autocomplete": "^5.12.0",
     "lodash": "^4.17.11",
     "mobx": "^5.8.0",
     "mobx-react": "^5.4.3",
@@ -40,6 +41,7 @@
     "nuka-carousel": "^4.4.7",
     "rc-menu": "^8.0.0-alpha.5",
     "react-burger-menu": "^2.6.13",
+    "react-tag-autocomplete": "^5.12.1",
     "uuid": "^3.3.2"
   },
   "devDependencies": {

@@ -33,6 +33,7 @@ import {
   withListTitle,
   ListTitleProps,
 } from '@bodiless/components';
+import { withNewTagButton } from './withNewTagButton';
 import { FilterComponents, FilterProps } from './types';
 import { useFilterByGroupContext } from './FilterByGroupContext';
 import { useItemsAccessors } from './FilterTagsModel';
@@ -108,6 +109,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     withDesign({
       Title: replaceWith(TagListTitleBase),
       Wrapper: replaceWith(FilterGroupWrapper),
+      ItemMenuOptionsProvider: withNewTagButton(),
     }),
   )(List);
 
