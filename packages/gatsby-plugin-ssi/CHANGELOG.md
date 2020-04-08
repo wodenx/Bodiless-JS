@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/dewen/bodiless-js/compare/v0.1.2...v0.2.0) (2020-04-08)
+
+**Note:** Version bump only for package @dewen_li/gatsby-plugin-ssi
+
+
+
+
+
 # [0.1.0](https://github.com/dewen/bodiless-js/compare/v0.0.47...v0.1.0) (2020-04-07)
 
 **Note:** Version bump only for package @dewen_li/gatsby-plugin-ssi
