@@ -19,16 +19,33 @@ import {
   contextMenuForm, getUI, useEditContext,
 } from '@bodiless/core';
 import { useFilterByGroupContext } from './FilterByGroupContext';
+import { FBGContextInterface } from './types';
+
 import './react-tags.css';
 
 type TMenuOptionGetter = () => TMenuOption[];
 
-const tagSelectForm = () => contextMenuForm({
+type FormProps = {
+  context: FBGContextInterface,
+  onAdd: () => void,
+}
+
+type TagButtonProps = {
+  setTag?: (tag: Tag) => void,
+}
+
+const tagSelectForm = ({ context, onAdd, setTag }: FormProps & TagButtonProps) => contextMenuForm({
   submitValues: (values: any) => {
     console.log('Submitted: ', values.tag);
+    console.log('onAdd: ', onAdd);
+    // onAdd();
+    if (setTag && typeof setTag === 'function') {
+      setTag(values.tag);
+    }
   },
 })(
   ({ ui, formApi }: any) => {
+    console.log('UI: ', ui);
     const pageContext = useEditContext();
     const {
       ComponentFormTitle,
@@ -37,7 +54,7 @@ const tagSelectForm = () => contextMenuForm({
       ComponentFormUnwrapButton,
     } = getUI(ui);
 
-    const { allTags } = useFilterByGroupContext();
+    const { allTags } = context;
     const [tags, updateTags] = useState<Tag[]>();
 
     const handleAddition = (tag: Tag) => {
@@ -46,7 +63,7 @@ const tagSelectForm = () => contextMenuForm({
     };
 
     const displayListOfTags = () => pageContext.showPageOverlay({
-      message: allTags.reverse().reduce((acc, tag) => `${acc}\n${tag.name}`, ''),
+      message: allTags.slice().reverse().reduce((acc, tag) => `${acc}\n${tag.name}`, ''),
       hasSpinner: false,
       hasCloseButton: true,
     });
@@ -75,16 +92,23 @@ const tagSelectForm = () => contextMenuForm({
 // ==============================
 // TODO: This should be a general useMenuHandler() utility exposed by bodiless core.
 // ==============================
-const withNewTagButton = () => {
-  const useGetMenuOptions = (): TMenuOptionGetter => () => (
-    [{
-      icon: 'local_offer',
-      name: 'Tag',
-      handler: () => tagSelectForm(),
-      global: false,
-      local: true,
-    }]
-  );
+const withNewTagButton = ({ setTag }: TagButtonProps) => {
+  const context = useFilterByGroupContext();
+
+  const useGetMenuOptions = (props: any): TMenuOptionGetter => () => {
+    console.log('PROPS:', props);
+    const { onAdd } = props;
+
+    return (
+      [{
+        icon: 'local_offer',
+        name: 'Tag',
+        handler: () => tagSelectForm({ context, onAdd, setTag }),
+        global: false,
+        local: true,
+      }]
+    );
+  }
 
   return withMenuOptions({ useGetMenuOptions, name: 'tag' });
 };

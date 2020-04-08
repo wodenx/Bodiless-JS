@@ -100,6 +100,9 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     );
   };
 
+  const { getTag } = useItemsAccessors();
+  console.log('TAG: ', getTag());
+
   const CategoryList = flow(
     asEditableList,
     withListTitle(CategoryListTitle),
@@ -110,7 +113,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     withDesign({
       Title: replaceWith(TagListTitleBase),
       Wrapper: replaceWith(FilterGroupWrapper),
-      ItemMenuOptionsProvider: withNewTagButton(),
+      ItemMenuOptionsProvider: withNewTagButton({}),
     }),
   )(List);
 

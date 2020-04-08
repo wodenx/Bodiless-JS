@@ -53,7 +53,7 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
   const addRandomTag = () => context.addTag(new Tag(`#${(Math.random() * 0xFFFFFF << 0).toString(16)}`));
 
   const tagElements = allTags.map(tag => (
-    <TagComponent key={tag.id}>{ tag.name }</TagComponent>
+    <TagComponent key={tag.id}>{ tag.name || " - " }</TagComponent>
   )).reverse();
 
   return (
