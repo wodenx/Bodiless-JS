@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.1.0...v0.1.1) (2020-04-08)
+
+
+### Bug Fixes
+
+* **@bodiless/bv:** test release changelog ([#0](https://github.com/johnsonandjohnson/bodiless-js/issues/0).1.1) ([360c187](https://github.com/johnsonandjohnson/bodiless-js/commit/360c187f57e453c987d64fe3ce90cd820ecf6d50))
+
+
+
+
+
 # [0.1.0](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.47...v0.1.0) (2020-04-07)
 
 
