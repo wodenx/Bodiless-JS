@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/dewen/bodiless-js/compare/v0.2.0...v0.2.1) (2020-04-08)
+
+
+### Bug Fixes
+
+* **@bodiless/core:** test release changelog ([#0](https://github.com/dewen/bodiless-js/issues/0).2.1) ([7b33ae1](https://github.com/dewen/bodiless-js/commit/7b33ae15c5292a3106336b728f1a423e8bb557d7))
+
+
+
+
+
 # [0.2.0](https://github.com/dewen/bodiless-js/compare/v0.1.2...v0.2.0) (2020-04-08)
 
 
