@@ -56,7 +56,9 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
   } = components;
 
   const CategoryListTitle = (props: HTMLProps<HTMLHeadingElement> & ListTitleProps) => (
-    <FilterCategory {...props}><Editable nodeKey="categoryListText" placeholder="Category Name" /></FilterCategory>
+    <FilterCategory {...props}>
+      <Editable nodeKey="categoryListText" placeholder="Category Name" />
+    </FilterCategory>
   );
 
   const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) => {
@@ -70,17 +72,16 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     if (isEmpty(tag.id)) {
       tag = new Tag(titleTextNode.data.text || '');
       setTag(tag);
-      context.addTag(tag);
     } else if ((isEmpty(tag.name) && titleTextNode.data.text) || (titleTextNode.data.text && tag.name !== titleTextNode.data.text)) {
       tag.name = titleTextNode.data.text || '';
       setTag(tag);
-      context.addTag(tag);
-    } else if (!allTags.some(_tag => _tag.id === tag.id)) {
+    }
+
+    if (!allTags.some(_tag => _tag.id === tag.id)) {
       context.addTag(tag);
     }
 
     const isTagSelected = Boolean(selectedTag && selectedTag.id === tag.id);
-
 
     return (
       <FilterInputWrapper {...props}>
@@ -114,8 +115,6 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
   )(List);
 
   const FilterList = withBasicSublist(TagList)(CategoryList);
-
-  // const { allTags } = useFilterByGroupContext();
 
   return (
     <FilterList nodeKey="filter" />

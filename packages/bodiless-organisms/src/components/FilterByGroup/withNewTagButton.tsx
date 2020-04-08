@@ -16,7 +16,7 @@ import React, { useState } from 'react';
 import ReactTags, { Tag } from 'react-tag-autocomplete';
 import {
   TMenuOption, withMenuOptions,
-  contextMenuForm, getUI,
+  contextMenuForm, getUI, useEditContext,
 } from '@bodiless/core';
 import { useFilterByGroupContext } from './FilterByGroupContext';
 import './react-tags.css';
@@ -29,6 +29,7 @@ const tagSelectForm = () => contextMenuForm({
   },
 })(
   ({ ui, formApi }: any) => {
+    const editContext = useEditContext();
     const {
       ComponentFormTitle,
       ComponentFormLabel,
@@ -42,6 +43,8 @@ const tagSelectForm = () => contextMenuForm({
       updateTags([tag]);
       formApi.setValue('tag', tag);
     };
+
+    console.log('editContext ', editContext);
 
     return (
       <>
@@ -63,6 +66,9 @@ const tagSelectForm = () => contextMenuForm({
   },
 );
 
+// ==============================
+// TODO: This should be a general useMenuHandler() utility exposed by bodiless core.
+// ==============================
 const withNewTagButton = () => {
   const useGetMenuOptions = (): TMenuOptionGetter => () => (
     [{
