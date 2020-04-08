@@ -1,7 +1,7 @@
 {
   "name": "@dewen_li/core",
   "version": "0.2.0",
-  "description": "Edit context for BodilessJS site editor. v0.2.0",
+  "description": "Edit context for BodilessJS site editor. v0.2.1",
   "author": "Chris Oden <coden@its.jnj.com>",
   "license": "Apache-2.0",
   "main": "lib/index.js",
