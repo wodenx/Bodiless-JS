@@ -29,11 +29,12 @@ const tagSelectForm = () => contextMenuForm({
   },
 })(
   ({ ui, formApi }: any) => {
-    const editContext = useEditContext();
+    const pageContext = useEditContext();
     const {
       ComponentFormTitle,
       ComponentFormLabel,
       ComponentFormText,
+      ComponentFormUnwrapButton,
     } = getUI(ui);
 
     const { allTags } = useFilterByGroupContext();
@@ -44,7 +45,11 @@ const tagSelectForm = () => contextMenuForm({
       formApi.setValue('tag', tag);
     };
 
-    console.log('editContext ', editContext);
+    const displayListOfTags = () => pageContext.showPageOverlay({
+      message: allTags.reverse().reduce((acc, tag) => `${acc}\n${tag.name}`, ''),
+      hasSpinner: false,
+      hasCloseButton: true,
+    });
 
     return (
       <>
@@ -61,6 +66,7 @@ const tagSelectForm = () => contextMenuForm({
           autoresize={false}
           minQueryLength={1}
         />
+        <ComponentFormUnwrapButton type="button" onClick={displayListOfTags}>See All Tags</ComponentFormUnwrapButton>
       </>
     );
   },
