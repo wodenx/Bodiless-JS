@@ -15,34 +15,14 @@
 import React, { useState } from 'react';
 import { Tag } from 'react-tag-autocomplete';
 import {
-  TMenuOption, withMenuOptions,
-  contextMenuForm, getUI, useEditContext,
+  getUI, useEditContext, withEditButton,
 } from '@bodiless/core';
 import { useFilterByGroupContext } from './FilterByGroupContext';
-import { FBGContextInterface } from './types';
 
-type TMenuOptionGetter = () => TMenuOption[];
-
-type FormProps = {
-  context: FBGContextInterface,
-  onAdd: () => void,
-};
-
-type TagButtonProps = {
-  setTag?: (tag: Tag) => void,
-};
-
-const tagSelectForm = ({ context, onAdd, setTag }: FormProps & TagButtonProps) => contextMenuForm({
-  submitValues: (values: any) => {
-    console.log('Submitted: ', values.tag);
-    console.log('onAdd: ', onAdd);
-    // onAdd();
-    if (setTag && typeof setTag === 'function') {
-      setTag(values.tag);
-    }
-  },
-})(
-  ({ ui, formApi }: any) => {
+const withNewTagButton = withEditButton({
+  icon: 'local_offer',
+  name: 'Tags',
+  renderForm: ({ ui, formApi }) => {
     const pageContext = useEditContext();
     const {
       ComponentFormTitle,
@@ -52,12 +32,13 @@ const tagSelectForm = ({ context, onAdd, setTag }: FormProps & TagButtonProps) =
       ReactTags,
     } = getUI(ui);
 
-    const { allTags } = context;
+    const { allTags } = useFilterByGroupContext();
     const [tags, updateTags] = useState<Tag[]>();
 
     const handleAddition = (tag: Tag) => {
       updateTags([tag]);
-      formApi.setValue('tag', tag);
+      formApi.setValue('id', tag.id);
+      formApi.setValue('name', tag.name);
     };
 
     const displayListOfTags = () => pageContext.showPageOverlay({
@@ -70,7 +51,8 @@ const tagSelectForm = ({ context, onAdd, setTag }: FormProps & TagButtonProps) =
       <>
         <ComponentFormTitle>Tags: </ComponentFormTitle>
         <ComponentFormLabel>Select from available tags:</ComponentFormLabel>
-        <ComponentFormText field="tag" type="hidden" />
+        <ComponentFormText field="id" type="hidden" />
+        <ComponentFormText field="name" type="hidden" />
         <ReactTags
           tags={tags}
           suggestions={allTags}
@@ -85,30 +67,9 @@ const tagSelectForm = ({ context, onAdd, setTag }: FormProps & TagButtonProps) =
       </>
     );
   },
-);
-
-// ==============================
-// TODO: This should be a general useMenuHandler() utility exposed by bodiless core.
-// ==============================
-const withNewTagButton = ({ setTag }: TagButtonProps) => {
-  const context = useFilterByGroupContext();
-
-  const useGetMenuOptions = (props: any): TMenuOptionGetter => () => {
-    const { onAdd } = props;
-
-    return (
-      [{
-        icon: 'local_offer',
-        name: 'Tag',
-        handler: () => tagSelectForm({ context, onAdd, setTag }),
-        global: false,
-        local: true,
-      }]
-    );
-  };
-
-  return withMenuOptions({ useGetMenuOptions, name: 'tag' });
-};
+  global: false,
+  local: true,
+});
 
 export default withNewTagButton;
 export {

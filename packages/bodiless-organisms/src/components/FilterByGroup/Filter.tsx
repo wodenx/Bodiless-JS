@@ -14,7 +14,18 @@
 
 /* eslint-disable arrow-body-style, max-len, @typescript-eslint/no-unused-vars */
 import React, { FC, HTMLProps } from 'react';
-import { flow, isEmpty } from 'lodash';
+import { flow } from 'lodash';
+import {
+  withNodeKey,
+  withNode,
+  withNodeDataHandlers,
+  withData,
+  ifReadOnly,
+  withoutProps,
+  ifEditable,
+  withContextActivator,
+  withLocalContextMenu,
+} from '@bodiless/core';
 import {
   designable,
   Div,
@@ -37,8 +48,6 @@ import { withNewTagButton } from './withNewTagButton';
 import { FilterComponents, FilterProps } from './types';
 import { useFilterByGroupContext } from './FilterByGroupContext';
 import { useItemsAccessors } from './FilterTagsModel';
-
-import Tag from './FilterByGroupTag';
 
 const FilterComponentsStart:FilterComponents = {
   FilterCategory: H3,
@@ -63,23 +72,8 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
 
   const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) => {
     const context = useFilterByGroupContext();
-    const { allTags, selectedTag } = useFilterByGroupContext();
-    const { setTag, getTag, getSubnode } = useItemsAccessors();
-    const titleTextNode = getSubnode('tag-title');
-
-    let tag = getTag();
-
-    if (isEmpty(tag.id)) {
-      tag = new Tag(titleTextNode.data.text || '');
-      setTag(tag);
-    } else if ((isEmpty(tag.name) && titleTextNode.data.text) || (titleTextNode.data.text && tag.name !== titleTextNode.data.text)) {
-      tag.name = titleTextNode.data.text || '';
-      setTag(tag);
-    }
-
-    if (!allTags.some(_tag => _tag.id === tag.id)) {
-      context.addTag(tag);
-    }
+    const { tag } = useItemsAccessors();
+    const { selectedTag } = context;
 
     const isTagSelected = Boolean(selectedTag && selectedTag.id === tag.id);
 
@@ -93,27 +87,35 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
           onChange={() => context.setSelectedTag(tag)}
           checked={isTagSelected}
         />
-        <Label htmlFor={tag.id}>
-          <Editable nodeKey="tag-title" placeholder="Tag Name" />
-        </Label>
+        <Label htmlFor={tag.id}>{ tag.name || 'Select tag...' }</Label>
       </FilterInputWrapper>
     );
   };
-
-  // const { getTag } = useItemsAccessors();
-  // console.log('TAG: ', getTag());
 
   const CategoryList = flow(
     asEditableList,
     withListTitle(CategoryListTitle),
   )(List);
 
+  const TagTitle = flow(
+    withoutProps(['componentData']),
+    ifEditable(
+      withNewTagButton,
+      withContextActivator('onClick'),
+      withLocalContextMenu,
+    ),
+    ifReadOnly(withoutProps(['setComponentData'])),
+    withNodeDataHandlers({ id: '', name: '' }),
+    withNode,
+    withNodeKey('tag'),
+    withData,
+  )(TagListTitleBase);
+
   const TagList = flow(
     asEditableList,
     withDesign({
-      Title: replaceWith(TagListTitleBase),
+      Title: replaceWith(TagTitle),
       Wrapper: replaceWith(FilterGroupWrapper),
-      ItemMenuOptionsProvider: withNewTagButton({}),
     }),
   )(List);
 

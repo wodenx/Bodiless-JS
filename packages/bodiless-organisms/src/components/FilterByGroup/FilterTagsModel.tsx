@@ -13,19 +13,13 @@
  */
 
 import { useNode } from '@bodiless/core';
-import { TagType, EditableNodeData } from './types';
+import { TagType } from './types';
 
 const useItemsAccessors = () => {
   const { node } = useNode<TagType>();
 
   return {
-    getTag: () => node.data || { id: '', name: '' },
-    setTag: (tag: TagType) => node.setData(tag),
-    getSubnode: (nodeKey: string) => node.child<EditableNodeData>(nodeKey),
-    deleteSubnode: (item?: string) => {
-      const path$ = item ? node.path.concat(item) : node.path;
-      return node.delete(path$);
-    },
+    tag: node.data || { id: '', name: '' },
   };
 };
 
