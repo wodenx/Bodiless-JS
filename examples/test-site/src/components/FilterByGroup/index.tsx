@@ -29,7 +29,9 @@ const asFilterByGroup = flow(
     Filter: flow(
       withDesign({
         FilterCategory: addClasses('font-bold'),
-        FilterGroupItem: addClasses('mr-3'),
+        FilterGroupItemInput: addClasses('mr-3'),
+        FilterGroupItemLabel: addClasses(''),
+        FilterGroupItemPlaceholder: addClasses('text-gray-600'),
         FilterInputWrapper: addClasses('flex pb-2 items-center'),
         FilterGroupWrapper: addClasses('m-2 pl-2'),
       }),

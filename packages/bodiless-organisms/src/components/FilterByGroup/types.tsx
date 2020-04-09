@@ -25,7 +25,9 @@ export type FilterByGroupComponents = {
 
 export type FilterComponents = {
   FilterCategory: ComponentType<StylableProps>,
-  FilterGroupItem: ComponentType<StylableProps & HTMLProps<HTMLInputElement>>,
+  FilterGroupItemInput: ComponentType<StylableProps & HTMLProps<HTMLInputElement>>,
+  FilterGroupItemLabel: ComponentType<StylableProps & HTMLProps<HTMLLabelElement>>,
+  FilterGroupItemPlaceholder: ComponentType<StylableProps & HTMLProps<HTMLLabelElement>>,
   FilterGroupWrapper: ComponentType<StylableProps>,
   FilterInputWrapper: ComponentType<StylableProps>,
 };
@@ -37,6 +39,10 @@ export type TagType = {
   id: string,
   name: string,
 };
+
+export type TagLabelProps = {
+  labelText?: string,
+} & HTMLProps<HTMLLabelElement>;
 
 export type EditableNodeData = {
   text: string,

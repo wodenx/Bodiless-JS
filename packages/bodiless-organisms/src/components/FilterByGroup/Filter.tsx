@@ -45,21 +45,25 @@ import {
   ListTitleProps,
 } from '@bodiless/components';
 import { withNewTagButton } from './withNewTagButton';
-import { FilterComponents, FilterProps } from './types';
+import { FilterComponents, FilterProps, TagLabelProps } from './types';
 import { useFilterByGroupContext } from './FilterByGroupContext';
 import { useItemsAccessors } from './FilterTagsModel';
 
 const FilterComponentsStart:FilterComponents = {
   FilterCategory: H3,
   FilterGroupWrapper: Ul,
-  FilterGroupItem: Input,
+  FilterGroupItemInput: Input,
+  FilterGroupItemLabel: Label,
+  FilterGroupItemPlaceholder: Label,
   FilterInputWrapper: Div,
 };
 
 const FilterBase: FC<FilterProps> = ({ components }) => {
   const {
     FilterCategory,
-    FilterGroupItem,
+    FilterGroupItemInput,
+    FilterGroupItemLabel,
+    FilterGroupItemPlaceholder,
     FilterGroupWrapper,
     FilterInputWrapper,
   } = components;
@@ -82,9 +86,15 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     const isTagSelected = Boolean(selectedTag && selectedTag.id === tag.id);
     const isNodeSelected = Boolean(selectedNode === nodeId);
 
+    const LabelComponent = (
+      { labelText, ...rest }: TagLabelProps,
+    ) => (isEmpty(labelText)
+      ? (<FilterGroupItemPlaceholder htmlFor={nodeId}>Select tag...</FilterGroupItemPlaceholder>)
+      : (<FilterGroupItemLabel htmlFor={nodeId}>{ labelText }</FilterGroupItemLabel>));
+
     return (
       <FilterInputWrapper {...props} key={tag.id}>
-        <FilterGroupItem
+        <FilterGroupItemInput
           type="radio"
           name="filter-item"
           value={tag.id}
@@ -92,7 +102,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
           onChange={() => context.setSelectedTag(tag, nodeId)}
           checked={isNodeSelected && isTagSelected}
         />
-        <Label htmlFor={nodeId}>{ tag.name || 'Select tag...' }</Label>
+        <LabelComponent labelText={tag.name} />
       </FilterInputWrapper>
     );
   };
