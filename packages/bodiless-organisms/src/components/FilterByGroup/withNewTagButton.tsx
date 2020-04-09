@@ -52,14 +52,14 @@ const withNewTagButton = withEditButton({
       formApi.setValue('name', tagToAdd.name);
     };
 
-    const handleDelete = (hasTag: any) => {
+    const handleDelete = () => {
       formApi.setValue('id', tag.id);
       formApi.setValue('name', tag.name);
       updateTags([]);
-    }
+    };
 
     const displayListOfTags = () => pageContext.showPageOverlay({
-      message: allTags.slice().reverse().reduce((acc, tag) => `${acc}\n${tag.name}`, ''),
+      message: allTags.slice().reverse().reduce((acc, _tag) => `${acc}\n${_tag.name}`, ''),
       hasSpinner: false,
       hasCloseButton: true,
     });
