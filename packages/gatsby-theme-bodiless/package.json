@@ -62,7 +62,7 @@
     "gatsby-transformer-json": "^2.1.4",
     "git-branch": "^2.0.1",
     "glob": "^7.1.6",
-    "informed": "^3.6.1",
+    "informed": "^2.11.8",
     "lodash": "^4.17.11",
     "mobx": "^5.8.0",
     "mobx-react": "^5.4.3",
