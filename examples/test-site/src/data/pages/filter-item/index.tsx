@@ -14,13 +14,7 @@
 import React, { useState } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
-import {
-  // withFilterToggle,
-  Editable,
-  withAutoCompleteSuggestions,
-  asBodilessFilterItem,
-  ReactTagSampleForm,
-} from '@bodiless/components';
+import { Editable, asBodilessFilterItem } from '@bodiless/components';
 import Layout from '../../../components/Layout';
 import { flow } from 'lodash';
 import { stylable } from '@bodiless/fclasses';
@@ -35,9 +29,7 @@ const suggestions = [
   { id: 7, name: 'not' },
 ];
 
-const TagableItem = flow(
-  asBodilessFilterItem(),
-)('span');
+const TagableItem = flow(asBodilessFilterItem())('span');
 
 // const validate = (value: string | any[]) => {
 //   return !value || value.length < 5

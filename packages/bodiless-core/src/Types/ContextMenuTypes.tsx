@@ -20,6 +20,7 @@ import {
 } from 'react';
 import { FieldProps } from 'informed';
 import Tooltip from 'rc-tooltip';
+import { ReactTagsProps } from 'react-tag-autocomplete';
 import { TMenuOption } from '../PageEditContext/types';
 
 export type ButtonVariantProps = HTMLProps<HTMLDivElement> & {
@@ -48,6 +49,7 @@ export type UI = {
   ComponentFormError?: ComponentType<HTMLProps<HTMLDivElement>> | string;
   Form?: ComponentType<HTMLProps<HTMLFormElement>> | string;
   Tooltip?: FC<Tooltip['props']>;
+  ReactTags?: ComponentType<ReactTagsProps>;
   // @TODO: Add other controls from informed.
 };
 

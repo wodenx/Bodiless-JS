@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import React, {HTMLProps} from 'react';
+import React, { HTMLProps, useState } from 'react';
 import {
   EditButtonOptions,
   getUI,
@@ -27,10 +27,11 @@ import {
   ifReadOnly,
   withNodeKey,
   withoutProps,
+  useNode,
+  useEditContext,
 } from '@bodiless/core';
 import { flowRight } from 'lodash';
-import { InformedReactTagField } from './InformedReactAutoComplete';
-import {Tag} from "react-tag-autocomplete";
+import { Tag } from 'react-tag-autocomplete';
 
 // Type of the data used by this component.
 export type Data = {
@@ -40,18 +41,72 @@ export type Data = {
 // @Todo: Determine if this type is necessary?
 type Props = HTMLProps<HTMLElement>;
 
+/*
+ * Hook to access tags.
+ */
+const useAccessors = () => {
+  const { node } = useNode<Data>();
+  return {
+    getTags: () => node.data.tags,
+  };
+};
+
 export const editButtonOptions: EditButtonOptions<Props, Data> = {
-  // @Todo: what icon should we use?
-  icon: 'add',
+  icon: 'local_offer',
   name: 'Add',
-  renderForm: ({ui: formUi, props: props}) => {
-    const { suggestions }  = props;
-    console.log('in render form', props);
-    const { ComponentFormTitle } = getUI(formUi);
+  renderForm: ({ ui: formUi, props: props, formApi }) => {
+    const { getTags } = useAccessors();
+    const [tags, setTags] = useState(getTags());
+    const { suggestions } = props;
+    // Update the value for Infomed tags field on change.
+    const onChange = (tags: Tag[]) => formApi.setValue('tags', tags);
+
+    // Show the available suggestions up
+    const pageContext = useEditContext();
+    const displayListOfSuggestions = () => {
+      return pageContext.showPageOverlay({
+        message: suggestions.map((s: Tag) => `${s.name}\n`),
+        hasSpinner: false,
+        hasCloseButton: true,
+      });
+    };
+
+    const {
+      ComponentFormTitle,
+      ComponentFormText,
+      ComponentFormUnwrapButton,
+      ReactTags,
+    } = getUI(formUi);
     return (
       <>
         <ComponentFormTitle>Group Membership</ComponentFormTitle>
-        <InformedReactTagField suggestions={suggestions} />
+        <ComponentFormText type="hidden" field="tags" />
+        <ReactTags
+          suggestions={suggestions}
+          autoresize={false}
+          tags={tags}
+          placeholder={'Add or creat'}
+          noSuggestionsText={'No suggestions found'}
+          allowNew={true}
+          addOnBlur={true}
+          handleDelete={i => {
+            const newTags = tags.slice(0);
+            newTags.splice(i, 1);
+            setTags(newTags);
+            onChange(newTags);
+          }}
+          handleAddition={(tag: any) => {
+            const newTags = [...tags, tag];
+            setTags(newTags);
+            onChange(newTags);
+          }}
+        />
+        <ComponentFormUnwrapButton
+          type="button"
+          onClick={displayListOfSuggestions}
+        >
+          See All Groups
+        </ComponentFormUnwrapButton>
       </>
     );
   },
@@ -72,7 +127,7 @@ const emptyValue = {
 // @todo: revist review the markup produced by adding a tag: Determine what we need to do with withData?
 // @todo revisit suggestions as they need to be passed at runtime?
 export const asBodilessFilterItem = (nodeKey?: string, suggestions?: any) => {
- console.log('in asBodilessFilterItem', nodeKey);
+  console.log('in asBodilessFilterItem', nodeKey);
   console.log('in asBodilessFilterItem', suggestions);
   return flowRight(
     withNodeKey(nodeKey),
@@ -84,8 +139,8 @@ export const asBodilessFilterItem = (nodeKey?: string, suggestions?: any) => {
       withContextActivator('onClick'),
       withLocalContextMenu,
     ),
-    withoutProps(['suggestions', 'componentData'])
-  ) as Bodiless<Props, Props & Partial<WithNodeProps>>
+    withoutProps(['suggestions', 'componentData']),
+  ) as Bodiless<Props, Props & Partial<WithNodeProps>>;
 };
 const FilterItem = asBodilessFilterItem()('span');
 export default FilterItem;

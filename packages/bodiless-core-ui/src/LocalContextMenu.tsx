@@ -21,7 +21,7 @@ import {
 import {
   ComponentFormTitle, ComponentFormLabel, ComponentFormText, ComponentFormButton,
   ComponentFormCloseButton, ComponentFormSubmitButton, Icon, Div, ToolbarButton,
-  ComponentFormUnwrapButton,
+  ComponentFormUnwrapButton, ReactTags,
 } from '@bodiless/ui';
 import { flow } from 'lodash';
 
@@ -50,6 +50,7 @@ const ui = {
   Toolbar,
   ToolbarButton,
   Tooltip: LocalTooltip,
+  ReactTags,
 };
 
 const LocalContextMenu: FC<ContextMenuProps> = props => (

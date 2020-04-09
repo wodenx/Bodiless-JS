@@ -26,6 +26,7 @@ export type FormBodyProps<D> = ContextMenuFormBodyProps<D> & {
   // @todo: Make props a generic type.
   props?: any;
 };
+
 export type FormBodyRenderer<D> = (p: FormBodyProps<D>) => ReactNode;
 
 export type EditButtonProps<D> = {

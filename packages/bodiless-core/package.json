@@ -26,12 +26,13 @@
   "dependencies": {
     "@bodiless/fclasses": "^0.0.45",
     "enzyme": "^3.9.0",
-    "informed": "^3.6.1",
+    "informed": "^2.11.8",
     "lodash": "^4.17.11",
     "mobx": "^5.8.0",
     "mobx-react": "^5.4.3",
     "mobx-react-lite": "^1.3.1",
     "rc-tooltip": "^3.7.3",
+    "react-tag-autocomplete": "^5.12.1",
     "uuid": "^3.3.2"
   },
   "peerDependencies": {
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "@types/rc-tooltip": "^3.7.1",
+    "@types/react-tag-autocomplete": "^5.12.0",
     "@types/uuid": "^3.4.4"
   }
 }

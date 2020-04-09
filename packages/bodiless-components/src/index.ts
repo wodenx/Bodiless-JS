@@ -17,8 +17,7 @@ import { asBodilessLink } from './Link';
 import Image, { asBodilessImage } from './Image';
 import NodeViewer from './NodeViewer';
 import withLinkToggle from './LinkToggle';
-import {asBodilessFilterItem} from './Filter/Item';
-import { ReactTagSampleForm } from './Filter/InformedReactAutoComplete';
+import {asBodilessFilterItem} from './Taggable/Item';
 import List from './List';
 import {
   FinalProps as ListProps,
@@ -71,5 +70,4 @@ export {
   withEditPlaceholder,
   withEvent,
   asBodilessFilterItem,
-  ReactTagSampleForm,
 };
