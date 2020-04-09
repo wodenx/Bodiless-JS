@@ -21,8 +21,6 @@ import {
 import { useFilterByGroupContext } from './FilterByGroupContext';
 import { FBGContextInterface } from './types';
 
-// import './react-tags.css';
-
 type TMenuOptionGetter = () => TMenuOption[];
 
 type FormProps = {

@@ -57,6 +57,7 @@
 }
 
 .bl-react-tags__selected {
+  max-width: 250px;
   display: inline;
 }
 
