@@ -13,11 +13,13 @@
  */
 
 import React, { useState } from 'react';
-import { Tag } from 'react-tag-autocomplete';
+import { Tag as TagType } from 'react-tag-autocomplete';
+import { isEmpty } from 'lodash';
 import {
   getUI, useEditContext, withEditButton,
 } from '@bodiless/core';
 import { useFilterByGroupContext } from './FilterByGroupContext';
+import Tag from './FilterByGroupTag';
 
 const withNewTagButton = withEditButton({
   icon: 'local_offer',
@@ -32,13 +34,20 @@ const withNewTagButton = withEditButton({
       ReactTags,
     } = getUI(ui);
 
-    const { allTags } = useFilterByGroupContext();
-    const [tags, updateTags] = useState<Tag[]>();
+    const context = useFilterByGroupContext();
+    const { allTags } = context;
+    const [tags, updateTags] = useState<TagType[]>();
 
-    const handleAddition = (tag: Tag) => {
-      updateTags([tag]);
-      formApi.setValue('id', tag.id);
-      formApi.setValue('name', tag.name);
+    const handleAddition = (tag: TagType) => {
+      let tagToAdd = tag;
+
+      if (isEmpty(tagToAdd.id)) {
+        tagToAdd = new Tag(tagToAdd.name);
+      }
+
+      updateTags([tagToAdd]);
+      formApi.setValue('id', tagToAdd.id);
+      formApi.setValue('name', tagToAdd.name);
     };
 
     const displayListOfTags = () => pageContext.showPageOverlay({
@@ -62,6 +71,7 @@ const withNewTagButton = withEditButton({
           noSuggestionsText="No maching tags found."
           autoresize={false}
           minQueryLength={1}
+          allowNew
         />
         <ComponentFormUnwrapButton type="button" onClick={displayListOfTags}>See All Tags</ComponentFormUnwrapButton>
       </>

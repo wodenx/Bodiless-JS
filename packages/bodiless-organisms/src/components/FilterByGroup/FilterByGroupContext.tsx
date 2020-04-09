@@ -58,8 +58,8 @@ class FilterByGroupContext implements FBGContextInterface {
     return new FilterByGroupContext(values);
   }
 
-  setSelectedTag(tag?: TagType) {
-    this.store.setSelectedTag(tag);
+  setSelectedTag(tag?: TagType, nodeId?: string) {
+    this.store.setSelectedTag(tag, nodeId);
   }
 
   addTag(tag: TagType) {
@@ -68,6 +68,10 @@ class FilterByGroupContext implements FBGContextInterface {
 
   get selectedTag() {
     return this.store.selectedTag;
+  }
+
+  get selectedNode() {
+    return this.store.selectedNodeId;
   }
 
   get allTags() {

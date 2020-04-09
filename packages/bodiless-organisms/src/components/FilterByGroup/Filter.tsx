@@ -14,7 +14,7 @@
 
 /* eslint-disable arrow-body-style, max-len, @typescript-eslint/no-unused-vars */
 import React, { FC, HTMLProps } from 'react';
-import { flow } from 'lodash';
+import { flow, isEmpty } from 'lodash';
 import {
   withNodeKey,
   withNode,
@@ -72,22 +72,27 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
 
   const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) => {
     const context = useFilterByGroupContext();
-    const { tag } = useItemsAccessors();
-    const { selectedTag } = context;
+    const { tag, nodeId } = useItemsAccessors();
+    const { allTags, selectedTag, selectedNode } = context;
+
+    if (!isEmpty(tag.id) && !allTags.some(_tag => _tag.id === tag.id)) {
+      context.addTag(tag);
+    }
 
     const isTagSelected = Boolean(selectedTag && selectedTag.id === tag.id);
+    const isNodeSelected = Boolean(selectedNode === nodeId);
 
     return (
-      <FilterInputWrapper {...props}>
+      <FilterInputWrapper {...props} key={tag.id}>
         <FilterGroupItem
           type="radio"
           name="filter-item"
           value={tag.id}
-          id={tag.id}
-          onChange={() => context.setSelectedTag(tag)}
-          checked={isTagSelected}
+          id={nodeId}
+          onChange={() => context.setSelectedTag(tag, nodeId)}
+          checked={isNodeSelected && isTagSelected}
         />
-        <Label htmlFor={tag.id}>{ tag.name || 'Select tag...' }</Label>
+        <Label htmlFor={nodeId}>{ tag.name || 'Select tag...' }</Label>
       </FilterInputWrapper>
     );
   };

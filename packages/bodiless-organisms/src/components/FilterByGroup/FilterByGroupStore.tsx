@@ -19,7 +19,8 @@ import { TagType, FBGContextInterface } from './types';
 interface FBGStoreInterface {
   tags: TagType[],
   selectedTag: TagType | undefined,
-  setSelectedTag(tag: TagType): void,
+  selectedNodeId: string | undefined,
+  setSelectedTag(tag: TagType, nodeId?: string): void,
   addTag(tag: TagType): void,
   setActiveContext(context?: FBGContextInterface): void,
 }
@@ -29,10 +30,13 @@ class FBGStore implements FBGStoreInterface {
 
   @observable selectedTag: TagType | undefined = undefined;
 
+  @observable selectedNodeId: string | undefined = undefined;
+
   @observable tags: TagType[] = [];
 
-  @action setSelectedTag(tag?: TagType) {
+  @action setSelectedTag(tag?: TagType, nodeId?: string) {
     this.selectedTag = tag;
+    this.selectedNodeId = nodeId;
   }
 
   @action addTag(tag: TagType) {

@@ -20,6 +20,7 @@ const useItemsAccessors = () => {
 
   return {
     tag: node.data || { id: '', name: '' },
+    nodeId: node.path[node.path.length - 2],
   };
 };
 

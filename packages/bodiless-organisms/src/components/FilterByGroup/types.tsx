@@ -49,8 +49,9 @@ export type FBGContextOptions = {
 export interface FBGContextInterface {
   readonly defaultSuggestions: TagType[]
   readonly selectedTag: TagType | undefined,
+  readonly selectedNode: string | undefined,
   readonly allTags: TagType[],
-  setSelectedTag: (tag?: TagType) => void,
+  setSelectedTag: (tag?: TagType, nodeId?: string) => void,
   addTag: (tag: TagType) => void,
   spawn: (instance: FBGContextOptions) => FBGContextInterface,
   refresh: () => void,
