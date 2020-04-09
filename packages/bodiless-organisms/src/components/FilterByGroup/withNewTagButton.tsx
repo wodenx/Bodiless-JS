@@ -20,6 +20,7 @@ import {
 } from '@bodiless/core';
 import { useFilterByGroupContext } from './FilterByGroupContext';
 import Tag from './FilterByGroupTag';
+import { useItemsAccessors } from './FilterTagsModel';
 
 const withNewTagButton = withEditButton({
   icon: 'local_offer',
@@ -34,12 +35,13 @@ const withNewTagButton = withEditButton({
       ReactTags,
     } = getUI(ui);
 
+    const { tag } = useItemsAccessors();
     const context = useFilterByGroupContext();
     const { allTags } = context;
     const [tags, updateTags] = useState<TagType[]>();
 
-    const handleAddition = (tag: TagType) => {
-      let tagToAdd = tag;
+    const handleAddition = (newTag: TagType) => {
+      let tagToAdd = newTag;
 
       if (isEmpty(tagToAdd.id)) {
         tagToAdd = new Tag(tagToAdd.name);
@@ -49,6 +51,12 @@ const withNewTagButton = withEditButton({
       formApi.setValue('id', tagToAdd.id);
       formApi.setValue('name', tagToAdd.name);
     };
+
+    const handleDelete = (hasTag: any) => {
+      formApi.setValue('id', tag.id);
+      formApi.setValue('name', tag.name);
+      updateTags([]);
+    }
 
     const displayListOfTags = () => pageContext.showPageOverlay({
       message: allTags.slice().reverse().reduce((acc, tag) => `${acc}\n${tag.name}`, ''),
@@ -65,7 +73,7 @@ const withNewTagButton = withEditButton({
         <ReactTags
           tags={tags}
           suggestions={allTags}
-          handleDelete={() => updateTags([])}
+          handleDelete={handleDelete}
           handleAddition={handleAddition}
           placeholder="Select Tags"
           noSuggestionsText="No maching tags found."

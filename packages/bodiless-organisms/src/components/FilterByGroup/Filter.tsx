@@ -89,8 +89,8 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     const LabelComponent = (
       { labelText, ...rest }: TagLabelProps,
     ) => (isEmpty(labelText)
-      ? (<FilterGroupItemPlaceholder htmlFor={nodeId}>Select tag...</FilterGroupItemPlaceholder>)
-      : (<FilterGroupItemLabel htmlFor={nodeId}>{ labelText }</FilterGroupItemLabel>));
+      ? (<FilterGroupItemPlaceholder {...rest}>Select tag...</FilterGroupItemPlaceholder>)
+      : (<FilterGroupItemLabel {...rest}>{ labelText }</FilterGroupItemLabel>));
 
     return (
       <FilterInputWrapper {...props} key={tag.id}>
@@ -102,7 +102,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
           onChange={() => context.setSelectedTag(tag, nodeId)}
           checked={isNodeSelected && isTagSelected}
         />
-        <LabelComponent labelText={tag.name} />
+        <LabelComponent htmlFor={nodeId} labelText={tag.name} />
       </FilterInputWrapper>
     );
   };
