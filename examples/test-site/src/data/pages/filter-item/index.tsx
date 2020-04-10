@@ -26,8 +26,6 @@ const suggestions = [
 ];
 
 const TaggableItem = flow(asTaggableItem())('span');
-const TaggableEditableItem = asTaggableItem('tags' , suggestions)(Editable);
-
 export default (props: any) => (
   <Page {...props}>
     <Layout>
@@ -37,14 +35,16 @@ export default (props: any) => (
         that an end user to hide it with a filter.
       </p>
       <div className="my-3">
-        <TaggableItem nodeKey="tags" suggestions={suggestions}>
+        <TaggableItem
+          nodeKey="tags"
+          suggestions={suggestions}
+          inputPlaceHolder={'Add or create'}
+          allowNew={true}
+          noSuggestionsText={'No suggestions found'}
+        >
           <Editable nodeKey="text" placeholder="Editable Text" />
         </TaggableItem>
       </div>
-      <p>
-        <TaggableEditableItem nodeKey="text" placeholder="Editable Text2" />
-
-      </p>
     </Layout>
   </Page>
 );

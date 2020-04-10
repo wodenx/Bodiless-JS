@@ -20,30 +20,35 @@ const suggestions = [
   { id: 6, name: 'Apricots' },
 ];
 
-const TagableItem = flow(asTaggableItem())('span');
+const props = {
+  suggestions: suggestions,
+  allowNew: true,
+  inputPlaceHolder: 'placeholder',
+  noSuggestionsText: 'no suggestions',
+};
+
+const testTag = { name: 'bananas' };
+
+const Taggable = flow(asTaggableItem())('span');
 
 let wrapper: ReactWrapper;
 let menuButton: ReactWrapper;
 let menuForm: ReactWrapper;
 let menuPopup: ReactWrapper;
 
-const itemProps = { nodeKey: 'tags', suggestions:  [...suggestions]  };
+const itemProps = { nodeKey: 'tags', ...props };
 
 describe('Filter item interactions', () => {
   it('should render menu item when clicked', () => {
     wrapper = mount(
-      <div>
-        <TagableItem {...itemProps}>
-          <div>test</div>
-        </TagableItem>
-      </div>,
+      <Taggable {...itemProps}>
+        <div>test</div>
+      </Taggable>,
     );
-    console.log(itemProps);
     const item = wrapper.find({ ...itemProps }).at(0);
     expect(item).toHaveLength(1);
     item.find('div').simulate('click');
     menuButton = wrapper.find('i');
-    console.log(menuButton.text());
     expect(menuButton.text()).toBe('local_offer');
   });
 
@@ -61,8 +66,16 @@ describe('Filter item interactions', () => {
     menuPopup = tooltips.at(1);
     expect(menuPopup.prop('visible')).toBeFalsy();
   });
-  //
-  it('context form should have input fields and all tags with cancel and done buttons', () => {
+
+  it('React Tags should have all props', () => {
+    const reactTags = wrapper.find('ReactTags');
+    expect(reactTags.prop('placeholder')).toBe('placeholder');
+    expect(reactTags.prop('noSuggestionsText')).toBe('no suggestions');
+    expect(reactTags.prop('allowNew')).toBe(true);
+
+  });
+
+  it('context form should have input fields with cancel and done buttons', () => {
     menuButton.simulate('click');
     menuForm = menuPopup.find('form');
     // Test for input fields:
@@ -70,7 +83,7 @@ describe('Filter item interactions', () => {
     expect(tagsInputFields).toHaveLength(2);
     expect(tagsInputFields.at(0).prop('value')).toBeNull;
     expect(tagsInputFields.at(0).prop('type')).toBe('hidden');
-    expect(tagsInputFields.at(1).prop('placeholder')).toBe('Add or creat');
+    expect(tagsInputFields.at(1).prop('placeholder')).toBe('placeholder');
 
     // Cancel and add buttons:
     const cancelButton = menuForm.find('button[aria-label="Cancel"]');
@@ -81,7 +94,15 @@ describe('Filter item interactions', () => {
     expect(submitButton.prop('type')).toBeUndefined();
   });
 
-    it('context form should have interactive all tags button', () => {
+  it('context form should have all tags button and when clicked display all ', () => {
+    // All tags
+    const allTags = menuForm.find('button#all-tags');
+    // @Todo:
+    expect(allTags).not.toBeUndefined();
+    allTags.simulate('click');
+  });
+
+  it('context form should have interactive all tags button', () => {
     menuButton.simulate('click');
     menuForm = menuPopup.find('form');
     // Test for input fields:
@@ -89,7 +110,6 @@ describe('Filter item interactions', () => {
     expect(tagsInputFields).toHaveLength(2);
     expect(tagsInputFields.at(0).prop('value')).toBeNull;
     expect(tagsInputFields.at(0).prop('type')).toBe('hidden');
-    expect(tagsInputFields.at(1).prop('placeholder')).toBe('Add or creat');
 
     // Cancel and add buttons:
     const cancelButton = menuForm.find('button[aria-label="Cancel"]');
@@ -99,13 +119,11 @@ describe('Filter item interactions', () => {
     expect(submitButton).not.toBeUndefined();
     expect(submitButton.prop('type')).toBeUndefined();
   });
-  //
-  //
+
   it('context menu form should close and save content when done is clicked', () => {
-    let tagField = menuForm.find( "input[name='tags']");
-    tagField.simulate('change', { target: { name: 'bananas' } });
-
-    expect(wrapper.find('Popup[visible=true]')).toHaveLength(2);
+    let input = menuForm.find('input[name="tags"]');
+    input.simulate('change', { target: { value: testTag } });
+    expect(wrapper.find('Popup[visible=true]')).toHaveLength(1);
 
     const doneButton = menuForm.find('button[aria-label="Submit"]');
     doneButton.simulate('submit');
@@ -117,8 +135,18 @@ describe('Filter item interactions', () => {
 
     menuPopup = wrapper.find('Tooltip[visible=true]').at(1);
     menuForm = menuPopup.find('form');
-    tagField = menuForm.find('input#image-src');
+    input = menuForm.find('input[name="tags"]');
+    expect(input.prop('value')).toBe(testTag);
+  });
 
-    expect(tagField.prop('value')).toBe('ok');
+  it('context form should not save content when cancel is clicked', () => {
+    const sampleTag = { name: 'bananas' };
+    const inputField = menuForm.find('input[name="tags"]');
+    inputField.simulate('change', { target: { value: sampleTag } });
+    expect(wrapper.find('Popup[visible=true]')).toHaveLength(2);
+    const cancelButton = menuForm.find('button[aria-label="Cancel"]');
+    cancelButton.simulate('submit');
+    expect(wrapper.find('Popup[visible=true]')).toHaveLength(1);
+    expect(inputField.prop('value')).toBe(testTag);
   });
 });

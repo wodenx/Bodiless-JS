@@ -57,7 +57,14 @@ export const editButtonOptions: EditButtonOptions<Props, Data> = {
   renderForm: ({ ui: formUi, props: props, formApi }) => {
     const { getTags } = useAccessors();
     const [tags, setTags] = useState(getTags());
-    const { suggestions } = props;
+    const {
+      suggestions,
+      inputPlaceHolder,
+      allowNew,
+      noSuggestionsText,
+    } = props;
+    // Sort the suggestions.
+    suggestions.sort((a:Tag,b:Tag) => a.name.localeCompare(b.name));
     // Update the value for Infomed tags field on change.
     const onChange = (tags: Tag[]) => formApi.setValue('tags', tags);
 
@@ -84,9 +91,9 @@ export const editButtonOptions: EditButtonOptions<Props, Data> = {
         <ReactTags
           suggestions={suggestions}
           tags={tags}
-          placeholder={'Add or creat'}
-          noSuggestionsText={'No suggestions found'}
-          allowNew={true}
+          placeholder={inputPlaceHolder}
+          noSuggestionsText={noSuggestionsText}
+          allowNew={allowNew}
           addOnBlur={true}
           handleDelete={i => {
             const newTags = tags.slice(0);
@@ -103,8 +110,9 @@ export const editButtonOptions: EditButtonOptions<Props, Data> = {
         <ComponentFormUnwrapButton
           type="button"
           onClick={displayListOfSuggestions}
+          id={'all-tags'}
         >
-          See All Groups
+          See All Tags
         </ComponentFormUnwrapButton>
       </>
     );
@@ -126,8 +134,6 @@ const emptyValue = {
 // @todo: revist review the markup produced by adding a tag: Determine what we need to do with withData?
 // @todo revisit suggestions as they need to be passed at runtime?
 export const asTaggableItem = (nodeKey?: string, suggestions?: any) => {
-  console.log('suggestions', suggestions)
-  console.log('nodekey', nodeKey)
   return flowRight(
     withNodeKey(nodeKey),
     withNode,
@@ -138,7 +144,13 @@ export const asTaggableItem = (nodeKey?: string, suggestions?: any) => {
       withContextActivator('onClick'),
       withLocalContextMenu,
     ),
-    withoutProps(['suggestions', 'componentData']),
+    withoutProps([
+      'suggestions',
+      'inputPlaceHolder',
+      'allowNew',
+      'noSuggestionsText',
+      'componentData',
+    ]),
   ) as Bodiless<Props, Props & Partial<WithNodeProps>>;
 };
 export default asTaggableItem;
