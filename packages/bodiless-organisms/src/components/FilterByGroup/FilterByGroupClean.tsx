@@ -34,6 +34,14 @@ const FilterByGroupComponentsStart:FilterByGroupComponents = {
   Filter: FilterClean,
 };
 
+/**
+ * This 2 components below are for demonstrating purposes only.
+ *
+ * These components display a list of all available tags in a human-readable format
+ * and a button to demonstrate how context.addTag(tag) works.
+ * It will be removed from here once FiltarableItem
+ * and FilterByTag components are assembled together.
+ */
 const AddButton = addClasses('px-2 mb-2 border border-gray-600')(Button);
 const TagComponent = addClasses('px-3 my-2 mr-2 mb-2 border border-gray-600 inline-block')(Div);
 
@@ -46,8 +54,8 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
     Filter,
   } = components;
 
-  const { allTags, selectedTag } = useFilterByGroupContext();
   const context = useFilterByGroupContext();
+  const { allTags, selectedTag } = context;
 
   /* eslint-disable no-bitwise */
   const addRandomTag = () => context.addTag(new Tag(`#${(Math.random() * 0xFFFFFF << 0).toString(16)}`));

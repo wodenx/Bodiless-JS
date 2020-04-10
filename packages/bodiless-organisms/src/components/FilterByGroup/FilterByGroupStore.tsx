@@ -22,7 +22,6 @@ interface FBGStoreInterface {
   selectedNodeId: string | undefined,
   setSelectedTag(tag: TagType, nodeId?: string): void,
   addTag(tag: TagType): void,
-  setActiveContext(context?: FBGContextInterface): void,
 }
 
 class FBGStore implements FBGStoreInterface {
@@ -41,11 +40,6 @@ class FBGStore implements FBGStoreInterface {
 
   @action addTag(tag: TagType) {
     this.tags = unionBy([tag], this.tags, 'id');
-  }
-
-  @action
-  setActiveContext(context?: FBGContextInterface) {
-    if (context) this.activeContext = context;
   }
 }
 

@@ -27,6 +27,8 @@ const asTestableFilterByGroup = withDesign({
     withDesign({
       FilterCategory: addProps({ 'data-filter-by-group': 'filter-category' }),
       FilterGroupItemInput: addProps({ 'aria-label': 'Radio Button Select' }),
+      FilterGroupItemLabel: addProps({ 'data-filter-by-group': 'filter-tag-label' }),
+      FilterGroupItemPlaceholder: addProps({ 'data-filter-by-group': 'filter-tag-placeholder' }),
       FilterGroupWrapper: addProps({ 'data-filter-by-group': 'filter-group-wrapper' }),
       FilterInputWrapper: addProps({ 'data-filter-by-group': 'filter-input-wrapper' }),
     }),

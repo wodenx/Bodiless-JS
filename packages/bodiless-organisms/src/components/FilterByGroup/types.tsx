@@ -60,5 +60,4 @@ export interface FBGContextInterface {
   setSelectedTag: (tag?: TagType, nodeId?: string) => void,
   addTag: (tag: TagType) => void,
   spawn: (instance: FBGContextOptions) => FBGContextInterface,
-  refresh: () => void,
 }

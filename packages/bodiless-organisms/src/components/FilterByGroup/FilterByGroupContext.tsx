@@ -75,11 +75,8 @@ class FilterByGroupContext implements FBGContextInterface {
   }
 
   get allTags() {
-    return this.store.tags;
-  }
-
-  refresh() {
-    this.store.setActiveContext(this);
+    // Sort alphabetically
+    return this.store.tags.slice().sort((a, b) => a.name.localeCompare(b.name));
   }
 }
 

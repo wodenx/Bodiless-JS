@@ -59,7 +59,7 @@ const withNewTagButton = withEditButton({
     };
 
     const displayListOfTags = () => pageContext.showPageOverlay({
-      message: allTags.slice().reverse().reduce((acc, _tag) => `${acc}\n${_tag.name}`, ''),
+      message: allTags.slice().reduce((acc, _tag) => `${acc}\n${_tag.name}`, ''),
       hasSpinner: false,
       hasCloseButton: true,
     });
