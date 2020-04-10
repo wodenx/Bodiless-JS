@@ -17,7 +17,7 @@ import { asBodilessLink } from './Link';
 import Image, { asBodilessImage } from './Image';
 import NodeViewer from './NodeViewer';
 import withLinkToggle from './LinkToggle';
-import {asBodilessFilterItem} from './Taggable/Item';
+import {asTaggableItem} from './Taggable/Item';
 import List from './List';
 import {
   FinalProps as ListProps,
@@ -69,5 +69,5 @@ export {
   asBodilessHelmet,
   withEditPlaceholder,
   withEvent,
-  asBodilessFilterItem,
+  asTaggableItem,
 };

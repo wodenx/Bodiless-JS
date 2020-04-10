@@ -11,32 +11,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
+import React from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
-import { Editable, asBodilessFilterItem } from '@bodiless/components';
+import { Editable, asTaggableItem } from '@bodiless/components';
 import Layout from '../../../components/Layout';
 import { flow } from 'lodash';
-import { stylable } from '@bodiless/fclasses';
-
-//const TagableItem = withFilterToggle(Item);
 
 const suggestions = [
-  { id: 3, name: 'Bananas' },
-  { id: 4, name: 'Mangos' },
-  { id: 5, name: 'Lemons' },
-  { id: 6, name: 'Apricots' },
-  { id: 7, name: 'not' },
+  { id: 0, name: 'Bananas' },
+  { id: 1, name: 'Mangos' },
+  { id: 2, name: 'Lemons' },
+  { id: 3, name: 'Apricots' },
 ];
 
-const TagableItem = flow(asBodilessFilterItem())('span');
+const TaggableItem = flow(asTaggableItem())('span');
+const TaggableEditableItem = asTaggableItem('tags' , suggestions)(Editable);
 
-// const validate = (value: string | any[]) => {
-//   return !value || value.length < 5
-//     ? 'Field must be at least five characters'
-//     : undefined;
-// };
-// @ts-ignore
 export default (props: any) => (
   <Page {...props}>
     <Layout>
@@ -46,15 +37,15 @@ export default (props: any) => (
         that an end user to hide it with a filter.
       </p>
       <div className="my-3">
-        <TagableItem nodeKey="tags" suggestions={suggestions}>
+        <TaggableItem nodeKey="tags" suggestions={suggestions}>
           <Editable nodeKey="text" placeholder="Editable Text" />
-        </TagableItem>
+        </TaggableItem>
       </div>
+      <p>
+        <TaggableEditableItem nodeKey="text" placeholder="Editable Text2" />
+
+      </p>
     </Layout>
-    <h3> MY Test of InformedReactAutoComplete:</h3>
-    <div className="my-3">
-      <ReactTagSampleForm suggestions={suggestions} />
-    </div>
   </Page>
 );
 

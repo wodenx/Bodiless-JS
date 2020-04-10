@@ -83,7 +83,6 @@ export const editButtonOptions: EditButtonOptions<Props, Data> = {
         <ComponentFormText type="hidden" field="tags" />
         <ReactTags
           suggestions={suggestions}
-          autoresize={false}
           tags={tags}
           placeholder={'Add or creat'}
           noSuggestionsText={'No suggestions found'}
@@ -126,9 +125,9 @@ const emptyValue = {
 // - withData must be *after* the data handlers are defiend.
 // @todo: revist review the markup produced by adding a tag: Determine what we need to do with withData?
 // @todo revisit suggestions as they need to be passed at runtime?
-export const asBodilessFilterItem = (nodeKey?: string, suggestions?: any) => {
-  console.log('in asBodilessFilterItem', nodeKey);
-  console.log('in asBodilessFilterItem', suggestions);
+export const asTaggableItem = (nodeKey?: string, suggestions?: any) => {
+  console.log('suggestions', suggestions)
+  console.log('nodekey', nodeKey)
   return flowRight(
     withNodeKey(nodeKey),
     withNode,
@@ -142,5 +141,4 @@ export const asBodilessFilterItem = (nodeKey?: string, suggestions?: any) => {
     withoutProps(['suggestions', 'componentData']),
   ) as Bodiless<Props, Props & Partial<WithNodeProps>>;
 };
-const FilterItem = asBodilessFilterItem()('span');
-export default FilterItem;
+export default asTaggableItem;

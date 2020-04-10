@@ -1,36 +1,12 @@
 {
   "tags": [
     {
-      "id": 6,
-      "name": "Apricots"
-    },
-    {
-      "id": 3,
+      "id": 0,
       "name": "Bananas"
     },
     {
-      "name": "xx"
-    },
-    {
-      "name": "ybb"
-    },
-    {
-      "name": "gggg"
-    },
-    {
-      "name": "gggg"
-    },
-    {
-      "name": "ggg"
-    },
-    {
-      "name": "gggg"
-    },
-    {
-      "name": "ggggg"
-    },
-    {
-      "name": "gggg"
+      "id": 3,
+      "name": "Apricots"
     }
   ]
 }
