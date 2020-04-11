@@ -14,9 +14,10 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
-import { Editable, asTaggableItem } from '@bodiless/components';
+import { Editable, asTaggableItem, withPlaceholder, asEditable } from '@bodiless/components';
 import Layout from '../../../components/Layout';
-import { flow } from 'lodash';
+import { flow, flowRight } from 'lodash';
+import { withNodeKey } from '@bodiless/core';
 
 const suggestions = [
   { id: 0, name: 'Bananas' },
@@ -25,7 +26,15 @@ const suggestions = [
   { id: 3, name: 'Apricots' },
 ];
 
-const TaggableItem = flow(asTaggableItem())('span');
+//  const TaggableEditable = flowRight(
+//    asTaggableItem('tags'),
+//    asEditable('text', 'Editable Text')
+//  )('span');
+const TaggableEditable = flowRight(
+  asTaggableItem('tags'),
+  withPlaceholder('Editable Text'),
+  withNodeKey('text'),
+)(Editable);
 export default (props: any) => (
   <Page {...props}>
     <Layout>
@@ -35,15 +44,12 @@ export default (props: any) => (
         that an end user to hide it with a filter.
       </p>
       <div className="my-3">
-        <TaggableItem
-          nodeKey="tags"
+        <TaggableEditable
           suggestions={suggestions}
-          inputPlaceHolder={'Add or create'}
-          allowNew={true}
-          noSuggestionsText={'No suggestions found'}
-        >
-          <Editable nodeKey="text" placeholder="Editable Text" />
-        </TaggableItem>
+          inputPlaceHolder="Add or create"
+          allowNew
+          noSuggestionsText="No suggestions found"
+        />
       </div>
     </Layout>
   </Page>

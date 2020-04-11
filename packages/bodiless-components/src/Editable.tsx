@@ -53,7 +53,7 @@ const EditableText = observer((props: Props) => {
       document.execCommand('insertHTML', false, text);
     }
   };
-  const { placeholder } = props;
+  const { placeholder, ...rest } = props;
   const placeholderDataAttr = placeholder || '';
   const text = node.data.text || '';
   return (
@@ -64,6 +64,7 @@ const EditableText = observer((props: Props) => {
       onPaste={pasteAsPlainText}
       html={text}
       data-placeholder={placeholderDataAttr}
+      {...rest}
     />
   );
 });
