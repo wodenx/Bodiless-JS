@@ -58,3 +58,18 @@ const FilterByGroup = asFilterByGroupStyled(FilterByGroupClean);
 
 export default FilterByGroup;
 ```
+
+## Context
+Every component places inside of FilterByGroup will have an access to FilterByGroupContext:
+```js
+import { useFilterByGroupContext } from '@bodiless/organisms';
+
+const InsideFilterByGroup = (props) => {
+  const context = useFilterByGroupContext();
+  const { allTags, selectedTag } = context;
+
+  const addTag = tag => context.addTag(tag);
+  const setSelected = tag => context.setSelectedTag(tag);
+  const resetSelected = () => context.setSelectedTag();
+}
+```
