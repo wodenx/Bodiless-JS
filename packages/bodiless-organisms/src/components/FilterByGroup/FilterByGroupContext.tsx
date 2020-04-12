@@ -100,17 +100,17 @@ const withFilterSuggestions = <P extends object>({
 }: FBGContextOptions) => (Component: CT<P> | string) => (props: P) => (
   <Component {...props} suggestions={suggestions} />);
 
-const withFilterByGroupContext = <P extends object>() => (
+const withFilterByGroupContext = <P extends object>(
   Component: CT<P> | string,
 ) => (props: P & FBGContextOptions) => {
-  const { suggestions } = props;
+    const { suggestions } = props;
 
-  return (
-    <FilterByGroupProvider suggestions={suggestions}>
-      <Component {...props} />
-    </FilterByGroupProvider>
-  );
-};
+    return (
+      <FilterByGroupProvider suggestions={suggestions}>
+        <Component {...props} />
+      </FilterByGroupProvider>
+    );
+  };
 
 export default FilterByGroupContext;
 export {

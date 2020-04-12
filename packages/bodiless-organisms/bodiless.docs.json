@@ -5,7 +5,8 @@
       "slider.md": "./README.md",
       "touts.md": "./README.md",
       "MainMenu.md" : "./doc/MainMenu.md",
-      "BurgerMenu.md" : "./doc/BurgerMenu.md"
+      "BurgerMenu.md" : "./doc/BurgerMenu.md",
+      "FilterByGroup.md" : "./doc/FilterByGroup.md"
     }
   }
 }

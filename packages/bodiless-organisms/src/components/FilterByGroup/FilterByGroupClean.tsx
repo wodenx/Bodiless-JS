@@ -17,6 +17,7 @@ import { flow } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import {
   designable, Div, Button, addClasses,
+  withoutProps,
 } from '@bodiless/fclasses';
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
 import FilterClean from './Filter';
@@ -97,7 +98,8 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
 
 const FilterByGroupClean = flow(
   observer,
-  withFilterByGroupContext(),
+  withoutProps(['suggestions']),
+  withFilterByGroupContext,
   designable(FilterByGroupComponentsStart),
 )(FilterByGroupBase);
 

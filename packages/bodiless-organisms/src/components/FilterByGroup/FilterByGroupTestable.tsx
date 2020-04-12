@@ -17,6 +17,7 @@ import {
   withDesign,
   addProps,
 } from '@bodiless/fclasses';
+import FilterByGroupClean from './FilterByGroupClean';
 
 const asTestableFilterByGroup = withDesign({
   Wrapper: addProps({ 'data-filter-by-group': 'wrapper' }),
@@ -32,8 +33,13 @@ const asTestableFilterByGroup = withDesign({
       FilterGroupWrapper: addProps({ 'data-filter-by-group': 'filter-group-wrapper' }),
       FilterInputWrapper: addProps({ 'data-filter-by-group': 'filter-input-wrapper' }),
     }),
-    addProps({ 'data-filter-by-group': 'filter' }),
   ),
 });
 
-export default asTestableFilterByGroup;
+const TestableFilterByGroup = flow(asTestableFilterByGroup)(FilterByGroupClean);
+
+export default TestableFilterByGroup;
+export {
+  TestableFilterByGroup,
+  asTestableFilterByGroup,
+};

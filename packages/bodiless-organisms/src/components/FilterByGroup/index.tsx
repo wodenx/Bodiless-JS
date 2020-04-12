@@ -13,11 +13,12 @@
  */
 
 import FilterByGroupClean from './FilterByGroupClean';
-import asTestableFilterByGroup from './asTestableFilterByGroup';
+import { TestableFilterByGroup, asTestableFilterByGroup } from './FilterByGroupTestable';
 import { withFilterSuggestions } from './FilterByGroupContext';
 
 export {
   FilterByGroupClean,
+  TestableFilterByGroup,
   asTestableFilterByGroup,
   withFilterSuggestions,
 };
