@@ -95,16 +95,9 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({ components, children, ...re
   );
 };
 
-const suggestions = [
-  { id: '1', name: 'DefaultTag 1' },
-  { id: '2', name: 'DefaultTag 2' },
-  { id: '3', name: 'DefaultTag 3' },
-  { id: '4', name: 'DefaultTag 4' },
-];
-
 const FilterByGroupClean = flow(
   observer,
-  withFilterByGroupContext({ suggestions }),
+  withFilterByGroupContext(),
   designable(FilterByGroupComponentsStart),
 )(FilterByGroupBase);
 

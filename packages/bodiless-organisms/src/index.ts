@@ -69,6 +69,7 @@ export {
 export {
   asTestableFilterByGroup,
   FilterByGroupClean,
+  withFilterSuggestions,
 } from './components/FilterByGroup';
 
 export {

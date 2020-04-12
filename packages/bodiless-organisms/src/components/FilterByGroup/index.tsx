@@ -14,8 +14,10 @@
 
 import FilterByGroupClean from './FilterByGroupClean';
 import asTestableFilterByGroup from './asTestableFilterByGroup';
+import { withFilterSuggestions } from './FilterByGroupContext';
 
 export {
   FilterByGroupClean,
   asTestableFilterByGroup,
+  withFilterSuggestions,
 };

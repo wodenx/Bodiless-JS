@@ -44,10 +44,6 @@ export type TagLabelProps = {
   labelText?: string,
 } & HTMLProps<HTMLLabelElement>;
 
-export type EditableNodeData = {
-  text: string,
-};
-
 export type FBGContextOptions = {
   suggestions?: TagType[],
 };

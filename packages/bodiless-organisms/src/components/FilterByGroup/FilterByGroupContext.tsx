@@ -95,21 +95,27 @@ const FilterByGroupProvider: FC<FBGContextOptions> = ({
   );
 };
 
-type WithFilterByGroupOptions<P> = {
-  suggestions?: TagType[],
-};
-
-const withFilterByGroupContext = <P extends object>({
+const withFilterSuggestions = <P extends object>({
   suggestions,
-}: WithFilterByGroupOptions<P>) => (Component: CT<P> | string) => (props: P) => (
-  <FilterByGroupProvider suggestions={suggestions}>
-    <Component {...props} />
-  </FilterByGroupProvider>
+}: FBGContextOptions) => (Component: CT<P> | string) => (props: P) => (
+  <Component {...props} suggestions={suggestions} />);
+
+const withFilterByGroupContext = <P extends object>() => (
+  Component: CT<P> | string,
+) => (props: P & FBGContextOptions) => {
+  const { suggestions } = props;
+
+  return (
+    <FilterByGroupProvider suggestions={suggestions}>
+      <Component {...props} />
+    </FilterByGroupProvider>
   );
+};
 
 export default FilterByGroupContext;
 export {
+  FilterByGroupProvider,
   useFilterByGroupContext,
   withFilterByGroupContext,
-  FilterByGroupProvider,
+  withFilterSuggestions,
 };

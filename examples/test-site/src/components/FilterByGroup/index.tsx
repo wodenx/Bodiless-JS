@@ -13,11 +13,19 @@
  */
 
 import { flow } from 'lodash';
-import { FilterByGroupClean, asTestableFilterByGroup } from '@bodiless/organisms';
+import { FilterByGroupClean, asTestableFilterByGroup, withFilterSuggestions } from '@bodiless/organisms';
 import { withDesign, addClasses } from '@bodiless/fclasses';
 import { asTextColorPrimary } from '../Elements.token';
 
+const suggestions = [
+  { id: '1', name: 'DefaultTag 1' },
+  { id: '2', name: 'DefaultTag 2' },
+  { id: '3', name: 'DefaultTag 3' },
+  { id: '4', name: 'DefaultTag 4' },
+];
+
 const asFilterByGroup = flow(
+  withFilterSuggestions({ suggestions }),
   withDesign({
     Wrapper: addClasses('flex'),
     FilterWrapper: addClasses('p-2 mr-5 w-1/4 bg-gray-400 flex flex-col'),
