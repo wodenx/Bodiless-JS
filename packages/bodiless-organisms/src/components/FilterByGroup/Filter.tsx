@@ -13,7 +13,7 @@
  */
 
 /* eslint-disable arrow-body-style, max-len, @typescript-eslint/no-unused-vars */
-import React, { FC, HTMLProps } from 'react';
+import React, { FC, HTMLProps, memo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { flow, isEmpty } from 'lodash';
 import {
@@ -129,7 +129,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     }),
   )(List);
 
-  const FilterList = withBasicSublist(TagList)(CategoryList);
+  const FilterList = memo(withBasicSublist(TagList)(CategoryList));
 
   return (
     <FilterList nodeKey="filter" />
