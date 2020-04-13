@@ -38,10 +38,9 @@ import {
 } from '@bodiless/fclasses';
 import {
   List,
-  Editable,
+  asEditable,
   asEditableList,
   withBasicSublist,
-  withListTitle,
   ListTitleProps,
 } from '@bodiless/components';
 import { withNewTagButton } from './withNewTagButton';
@@ -50,7 +49,7 @@ import { useFilterByGroupContext } from './FilterByGroupContext';
 import { useItemsAccessors } from './FilterTagsModel';
 
 const filterComponentsStart:FilterComponents = {
-  FilterCategory: H3,
+  FilterCategory: asEditable('category_name', 'Category Name')(H3),
   FilterGroupWrapper: Ul,
   FilterGroupItemInput: Input,
   FilterGroupItemLabel: Label,
@@ -67,12 +66,6 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     FilterGroupWrapper,
     FilterInputWrapper,
   } = components;
-
-  const CategoryListTitle = (props: HTMLProps<HTMLHeadingElement> & ListTitleProps) => (
-    <FilterCategory {...props}>
-      <Editable nodeKey="categoryListText" placeholder="Category Name" />
-    </FilterCategory>
-  );
 
   const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) => {
     const context = useFilterByGroupContext();
@@ -109,7 +102,9 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
 
   const CategoryList = flow(
     asEditableList,
-    withListTitle(CategoryListTitle),
+    withDesign({
+      Title: replaceWith(FilterCategory),
+    }),
   )(List);
 
   const TagTitle = flow(

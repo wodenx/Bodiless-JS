@@ -14,6 +14,9 @@
 
 import { ComponentType, HTMLProps } from 'react';
 import { StylableProps, DesignableComponentsProps } from '@bodiless/fclasses';
+// import {
+//   ListTitleProps,
+// } from '@bodiless/components';
 
 export type FilterByGroupComponents = {
   Wrapper: ComponentType<StylableProps>,

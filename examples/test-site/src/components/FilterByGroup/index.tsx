@@ -14,8 +14,14 @@
 
 import { flow } from 'lodash';
 import { FilterByGroupClean, asTestableFilterByGroup, withFilterSuggestions } from '@bodiless/organisms';
-import { withDesign, addClasses } from '@bodiless/fclasses';
-import { asTextColorPrimary } from '../Elements.token';
+import {
+  withDesign,
+  addClasses,
+  H3,
+  replaceWith,
+} from '@bodiless/fclasses';
+import { asTextColorPrimary, asHeader3 } from '../Elements.token';
+import { asEditorSimple } from '../Editors';
 
 const suggestions = [
   { id: '1', name: 'DefaultTag 1' },
@@ -23,6 +29,11 @@ const suggestions = [
   { id: '3', name: 'DefaultTag 3' },
   { id: '4', name: 'DefaultTag 4' },
 ];
+
+export const FilterCategoryTitle = flow(
+  asHeader3,
+  asEditorSimple('category_name', 'Category Name'),
+)(H3);
 
 const asFilterByGroup = flow(
   withFilterSuggestions({ suggestions }),
@@ -36,7 +47,10 @@ const asFilterByGroup = flow(
     ),
     Filter: flow(
       withDesign({
-        FilterCategory: addClasses('font-bold'),
+        FilterCategory: flow(
+          replaceWith(FilterCategoryTitle),
+          addClasses('font-bold'),
+        ),
         FilterGroupItemInput: addClasses('mr-3'),
         FilterGroupItemLabel: addClasses(''),
         FilterGroupItemPlaceholder: addClasses('text-gray-600'),
