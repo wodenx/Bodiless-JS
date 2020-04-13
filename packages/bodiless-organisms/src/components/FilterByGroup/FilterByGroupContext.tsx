@@ -50,7 +50,7 @@ class FilterByGroupContext implements FBGContextInterface {
       this.defaultSuggestions = values.suggestions;
     }
 
-    this.defaultSuggestions.forEach(subbestion => this.store.addTag(subbestion));
+    this.defaultSuggestions.forEach(suggestion => this.store.addTag(suggestion));
   }
 
   /* eslint-disable class-methods-use-this */

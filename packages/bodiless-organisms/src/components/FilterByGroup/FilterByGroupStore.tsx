@@ -14,7 +14,7 @@
 
 import { action, observable } from 'mobx';
 import { unionBy } from 'lodash';
-import { TagType, FBGContextInterface } from './types';
+import { TagType } from './types';
 
 interface FBGStoreInterface {
   tags: TagType[],
@@ -25,8 +25,6 @@ interface FBGStoreInterface {
 }
 
 class FBGStore implements FBGStoreInterface {
-  @observable activeContext: FBGContextInterface | undefined = undefined;
-
   @observable selectedTag: TagType | undefined = undefined;
 
   @observable selectedNodeId: string | undefined = undefined;
