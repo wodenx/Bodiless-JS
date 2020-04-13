@@ -19,7 +19,6 @@ import {
   withNodeKey,
   withNode,
   withNodeDataHandlers,
-  withData,
   ifReadOnly,
   withoutProps,
   ifEditable,
@@ -49,7 +48,7 @@ import { FilterComponents, FilterProps, TagLabelProps } from './types';
 import { useFilterByGroupContext } from './FilterByGroupContext';
 import { useItemsAccessors } from './FilterTagsModel';
 
-const FilterComponentsStart:FilterComponents = {
+const filterComponentsStart:FilterComponents = {
   FilterCategory: H3,
   FilterGroupWrapper: Ul,
   FilterGroupItemInput: Input,
@@ -123,7 +122,6 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     withNodeDataHandlers({ id: '', name: '' }),
     withNode,
     withNodeKey('tag'),
-    withData,
   )(TagListTitleBase);
 
   const TagList = flow(
@@ -142,7 +140,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
 };
 
 const FilterClean = flow(
-  designable(FilterComponentsStart),
+  designable(filterComponentsStart),
 )(FilterBase);
 
 export default FilterClean;
