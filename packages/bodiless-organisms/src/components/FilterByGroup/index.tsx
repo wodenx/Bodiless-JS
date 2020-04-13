@@ -12,11 +12,13 @@
  * limitations under the License.
  */
 
+import FilterByGroupTag from './FilterByGroupTag';
 import FilterByGroupClean from './FilterByGroupClean';
 import { TestableFilterByGroup, asTestableFilterByGroup } from './FilterByGroupTestable';
 import { withFilterSuggestions, useFilterByGroupContext } from './FilterByGroupContext';
 
 export {
+  FilterByGroupTag,
   FilterByGroupClean,
   TestableFilterByGroup,
   asTestableFilterByGroup,

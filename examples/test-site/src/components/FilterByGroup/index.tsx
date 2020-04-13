@@ -52,3 +52,6 @@ const asFilterByGroup = flow(
 const FilterByGroup = asFilterByGroup(FilterByGroupClean);
 
 export default FilterByGroup;
+export {
+  ContextLogger,
+} from './ContextLogger';

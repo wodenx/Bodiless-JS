@@ -67,8 +67,9 @@ export {
 } from './components/Touts.tokens';
 
 export {
-  asTestableFilterByGroup,
+  FilterByGroupTag,
   FilterByGroupClean,
+  asTestableFilterByGroup,
   withFilterSuggestions,
   useFilterByGroupContext,
 } from './components/FilterByGroup';

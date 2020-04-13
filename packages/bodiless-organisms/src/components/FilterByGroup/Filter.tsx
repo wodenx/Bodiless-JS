@@ -14,6 +14,7 @@
 
 /* eslint-disable arrow-body-style, max-len, @typescript-eslint/no-unused-vars */
 import React, { FC, HTMLProps } from 'react';
+import { observer } from 'mobx-react-lite';
 import { flow, isEmpty } from 'lodash';
 import {
   withNodeKey,
@@ -112,6 +113,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
   )(List);
 
   const TagTitle = flow(
+    observer,
     withoutProps(['componentData']),
     ifEditable(
       withNewTagButton,

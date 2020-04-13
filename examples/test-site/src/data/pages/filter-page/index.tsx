@@ -16,14 +16,16 @@ import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 
 import Layout from '../../../components/Layout';
-import FilterByGroup from '../../../components/FilterByGroup';
+import FilterByGroup, { ContextLogger } from '../../../components/FilterByGroup';
 
 export default (props: any) => (
   <Page {...props}>
     <Layout>
       <h1 className="text-3xl font-bold">Filter Demo Page</h1>
       <div className="my-10">
-        <FilterByGroup />
+        <FilterByGroup>
+          <ContextLogger />
+        </FilterByGroup>
       </div>
     </Layout>
   </Page>
