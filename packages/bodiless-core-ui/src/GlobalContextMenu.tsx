@@ -24,8 +24,9 @@ import {
 import {
   ComponentFormTitle, ComponentFormCloseButton, ComponentFormLabel, ComponentFormText,
   ComponentFormButton, Icon, Div, Hr, ToolbarButton, ComponentFormUnwrapButton,
-  ComponentFormError, ComponentFormSubmitButton, ReactTags,
+  ComponentFormError, ComponentFormSubmitButton,
 } from '@bodiless/ui';
+import ReactTags from './ReactTags';
 
 const Toolbar = flow(
   addClasses('bl-bg-black bl-rounded bl-z-50 bl-p-grid-2 bl-fixed bl-top-grid-0 bl-left-grid-0 bl-text-white'),

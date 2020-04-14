@@ -14,6 +14,7 @@
 
 import React, { FC } from 'react';
 import ReactTooltip from 'rc-tooltip';
+import { flow } from 'lodash';
 import { addClasses, addProps } from '@bodiless/fclasses';
 import {
   ContextMenu, ContextMenuProps,
@@ -21,9 +22,9 @@ import {
 import {
   ComponentFormTitle, ComponentFormLabel, ComponentFormText, ComponentFormButton,
   ComponentFormCloseButton, ComponentFormSubmitButton, Icon, Div, ToolbarButton,
-  ComponentFormUnwrapButton, ReactTags,
+  ComponentFormUnwrapButton,
 } from '@bodiless/ui';
-import { flow } from 'lodash';
+import ReactTags from './ReactTags';
 
 // For accessibility attributes, see https://www.w3.org/TR/wai-aria-practices/examples/toolbar/toolbar.html
 const Toolbar = flow(

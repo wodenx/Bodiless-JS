@@ -20,12 +20,10 @@ const ReactTags = (props: ReactTagsProps) => {
   return (
     <ReactTagsBase
       classNames={classes}
+      autoresize={false}
       {...props}
     />
   );
 };
 
 export default ReactTags;
-export {
-  ReactTags,
-};

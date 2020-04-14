@@ -19,6 +19,7 @@ import asStatic from './asStatic';
 import { useEditContext, useUUID, useContextActivator } from './hooks';
 import withNode, { withNodeKey } from './withNode';
 import withEditButton from './withEditButton';
+import withTagButton, { TagButtonOptions } from './withTagButton';
 import contextMenuForm from './contextMenuForm';
 import withData from './withData';
 import NodeProvider, { useNode, useNodeDataHandlers } from './NodeProvider';
@@ -62,6 +63,8 @@ export {
   useContextActivator,
   useUUID,
   withEditButton,
+  withTagButton,
+  TagButtonOptions,
   WithNodeProps,
   EditButtonOptions,
   withNode,

@@ -25,6 +25,8 @@ import {
   ifEditable,
   withContextActivator,
   withLocalContextMenu,
+  withTagButton,
+  TagButtonOptions,
 } from '@bodiless/core';
 import {
   designable,
@@ -43,7 +45,6 @@ import {
   withBasicSublist,
   ListTitleProps,
 } from '@bodiless/components';
-import { withNewTagButton } from './withNewTagButton';
 import { FilterComponents, FilterProps, TagLabelProps } from './types';
 import { useFilterByGroupContext } from './FilterByGroupContext';
 import { useItemsAccessors } from './FilterTagsModel';
@@ -107,11 +108,22 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     }),
   )(List);
 
+  const tagButtonOptions: TagButtonOptions = {
+    suggestions: [
+      { id: '1', name: 'Test Tag 1' },
+      { id: '2', name: 'Test Tag 2' },
+      { id: '3', name: 'Test Tag 3' },
+      { id: '4', name: 'Test Tag 4' },
+      { id: '5', name: 'Test Tag 5' },
+    ],
+    allowMultipleTags: false,
+  };
+
   const TagTitle = flow(
     observer,
     withoutProps(['componentData']),
     ifEditable(
-      withNewTagButton,
+      withTagButton(tagButtonOptions),
       withContextActivator('onClick'),
       withLocalContextMenu,
     ),
