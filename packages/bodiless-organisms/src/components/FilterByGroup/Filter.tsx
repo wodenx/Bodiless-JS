@@ -70,12 +70,10 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
 
   const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) => {
     const context = useFilterByGroupContext();
-    const { tag, nodeId } = useItemsAccessors();
-    const { allTags, selectedTag, selectedNode } = context;
+    const { tag, getTag, nodeId } = useItemsAccessors();
+    const { selectedTag, selectedNode } = context;
 
-    if (!isEmpty(tag.id) && !allTags.some(_tag => _tag.id === tag.id)) {
-      context.addTag(tag);
-    }
+    context.addTagGetter(() => [ getTag() ]);
 
     const isTagSelected = Boolean(selectedTag && selectedTag.id === tag.id);
     const isNodeSelected = Boolean(selectedNode === nodeId);

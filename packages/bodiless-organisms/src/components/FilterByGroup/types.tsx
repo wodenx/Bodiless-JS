@@ -54,6 +54,6 @@ export interface FBGContextInterface {
   readonly selectedNode: string | undefined,
   readonly allTags: TagType[],
   setSelectedTag: (tag?: TagType, nodeId?: string) => void,
-  addTag: (tag: TagType) => void,
+  addTagGetter: (getter: () => TagType[]) => void,
   spawn: (instance: FBGContextOptions) => FBGContextInterface,
 }

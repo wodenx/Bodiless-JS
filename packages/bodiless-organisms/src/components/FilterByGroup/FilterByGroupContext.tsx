@@ -50,7 +50,7 @@ class FilterByGroupContext implements FBGContextInterface {
       this.defaultSuggestions = values.suggestions;
     }
 
-    this.defaultSuggestions.forEach(suggestion => this.store.addTag(suggestion));
+    this.store.tagGetters.push(() => this.defaultSuggestions);
   }
 
   /* eslint-disable class-methods-use-this */
@@ -62,8 +62,8 @@ class FilterByGroupContext implements FBGContextInterface {
     this.store.setSelectedTag(tag, nodeId);
   }
 
-  addTag(tag: TagType) {
-    this.store.addTag(tag);
+  addTagGetter(getter: () => TagType[]) {
+    this.store.tagGetters.push(getter);
   }
 
   get selectedTag() {
@@ -76,7 +76,7 @@ class FilterByGroupContext implements FBGContextInterface {
 
   get allTags() {
     // Sort alphabetically
-    return this.store.tags.slice().sort((a, b) => a.name.localeCompare(b.name));
+    return this.store.getTags().slice().sort((a, b) => a.name.localeCompare(b.name));
   }
 }
 

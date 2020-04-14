@@ -21,7 +21,6 @@ interface FBGStoreInterface {
   selectedTag: TagType | undefined,
   selectedNodeId: string | undefined,
   setSelectedTag(tag: TagType, nodeId?: string): void,
-  addTag(tag: TagType): void,
 }
 
 class FBGStore implements FBGStoreInterface {
@@ -31,13 +30,15 @@ class FBGStore implements FBGStoreInterface {
 
   @observable tags: TagType[] = [];
 
+  tagGetters: (() => TagType[])[] = [];
+
   @action setSelectedTag(tag?: TagType, nodeId?: string) {
     this.selectedTag = tag;
     this.selectedNodeId = nodeId;
   }
 
-  @action addTag(tag: TagType) {
-    this.tags = unionBy([tag], this.tags, 'id');
+  getTags(): TagType[] {
+    return this.tagGetters.reduce((acc, getter) => acc.concat(getter()), [] as TagType[]);
   }
 }
 
