@@ -13,6 +13,7 @@
  */
 
 import { ComponentType, HTMLProps } from 'react';
+import { TagType } from '@bodiless/core';
 import { StylableProps, DesignableComponentsProps } from '@bodiless/fclasses';
 
 export type FilterByGroupComponents = {
@@ -35,9 +36,8 @@ export type FilterComponents = {
 export type FilterByGroupProps = DesignableComponentsProps<FilterByGroupComponents>;
 export type FilterProps = DesignableComponentsProps<FilterComponents>;
 
-export type TagType = {
-  id: string,
-  name: string,
+export type NodeTagType = {
+  tags: TagType[],
 };
 
 export type TagLabelProps = {

@@ -13,7 +13,12 @@
  */
 
 import { v4 } from 'uuid';
-import { TagType } from './types';
+// import { TagType } from '@bodiless/core';
+
+type TagType = {
+  id: string,
+  name: string,
+};
 
 class Tag implements TagType {
   readonly id: string = v4();

@@ -18,8 +18,7 @@ import PageEditContext from './PageEditContext';
 import asStatic from './asStatic';
 import { useEditContext, useUUID, useContextActivator } from './hooks';
 import withNode, { withNodeKey } from './withNode';
-import withEditButton from './withEditButton';
-import withTagButton, { TagButtonOptions } from './withTagButton';
+import withEditButton, { EditButtonProps } from './withEditButton';
 import contextMenuForm from './contextMenuForm';
 import withData from './withData';
 import NodeProvider, { useNode, useNodeDataHandlers } from './NodeProvider';
@@ -33,7 +32,7 @@ import {
   withoutProps,
 } from './hoc';
 import { ifEditable, ifReadOnly, withEditToggle } from './withEditToggle';
-import { TMenuOption } from './PageEditContext/types';
+import { TMenuOption, PageEditContextInterface } from './PageEditContext/types';
 import { EditButtonOptions } from './Types/EditButtonTypes';
 import { TMenuOptionGetter } from './Types/PageContextProviderTypes';
 import { WithNodeProps } from './Types/NodeTypes';
@@ -53,6 +52,7 @@ export {
   withNodeAndHandlers,
   withNodeDataHandlers,
   withLocalContextMenu,
+  PageEditContextInterface,
   TMenuOption,
   TMenuOptionGetter,
   TOverlaySettings,
@@ -63,8 +63,7 @@ export {
   useContextActivator,
   useUUID,
   withEditButton,
-  withTagButton,
-  TagButtonOptions,
+  EditButtonProps,
   WithNodeProps,
   EditButtonOptions,
   withNode,

@@ -12,20 +12,17 @@
  * limitations under the License.
  */
 
-import { isEmpty } from 'lodash';
-import { useNode } from '@bodiless/core';
-import { NodeTagType } from './types';
+import { TagType } from '@bodiless/core';
 
-const useItemsAccessors = () => {
-  const { node } = useNode<NodeTagType>();
-
-  return {
-    tag: isEmpty(node.data.tags) ? { id: '', name: '' } : node.data.tags[0],
-    nodeId: node.path[node.path.length - 2],
-  };
+export type NodeTagsType = {
+  tags: TagType[],
 };
 
-export default useItemsAccessors;
-export {
-  useItemsAccessors,
+export type TagButtonOptions = {
+  suggestions: TagType[],
+  placeholder?: string,
+  noSuggestionsText?: string,
+  minQueryLength?: number,
+  allowNew?: boolean,
+  allowMultipleTags?: boolean,
 };

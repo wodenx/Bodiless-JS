@@ -25,8 +25,6 @@ import {
   ifEditable,
   withContextActivator,
   withLocalContextMenu,
-  withTagButton,
-  TagButtonOptions,
 } from '@bodiless/core';
 import {
   designable,
@@ -44,6 +42,8 @@ import {
   asEditableList,
   withBasicSublist,
   ListTitleProps,
+  withTagButton,
+  TagButtonOptions,
 } from '@bodiless/components';
 import { FilterComponents, FilterProps, TagLabelProps } from './types';
 import { useFilterByGroupContext } from './FilterByGroupContext';
@@ -128,7 +128,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
       withLocalContextMenu,
     ),
     ifReadOnly(withoutProps(['setComponentData'])),
-    withNodeDataHandlers({ id: '', name: '' }),
+    withNodeDataHandlers({ tags: [] }),
     withNode,
     withNodeKey('tag'),
   )(TagListTitleBase);

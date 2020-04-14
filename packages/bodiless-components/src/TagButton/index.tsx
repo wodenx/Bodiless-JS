@@ -12,20 +12,10 @@
  * limitations under the License.
  */
 
-import { isEmpty } from 'lodash';
-import { useNode } from '@bodiless/core';
-import { NodeTagType } from './types';
+import withTagButton from './withTagButton';
+import { TagButtonOptions } from './types';
 
-const useItemsAccessors = () => {
-  const { node } = useNode<NodeTagType>();
-
-  return {
-    tag: isEmpty(node.data.tags) ? { id: '', name: '' } : node.data.tags[0],
-    nodeId: node.path[node.path.length - 2],
-  };
-};
-
-export default useItemsAccessors;
 export {
-  useItemsAccessors,
+  TagButtonOptions,
+  withTagButton,
 };

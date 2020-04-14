@@ -19,8 +19,8 @@ import React, {
   ComponentType as CT,
 } from 'react';
 import { Observer } from 'mobx-react';
+import { TagType } from '@bodiless/core';
 import {
-  TagType,
   FBGContextOptions,
   FBGContextInterface,
 } from './types';

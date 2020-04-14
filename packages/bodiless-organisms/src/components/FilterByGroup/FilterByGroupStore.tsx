@@ -14,7 +14,7 @@
 
 import { action, observable } from 'mobx';
 import { unionBy } from 'lodash';
-import { TagType } from './types';
+import { TagType } from '@bodiless/core';
 
 interface FBGStoreInterface {
   tags: TagType[],
