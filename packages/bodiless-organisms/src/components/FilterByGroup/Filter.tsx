@@ -110,11 +110,11 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
 
   const tagButtonOptions: TagButtonOptions = {
     suggestions: [
-      { id: '1', name: 'Test Tag 1' },
-      { id: '2', name: 'Test Tag 2' },
-      { id: '3', name: 'Test Tag 3' },
-      { id: '4', name: 'Test Tag 4' },
-      { id: '5', name: 'Test Tag 5' },
+      { id: '_1', name: 'Test Tag 1' },
+      { id: '_2', name: 'Test Tag 2' },
+      { id: '_3', name: 'Test Tag 3' },
+      { id: '_4', name: 'Test Tag 4' },
+      { id: '_5', name: 'Test Tag 5' },
     ],
     allowMultipleTags: false,
   };

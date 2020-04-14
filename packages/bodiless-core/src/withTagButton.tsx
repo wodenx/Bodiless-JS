@@ -13,7 +13,8 @@
  */
 
 import React, { useState } from 'react';
-import { flowRight } from 'lodash';
+import { flowRight, isEmpty } from 'lodash';
+import { v1 } from 'uuid';
 import { Tag as TagType } from 'react-tag-autocomplete';
 import { withPageContext, withoutProps } from './hoc';
 import { PageEditContextInterface } from './PageEditContext/types';
@@ -30,13 +31,16 @@ export type TagButtonOptions = {
   allowMultipleTags?: boolean,
 };
 
-const renderTagsForm = (
-  options: TagButtonOptions,
+const renderTagsForm = <P extends object, D extends object>(
+  options: TagButtonOptions & P & EditButtonProps<D>,
   context: PageEditContextInterface,
 ) => contextMenuForm({
-  submitValues: () => console.log('Form Submitted...'),
+  submitValues: (values: D) => {
+    const { setComponentData } = options;
+    setComponentData(values);
+  },
 })(
-  ({ ui /* formApi */ }: any) => {
+  ({ ui, formApi }: any) => {
     const {
       ComponentFormTitle,
       ComponentFormLabel,
@@ -52,18 +56,38 @@ const renderTagsForm = (
       minQueryLength = 1,
       allowNew = true,
       allowMultipleTags = true,
+      componentData,
     } = options;
 
     const [tags, updateTags] = useState<TagType[]>([]);
 
     const handleAddition = (newTag: TagType) => {
       updateTags(allowMultipleTags ? [...tags, newTag] : [newTag]);
+
+      if (allowMultipleTags) {
+        // TODO: Set component data for multiple tags
+      } else {
+        let tag = newTag;
+        if (isEmpty(tag.id)) {
+          tag.id = v1();
+        }
+        formApi.setValue('id', tag.id);
+        formApi.setValue('name', tag.name);
+      }
+      
     };
 
     const handleDelete = (i: number) => {
       const newTags = tags.slice(0);
       newTags.splice(i, 1);
       updateTags(newTags);
+
+      if (allowMultipleTags) {
+        // TODO: Handle component data for multiple tags
+      } else {
+        formApi.setValue('id', componentData.id);
+        formApi.setValue('name', componentData.name);
+      }
     };
 
     const displayListOfTags = () => context.showPageOverlay({
@@ -104,7 +128,7 @@ const createMenuOptionHook = <P extends object, D extends object>(options: TagBu
       name: 'tags',
       global: false,
       local: true,
-      handler: () => renderTagsForm(options, context),
+      handler: () => renderTagsForm({...options, ...props}, context),
     },
   ];
 
