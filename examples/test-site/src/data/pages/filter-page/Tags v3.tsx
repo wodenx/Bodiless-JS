@@ -1,45 +1,16 @@
-// /**
-//  * Copyright © 2020 Johnson & Johnson
-//  *
-//  * Licensed under the Apache License, Version 2.0 (the "License");
-//  * you may not use this file except in compliance with the License.
-//  * You may obtain a copy of the License at
-//  * http://www.apache.org/licenses/LICENSE-2.0
-//  * Unless required by applicable law or agreed to in writing, software
-//  * distributed under the License is distributed on an "AS IS" BASIS,
-//  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  * See the License for the specific language governing permissions and
-//  * limitations under the License.
-//  */
-// import React from 'react';
-// import { graphql } from 'gatsby';
-// import { Page } from '@bodiless/gatsby-theme-bodiless';
-
-// import Layout from '../../../components/Layout';
-// import FilterByGroup, { ContextLogger } from '../../../components/FilterByGroup';
-
-// export default (props: any) => (
-//   <Page {...props}>
-//     <Layout>
-//       <h1 className="text-3xl font-bold">Filter Demo Page</h1>
-//       <div className="my-10">
-//         <FilterByGroup>
-//           <ContextLogger />
-//         </FilterByGroup>
-//       </div>
-//     </Layout>
-//   </Page>
-// );
-
-// export const query = graphql`
-//   query($slug: String!) {
-//     ...PageQuery
-//     ...SiteQuery
-//   }
-// `;
-
-
-
+/**
+ * Copyright © 2020 Johnson & Johnson
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import React, { useRef, forwardRef, useContext, createContext } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
@@ -63,14 +34,14 @@ const withRegisterTags = (Component: any) => (props: any) => {
   return <Component {...props} registerTags={registerTags} />;
 }
 
-const TagComponent = ({ getSuggestions, children, registerTags }) => {
+const TagComponent = ({ suggestions, children, registerTags }) => {
   const [ tags, setTags ] = React.useState<string[]>([]);
   const addRandomTag = () => {
     setTags(oldTags => [ ...oldTags, v1() ]);
   }
   registerTags(tags);
   const showTags = () => {
-    alert(JSON.stringify(getSuggestions()));
+    alert(JSON.stringify(suggestions()));
   }
   return(
     <TagComponentDiv>
@@ -93,11 +64,11 @@ const TagContainerElement = withRegisterTags(TagComponent);
 
 const TagContainer = ({ names }: Props) => {
   const refs = useRef([]);
-  const getSuggestions = () => (
+  const suggestions = () => (
     refs.current.reduce((acc, ref) => [...acc, ...ref.current ], [])
   );
   const elements = names.map(name => (
-    <TagContainerElement getSuggestions={getSuggestions}>{name}</TagContainerElement>
+    <TagContainerElement suggestions={suggestions}>{name}</TagContainerElement>
   ));
 
   return (
