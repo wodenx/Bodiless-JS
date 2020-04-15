@@ -26,23 +26,13 @@ const TagComponentDiv = addClasses('px-3 my-2 mr-2 mb-2 border border-gray-600 i
 
 const TagSuggestionContext = createContext(null);
 
-const withNewTagSuggestionRef = (Component: any) => (props: any) => {
+const withRegisterTags = (Component: any) => (props: any) => {
   const refs = useContext(TagSuggestionContext);
   const ref = useRef([]);
   refs.current.push(ref);
-  return <Component ref={ref} {...props} />;
+  const registerTags = tags => ref.current = tags;
+  return <Component {...props} registerTags={registerTags} />;
 }
-const withTagSuggestionRefAsProp = (Component: any) => forwardRef(
-  (props: any, ref: any) => {
-    const registerTags = tags => ref.current = tags;
-    return <Component {...props} registerTags={registerTags} />;
-  }
-);
-
-const withRegisterTags = flow(
-  withTagSuggestionRefAsProp,
-  withNewTagSuggestionRef,
-);
 
 const TagComponent = ({ suggestions, children, registerTags }) => {
   const [ tags, setTags ] = React.useState<string[]>([]);
