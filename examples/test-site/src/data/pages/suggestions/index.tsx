@@ -17,9 +17,13 @@ import { Page } from '@bodiless/gatsby-theme-bodiless';
 
 import Layout from '../../../components/Layout';
 import { v1 } from 'uuid';
+import { addClasses, Button, Div } from '@bodiless/fclasses';
+
+const AddButton = addClasses('px-2 mb-2 border border-gray-600')(Button);
+const TagComponentDiv = addClasses('px-3 my-2 mr-2 mb-2 border border-gray-600 inline-block')(Div);
 
 
-const TagComponent = forwardRef(({ suggestions }: any, ref: any) => {
+const TagComponent = forwardRef(({ suggestions, children }: any, ref: any) => {
   const [ tags, setTags ] = React.useState<string[]>([]);
   const addRandomTag = () => {
     setTags(oldTags => [ ...oldTags, v1() ]);
@@ -29,26 +33,36 @@ const TagComponent = forwardRef(({ suggestions }: any, ref: any) => {
     alert(JSON.stringify(suggestions()));
   }
   return(
-    <div className="p-2 border">
-      <h3>Tag Component</h3>
-      <a onClick={addRandomTag}>Add Random Tag</a>
-      <a onClick={showTags}>Show Tags</a>
+    <TagComponentDiv>
+      <h3>Tag Component: {children}</h3>
+      <AddButton onClick={addRandomTag}>Add Random Tag</AddButton>
+      <AddButton onClick={showTags}>Show Tags</AddButton>
       <div>
         <h4>My Tags</h4>
         <pre>{JSON.stringify(tags)}</pre>
       </div>
-    </div>
+    </TagComponentDiv>
   );
 });
 
-const TagContainer = () => {
-  const ref1 = useRef([]);
-  const ref2 = useRef([]);
-  const suggestions = () => [ ...ref1.current, ...ref2.current ];
+type Props = {
+  names: string[],
+}
+
+const TagContainer = ({ names }: Props) => {
+  const refs = [];
+  const suggestions = () => (
+    refs.reduce((acc, ref) => [...acc, ...ref.current ], [])
+  );
+  const elements = names.map(name => {
+    const ref = useRef([]);
+    refs.push(ref);
+    return <TagComponent ref={ref} suggestions={suggestions}>{name}</TagComponent>  
+  });
+
   return (
     <div>
-      <TagComponent ref={ref1} suggestions={suggestions} />
-      <TagComponent ref={ref2} suggestions={suggestions} />
+      {elements}
     </div>
   );
 }
@@ -56,7 +70,7 @@ const TagContainer = () => {
 export default (props: any) => (
   <Page {...props}>
     <Layout>
-      <TagContainer />
+      <TagContainer names={['foo', 'bar', 'baz']} />
     </Layout>
   </Page>
 );
