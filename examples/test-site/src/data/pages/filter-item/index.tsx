@@ -14,10 +14,10 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
-import { Editable } from '@bodiless/components';
-import {asTaggableItem} from "@bodiless/components";
-import Layout from '../../../components/Layout';
+import { Editable, asTaggableItem } from '@bodiless/components';
+
 import { flow } from 'lodash';
+import Layout from '../../../components/Layout';
 
 const suggestions = [
   { id: 0, name: 'Bananas' },
@@ -39,9 +39,9 @@ export default (props: any) => (
         <TaggableItem
           nodeKey="tags"
           suggestions={suggestions}
-          inputPlaceHolder={'Add or create'}
-          allowNew={true}
-          noSuggestionsText={'No suggestions found'}
+          inputPlaceHolder="Add or create"
+          allowNew
+          noSuggestionsText="No suggestions found"
         >
           <Editable nodeKey="text" placeholder="Editable Text" />
         </TaggableItem>
