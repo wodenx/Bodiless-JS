@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, forwardRef } from 'react';
+import React, { useRef, forwardRef, useContext, createContext } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 
@@ -57,12 +57,21 @@ type Props = {
   names: string[],
 }
 
+const RefContext = createContext(null);
 
-const TagContainerElement = forwardRef((props: any, refs: any) => {
+const withRefsFromContext = (Component: any) => (props: any) => {
+  const refs = useContext(RefContext);
+  return <Component {...props} ref={refs} />
+}
+
+
+const TagContainerElement = withRefsFromContext(
+forwardRef((props: any, refs: any) => {
   const ref = useRef([]);
   refs.current.push(ref);
   return <TagComponent ref={ref} {...props} />
-});
+})
+);
 
 const TagContainer = ({ names }: Props) => {
   const refs = useRef([]);
@@ -70,13 +79,15 @@ const TagContainer = ({ names }: Props) => {
     refs.current.reduce((acc, ref) => [...acc, ...ref.current ], [])
   );
   const elements = names.map(name => (
-    <TagContainerElement ref={refs} suggestions={suggestions}>{name}</TagContainerElement>
+    <TagContainerElement suggestions={suggestions}>{name}</TagContainerElement>
   ));
 
   return (
-    <div>
-      {elements}
-    </div>
+    <RefContext.Provider value={refs}>
+      <div>
+        {elements}
+      </div>
+    </RefContext.Provider>
   );
 }
 
