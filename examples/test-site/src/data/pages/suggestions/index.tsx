@@ -24,15 +24,15 @@ import { flow } from 'lodash';
 const AddButton = addClasses('px-2 mb-2 border border-gray-600')(Button);
 const TagComponentDiv = addClasses('px-3 my-2 mr-2 mb-2 border border-gray-600 inline-block')(Div);
 
-const RefContext = createContext(null);
+const TagSuggestionContext = createContext(null);
 
-const withRefsFromContext = (Component: any) => (props: any) => {
-  const refs = useContext(RefContext);
+const withNewTagSuggestionRef = (Component: any) => (props: any) => {
+  const refs = useContext(TagSuggestionContext);
   const ref = useRef([]);
   refs.current.push(ref);
   return <Component ref={ref} {...props} />;
 }
-const forwardTagRef = (Component: any) => forwardRef(
+const withTagSuggestionRefAsProp = (Component: any) => forwardRef(
   (props: any, ref: any) => {
     const registerTags = tags => ref.current = tags;
     return <Component {...props} registerTags={registerTags} />;
@@ -40,8 +40,8 @@ const forwardTagRef = (Component: any) => forwardRef(
 );
 
 const withRegisterTags = flow(
-  forwardTagRef,
-  withRefsFromContext,
+  withTagSuggestionRefAsProp,
+  withNewTagSuggestionRef,
 );
 
 const TagComponent = ({ suggestions, children, registerTags }) => {
@@ -82,11 +82,11 @@ const TagContainer = ({ names }: Props) => {
   ));
 
   return (
-    <RefContext.Provider value={refs}>
+    <TagSuggestionContext.Provider value={refs}>
       <div>
         {elements}
       </div>
-    </RefContext.Provider>
+    </TagSuggestionContext.Provider>
   );
 }
 
