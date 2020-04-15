@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 Johnson & Johnson
+ * Copyright © 2020 Johnson & Johnson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,12 +12,17 @@
  * limitations under the License.
  */
 
-import ContextWrapper from './ContextWrapper';
-import PageEditor from './PageEditor';
-import PageOverlay from './PageOverlay';
-import ReactTags from './ReactTags';
+import { useNode } from '@bodiless/core';
+import { NodeTagsType } from './types';
 
+const useTagsAccessors = () => {
+  const { node } = useNode<NodeTagsType>();
+  return {
+    getItems: () => node.data.tags || [],
+  };
+};
+
+export default useTagsAccessors;
 export {
-  ContextWrapper, PageEditor, PageOverlay,
-  ReactTags,
+  useTagsAccessors,
 };
