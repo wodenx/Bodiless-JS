@@ -61,17 +61,13 @@ const RefContext = createContext(null);
 
 const withRefsFromContext = (Component: any) => (props: any) => {
   const refs = useContext(RefContext);
-  return <Component {...props} ref={refs} />
+  const ref = useRef([]);
+  refs.current.push(ref);
+  return <Component ref={ref} {...props} />;
 }
 
 
-const TagContainerElement = withRefsFromContext(
-forwardRef((props: any, refs: any) => {
-  const ref = useRef([]);
-  refs.current.push(ref);
-  return <TagComponent ref={ref} {...props} />
-})
-);
+const TagContainerElement = withRefsFromContext(TagComponent);
 
 const TagContainer = ({ names }: Props) => {
   const refs = useRef([]);
