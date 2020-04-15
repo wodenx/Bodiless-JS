@@ -22,6 +22,7 @@ import { addClasses, Button, Div } from '@bodiless/fclasses';
 const AddButton = addClasses('px-2 mb-2 border border-gray-600')(Button);
 const TagComponentDiv = addClasses('px-3 my-2 mr-2 mb-2 border border-gray-600 inline-block')(Div);
 
+
 const forwardTagRef = (Component: any) => forwardRef(
   (props: any, ref: any) => {
     const registerTags = tags => ref.current = tags;
@@ -56,13 +57,13 @@ type Props = {
 }
 
 const TagContainer = ({ names }: Props) => {
-  const refs = [];
+  const refs = useRef([]);
   const suggestions = () => (
-    refs.reduce((acc, ref) => [...acc, ...ref.current ], [])
+    refs.current.reduce((acc, ref) => [...acc, ...ref.current ], [])
   );
   const elements = names.map(name => {
     const ref = useRef([]);
-    refs.push(ref);
+    refs.current.push(ref);
     return <TagComponent ref={ref} suggestions={suggestions}>{name}</TagComponent>  
   });
 
