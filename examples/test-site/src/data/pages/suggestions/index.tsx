@@ -19,7 +19,7 @@ import Layout from '../../../components/Layout';
 import { v1 } from 'uuid';
 
 
-const TagComponent = forwardRef(({ suggestions }: any, ref) => {
+const TagComponent = forwardRef(({ suggestions }: any, ref: any) => {
   const [ tags, setTags ] = React.useState<string[]>([]);
   const addRandomTag = () => {
     setTags(oldTags => [ ...oldTags, v1() ]);
@@ -42,10 +42,14 @@ const TagComponent = forwardRef(({ suggestions }: any, ref) => {
 });
 
 const TagContainer = () => {
-  const ref1 = useRef();
-  const suggestions = () => ref1.current;
+  const ref1 = useRef([]);
+  const ref2 = useRef([]);
+  const suggestions = () => [ ...ref1.current, ...ref2.current ];
   return (
-    <TagComponent ref={ref1} suggestions={suggestions} />
+    <div>
+      <TagComponent ref={ref1} suggestions={suggestions} />
+      <TagComponent ref={ref2} suggestions={suggestions} />
+    </div>
   );
 }
 
