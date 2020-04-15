@@ -23,6 +23,7 @@ import {
   TitleProps as ListTitleProps,
   ListDesignableComponents,
 } from './List/types';
+import asTaggableItem from "./Taggable/Item";
 import withListTitle from './List/withListTitle';
 import asEditableList from './List/asEditableList';
 import asBasicSublist from './List/asBasicSublist';
@@ -71,4 +72,5 @@ export {
   withEvent,
   withTagButton,
   TagButtonOptions,
+  asTaggableItem,
 };
