@@ -18,6 +18,7 @@ import { Page } from '@bodiless/gatsby-theme-bodiless';
 import Layout from '../../../components/Layout';
 import { v1 } from 'uuid';
 import { addClasses, Button, Div } from '@bodiless/fclasses';
+import { any } from 'bluebird';
 
 const AddButton = addClasses('px-2 mb-2 border border-gray-600')(Button);
 const TagComponentDiv = addClasses('px-3 my-2 mr-2 mb-2 border border-gray-600 inline-block')(Div);
@@ -56,16 +57,21 @@ type Props = {
   names: string[],
 }
 
+
+const TagContainerElement = forwardRef((props: any, refs: any) => {
+  const ref = useRef([]);
+  refs.current.push(ref);
+  return <TagComponent ref={ref} {...props} />
+});
+
 const TagContainer = ({ names }: Props) => {
   const refs = useRef([]);
   const suggestions = () => (
     refs.current.reduce((acc, ref) => [...acc, ...ref.current ], [])
   );
-  const elements = names.map(name => {
-    const ref = useRef([]);
-    refs.current.push(ref);
-    return <TagComponent ref={ref} suggestions={suggestions}>{name}</TagComponent>  
-  });
+  const elements = names.map(name => (
+    <TagContainerElement ref={refs} suggestions={suggestions}>{name}</TagContainerElement>
+  ));
 
   return (
     <div>
