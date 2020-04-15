@@ -13,28 +13,41 @@
  */
 
 import React, { FC } from 'react';
-import { observer } from 'mobx-react-lite';
+import { flow } from 'lodash';
+// import { observer } from 'mobx-react-lite';
 import {
   Div, Button, addClasses,
 } from '@bodiless/fclasses';
 import {
-  useFilterByGroupContext,
+  useFBGContext,
+  withRegisterTags,
 } from '@bodiless/organisms';
-import { BodilessTag } from '@bodiless/core';
+import { BodilessTag, TagType } from '@bodiless/core';
 
 const AddButton = addClasses('px-2 mb-2 border border-gray-600')(Button);
 const TagComponent = addClasses('px-3 my-2 mr-2 mb-2 border border-gray-600 inline-block')(Div);
 
-const ContextLoggerBase: FC = () => {
-  const context = useFilterByGroupContext();
-  const { allTags, selectedTag } = context;
+type Props = {
+  registerSuggestion: (tags: TagType) => any,
+};
 
-  const tagElements = allTags.map(tag => (
+const ContextLoggerBase: FC<Props> = ({ registerSuggestion }) => {
+  const { getSuggestions, selectedTag } = useFBGContext();
+  const allSuggestions = getSuggestions();
+
+  const tagElements = allSuggestions.map(tag => (
     <TagComponent key={tag.id}>{ tag.name || ' - ' }</TagComponent>
   ));
 
-  /* eslint-disable no-bitwise */
-  const addRandomTag = () => context.addTag(new BodilessTag(`#${(Math.random() * 0xFFFFFF << 0).toString(16)}`));
+  /* eslint-disable no-bitwise, max-len */
+  /*
+   * TODO: Error: Invalid hook call. Hooks can only be called inside of the body of a function component.
+   * This happenes in both cases: when we pass registerSuggestion as a prop
+   * and if we get it from useFBGContext()
+   */
+  const addRandomTag = () => (
+    registerSuggestion(new BodilessTag(`#${(Math.random() * 0xFFFFFF << 0).toString(16)}`))
+  );
 
   return (
     <Div>
@@ -49,7 +62,7 @@ const ContextLoggerBase: FC = () => {
       <Div>
         { tagElements }
         <pre>
-          {JSON.stringify(allTags, null, 2)}
+          {JSON.stringify(allSuggestions, null, 2)}
         </pre>
       </Div>
 
@@ -57,7 +70,10 @@ const ContextLoggerBase: FC = () => {
   );
 };
 
-const ContextLogger = observer(ContextLoggerBase);
+const ContextLogger = flow(
+  // observer,
+  withRegisterTags,
+)(ContextLoggerBase);
 
 export default ContextLogger;
 export {

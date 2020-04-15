@@ -12,44 +12,71 @@
  * limitations under the License.
  */
 
+/* eslint-disable react/jsx-indent */
 import React, {
   useRef,
-  // forwardRef,
   useContext,
   createContext,
   FC,
+  ComponentType as CT,
 } from 'react';
+import { isEmpty } from 'lodash';
 import { TagType } from '@bodiless/core';
-
-export type BVLoaderData = {
-  isLoaded: boolean;
-};
+import { FBGContextOptions } from './types';
 
 type FBGContextType = {
   getSuggestions: () => TagType[],
-  registerSuggestions: (tags: any) => any,
-}
+  registerSuggestion: (tags: TagType) => any,
+  setSelectedTag: (tag?: TagType) => void,
+  setSelectedNode: (nodeId?: string) => void,
+  selectedTag?: TagType,
+  selectedNode?: string,
+};
 
 const FBGContext = createContext<FBGContextType>({
   getSuggestions: () => [],
-  registerSuggestions: () => {},
+  registerSuggestion: () => {},
+  setSelectedTag: () => {},
+  setSelectedNode: () => {},
 });
 
 const useFBGContext = () => useContext(FBGContext);
 
-const FBGProvider: FC = ({
+const FBGProvider: FC<FBGContextOptions> = ({
   children,
+  suggestions,
 }) => {
-  const refs = useRef<TagType[]>([]);
-  const getSuggestions = () => (
-    refs.current.reduce((acc, ref) => [...acc, ...ref.current ], [] as TagType[])
+  const [selectedTag, setSelectedTag] = React.useState<TagType>();
+  const [selectedNode, setSelectedNode] = React.useState<string>();
+
+  const refs = useRef<any>([]);
+
+  const getSuggestions = (): TagType[] => (
+    refs.current.reduce((acc: any, ref: any) => [...acc, ref.current], [])
   );
-  const registerSuggestions = (tags: any) => refs.current = tags;
+
+  const registerSuggestion = (suggestion: TagType) => {
+    const allSuggestions = getSuggestions();
+    const ref = useRef<TagType>();
+
+    if (suggestion.id && !allSuggestions.some(_suggestion => _suggestion.id === suggestion.id)) {
+      ref.current = suggestion;
+      refs.current.push(ref);
+    }
+  };
+
+  if (suggestions && !isEmpty(suggestions)) {
+    suggestions.forEach(registerSuggestion);
+  }
 
   const newValue = {
     getSuggestions,
-    registerSuggestions,
-  }
+    registerSuggestion,
+    selectedTag,
+    selectedNode,
+    setSelectedTag,
+    setSelectedNode,
+  };
 
   return (
     <FBGContext.Provider value={newValue}>
@@ -58,8 +85,32 @@ const FBGProvider: FC = ({
   );
 };
 
+const withFBGContext = <P extends object>(
+  Component: CT<P> | string,
+) => (props: P & FBGContextOptions) => (
+    <FBGProvider suggestions={props.suggestions}>
+      <Component {...props} />
+    </FBGProvider>
+  );
+
+const withRegisterTags = (Component: any) => (props: any) => {
+  const { registerSuggestion } = useFBGContext();
+
+  return <Component {...props} registerSuggestion={registerSuggestion} />;
+};
+
+const withFBGSuggestions = <P extends object>({
+  suggestions,
+}: FBGContextOptions) => (Component: CT<P> | string) => (props: P) => (
+  <Component {...props} suggestions={suggestions} />
+  );
+
+
 export default FBGContext;
 export {
   FBGContext,
   useFBGContext,
+  withFBGContext,
+  withRegisterTags,
+  withFBGSuggestions,
 };

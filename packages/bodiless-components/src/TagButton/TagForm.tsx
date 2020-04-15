@@ -40,13 +40,15 @@ const renderTagsForm = <P extends object, D extends object>(
     } = getUI(ui);
 
     const {
-      suggestions,
+      getSuggestions,
       placeholder = 'Select Tags',
       noSuggestionsText = 'No maching tags found.',
       minQueryLength = 1,
       allowNew = true,
       allowMultipleTags = true,
     } = options;
+
+    const suggestions = getSuggestions();
 
     const displayListOfTags = () => context.showPageOverlay({
       message: suggestions.slice().reduce((acc, _tag) => `${acc}\n${_tag.name}`, ''),

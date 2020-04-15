@@ -14,12 +14,13 @@
 
 import FilterByGroupClean from './FilterByGroupClean';
 import { TestableFilterByGroup, asTestableFilterByGroup } from './FilterByGroupTestable';
-import { withFilterSuggestions, useFilterByGroupContext } from './FilterByGroupContext';
+import { useFBGContext, withRegisterTags, withFBGSuggestions } from './FBGContext';
 
 export {
   FilterByGroupClean,
   TestableFilterByGroup,
   asTestableFilterByGroup,
-  withFilterSuggestions,
-  useFilterByGroupContext,
+  withFBGSuggestions,
+  useFBGContext,
+  withRegisterTags,
 };

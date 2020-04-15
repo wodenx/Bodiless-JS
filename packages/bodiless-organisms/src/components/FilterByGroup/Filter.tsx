@@ -46,8 +46,9 @@ import {
   TagButtonOptions,
 } from '@bodiless/components';
 import { FilterComponents, FilterProps, TagLabelProps } from './types';
-import { useFilterByGroupContext } from './FilterByGroupContext';
 import { useItemsAccessors } from './FilterByGroupModel';
+
+import { useFBGContext } from './FBGContext';
 
 const filterComponentsStart:FilterComponents = {
   FilterCategory: asEditable('category_name', 'Category Name')(H3),
@@ -59,11 +60,10 @@ const filterComponentsStart:FilterComponents = {
 };
 
 const useWithTagButton = () => {
-  // TODO: This does not getting updated on conext update
-  const { allTags } = useFilterByGroupContext();
+  const { getSuggestions } = useFBGContext();
 
   const tagButtonOptions: TagButtonOptions = {
-    suggestions: allTags,
+    getSuggestions,
     allowMultipleTags: false,
   };
 
@@ -81,16 +81,24 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
   } = components;
 
   const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) => {
-    const context = useFilterByGroupContext();
     const { tag, nodeId } = useItemsAccessors();
-    const { allTags, selectedTag, selectedNode } = context;
+    const {
+      registerSuggestion,
+      selectedTag,
+      selectedNode,
+      setSelectedNode,
+      setSelectedTag,
+    } = useFBGContext();
 
-    if (!isEmpty(tag.id) && !allTags.some(_tag => _tag.id === tag.id)) {
-      context.addTag(tag);
-    }
+    const onSelect = () => {
+      setSelectedNode(nodeId);
+      setSelectedTag(tag);
+    };
 
     const isTagSelected = Boolean(selectedTag && selectedTag.id === tag.id);
     const isNodeSelected = Boolean(selectedNode === nodeId);
+
+    registerSuggestion(tag);
 
     const LabelComponent = (
       { labelText, ...rest }: TagLabelProps,
@@ -105,7 +113,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
           name="filter-item"
           value={tag.id}
           id={nodeId}
-          onChange={() => context.setSelectedTag(tag, nodeId)}
+          onChange={() => onSelect()}
           checked={isNodeSelected && isTagSelected}
         />
         <LabelComponent htmlFor={nodeId} labelText={tag.name} />
