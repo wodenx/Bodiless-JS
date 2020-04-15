@@ -13,13 +13,25 @@
  */
 
 import React, { useState } from 'react';
+import { v4 } from 'uuid';
 import { useFormApi, Text } from 'informed';
-import ReactTags, { ReactTagsProps, Tag } from 'react-tag-autocomplete';
+import { isEmpty } from 'lodash';
+import ReactTags, { ReactTagsProps, Tag as ReactTagType } from 'react-tag-autocomplete';
 
 export type TagType = {
   id: string,
   name: string,
-} | Tag;
+} | ReactTagType;
+
+class Tag {
+  readonly id: string = v4();
+
+  name: string = '';
+
+  constructor(name: string = '') {
+    this.name = name;
+  }
+}
 
 export type ReactTagsFieldProps = {
   allowMultipleTags?: boolean,
@@ -31,6 +43,11 @@ const ReactTagsField = (props: ReactTagsFieldProps) => {
   const [tags, updateTags] = useState<TagType[]>([]);
 
   const handleAddition = (tag: TagType) => {
+    if (isEmpty(tag.id)) {
+      /* eslint-disable no-param-reassign */
+      tag = new Tag(tag.name);
+    }
+
     const newTags = allowMultipleTags ? [...tags, tag] : [tag];
     formApi.setValue('tags', newTags);
     updateTags(newTags);
@@ -57,3 +74,6 @@ const ReactTagsField = (props: ReactTagsFieldProps) => {
 };
 
 export default ReactTagsField;
+export {
+  Tag as BodilessTag,
+};

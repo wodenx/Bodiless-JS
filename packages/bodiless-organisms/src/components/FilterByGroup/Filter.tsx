@@ -47,7 +47,7 @@ import {
 } from '@bodiless/components';
 import { FilterComponents, FilterProps, TagLabelProps } from './types';
 import { useFilterByGroupContext } from './FilterByGroupContext';
-import { useItemsAccessors } from './FilterTagsModel';
+import { useItemsAccessors } from './FilterByGroupModel';
 
 const filterComponentsStart:FilterComponents = {
   FilterCategory: asEditable('category_name', 'Category Name')(H3),
@@ -56,6 +56,18 @@ const filterComponentsStart:FilterComponents = {
   FilterGroupItemLabel: Label,
   FilterGroupItemPlaceholder: Label,
   FilterInputWrapper: Div,
+};
+
+const useWithTagButton = () => {
+  // TODO: This does not getting updated on conext update
+  const { allTags } = useFilterByGroupContext();
+
+  const tagButtonOptions: TagButtonOptions = {
+    suggestions: allTags,
+    allowMultipleTags: false,
+  };
+
+  return withTagButton(tagButtonOptions);
 };
 
 const FilterBase: FC<FilterProps> = ({ components }) => {
@@ -108,22 +120,11 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     }),
   )(List);
 
-  const tagButtonOptions: TagButtonOptions = {
-    suggestions: [
-      { id: '_1', name: 'Test Tag 1' },
-      { id: '_2', name: 'Test Tag 2' },
-      { id: '_3', name: 'Test Tag 3' },
-      { id: '_4', name: 'Test Tag 4' },
-      { id: '_5', name: 'Test Tag 5' },
-    ],
-    allowMultipleTags: false,
-  };
-
   const TagTitle = flow(
     observer,
     withoutProps(['componentData']),
     ifEditable(
-      withTagButton(tagButtonOptions),
+      useWithTagButton(),
       withContextActivator('onClick'),
       withLocalContextMenu,
     ),

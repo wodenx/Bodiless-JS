@@ -18,9 +18,9 @@ import {
   Div, Button, addClasses,
 } from '@bodiless/fclasses';
 import {
-  FilterByGroupTag,
   useFilterByGroupContext,
 } from '@bodiless/organisms';
+import { BodilessTag } from '@bodiless/core';
 
 const AddButton = addClasses('px-2 mb-2 border border-gray-600')(Button);
 const TagComponent = addClasses('px-3 my-2 mr-2 mb-2 border border-gray-600 inline-block')(Div);
@@ -34,7 +34,7 @@ const ContextLoggerBase: FC = () => {
   ));
 
   /* eslint-disable no-bitwise */
-  const addRandomTag = () => context.addTag(new FilterByGroupTag(`#${(Math.random() * 0xFFFFFF << 0).toString(16)}`));
+  const addRandomTag = () => context.addTag(new BodilessTag(`#${(Math.random() * 0xFFFFFF << 0).toString(16)}`));
 
   return (
     <Div>
