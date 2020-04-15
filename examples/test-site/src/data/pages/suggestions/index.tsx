@@ -19,11 +19,19 @@ import Layout from '../../../components/Layout';
 import { v1 } from 'uuid';
 import { addClasses, Button, Div } from '@bodiless/fclasses';
 import { any } from 'bluebird';
+import { flow } from 'lodash';
 
 const AddButton = addClasses('px-2 mb-2 border border-gray-600')(Button);
 const TagComponentDiv = addClasses('px-3 my-2 mr-2 mb-2 border border-gray-600 inline-block')(Div);
 
+const RefContext = createContext(null);
 
+const withRefsFromContext = (Component: any) => (props: any) => {
+  const refs = useContext(RefContext);
+  const ref = useRef([]);
+  refs.current.push(ref);
+  return <Component ref={ref} {...props} />;
+}
 const forwardTagRef = (Component: any) => forwardRef(
   (props: any, ref: any) => {
     const registerTags = tags => ref.current = tags;
@@ -31,7 +39,12 @@ const forwardTagRef = (Component: any) => forwardRef(
   }
 );
 
-const TagComponent = forwardTagRef(({ suggestions, children, registerTags }) => {
+const withRegisterTags = flow(
+  forwardTagRef,
+  withRefsFromContext,
+);
+
+const TagComponent = ({ suggestions, children, registerTags }) => {
   const [ tags, setTags ] = React.useState<string[]>([]);
   const addRandomTag = () => {
     setTags(oldTags => [ ...oldTags, v1() ]);
@@ -51,23 +64,13 @@ const TagComponent = forwardTagRef(({ suggestions, children, registerTags }) => 
       </div>
     </TagComponentDiv>
   );
-});
+};
 
 type Props = {
   names: string[],
 }
 
-const RefContext = createContext(null);
-
-const withRefsFromContext = (Component: any) => (props: any) => {
-  const refs = useContext(RefContext);
-  const ref = useRef([]);
-  refs.current.push(ref);
-  return <Component ref={ref} {...props} />;
-}
-
-
-const TagContainerElement = withRefsFromContext(TagComponent);
+const TagContainerElement = withRegisterTags(TagComponent);
 
 const TagContainer = ({ names }: Props) => {
   const refs = useRef([]);
