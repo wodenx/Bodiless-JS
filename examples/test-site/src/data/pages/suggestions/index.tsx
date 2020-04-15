@@ -22,13 +22,19 @@ import { addClasses, Button, Div } from '@bodiless/fclasses';
 const AddButton = addClasses('px-2 mb-2 border border-gray-600')(Button);
 const TagComponentDiv = addClasses('px-3 my-2 mr-2 mb-2 border border-gray-600 inline-block')(Div);
 
+const forwardTagRef = (Component: any) => forwardRef(
+  (props: any, ref: any) => {
+    const registerTags = tags => ref.current = tags;
+    return <Component {...props} registerTags={registerTags} />;
+  }
+);
 
-const TagComponent = forwardRef(({ suggestions, children }: any, ref: any) => {
+const TagComponent = forwardTagRef(({ suggestions, children, registerTags }) => {
   const [ tags, setTags ] = React.useState<string[]>([]);
   const addRandomTag = () => {
     setTags(oldTags => [ ...oldTags, v1() ]);
   }
-  ref.current = tags;
+  registerTags(tags);
   const showTags = () => {
     alert(JSON.stringify(suggestions()));
   }
