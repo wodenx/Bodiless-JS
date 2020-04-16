@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import  { HTMLProps } from 'react';
+import { HTMLProps } from 'react';
 import {
   withContextActivator,
   withNode,
@@ -26,7 +26,7 @@ import {
   withoutProps,
 } from '@bodiless/core';
 import { flowRight } from 'lodash';
-import {withTagButton} from '../TagButton';
+import { withTagButton } from '../TagButton';
 // Type of the data used by this component.
 // @Todo: Determine if this type is necessary?
 type Props = HTMLProps<HTMLElement>;
@@ -42,26 +42,25 @@ const emptyValue = {
 // - anything relying on the context (activator, indicator) must be
 //   *after* `withEditButton()` as this establishes the context.
 // - withData must be *after* the data handlers are defiend.
-// @todo: revist review the markup produced by adding a tag: Determine what we need to do with withData?
+// @todo: revist review the markup produced by adding a tag:
+// Determine what we need to do with withData?
 // @todo revisit suggestions as they need to be passed at runtime?
-export const asTaggableItem = (nodeKey?: string, suggestions?: any) => {
-  return flowRight(
-    withNodeKey(nodeKey),
-    withNode,
-    withNodeDataHandlers(emptyValue),
-    ifReadOnly(withoutProps(['setComponentData'])),
-    ifEditable(
-      withTagButton({suggestions}),
-      withContextActivator('onClick'),
-      withLocalContextMenu,
-    ),
-    withoutProps([
-      'suggestions',
-      'inputPlaceHolder',
-      'allowNew',
-      'noSuggestionsText',
-      'componentData',
-    ]),
-  ) as Bodiless<Props, Props & Partial<WithNodeProps>>;
-};
+export const asTaggableItem = (nodeKey?: string, suggestions?: any) => flowRight(
+  withNodeKey(nodeKey),
+  withNode,
+  withNodeDataHandlers(emptyValue),
+  ifReadOnly(withoutProps(['setComponentData'])),
+  ifEditable(
+    withTagButton({ suggestions }),
+    withContextActivator('onClick'),
+    withLocalContextMenu,
+  ),
+  withoutProps([
+    'suggestions',
+    'inputPlaceHolder',
+    'allowNew',
+    'noSuggestionsText',
+    'componentData',
+  ]),
+) as Bodiless<Props, Props & Partial<WithNodeProps>>;
 export default asTaggableItem;

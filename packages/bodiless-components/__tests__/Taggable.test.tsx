@@ -21,7 +21,7 @@ const suggestions = [
 ];
 
 const props = {
-  suggestions: suggestions,
+  suggestions,
   allowNew: true,
   inputPlaceHolder: 'placeholder',
   noSuggestionsText: 'no suggestions',
@@ -72,7 +72,6 @@ describe('Filter item interactions', () => {
     expect(reactTags.prop('placeholder')).toBe('placeholder');
     expect(reactTags.prop('noSuggestionsText')).toBe('no suggestions');
     expect(reactTags.prop('allowNew')).toBe(true);
-
   });
 
   it('context form should have input fields with cancel and done buttons', () => {
@@ -81,7 +80,7 @@ describe('Filter item interactions', () => {
     // Test for input fields:
     const tagsInputFields = menuForm.find('input');
     expect(tagsInputFields).toHaveLength(2);
-    expect(tagsInputFields.at(0).prop('value')).toBeNull;
+    expect(tagsInputFields.at(0).prop('value')).toBeNull();
     expect(tagsInputFields.at(0).prop('type')).toBe('hidden');
     expect(tagsInputFields.at(1).prop('placeholder')).toBe('placeholder');
 
@@ -108,7 +107,7 @@ describe('Filter item interactions', () => {
     // Test for input fields:
     const tagsInputFields = menuForm.find('input');
     expect(tagsInputFields).toHaveLength(2);
-    expect(tagsInputFields.at(0).prop('value')).toBeNull;
+    expect(tagsInputFields.at(0).prop('value')).toBeNull();
     expect(tagsInputFields.at(0).prop('type')).toBe('hidden');
 
     // Cancel and add buttons:
