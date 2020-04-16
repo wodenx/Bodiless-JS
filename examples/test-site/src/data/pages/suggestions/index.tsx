@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, forwardRef, useContext, createContext } from 'react';
+import React, { useRef, forwardRef, useContext, createContext, useState } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 
@@ -34,14 +34,15 @@ const withRegisterTags = (Component: any) => (props: any) => {
   return <Component {...props} registerTags={registerTags} />;
 }
 
-const TagComponent = ({ suggestions, children, registerTags }) => {
+const TagComponent = ({ suggestions, refreshSuggestions, children, registerTags }) => {
   const [ tags, setTags ] = React.useState<string[]>([]);
   const addRandomTag = () => {
     setTags(oldTags => [ ...oldTags, v1() ]);
   }
   registerTags(tags);
   const showTags = () => {
-    alert(JSON.stringify(suggestions()));
+    // alert(JSON.stringify(suggestions()));
+    refreshSuggestions();
   }
   return(
     <TagComponentDiv>
@@ -62,13 +63,21 @@ type Props = {
 
 const TagContainerElement = withRegisterTags(TagComponent);
 
+const SuggestionList = ({ suggestions }) => (
+  <pre>
+    {JSON.stringify(suggestions)}
+  </pre>
+);
+
 const TagContainer = ({ names }: Props) => {
   const refs = useRef([]);
   const suggestions = () => (
     refs.current.reduce((acc, ref) => [...acc, ...ref.current ], [])
   );
+  const refreshSuggestions = () => setSuggestionList(suggestions());
+  const [ suggestionList, setSuggestionList ] = useState();
   const elements = names.map(name => (
-    <TagContainerElement suggestions={suggestions}>{name}</TagContainerElement>
+    <TagContainerElement suggestions={suggestions} refresh={refreshSuggestions}>{name}</TagContainerElement>
   ));
 
   return (
@@ -76,6 +85,7 @@ const TagContainer = ({ names }: Props) => {
       <div>
         {elements}
       </div>
+      <SuggestionList suggestions={suggestionList} />
     </TagSuggestionContext.Provider>
   );
 }

@@ -20,22 +20,27 @@ import React, {
   FC,
   ComponentType as CT,
 } from 'react';
-import { isEmpty } from 'lodash';
+import { v1 } from 'uuid';
 import { TagType } from '@bodiless/core';
 import { FBGContextOptions } from './types';
 
 type FBGContextType = {
   getSuggestions: () => TagType[],
-  registerSuggestion: (tags: TagType) => any,
+  useRegisterSuggestions: () => (tags: TagType[]) => void,
   setSelectedTag: (tag?: TagType) => void,
   setSelectedNode: (nodeId?: string) => void,
   selectedTag?: TagType,
   selectedNode?: string,
 };
 
+type RefType = {
+  id: string,
+  tags: TagType[],
+};
+
 const FBGContext = createContext<FBGContextType>({
   getSuggestions: () => [],
-  registerSuggestion: () => {},
+  useRegisterSuggestions: () => () => undefined,
   setSelectedTag: () => {},
   setSelectedNode: () => {},
 });
@@ -51,27 +56,31 @@ const FBGProvider: FC<FBGContextOptions> = ({
 
   const refs = useRef<any>([]);
 
-  const getSuggestions = (): TagType[] => (
-    refs.current.reduce((acc: any, ref: any) => [...acc, ref.current], [])
-  );
-
-  const registerSuggestion = (suggestion: TagType) => {
-    const allSuggestions = getSuggestions();
-    const ref = useRef<TagType>();
-
-    if (suggestion.id && !allSuggestions.some(_suggestion => _suggestion.id === suggestion.id)) {
-      ref.current = suggestion;
-      refs.current.push(ref);
-    }
+  const getSuggestions = (): TagType[] => {
+    const allSuggestions = refs.current.reduce(
+      (acc: any, ref: any) => [...acc, ...ref.current.tags],
+      suggestions || [],
+    );
+    return allSuggestions;
   };
 
-  if (suggestions && !isEmpty(suggestions)) {
-    suggestions.forEach(registerSuggestion);
-  }
+
+  const useRegisterSuggestions = () => {
+    const newRef = useRef({
+      id: v1(),
+      tags: [] as TagType[],
+    });
+    if (!refs.current.find((ref: any) => ref.current.id === newRef.current.id)) {
+      refs.current.push(newRef);
+    }
+    return (tags: TagType[]) => {
+      newRef.current.tags = tags;
+    };
+  };
 
   const newValue = {
     getSuggestions,
-    registerSuggestion,
+    useRegisterSuggestions,
     selectedTag,
     selectedNode,
     setSelectedTag,
@@ -92,11 +101,9 @@ const withFBGContext = <P extends object>(
       <Component {...props} />
     </FBGProvider>
   );
-
 const withRegisterTags = (Component: any) => (props: any) => {
-  const { registerSuggestion } = useFBGContext();
-
-  return <Component {...props} registerSuggestion={registerSuggestion} />;
+  const { useRegisterSuggestions } = useFBGContext();
+  return <Component {...props} registerSuggestion={useRegisterSuggestions()} />;
 };
 
 const withFBGSuggestions = <P extends object>({

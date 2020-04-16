@@ -83,7 +83,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
   const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) => {
     const { tag, nodeId } = useItemsAccessors();
     const {
-      registerSuggestion,
+      useRegisterSuggestions,
       selectedTag,
       selectedNode,
       setSelectedNode,
@@ -98,7 +98,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     const isTagSelected = Boolean(selectedTag && selectedTag.id === tag.id);
     const isNodeSelected = Boolean(selectedNode === nodeId);
 
-    registerSuggestion(tag);
+    useRegisterSuggestions()([tag]);
 
     const LabelComponent = (
       { labelText, ...rest }: TagLabelProps,

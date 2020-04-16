@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import React, { FC } from 'react';
+import React, { FC, useState, useRef } from 'react';
 import { flow } from 'lodash';
 // import { observer } from 'mobx-react-lite';
 import {
@@ -28,30 +28,41 @@ const AddButton = addClasses('px-2 mb-2 border border-gray-600')(Button);
 const TagComponent = addClasses('px-3 my-2 mr-2 mb-2 border border-gray-600 inline-block')(Div);
 
 type Props = {
-  registerSuggestion: (tags: TagType) => any,
+  registerSuggestions: (tags: TagType[]) => any,
 };
 
-const ContextLoggerBase: FC<Props> = ({ registerSuggestion }) => {
-  const { getSuggestions, selectedTag } = useFBGContext();
-  const allSuggestions = getSuggestions();
+const ContextLoggerBase: FC<Props> = () => {
+  const { getSuggestions, useRegisterSuggestions, selectedTag } = useFBGContext();
+  const [allSuggestions, setAllSuggestions] = useState(getSuggestions());
+  const registerSuggestions = useRegisterSuggestions();
+
+  // const [randomSuggestions, setRandomSuggestions] = useState<TagType[]>();
+  // registerSuggestions(randomSuggestions);
+
+  const randomSuggestions = useRef([] as TagType[]);
 
   const tagElements = allSuggestions.map(tag => (
     <TagComponent key={tag.id}>{ tag.name || ' - ' }</TagComponent>
   ));
 
-  /* eslint-disable no-bitwise, max-len */
   /*
    * TODO: Error: Invalid hook call. Hooks can only be called inside of the body of a function component.
    * This happenes in both cases: when we pass registerSuggestion as a prop
    * and if we get it from useFBGContext()
    */
-  const addRandomTag = () => (
-    registerSuggestion(new BodilessTag(`#${(Math.random() * 0xFFFFFF << 0).toString(16)}`))
-  );
+  const addRandomTag = () => {
+    /* eslint-disable no-bitwise, max-len */
+    const newTag = new BodilessTag(`#${(Math.random() * 0xFFFFFF << 0).toString(16)}`);
+    randomSuggestions.current.push(newTag);
+    registerSuggestions(randomSuggestions.current);
+    setAllSuggestions(getSuggestions());
+  };
+
 
   return (
     <Div>
       <AddButton onClick={() => addRandomTag()}>Add Random Tag</AddButton>
+      <AddButton onClick={() => setAllSuggestions(getSuggestions())}>Refresh</AddButton>
       <br />
       <strong>Selected Tag: </strong>
       <pre>
