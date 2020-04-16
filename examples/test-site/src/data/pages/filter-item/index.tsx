@@ -25,8 +25,8 @@ const suggestions = [
   { id: 2, name: 'Lemons' },
   { id: 3, name: 'Apricots' },
 ];
-
-const TaggableItem = flow(asTaggableItem())('span');
+const inputAttributes = {name:'react-tags'};
+const TaggableItem = flow(asTaggableItem('tags'))('span');
 export default (props: any) => (
   <Page {...props}>
     <Layout>
@@ -42,6 +42,7 @@ export default (props: any) => (
           inputPlaceHolder="Add or create"
           allowNew
           noSuggestionsText="No suggestions found"
+          inputAttributes={inputAttributes}
         >
           <Editable nodeKey="text" placeholder="Editable Text" />
         </TaggableItem>
