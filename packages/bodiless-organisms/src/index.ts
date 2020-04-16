@@ -43,9 +43,7 @@ export {
 
 
 export {
-  Tout,
   ToutClean,
-  asEditableTout,
   asTestableTout,
 } from './components/Touts';
 
@@ -67,11 +65,11 @@ export {
 } from './components/Touts.tokens';
 
 export {
-  FilterByGroupTag,
   FilterByGroupClean,
   asTestableFilterByGroup,
-  withFilterSuggestions,
-  useFilterByGroupContext,
+  withFBGSuggestions,
+  useFBGContext,
+  withRegisterTags,
 } from './components/FilterByGroup';
 
 export {

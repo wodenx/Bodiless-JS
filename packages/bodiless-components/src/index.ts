@@ -39,6 +39,7 @@ import {
   withToggleButton,
 } from './Toggle';
 import withEditPlaceholder from './Placeholder';
+import { TagButtonOptions, withTagButton } from './TagButton';
 
 export {
   asBodilessLink,
@@ -68,4 +69,6 @@ export {
   asBodilessHelmet,
   withEditPlaceholder,
   withEvent,
+  withTagButton,
+  TagButtonOptions,
 };

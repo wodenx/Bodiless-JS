@@ -25,8 +25,6 @@ import {
   ifEditable,
   withContextActivator,
   withLocalContextMenu,
-  withTagButton,
-  TagButtonOptions,
 } from '@bodiless/core';
 import {
   designable,
@@ -44,10 +42,13 @@ import {
   asEditableList,
   withBasicSublist,
   ListTitleProps,
+  withTagButton,
+  TagButtonOptions,
 } from '@bodiless/components';
 import { FilterComponents, FilterProps, TagLabelProps } from './types';
-import { useFilterByGroupContext } from './FilterByGroupContext';
-import { useItemsAccessors } from './FilterTagsModel';
+import { useItemsAccessors } from './FilterByGroupModel';
+
+import { useFBGContext } from './FBGContext';
 
 const filterComponentsStart:FilterComponents = {
   FilterCategory: asEditable('category_name', 'Category Name')(H3),
@@ -56,6 +57,17 @@ const filterComponentsStart:FilterComponents = {
   FilterGroupItemLabel: Label,
   FilterGroupItemPlaceholder: Label,
   FilterInputWrapper: Div,
+};
+
+const useWithTagButton = () => {
+  const { getSuggestions } = useFBGContext();
+
+  const tagButtonOptions: TagButtonOptions = {
+    getSuggestions,
+    allowMultipleTags: false,
+  };
+
+  return withTagButton(tagButtonOptions);
 };
 
 const FilterBase: FC<FilterProps> = ({ components }) => {
@@ -69,14 +81,24 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
   } = components;
 
   const TagListTitleBase = (props: HTMLProps<HTMLInputElement> & ListTitleProps) => {
-    const context = useFilterByGroupContext();
-    const { tag, getTag, nodeId } = useItemsAccessors();
-    const { selectedTag, selectedNode } = context;
+    const { tag, nodeId } = useItemsAccessors();
+    const {
+      registerSuggestion,
+      selectedTag,
+      selectedNode,
+      setSelectedNode,
+      setSelectedTag,
+    } = useFBGContext();
 
-    context.addTagGetter(() => [ getTag() ]);
+    const onSelect = () => {
+      setSelectedNode(nodeId);
+      setSelectedTag(tag);
+    };
 
     const isTagSelected = Boolean(selectedTag && selectedTag.id === tag.id);
     const isNodeSelected = Boolean(selectedNode === nodeId);
+
+    registerSuggestion(tag);
 
     const LabelComponent = (
       { labelText, ...rest }: TagLabelProps,
@@ -91,7 +113,7 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
           name="filter-item"
           value={tag.id}
           id={nodeId}
-          onChange={() => context.setSelectedTag(tag, nodeId)}
+          onChange={() => onSelect()}
           checked={isNodeSelected && isTagSelected}
         />
         <LabelComponent htmlFor={nodeId} labelText={tag.name} />
@@ -106,27 +128,16 @@ const FilterBase: FC<FilterProps> = ({ components }) => {
     }),
   )(List);
 
-  const tagButtonOptions: TagButtonOptions = {
-    suggestions: [
-      { id: '1', name: 'Test Tag 1' },
-      { id: '2', name: 'Test Tag 2' },
-      { id: '3', name: 'Test Tag 3' },
-      { id: '4', name: 'Test Tag 4' },
-      { id: '5', name: 'Test Tag 5' },
-    ],
-    allowMultipleTags: false,
-  };
-
   const TagTitle = flow(
     observer,
     withoutProps(['componentData']),
     ifEditable(
-      withTagButton(tagButtonOptions),
+      useWithTagButton(),
       withContextActivator('onClick'),
       withLocalContextMenu,
     ),
     ifReadOnly(withoutProps(['setComponentData'])),
-    withNodeDataHandlers({ id: '', name: '' }),
+    withNodeDataHandlers({ tags: [] }),
     withNode,
     withNodeKey('tag'),
   )(TagListTitleBase);

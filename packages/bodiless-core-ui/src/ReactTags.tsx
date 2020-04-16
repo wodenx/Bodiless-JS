@@ -1,9 +1,9 @@
 import React from 'react';
-import ReactTagsBase, { ReactTagsProps } from 'react-tag-autocomplete';
+import { ReactTagsField, ReactTagsFieldProps } from '@bodiless/core';
 
 import './ReactTags.css';
 
-const ReactTags = (props: ReactTagsProps) => {
+const ReactTags = (props: ReactTagsFieldProps) => {
   const classes = {
     root: 'bl-react-tags',
     rootFocused: 'is-focused',
@@ -18,7 +18,7 @@ const ReactTags = (props: ReactTagsProps) => {
   };
 
   return (
-    <ReactTagsBase
+    <ReactTagsField
       classNames={classes}
       autoresize={false}
       {...props}

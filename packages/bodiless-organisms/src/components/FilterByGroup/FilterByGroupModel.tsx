@@ -12,17 +12,20 @@
  * limitations under the License.
  */
 
-import { v4 } from 'uuid';
-import { TagType } from './types';
+import { isEmpty } from 'lodash';
+import { useNode } from '@bodiless/core';
+import { NodeTagType } from './types';
 
-class Tag implements TagType {
-  readonly id: string = v4();
+const useItemsAccessors = () => {
+  const { node } = useNode<NodeTagType>();
 
-  name: string = '';
+  return {
+    tag: isEmpty(node.data.tags) ? { id: '', name: '' } : node.data.tags[0],
+    nodeId: node.path[node.path.length - 2],
+  };
+};
 
-  constructor(name: string = '') {
-    this.name = name;
-  }
-}
-
-export default Tag;
+export default useItemsAccessors;
+export {
+  useItemsAccessors,
+};

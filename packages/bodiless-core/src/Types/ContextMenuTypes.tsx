@@ -49,7 +49,7 @@ export type UI = {
   ComponentFormError?: ComponentType<HTMLProps<HTMLDivElement>> | string;
   Form?: ComponentType<HTMLProps<HTMLFormElement>> | string;
   Tooltip?: FC<Tooltip['props']>;
-  ReactTags?: ComponentType<ReactTagsProps>;
+  ReactTags?: ComponentType<Omit<ReactTagsProps, 'handleDelete' | 'handleAddition'>>;
   // @TODO: Add other controls from informed.
 };
 

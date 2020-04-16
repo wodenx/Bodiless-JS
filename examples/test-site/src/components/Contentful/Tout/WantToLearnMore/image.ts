@@ -12,20 +12,9 @@
  * limitations under the License.
  */
 
-import { useNode } from '@bodiless/core';
-import { TagType } from './types';
+import Image from './SiteBuildGuide.jpg';
 
-const useItemsAccessors = () => {
-  const { node } = useNode<TagType>();
-
-  return {
-    tag: node.data || { id: '', name: '' },
-    getTag: () => node.data || { id: '', name: ''},
-    nodeId: node.path[node.path.length - 2],
-  };
-};
-
-export default useItemsAccessors;
-export {
-  useItemsAccessors,
+export default {
+  src: Image,
+  alt: 'Site Build Guide',
 };
