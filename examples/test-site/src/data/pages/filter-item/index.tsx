@@ -19,14 +19,14 @@ import { Editable, asTaggableItem } from '@bodiless/components';
 import { flow } from 'lodash';
 import Layout from '../../../components/Layout';
 
-const suggestions = [
+const getSuggestions = () => [
   { id: 0, name: 'Bananas' },
   { id: 1, name: 'Mangos' },
   { id: 2, name: 'Lemons' },
   { id: 3, name: 'Apricots' },
 ];
 const inputAttributes = {name:'react-tags'};
-const TaggableItem = flow(asTaggableItem('tags'))('span');
+const TaggableItem = flow(asTaggableItem())('span');
 export default (props: any) => (
   <Page {...props}>
     <Layout>
@@ -38,8 +38,8 @@ export default (props: any) => (
       <div className="my-3">
         <TaggableItem
           nodeKey="tags"
-          suggestions={suggestions}
-          inputPlaceHolder="Add or create"
+          getSuggestions={getSuggestions}
+          placeholder="Add or create"
           allowNew
           noSuggestionsText="No suggestions found"
           inputAttributes={inputAttributes}

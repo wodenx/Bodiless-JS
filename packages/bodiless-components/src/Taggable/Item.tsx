@@ -51,16 +51,16 @@ export const asTaggableItem = (nodeKey?: string, suggestions?: any) => flowRight
   withNodeDataHandlers(emptyValue),
   ifReadOnly(withoutProps(['setComponentData'])),
   ifEditable(
-    withTagButton({ suggestions }),
+    withTagButton(),
     withContextActivator('onClick'),
     withLocalContextMenu,
   ),
   withoutProps([
-    'suggestions',
-    'inputPlaceHolder',
+    'getSuggestions',
     'allowNew',
     'noSuggestionsText',
     'componentData',
+    'inputAttributes',
   ]),
 ) as Bodiless<Props, Props & Partial<WithNodeProps>>;
 export default asTaggableItem;
