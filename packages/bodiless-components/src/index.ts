@@ -41,6 +41,7 @@ import {
 } from './Toggle';
 import withEditPlaceholder from './Placeholder';
 import { TagButtonOptions, withTagButton } from './TagButton';
+import {TestFilterSelector} from './filterHOC';
 
 export {
   asBodilessLink,
@@ -73,4 +74,5 @@ export {
   withTagButton,
   TagButtonOptions,
   asTaggableItem,
+  TestFilterSelector
 };
