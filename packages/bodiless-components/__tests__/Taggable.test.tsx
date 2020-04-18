@@ -25,7 +25,7 @@ const props = {
   allowNew: true,
   placeholder: 'placeholder',
   noSuggestionsText: 'no suggestions',
-  inputAttributes: {name:'react-tags'},
+  inputAttributes: { name: 'react-tags' },
 };
 
 const testTag = { id: 0, name: 'bananas' };
@@ -138,7 +138,7 @@ describe('Filter item interactions', () => {
   });
 
   it('context form should not save content when cancel is clicked', () => {
-    const sampleTag = {id:1, name: 'bananas' };
+    const sampleTag = { id: 1, name: 'bananas' };
     const inputField = menuForm.find('input[name="react-tags"]');
     inputField.simulate('change', { target: { value: [sampleTag] } });
     expect(wrapper.find('Popup[visible=true]')).toHaveLength(2);
