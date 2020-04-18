@@ -31,7 +31,6 @@ import { withTagButton } from '../TagButton';
 // @Todo: Determine if this type is necessary?
 type Props = HTMLProps<HTMLElement>;
 
-
 const emptyValue = {
   tags: '',
 };
@@ -45,7 +44,7 @@ const emptyValue = {
 // @todo: revist review the markup produced by adding a tag:
 // Determine what we need to do with withData?
 // @todo revisit suggestions as they need to be passed at runtime?
-export const asTaggableItem = (nodeKey?: string, suggestions?: any) => flowRight(
+export const asTaggableItem = (nodeKey?: string) => flowRight(
   withNodeKey(nodeKey),
   withNode,
   withNodeDataHandlers(emptyValue),
