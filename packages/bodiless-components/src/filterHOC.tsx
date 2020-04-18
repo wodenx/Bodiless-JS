@@ -6,27 +6,33 @@ import { difference, flowRight, flow } from 'lodash';
 
 type ToggleHook = (props: any) => boolean;
 
-const withFlowToggle = (useToggle: ToggleHook) => <P extends object, Q extends object>(
+const withFlowToggle = (useToggle: ToggleHook) => <
+  P extends object,
+  Q extends object
+>(
   On: ComponentType<P>,
   Off: ComponentType<Q>,
-) => observer(
-    (props: P & Q) => (
-      useToggle(props) ? <On {...props} /> : <Off {...props} />
-    ),
+) =>
+  observer((props: P & Q) =>
+    useToggle(props) ? <On {...props} /> : <Off {...props} />,
   );
 
-const ifToggledOn = (useToggle: ToggleHook) => <H extends Function>(...hocs: Function[]) => (
+const ifToggledOn = (useToggle: ToggleHook) => <H extends Function>(
+  ...hocs: Function[]
+) => (
   Component: ComponentType<any>,
   //  @ts-ignore Ex  ct ed at least 1  rg uments, but got 0 or more.ts(2557)
 ) => withFlowToggle(useToggle)(flowRight(...hocs)(Component), Component);
 
-const ifToggledOff = (useToggle: ToggleHook) => <H extends Function>(...hocs: Function[]) => (
+const ifToggledOff = (useToggle: ToggleHook) => <H extends Function>(
+  ...hocs: Function[]
+) => (
   Component: ComponentType<any>,
   // @ts-ignore Ex  ct ed at least   a rguments, but got 0 or more.ts(2557)
 ) => withFlowToggle(useToggle)(Component, flowRight(...hocs)(Component));
 
 type TagsData = {
-  tags: string[],
+  tags: string[];
 };
 
 const useTagsAccessors = () => {
@@ -37,10 +43,12 @@ const useTagsAccessors = () => {
 };
 
 type ToggleByTagsProps = {
-  selectedTags: string[],
+  selectedTags: string[];
 };
 
-const useToggleByTags = <P extends object>({ selectedTags }: P & ToggleByTagsProps) => {
+const useToggleByTags = <P extends object>({
+  selectedTags,
+}: P & ToggleByTagsProps) => {
   const itemTags = useTagsAccessors().getTags();
   return difference(selectedTags, itemTags).length === 0;
 };
@@ -48,19 +56,13 @@ const useToggleByTags = <P extends object>({ selectedTags }: P & ToggleByTagsPro
 const ifTagsSelected = ifToggledOn(useToggleByTags);
 const ifTagsNotSelected = ifToggledOff(useToggleByTags);
 
-const withFilterByTags = ifTagsSelected(
-  replaceWith(Fragment),
-);
+const withFilterByTags = ifTagsSelected(replaceWith(Fragment));
 
 export { ifTagsSelected, withFilterByTags, ifTagsNotSelected };
 
-
 // For each of these we'll have to create a mock node (or json file)
 // which provides the correct item tag
-const FilterableItem = flow(
-  withFilterByTags,
-  withNode,
-)('div');
+const FilterableItem = flow(withFilterByTags, withNode)('div');
 
 export const TestFilterSelector = () => {
   const [tags, setTags] = useState<string[]>([]);
@@ -75,14 +77,19 @@ export const TestFilterSelector = () => {
       </div>
       <div>
         <h2>Filtered Components</h2>
-        <FilterableItem nodeKey="foo" selectedTags={tags}>foo</FilterableItem>
-        <FilterableItem nodeKey="bar" selectedTags={tags}>bar</FilterableItem>
-        <FilterableItem nodeKey="baz" selectedTags={tags}>baz</FilterableItem>
-        <FilterableItem nodeKey="bat" selectedTags={tags}>bat</FilterableItem>
+        <FilterableItem nodeKey="foo" selectedTags={tags}>
+          foo
+        </FilterableItem>
+        <FilterableItem nodeKey="bar" selectedTags={tags}>
+          bar
+        </FilterableItem>
+        <FilterableItem nodeKey="baz" selectedTags={tags}>
+          baz
+        </FilterableItem>
+        <FilterableItem nodeKey="bat" selectedTags={tags}>
+          bat
+        </FilterableItem>
       </div>
     </div>
-  )
-
-}
-
-
+  );
+};

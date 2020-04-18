@@ -25,7 +25,7 @@ const getSuggestions = () => [
   { id: 2, name: 'Lemons' },
   { id: 3, name: 'Apricots' },
 ];
-const inputAttributes = {name:'react-tags'};
+const inputAttributes = { name: 'react-tags' };
 const TaggableItem = flow(asTaggableItem())('span');
 export default (props: any) => (
   <Page {...props}>
