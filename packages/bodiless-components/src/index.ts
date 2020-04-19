@@ -67,6 +67,4 @@ export {
   withEvent,
   withTagButton,
   TagButtonOptions,
-  asTaggableItem,
-  TestFilterSelector,
 };
