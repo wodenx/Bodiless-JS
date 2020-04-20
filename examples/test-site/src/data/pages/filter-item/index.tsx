@@ -14,7 +14,11 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
-import { Editable, asTaggableItem } from '@bodiless/components';
+import {
+  Editable,
+  asTaggableItem,
+  TestFilterSelector,
+} from '@bodiless/components';
 
 import { flow } from 'lodash';
 import Layout from '../../../components/Layout';
@@ -46,6 +50,13 @@ export default (props: any) => (
         >
           <Editable nodeKey="text" placeholder="Editable Text" />
         </TaggableItem>
+      </div>
+
+      <div className="my-3">
+        <TaggableItem />
+         <TaggableItem />
+          <TaggableItem />
+
       </div>
     </Layout>
   </Page>
