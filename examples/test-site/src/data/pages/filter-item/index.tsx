@@ -53,10 +53,7 @@ export default (props: any) => (
       </div>
 
       <div className="my-3">
-        <TaggableItem />
-         <TaggableItem />
-          <TaggableItem />
-
+      <TestFilterSelector />
       </div>
     </Layout>
   </Page>
