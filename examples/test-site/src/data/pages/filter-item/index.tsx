@@ -11,17 +11,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
   Editable,
   asTaggableItem,
-  TestFilterSelector,
+  asFilterableItem,
+  withFilterByTags,
 } from '@bodiless/components';
-
+import { H2, Button, addClasses } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import Layout from '../../../components/Layout';
+
+const TagButton = addClasses('px-2 mb-2 mr-2 border border-gray-600')(Button);
 
 const getSuggestions = () => [
   { id: 0, name: 'Bananas' },
@@ -30,7 +33,48 @@ const getSuggestions = () => [
   { id: 3, name: 'Apricots' },
 ];
 const inputAttributes = { name: 'react-tags' };
-const TaggableItem = flow(asTaggableItem())('span');
+const TaggableItem = flow(withFilterByTags, asTaggableItem())('span');
+const TaggableFilterSelector = () => {
+  const [tags, setTags] = useState<string[]>([]);
+  return (
+    <div>
+      <div>
+        <H2>Select a tag to filter by</H2>
+        <TagButton id="show-foo" type="button" onClick={() => setTags(['foo'])}>
+          foo
+        </TagButton>
+        <TagButton id="show-bar" type="button" onClick={() => setTags(['bar'])}>
+          bar
+        </TagButton>
+        <TagButton id="show-baz" type="button" onClick={() => setTags(['baz'])}>
+          baz
+        </TagButton>
+        <TagButton id="show-bat" type="button" onClick={() => setTags(['bat'])}>
+          bat
+        </TagButton>
+        <TagButton id="show-all" type="button" onClick={() => setTags([])}>
+          All
+        </TagButton>
+      </div>
+      <div>
+        <h2>Filtered Components</h2>
+        <TaggableItem nodeKey="foo" selectedTags={tags} id="foo">
+          foo
+        </TaggableItem>
+        <TaggableItem nodeKey="bar" selectedTags={tags} id="bar">
+          bar
+        </TaggableItem>
+        <TaggableItem nodeKey="baz" selectedTags={tags} id="baz">
+          baz
+        </TaggableItem>
+        <TaggableItem nodeKey="bat" selectedTags={tags} id="bat">
+          bat
+        </TaggableItem>
+      </div>
+    </div>
+  );
+};
+
 export default (props: any) => (
   <Page {...props}>
     <Layout>
@@ -53,7 +97,7 @@ export default (props: any) => (
       </div>
 
       <div className="my-3">
-      <TestFilterSelector />
+        <TaggableFilterSelector />
       </div>
     </Layout>
   </Page>

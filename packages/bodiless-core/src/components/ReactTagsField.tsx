@@ -39,7 +39,7 @@ export type ReactTagsFieldProps = {
 
 const ReactTagsField = (props: ReactTagsFieldProps) => {
   const formApi = useFormApi();
-  const currentTags = formApi.getValue<TagType[]>('tags');
+  const currentTags = formApi.getValue<TagType[]>('tags') || [];
   const { allowMultipleTags, ...rest } = props;
 
   const handleAddition = (tag: TagType) => {

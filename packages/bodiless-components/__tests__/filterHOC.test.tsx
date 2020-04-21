@@ -1,11 +1,16 @@
-import React, { useState, ComponentType, FC } from 'react';
+import React, { useState, FC } from 'react';
 import { flow } from 'lodash';
 import { withNode, DefaultContentNode, NodeProvider } from '@bodiless/core';
 import { mount } from 'enzyme';
 
 import { withFilterByTags } from '../src/filterHOC';
 
-const testTags = ['foo', 'bar', 'baz', 'bat'];
+const testTags = [
+  { id: 0, name: 'foo' },
+  { id: 1, name: 'bar' },
+  { id: 2, name: 'baz' },
+  { id: 3, name: 'bat' },
+];
 const getMockNode = () => {
   const getters = {
     getNode: jest.fn((path: string[]) => ({ tags: path.slice(-1) })),
@@ -52,6 +57,7 @@ const TestFilterSelector = () => {
 describe('withFilterByTags', () => {
   it('Hides all items which do not match selected tags', () => {
     const wrapper = mount(<TestFilterSelector />);
+    console.log(wrapper.debug());
     wrapper.find('#show-foo').simulate('click');
     expect(wrapper.find('div#foo')).toHaveLength(1);
     expect(wrapper.find('div#bar')).toHaveLength(0);
