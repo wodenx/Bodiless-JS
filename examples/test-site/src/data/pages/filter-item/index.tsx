@@ -17,23 +17,22 @@ import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
   Editable,
   asTaggableItem,
-  asFilterableItem,
   withFilterByTags,
 } from '@bodiless/components';
-import { H2, Button, addClasses } from '@bodiless/fclasses';
+import { H2, Span, Button, addClasses } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import Layout from '../../../components/Layout';
 
 const TagButton = addClasses('px-2 mb-2 mr-2 border border-gray-600')(Button);
-
+const TagSpan = addClasses('px-2 mb-2 mr-2')(Span);
 const getSuggestions = () => [
   { id: 0, name: 'Bananas' },
   { id: 1, name: 'Mangos' },
   { id: 2, name: 'Lemons' },
   { id: 3, name: 'Apricots' },
 ];
-const inputAttributes = { name: 'react-tags' };
-const TaggableItem = flow(withFilterByTags, asTaggableItem())('span');
+const TaggableNonFilterableItem = flow(asTaggableItem())('span');
+const TaggableFilterableItem = flow(withFilterByTags, asTaggableItem())(TagSpan);
 const TaggableFilterSelector = () => {
   const [tags, setTags] = useState<string[]>([]);
   return (
@@ -58,18 +57,18 @@ const TaggableFilterSelector = () => {
       </div>
       <div>
         <h2>Filtered Components</h2>
-        <TaggableItem nodeKey="foo" selectedTags={tags} id="foo">
+        <TaggableFilterableItem nodeKey="foo" selectedTags={tags} id="foo">
           foo
-        </TaggableItem>
-        <TaggableItem nodeKey="bar" selectedTags={tags} id="bar">
+        </TaggableFilterableItem>
+        <TaggableFilterableItem nodeKey="bar" selectedTags={tags} id="bar">
           bar
-        </TaggableItem>
-        <TaggableItem nodeKey="baz" selectedTags={tags} id="baz">
+        </TaggableFilterableItem>
+        <TaggableFilterableItem nodeKey="baz" selectedTags={tags} id="baz">
           baz
-        </TaggableItem>
-        <TaggableItem nodeKey="bat" selectedTags={tags} id="bat">
+        </TaggableFilterableItem>
+        <TaggableFilterableItem nodeKey="bat" selectedTags={tags} id="bat">
           bat
-        </TaggableItem>
+        </TaggableFilterableItem>
       </div>
     </div>
   );
@@ -84,16 +83,15 @@ export default (props: any) => (
         that an end user to hide it with a filter.
       </p>
       <div className="my-3">
-        <TaggableItem
+        <TaggableNonFilterableItem
           nodeKey="tags"
           getSuggestions={getSuggestions}
           placeholder="Add or create"
           allowNew
           noSuggestionsText="No suggestions found"
-          inputAttributes={inputAttributes}
         >
-          <Editable nodeKey="text" placeholder="Editable Text" />
-        </TaggableItem>
+          <Editable nodeKey="text" placeholder="Example Editable Text with Taggable Component." />
+        </TaggableNonFilterableItem>
       </div>
 
       <div className="my-3">
