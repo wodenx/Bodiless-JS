@@ -19,7 +19,9 @@ import {
   asTaggableItem,
   withFilterByTags,
 } from '@bodiless/components';
-import { H2, Span, Button, addClasses } from '@bodiless/fclasses';
+import {
+  H2, Span, Button, addClasses,
+} from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import Layout from '../../../components/Layout';
 
