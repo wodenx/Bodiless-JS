@@ -1,38 +1,17 @@
-import React, { ComponentType } from 'react';
-import { observer } from 'mobx-react-lite';
-import { withoutProps, TagType } from '@bodiless/core';
+import { withoutProps, ifToggledOn, ifToggledOff } from '@bodiless/core';
 import { replaceWith } from '@bodiless/fclasses';
 import { difference, flowRight } from 'lodash';
 import useTagsAccessors from './TagButton/TagModel';
-
-type ToggleHook = (props: any) => boolean;
-
-const withFlowToggle = (useToggle: ToggleHook) => <
-  P extends object,
-  Q extends object
->(
-    On: ComponentType<P>,
-    Off: ComponentType<Q>,
-  ) => observer((props: P & Q) => (useToggle(props) ? <On {...props} /> : <Off {...props} />));
-
-const ifToggledOn = (useToggle: ToggleHook) => <H extends Function>(
-  ...hocs: Function[]
-) => (
-    Component: ComponentType<any>,
-  //  @ts-ignore Ex  ct ed at least 1  rg uments, but got 0 or more.ts(2557)
-  ) => withFlowToggle(useToggle)(flowRight(...hocs)(Component), Component);
-
-const ifToggledOff = (useToggle: ToggleHook) => <H extends Function>(
-  ...hocs: Function[]
-) => (
-    Component: ComponentType<any>,
-  // @ts-ignore Ex  ct ed at least   a rguments, but got 0 or more.ts(2557)
-  ) => withFlowToggle(useToggle)(Component, flowRight(...hocs)(Component));
 
 type ToggleByTagsProps = {
   selectedTags: any[];
 };
 
+/**
+ * Determine which component to show based on selected tags.
+ * @param selectedTags
+ *  The selected tags to use.
+ */
 const useToggleByTags = <P extends object>({
   selectedTags,
 }: P & ToggleByTagsProps) => {

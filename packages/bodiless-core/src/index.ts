@@ -31,6 +31,8 @@ import {
   withLocalContextMenu,
   withContextActivator,
   withoutProps,
+  ifToggledOff,
+  ifToggledOn,
 } from './hoc';
 import { ifEditable, ifReadOnly, withEditToggle } from './withEditToggle';
 import { TMenuOption, PageEditContextInterface } from './PageEditContext/types';
@@ -86,6 +88,8 @@ export {
   withChild,
   withDefaultContent,
   withResetButton,
+  ifToggledOff,
+  ifToggledOn,
 };
 
 export type Bodiless<P, Q> = (C: ComponentType<P> | string) => ComponentType<Q>;
