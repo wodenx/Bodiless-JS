@@ -4,33 +4,30 @@ import {
   withNode,
   DefaultContentNode,
   NodeProvider,
-  TagType,
 } from '@bodiless/core';
 import { mount } from 'enzyme';
 import { withFilterByTags } from '../src/filterHOC';
-const mockItem = [
+
+const testTags = [
   { foo: { tags: [{ id: 0, name: 'foo' }] } },
   { bar: { tags: [{ id: 1, name: 'bar' }] } },
   { baz: { tags: [{ id: 1, name: 'baz' }] } },
   { bat: { tags: [{ id: 3, name: 'baz' }] } },
 ];
-// const testTags = {
-//   tags: [
-//     { id: 0, name: 'foo' },
-//     { id: 1, name: 'bar' },
-//     { id: 2, name: 'baz' },
-//     { id: 3, name: 'bat' },
-//   ],
-// };
-// const testTags = ['foo', 'bar', 'baz', 'bat'];
 const getMockNode = () => {
+  // @ts-ignore
   const getters = {
     getNode: jest.fn((path: string[]) => {
       console.log('path', path);
-      console.log(path.slice(-1));
-      return { tags: path.slice(-1) };
+      // @ts-ignore
+      return testTags[path[-1]];
     }),
-    getKeys: jest.fn(() => Object.keys(mockItem)),
+    getKeys: jest.fn(() => {
+      const keys: string[] = [];
+      testTags.forEach(t => keys.push(Object.keys(t)[0]));
+      // Return an array of keys ['foo', 'bar', 'baz', 'bat']
+      return keys;
+    }),
   };
   const actions = {
     setNode: jest.fn(),

@@ -41,6 +41,7 @@ const useToggleByTags = <P extends object>({
   const { getTags } = useTagsAccessors();
   const itemTags = getTags();
   const tags = itemTags.map(t => t.name);
+
   return difference(selectedTags, tags).length === 0;
 };
 
