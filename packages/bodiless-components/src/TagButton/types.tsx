@@ -15,7 +15,7 @@
 import { TagType } from '@bodiless/core';
 
 export type TagsNodeType = {
-  tags: TagType[];
+  tags: TagType[],
 };
 
 export type InputAttributes = {
@@ -23,14 +23,15 @@ export type InputAttributes = {
 };
 
 export type TagButtonProps = {
-  getSuggestions?: () => TagType[];
-  placeholder?: string;
-  noSuggestionsText?: string;
-  minQueryLength?: number;
-  allowNew?: boolean;
-  allowMultipleTags?: boolean;
+  getSuggestions?: () => TagType[],
+  placeholder?: string,
+  noSuggestionsText?: string,
+  minQueryLength?: number,
+  allowNew?: boolean,
+  allowMultipleTags?: boolean,
   inputAttributes?: InputAttributes,
   formTitle?: string,
   formBodyText?: string,
   seeAllText?: string,
+  autofocus?: boolean,
 };

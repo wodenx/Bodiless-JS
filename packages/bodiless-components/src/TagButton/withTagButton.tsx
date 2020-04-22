@@ -30,7 +30,6 @@ type Data = {
 export const tagButtonOptions:EditButtonOptions<TagButtonProps & HTMLProps<HTMLElement>, Data> = {
   icon: 'local_offer',
   name: 'Tag',
-  // @ts-ignore
   renderForm: ({ ui, componentProps }) => {
     const {
       ComponentFormTitle,
@@ -42,7 +41,7 @@ export const tagButtonOptions:EditButtonOptions<TagButtonProps & HTMLProps<HTMLE
     const {
       getSuggestions = () => [],
       placeholder = 'Select Tags',
-      noSuggestionsText = 'No maching tags found.',
+      noSuggestionsText = 'No matching tags found.',
       minQueryLength = 1,
       allowNew = true,
       allowMultipleTags = true,
@@ -50,6 +49,7 @@ export const tagButtonOptions:EditButtonOptions<TagButtonProps & HTMLProps<HTMLE
       formTitle = 'Tags',
       formBodyText = 'Select from available tags:',
       seeAllText = 'See all tags',
+      autofocus = false,
     } = componentProps;
 
     const suggestions = getSuggestions();
@@ -75,6 +75,7 @@ export const tagButtonOptions:EditButtonOptions<TagButtonProps & HTMLProps<HTMLE
           allowNew={allowNew}
           allowMultipleTags={allowMultipleTags}
           inputAttributes={inputAttributes}
+          autofocus={autofocus}
         />
         <ComponentFormUnwrapButton type="button" onClick={displayListOfTags}>
           {seeAllText}

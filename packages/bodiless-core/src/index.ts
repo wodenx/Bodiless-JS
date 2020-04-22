@@ -18,8 +18,11 @@ import PageEditContext from './PageEditContext';
 import asStatic from './asStatic';
 import { useEditContext, useUUID, useContextActivator } from './hooks';
 import withNode, { withNodeKey } from './withNode';
+import {
+  withDefaultContent,
+  withResetButton,
+} from './Contentful';
 import withEditButton, { EditButtonProps } from './withEditButton';
-import { withDefaultContent, withResetButton } from './Contentful';
 import contextMenuForm from './contextMenuForm';
 import withData from './withData';
 import NodeProvider, { useNode, useNodeDataHandlers } from './NodeProvider';

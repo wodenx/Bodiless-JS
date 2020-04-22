@@ -11,9 +11,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import Slider from './components/Slider';
-
 import {
   asBurgerSubMenu,
   asEditableBurgerSubMenu,
@@ -41,7 +38,6 @@ export {
   withSubmenu,
 } from './components/MainMenu/index';
 
-
 export {
   ToutClean,
   asTestableTout,
@@ -65,10 +61,23 @@ export {
 } from './components/Touts.tokens';
 
 export {
+  FilterByGroupClean,
+  asTestableFilterByGroup,
+  withFBGSuggestions,
+  useFilterByGroupContext,
+  withRegisterSuggestions,
+} from './components/FilterByGroup';
+
+export {
   asBurgerSubMenu,
   asEditableBurgerSubMenu,
   BurgerMenuClean,
   withBurgerSubmenu,
 };
 
-export { Slider };
+export {
+  BCarousel,
+  BAutoCarousel,
+  BCarouselClean,
+  asEditableCarousel,
+} from './components/Carousel';

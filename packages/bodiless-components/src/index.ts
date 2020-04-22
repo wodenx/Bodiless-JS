@@ -34,7 +34,7 @@ import asBodilessHelmet from './Helmet/Helemet';
 import withEvent from './GTM/gtm';
 import { withToggle, withToggleTo, withToggleButton } from './Toggle';
 import withEditPlaceholder from './Placeholder';
-import { TagButtonProps, withTagButton } from './TagButton';
+import { TagButtonProps, withTagButton, useTagsAccessors } from './TagButton';
 import { withFilterByTags } from './filterHOC';
 
 export {
@@ -69,4 +69,5 @@ export {
   TagButtonProps,
   asTaggableItem,
   withFilterByTags,
+  useTagsAccessors,
 };

@@ -25,7 +25,6 @@ export type FormBodyProps<P, D> = ContextMenuFormBodyProps<D> & {
   unwrap?: () => void;
   componentProps: P;
 };
-
 export type FormBodyRenderer<P, D> = (p: FormBodyProps<P, D>) => ReactNode;
 
 export type EditButtonProps<D> = {
