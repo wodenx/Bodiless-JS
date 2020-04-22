@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-// @ts-nocheck
 import React, { ComponentType } from 'react';
 import { observer } from 'mobx-react-lite';
 import { withoutProps, TagType } from '@bodiless/core';
@@ -32,7 +30,7 @@ const ifToggledOff = (useToggle: ToggleHook) => <H extends Function>(
   ) => withFlowToggle(useToggle)(Component, flowRight(...hocs)(Component));
 
 type ToggleByTagsProps = {
-  selectedTags: TagType[];
+  selectedTags: any[];
 };
 
 const useToggleByTags = <P extends object>({
@@ -41,7 +39,6 @@ const useToggleByTags = <P extends object>({
   const { getTags } = useTagsAccessors();
   const itemTags = getTags();
   const tags = itemTags.map(t => t.name);
-
   return difference(selectedTags, tags).length === 0;
 };
 
