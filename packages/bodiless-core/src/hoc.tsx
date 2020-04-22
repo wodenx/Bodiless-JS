@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 Johnson & Johnson
+ * Copyright © 2020 Johnson & Johnson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  */
 
 import { observer } from 'mobx-react-lite';
-import React, { ComponentType, ComponentType as CT } from 'react';
+import React, { ComponentType as CT } from 'react';
 import { flowRight, omit } from 'lodash';
 import { useContextActivator, useEditContext } from './hooks';
 import { useNodeDataHandlers } from './NodeProvider';
