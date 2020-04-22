@@ -18,7 +18,6 @@ import { TagsNodeType } from './types';
 
 const useTagsAccessors = () => {
   const { node } = useNode<TagsNodeType>();
-  console.log(JSON.stringify(node.data));
   return {
     getTags: () => node.data.tags || [],
     tag: isEmpty(node.data.tags) ? { id: '', name: '' } : node.data.tags[0],
