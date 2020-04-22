@@ -17,7 +17,7 @@ import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 
 import Layout from '../../../components/Layout';
-import FilterByGroup, { ContextLogger } from '../../../components/FilterByGroup';
+import FilterByGroup, { ContextLogger, AccordionFilter } from '../../../components/FilterByGroup';
 
 export default (props: any) => (
   <Page {...props}>
@@ -28,6 +28,11 @@ export default (props: any) => (
           <ContextLogger />
         </FilterByGroup>
       </div>
+
+      <div className="my-10 w-1/4 bg-gray-400 flex flex-col">
+        <AccordionFilter />
+      </div>
+
     </Layout>
   </Page>
 );
