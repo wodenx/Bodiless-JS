@@ -7,27 +7,21 @@ import {
 } from '@bodiless/core';
 import { mount } from 'enzyme';
 import { withFilterByTags } from '../src/filterHOC';
+import { TagsNodeType } from '../src/TagButton/types';
 
-const testTags = [
-  { foo: { tags: [{ id: 0, name: 'foo' }] } },
-  { bar: { tags: [{ id: 1, name: 'bar' }] } },
-  { baz: { tags: [{ id: 1, name: 'baz' }] } },
-  { bat: { tags: [{ id: 3, name: 'baz' }] } },
-];
+type TestData = {[key: string]: TagsNodeType};
+
+const testTags : TestData = {
+  foo: { tags: [{ id: 0, name: 'foo' }] },
+  bar: { tags: [{ id: 1, name: 'bar' }] },
+  baz: { tags: [{ id: 1, name: 'baz' }] },
+  bat: { tags: [{ id: 3, name: 'baz' }] },
+};
+
 const getMockNode = () => {
-  // @ts-ignore
   const getters = {
-    getNode: jest.fn((path: string[]) => {
-      console.log('path', path);
-      // @ts-ignore
-      return testTags[path[-1]];
-    }),
-    getKeys: jest.fn(() => {
-      const keys: string[] = [];
-      testTags.forEach(t => keys.push(Object.keys(t)[0]));
-      // Return an array of keys ['foo', 'bar', 'baz', 'bat']
-      return keys;
-    }),
+    getNode: jest.fn((path: string[]) => testTags[path[path.length - 1]]),
+    getKeys: jest.fn(() => Object.keys(testTags)),
   };
   const actions = {
     setNode: jest.fn(),
@@ -86,7 +80,6 @@ const TestFilterSelector = () => {
 describe('withFilterByTags', () => {
   it('Hides all items which do not match selected tags', () => {
     const wrapper = mount(<TestFilterSelector />);
-    console.log(wrapper.debug());
     wrapper.find('#show-foo').simulate('click');
     expect(wrapper.find('div#foo')).toHaveLength(1);
     expect(wrapper.find('div#bar')).toHaveLength(0);
