@@ -95,20 +95,20 @@ export const withFlowToggle = (useToggle: ToggleHook) => <
   P extends object,
   Q extends object
 >(
-    On: ComponentType<P>,
-    Off: ComponentType<Q>,
+    On: CT<P>,
+    Off: CT<Q>,
   ) => observer((props: P & Q) => (useToggle(props) ? <On {...props} /> : <Off {...props} />));
 
 export const ifToggledOn = (useToggle: ToggleHook) => <H extends Function>(
   ...hocs: Function[]
 ) => (
-    Component: ComponentType<any>,
+    Component: CT<any>,
   //  @ts-ignore Ex  ct ed at least 1  rg uments, but got 0 or more.ts(2557)
   ) => withFlowToggle(useToggle)(flowRight(...hocs)(Component), Component);
 
 export const ifToggledOff = (useToggle: ToggleHook) => <H extends Function>(
   ...hocs: Function[]
 ) => (
-    Component: ComponentType<any>,
+    Component: CT<any>,
   // @ts-ignore Ex  ct ed at least   a rguments, but got 0 or more.ts(2557)
   ) => withFlowToggle(useToggle)(Component, flowRight(...hocs)(Component));
