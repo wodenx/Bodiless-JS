@@ -16,7 +16,7 @@ type TestData = {[key: string]: TagsNodeType};
 const testTags : TestData = {
   foo: { tags: [{ id: 0, name: 'foo' }] },
   bar: { tags: [{ id: 1, name: 'bar' }] },
-  baz: { tags: [{ id: 1, name: 'baz' }] },
+  baz: { tags: [{ id: 2, name: 'baz' }] },
   bat: { tags: [{ id: 3, name: 'baz' }] },
 };
 
@@ -37,7 +37,6 @@ const TestDiv: FC<any> = props => <div {...props} />;
 const FilterableItem = flow(
   withFilterByTags,
   withNode,
-  // @TODO: Fix so that this type cast is not necessary.
 )(TestDiv) as React.ComponentType<any>;
 
 const TestFilterSelector = () => {

@@ -1,10 +1,17 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { observable } from 'mobx';
-import { withContextActivator, withLocalContextMenu, withNodeDataHandlers, withFlowToggle } from '../src/hoc';
+import {
+  withContextActivator,
+  withLocalContextMenu,
+  withNodeDataHandlers,
+  withFlowToggle,
+} from '../src/hoc';
 
 const TestComponent = ({ element: Element }: any) => (
-  <Element><div>Test Component</div></Element>
+  <Element>
+    <div>Test Component</div>
+  </Element>
 );
 
 describe('withContextActivator', () => {
@@ -43,10 +50,10 @@ describe('withFlowToggle', () => {
     const createToggleFunc = (isOn: boolean) => () => isOn;
     const RenderA = withFlowToggle(createToggleFunc(true))(A, B);
     const RenderB = withFlowToggle(createToggleFunc(false))(A, B);
-    const wrapper = shallow(<RenderA />);
-    expect(wrapper.find('#A')).toHaveLength(1);
-    expect(wrapper.find('#B')).toHaveLength(0);
-    const wrapperB = shallow(<RenderB />);
+    const wrapperA = mount(<RenderA />);
+    expect(wrapperA.find('#A')).toHaveLength(1);
+    expect(wrapperA.find('#B')).toHaveLength(0);
+    const wrapperB = mount(<RenderB />);
     expect(wrapperB.find('#A')).toHaveLength(0);
     expect(wrapperB.find('#B')).toHaveLength(1);
   });
