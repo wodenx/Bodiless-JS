@@ -4,12 +4,12 @@ import { flow } from 'lodash';
 import {
   withNode,
   DefaultContentNode,
-  NodeProvider
+  NodeProvider,
 } from '@bodiless/core';
 
 import { mount } from 'enzyme';
 import { withFilterByTags } from '../src/filterHOC';
-import { TagsNodeType} from '../src/TagButton/types';
+import { TagsNodeType } from '../src/TagButton/types';
 
 type TestData = {[key: string]: TagsNodeType};
 

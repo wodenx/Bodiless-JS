@@ -17,7 +17,9 @@ import {
   Editable,
   withFilterByTags,
 } from '@bodiless/components';
-import { H2, Span, Button, addClasses } from '@bodiless/fclasses';
+import {
+  H2, Span, Button, addClasses,
+} from '@bodiless/fclasses';
 import { flow } from 'lodash';
 
 const TagButton = addClasses('px-2 mb-2 mr-2 border border-gray-600')(Button);
@@ -35,9 +37,9 @@ const TaggableNonFilterableItem = () => (
     nodeKey="tags"
     getSuggestions={getSuggestions}
     placeholder="Add or create"
-    formTitle={'Groups'}
-    seeAllText={'See all groups'}
-    formBodyText={'Select from available tags:'}
+    formTitle="Groups"
+    seeAllText="See all groups"
+    formBodyText="Select from available tags:"
     allowNew
     noSuggestionsText="No suggestions found"
   >
