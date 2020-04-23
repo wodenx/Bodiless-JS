@@ -16,16 +16,18 @@ import React, { HTMLProps } from 'react';
 import { flow } from 'lodash';
 import { withNode } from '@bodiless/core';
 import { withDesign, replaceWith } from '@bodiless/fclasses';
+import {
+  Editable,
+  List,
+  asEditableList,
+  ListTitleProps,
+  asEditable,
+} from '@bodiless/components';
 
-import { SingleAccordionClean } from '../AccordionTemp';
-import Editable, { asEditable } from '../Editable';
-
-import List from '.';
-import asEditableList from './asEditableList';
-import { TitleProps } from './types';
+import { SingleAccordionClean } from './SingleAccordion';
 
 
-const SimpleTitle = (props: HTMLProps<HTMLSpanElement> & TitleProps) => (
+const SimpleTitle = (props: HTMLProps<HTMLSpanElement> & ListTitleProps) => (
   <span {...props}><Editable nodeKey="text" placeholder="Item" /></span>
 );
 
@@ -33,7 +35,7 @@ const SimpleList = withDesign({
   Title: replaceWith(SimpleTitle),
 })(asEditableList(List));
 
-const asAccordionList = flow(
+const asListAccordion = flow(
   withNode,
   withDesign({
     Title: asEditable('category_name', 'Category Name'),
@@ -41,6 +43,10 @@ const asAccordionList = flow(
   }),
 );
 
-const AccordionList = asAccordionList(SingleAccordionClean);
+const ListAccordion = asListAccordion(SingleAccordionClean);
 
-export default AccordionList;
+export default ListAccordion;
+export {
+  ListAccordion,
+  asListAccordion,
+};

@@ -17,7 +17,6 @@ import { asBodilessLink } from './Link';
 import Image, { asBodilessImage } from './Image';
 import NodeViewer from './NodeViewer';
 import withLinkToggle from './LinkToggle';
-import AccordionList from './List/AccordionList';
 import List from './List';
 import {
   FinalProps as ListProps,
@@ -50,7 +49,6 @@ export {
   NodeViewer,
   withLinkToggle,
   List,
-  AccordionList,
   ListDesignableComponents,
   asEditableList,
   asBasicSublist,

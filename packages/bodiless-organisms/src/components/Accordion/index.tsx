@@ -12,11 +12,14 @@
  * limitations under the License.
  */
 
-import { ListAccordion } from '@bodiless/organisms';
-
-const AccordionFilter = ListAccordion;
-
-export default AccordionFilter;
 export {
-  AccordionFilter,
-};
+  SingleAccordion,
+  SingleAccordionClean,
+  asSingleAccordion,
+  asTestableAccordion,
+} from './SingleAccordion';
+
+export {
+  ListAccordion,
+  asListAccordion,
+} from './ListAccordion';
