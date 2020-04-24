@@ -1,19 +1,14 @@
 import React, { useState, FC } from 'react';
 import { flow } from 'lodash';
-
-import {
-  withNode,
-  DefaultContentNode,
-  NodeProvider,
-} from '@bodiless/core';
+import { withNode, DefaultContentNode, NodeProvider } from '@bodiless/core';
 
 import { mount } from 'enzyme';
 import { withFilterByTags } from '../src/filterHOC';
 import { TagsNodeType } from '../src/TagButton/types';
 
-type TestData = {[key: string]: TagsNodeType};
+type TestData = { [key: string]: TagsNodeType };
 
-const testTags : TestData = {
+const testTags: TestData = {
   foo: { tags: [{ id: 0, name: 'foo' }] },
   bar: { tags: [{ id: 1, name: 'bar' }] },
   baz: { tags: [{ id: 2, name: 'baz' }] },

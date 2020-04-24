@@ -16,23 +16,12 @@ import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 // @ts-ignore TS7016: Could not find a declaration file for module .. implicitly has an 'any' type
 import Layout from '../../../components/Layout';
-import {
-  TaggableNonFilterableItem,
-  TaggableFilterSelector,
-} from '../../../components/Filter';
+import TaggableFilterSelector from '../../../components/Filter';
 
 export default (props: any) => (
   <Page {...props}>
     <Layout>
       <h1 className="text-3xl font-bold">Metadata (tags) Group Demo Page</h1>
-      <p>
-        Below is an editable component that can take metadata (tags/groups) So
-        that an end user to hide it with a filter.
-      </p>
-      <div className="my-3">
-        <TaggableNonFilterableItem />
-      </div>
-
       <div className="my-3">
         <TaggableFilterSelector />
       </div>

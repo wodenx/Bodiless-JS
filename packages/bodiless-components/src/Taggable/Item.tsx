@@ -60,6 +60,9 @@ export const asTaggableItem = (nodeKey?: string) => flowRight(
     'noSuggestionsText',
     'componentData',
     'inputAttributes',
+    'seeAllText',
+    'formBodyText',
+    'formTitle',
   ]),
 ) as Bodiless<Props, Props & Partial<WithNodeProps>>;
 export default asTaggableItem;

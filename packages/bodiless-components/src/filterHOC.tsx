@@ -1,6 +1,9 @@
-import { withoutProps, ifToggledOn, ifToggledOff } from '@bodiless/core';
+import {
+  withoutProps, ifToggledOn, ifToggledOff, TagType,
+} from '@bodiless/core';
 import { replaceWith } from '@bodiless/fclasses';
 import { difference, flowRight } from 'lodash';
+import { toJS } from 'mobx';
 import useTagsAccessors from './TagButton/TagModel';
 
 type ToggleByTagsProps = {
@@ -16,8 +19,11 @@ const useToggleByTags = <P extends object>({
   selectedTags,
 }: P & ToggleByTagsProps) => {
   const { getTags } = useTagsAccessors();
-  const itemTags = getTags();
-  const tags = itemTags.map(t => t.name);
+  const tags = getTags();
+  console.log('selected tags', selectedTags);
+  console.log('item tags', toJS(tags));
+  console.log('differnece', difference(selectedTags, tags));
+  // const tags = itemTags.map(t => t.name);
   return difference(selectedTags, tags).length === 0;
 };
 
