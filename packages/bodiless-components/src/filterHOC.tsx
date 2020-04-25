@@ -7,7 +7,7 @@ import { toJS } from 'mobx';
 import useTagsAccessors from './TagButton/TagModel';
 
 type ToggleByTagsProps = {
-  selectedTags: any[];
+  selectedTags: TagType[];
 };
 
 /**
