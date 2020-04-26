@@ -12,9 +12,76 @@
  * limitations under the License.
  */
 
-import React, { ComponentType as CT, PropsWithChildren, useState } from 'react';
+import React, {
+  FC,
+  ComponentType as CT,
+  PropsWithChildren,
+  HTMLProps,
+  useState,
+} from 'react';
+import { flow } from 'lodash';
+import {
+  withDesign,
+  designable,
+  Button,
+  StylableProps,
+  Span,
+  addClasses,
+  DesignableComponentsProps,
+} from '@bodiless/fclasses';
 import { withToggleTo } from '../Toggle';
 import { FinalProps as ListProps } from './types';
+
+export type ListAccordionComponents = {
+  Wrapper: CT<StylableProps & HTMLProps<HTMLButtonElement>>,
+  Icon: CT<StylableProps>,
+};
+
+export type ListAccordionTitleProps = {
+  expanded: boolean,
+  setExpanded: React.Dispatch<React.SetStateAction<boolean>>,
+} & DesignableComponentsProps<ListAccordionComponents>;
+
+const listAccordionComponentsStart:ListAccordionComponents = {
+  Wrapper: Button,
+  Icon: Span,
+};
+
+const ListAccordionTitleBase: FC<ListAccordionTitleProps> = ({
+  components,
+  expanded = false,
+  setExpanded,
+  children,
+  ...rest
+}) => {
+  const { Wrapper, Icon } = components;
+
+  return (
+    <Wrapper
+      data-accordion-element="accordion-icon"
+      data-accordion-icon={expanded ? 'remove' : 'add'}
+      onClick={() => setExpanded(!expanded)}
+      {...rest}
+    >
+      {children}
+      <Icon>
+        {expanded ? 'remove' : 'add'}
+      </Icon>
+    </Wrapper>
+  );
+};
+
+const ListAccordionTitleClean = flow(
+  designable(listAccordionComponentsStart),
+)(ListAccordionTitleBase);
+
+const ListAccordionTitle = flow(
+  withDesign({
+    Wrapper: addClasses('flex justify-between w-full'),
+    Icon: addClasses('material-icons cursor-pointer select-none'),
+  }),
+)(ListAccordionTitleClean);
+
 
 /**
  * Takes a sublist component and returns a HOC which, when applied to a list item,
@@ -29,19 +96,9 @@ const asAccordionSublist = (Sublist: CT<ListProps>) => (
 
       return (
         <Item>
-          <div tabIndex={0} className="flex justify-between" onClick={() => setExpanded(!expanded)} role="button" onKeyPress={() => setExpanded(!expanded)}>
+          <ListAccordionTitle expanded={expanded} setExpanded={setExpanded}>
             {children}
-            <button
-              className="material-icons cursor-pointer select-none"
-              data-accordion-element="accordion-icon"
-              data-accordion-icon={expanded ? 'remove' : 'add'}
-              onClick={() => setExpanded(!expanded)}
-              onKeyPress={() => setExpanded(!expanded)}
-              type="button"
-            >
-              {expanded ? 'remove' : 'add'}
-            </button>
-          </div>
+          </ListAccordionTitle>
 
           <div className={expanded ? 'block' : 'hidden'}>
             <Sublist {...rest} />
