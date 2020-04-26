@@ -17,6 +17,7 @@ import { flow } from 'lodash';
 import { withToggleButton } from '../Toggle';
 import { ListDesignableComponents, WithSublistToggle } from './types';
 import asBasicSublist from './asBasicSublist';
+import asAccordionSublist from './asAccordionSublist';
 import withDeleteSublistOnUnwrap from './withDeleteSublistOnUnwrap';
 
 /**
@@ -37,5 +38,11 @@ const withBasicSublist = flow(
   withSublist,
 );
 
+const withAccordionSublist = flow(
+  withDeleteSublistOnUnwrap,
+  asAccordionSublist,
+  withSublist,
+);
+
 export default withSublist;
-export { withBasicSublist };
+export { withBasicSublist, withAccordionSublist };

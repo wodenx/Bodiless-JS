@@ -12,9 +12,9 @@
  * limitations under the License.
  */
 
-import { ListAccordion } from '@bodiless/organisms';
+import { ListAccordionClean } from '@bodiless/organisms';
 
-const AccordionFilter = ListAccordion;
+const AccordionFilter = ListAccordionClean;
 
 export default AccordionFilter;
 export {

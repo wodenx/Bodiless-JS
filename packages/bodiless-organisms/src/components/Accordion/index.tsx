@@ -21,5 +21,7 @@ export {
 
 export {
   ListAccordion,
+  SimpleAccordion,
+  ListAccordionClean,
   asListAccordion,
 } from './ListAccordion';

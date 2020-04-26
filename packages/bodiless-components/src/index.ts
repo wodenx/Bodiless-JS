@@ -26,7 +26,7 @@ import {
 import withListTitle from './List/withListTitle';
 import asEditableList from './List/asEditableList';
 import asBasicSublist from './List/asBasicSublist';
-import withSublist, { withBasicSublist } from './List/withSublist';
+import withSublist, { withBasicSublist, withAccordionSublist } from './List/withSublist';
 import withDeleteSublistOnUnwrap from './List/withDeleteSublistOnUnwrap';
 import {
   withMeta, withMetaTitle, withMetaHtml,
@@ -53,6 +53,7 @@ export {
   asEditableList,
   asBasicSublist,
   withBasicSublist,
+  withAccordionSublist,
   withSublist,
   withDeleteSublistOnUnwrap,
   ListProps,

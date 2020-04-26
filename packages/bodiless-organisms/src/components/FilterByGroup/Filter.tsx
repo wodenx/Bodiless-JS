@@ -39,7 +39,7 @@ import {
   List,
   asEditable,
   asEditableList,
-  withBasicSublist,
+  withAccordionSublist,
   withTagButton,
   useTagsAccessors,
 } from '@bodiless/components';
@@ -187,7 +187,7 @@ class FilterBase extends React.PureComponent {
     const { TagList, CategoryList } = components;
 
     this.RestProps = rest;
-    this.Filter = withBasicSublist(TagList)(CategoryList);
+    this.Filter = withAccordionSublist(TagList)(CategoryList);
   }
 
   render() {
