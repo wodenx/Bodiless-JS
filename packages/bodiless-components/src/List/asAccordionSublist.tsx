@@ -13,86 +13,26 @@
  */
 
 import React, {
-  FC,
   ComponentType as CT,
   PropsWithChildren,
-  HTMLProps,
   useState,
 } from 'react';
-import { flow } from 'lodash';
-import {
-  withDesign,
-  designable,
-  Button,
-  StylableProps,
-  Span,
-  addClasses,
-  DesignableComponentsProps,
-} from '@bodiless/fclasses';
 import { withToggleTo } from '../Toggle';
-import { FinalProps as ListProps } from './types';
-
-export type ListAccordionComponents = {
-  Wrapper: CT<StylableProps & HTMLProps<HTMLButtonElement>>,
-  Icon: CT<StylableProps>,
-};
-
-export type ListAccordionTitleProps = {
-  expanded: boolean,
-  setExpanded: React.Dispatch<React.SetStateAction<boolean>>,
-} & DesignableComponentsProps<ListAccordionComponents>;
-
-const listAccordionComponentsStart:ListAccordionComponents = {
-  Wrapper: Button,
-  Icon: Span,
-};
-
-const ListAccordionTitleBase: FC<ListAccordionTitleProps> = ({
-  components,
-  expanded = false,
-  setExpanded,
-  children,
-  ...rest
-}) => {
-  const { Wrapper, Icon } = components;
-
-  return (
-    <Wrapper
-      data-accordion-element="accordion-icon"
-      data-accordion-icon={expanded ? 'remove' : 'add'}
-      onClick={() => setExpanded(!expanded)}
-      {...rest}
-    >
-      {children}
-      <Icon>
-        {expanded ? 'remove' : 'add'}
-      </Icon>
-    </Wrapper>
-  );
-};
-
-const ListAccordionTitleClean = flow(
-  designable(listAccordionComponentsStart),
-)(ListAccordionTitleBase);
-
-const ListAccordionTitle = flow(
-  withDesign({
-    Wrapper: addClasses('flex justify-between w-full'),
-    Icon: addClasses('material-icons cursor-pointer select-none'),
-  }),
-)(ListAccordionTitleClean);
-
+import {
+  FinalProps as ListProps,
+} from './types';
+import { ListAccordionTitle } from './ListAccordionTitle';
 
 /**
  * Takes a sublist component and returns a HOC which, when applied to a list item,
- * adds a toggled version of the sublist to the list item.
+ * adds a toggled version of the sublist as an Accordion body to the list item.
  *
- * @param Sublist The sublist component to add to the list item.
+ * @param Sublist The sublist component to add to the list accordion body.
  */
 const asAccordionSublist = (Sublist: CT<ListProps>) => (
   (Item: CT<PropsWithChildren<{}>> | string) => {
     const ItemWithSublist: CT<ListProps> = ({ children, ...rest }) => {
-      const [expanded, setExpanded] = useState(false);
+      const [expanded, setExpanded] = useState(true);
 
       return (
         <Item>

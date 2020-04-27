@@ -18,7 +18,12 @@ import {
   withBurgerSubmenu,
 } from './components/BurgerMenu';
 
-export * from './components/Accordion';
+export {
+  SingleAccordion,
+  SingleAccordionClean,
+  asSingleAccordion,
+  asTestableAccordion,
+} from './components/SingleAccordion';
 
 export {
   asEditableMainMenu,

@@ -1,0 +1,73 @@
+/**
+ * Copyright © 2020 Johnson & Johnson
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import React, { FC } from 'react';
+import { flow } from 'lodash';
+import {
+  withDesign,
+  designable,
+  Button,
+  Span,
+  addClasses,
+} from '@bodiless/fclasses';
+import {
+  ListAccordionComponents,
+  ListAccordionTitleProps,
+} from './types';
+
+const listAccordionComponentsStart:ListAccordionComponents = {
+  Wrapper: Button,
+  Icon: Span,
+};
+
+const ListAccordionTitleBase: FC<ListAccordionTitleProps> = ({
+  components,
+  expanded,
+  setExpanded,
+  children,
+  ...rest
+}) => {
+  const { Wrapper, Icon } = components;
+
+  return (
+    <Wrapper
+      data-accordion-element="accordion-icon"
+      data-accordion-icon={expanded ? 'remove' : 'add'}
+      onClick={() => setExpanded(!expanded)}
+      {...rest}
+    >
+      {children}
+      <Icon>
+        {expanded ? 'remove' : 'add'}
+      </Icon>
+    </Wrapper>
+  );
+};
+
+const ListAccordionTitleClean = flow(
+  designable(listAccordionComponentsStart),
+)(ListAccordionTitleBase);
+
+const ListAccordionTitle = flow(
+  withDesign({
+    Wrapper: addClasses('flex justify-between w-full'),
+    Icon: addClasses('material-icons cursor-pointer select-none'),
+  }),
+)(ListAccordionTitleClean);
+
+export default ListAccordionTitle;
+export {
+  ListAccordionTitle,
+  ListAccordionTitleClean,
+};

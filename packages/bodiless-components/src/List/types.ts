@@ -12,9 +12,9 @@
  * limitations under the License.
  */
 
-import { DesignableComponentsProps, DesignableProps } from '@bodiless/fclasses';
-import { WithNodeProps } from '@bodiless/core';
 import { HTMLProps, ComponentType, PropsWithChildren } from 'react';
+import { DesignableComponentsProps, DesignableProps, StylableProps } from '@bodiless/fclasses';
+import { WithNodeProps } from '@bodiless/core';
 
 export type TitleProps = {
   onAdd: () => void,
@@ -51,3 +51,13 @@ export type UseItemWithSublist = (Sublist: ComponentType<FinalProps>) =>
 };
 
 export type WithSublistToggle = (Sublist: ComponentType<FinalProps>) => ComponentType<FinalProps>;
+
+export type ListAccordionComponents = {
+  Wrapper: ComponentType<StylableProps & HTMLProps<HTMLButtonElement>>,
+  Icon: ComponentType<StylableProps>,
+};
+
+export type ListAccordionTitleProps = {
+  expanded: boolean,
+  setExpanded: React.Dispatch<React.SetStateAction<boolean>>,
+} & DesignableComponentsProps<ListAccordionComponents>;
