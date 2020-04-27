@@ -45,15 +45,24 @@ const withCategoryList = withDesign({
   Title: addClasses('font-bold'),
 });
 
+const asResponsiveFilterByGroup = withDesign({
+  Wrapper: addClasses('lg:flex-row'),
+  FilterWrapper: addClasses('md:w-1/3 lg:mr-5'),
+  FilterHeader: addClasses('lg:flex-row lg:justify-between lg:items-center'),
+});
+
 const asFilterByGroup = flow(
   withFBGSuggestions({ suggestions }),
   addProps({ resetButtonText: 'Show All Products' }),
+  asResponsiveFilterByGroup,
   withDesign({
-    Wrapper: addClasses('flex'),
-    FilterWrapper: addClasses('p-2 mr-5 w-1/4 bg-gray-400 flex flex-col'),
-    ContentWrapper: addClasses('p-2 w-3/4'),
+    Wrapper: addClasses('flex flex-col m-5'),
+    FilterWrapper: addClasses('p-2 bg-gray-400 flex flex-col'),
+    FilterHeader: addClasses('flex flex-col'),
+    FilterTitle: addClasses('text-xl font-bold'),
+    ContentWrapper: addClasses('p-2'),
     ResetButton: flow(
-      addClasses('my-2 underline self-end'),
+      addClasses('my-2 underline self-start'),
       asTextColorPrimary,
     ),
     Filter: withDesign({
