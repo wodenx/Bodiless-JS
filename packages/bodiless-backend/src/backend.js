@@ -371,11 +371,23 @@ class Backend {
   static getLatestCommits(route) {
     route.post(async (req, res) => {
       try {
-        await GitCmd.cmd().add('fetch', '--all');
-        const gitLog = await GitCmd.cmd()
-          .add('log', '--pretty=format:%H%n%ad%n%an%n%s%n')
+        await GitCmd.cmd().add('fetch', '--all').exec();
+        const branch = await GitCmd.cmd().add('rev-parse', '--abbrev-ref').exec();
+        const prodCommits = await GitCmd.cmd()
+          .add('rev-list', '--oneline', '--right-only', `origin/${branch}...origin/master`)
           .exec();
-        res.send(gitLog);
+        const upstreamCommits = await GitCmd.cmd()
+          .add('rev-list', '--oneline', '--right-only', `${branch}...origin/${branch}`)
+          .exec();
+        const localCommits = await GitCmd.cmd()
+          .add('rev-list', '--oneline', '--right-only', `${branch}...origin/master`)
+          .exec();
+        const rsp = JSON.stringify({
+          localCommits: localCommits.split('\n'),
+          upstreamCommits: upstreamCommits.split('\n'),
+          prodCommits: prodCommits.split('\n'),
+        });
+        res.send(rsp);
       } catch (error) {
         res.send(error.info);
       }
