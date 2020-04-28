@@ -17,7 +17,7 @@ import { flow } from 'lodash';
 import {
   withDesign,
   designable,
-  Button,
+  Div,
   Span,
   addClasses,
 } from '@bodiless/fclasses';
@@ -27,7 +27,7 @@ import {
 } from './types';
 
 const listAccordionComponentsStart:ListAccordionComponents = {
-  Wrapper: Button,
+  Wrapper: Div,
   Icon: Span,
 };
 
@@ -41,14 +41,12 @@ const ListAccordionTitleBase: FC<ListAccordionTitleProps> = ({
   const { Wrapper, Icon } = components;
 
   return (
-    <Wrapper
-      data-accordion-element="accordion-icon"
-      data-accordion-icon={expanded ? 'remove' : 'add'}
-      onClick={() => setExpanded(!expanded)}
-      {...rest}
-    >
+    <Wrapper onClick={() => setExpanded(!expanded)} {...rest}>
       {children}
-      <Icon>
+      <Icon
+        data-accordion-element="accordion-icon"
+        data-accordion-icon={expanded ? 'remove' : 'add'}
+      >
         {expanded ? 'remove' : 'add'}
       </Icon>
     </Wrapper>

@@ -28,6 +28,7 @@ import asEditableList from './List/asEditableList';
 import asBasicSublist from './List/asBasicSublist';
 import withSublist, { withBasicSublist, withAccordionSublist } from './List/withSublist';
 import withDeleteSublistOnUnwrap from './List/withDeleteSublistOnUnwrap';
+import { ListAccordionTitle } from './List/ListAccordionTitle';
 import {
   withMeta, withMetaTitle, withMetaHtml,
 } from './Meta/Meta';
@@ -50,6 +51,7 @@ export {
   withLinkToggle,
   List,
   ListDesignableComponents,
+  ListAccordionTitle,
   asEditableList,
   asBasicSublist,
   withBasicSublist,

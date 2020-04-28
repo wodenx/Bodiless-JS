@@ -12,11 +12,12 @@
  * limitations under the License.
  */
 
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { flow } from 'lodash';
 import {
   designable, Div, Button, withoutProps, H3,
 } from '@bodiless/fclasses';
+import { ListAccordionTitle } from '@bodiless/components';
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
 import FilterClean from './Filter';
 import { useFilterByGroupContext, withFilterByGroupContext } from './FilterByGroupContext';
@@ -48,16 +49,21 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({
     Filter,
   } = components;
 
+  const [expanded, setExpanded] = useState(true);
   const { setSelectedTag } = useFilterByGroupContext();
 
   return (
     <Wrapper {...rest}>
       <FilterWrapper>
-        <FilterHeader>
-          <FilterTitle>{filterTitle}</FilterTitle>
-          <ResetButton onClick={() => setSelectedTag()}>{resetButtonText}</ResetButton>
-        </FilterHeader>
-        <Filter />
+        <ListAccordionTitle expanded={expanded} setExpanded={setExpanded}>
+          <FilterHeader>
+            <FilterTitle>{filterTitle}</FilterTitle>
+            <ResetButton className={expanded ? '' : 'hidden'} onClick={() => setSelectedTag()}>{resetButtonText}</ResetButton>
+          </FilterHeader>
+        </ListAccordionTitle>
+        <Div className={expanded ? 'block' : 'hidden'}>
+          <Filter />
+        </Div>
       </FilterWrapper>
       <ContentWrapper>
         {children}

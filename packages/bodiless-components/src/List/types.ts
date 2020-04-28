@@ -53,7 +53,7 @@ export type UseItemWithSublist = (Sublist: ComponentType<FinalProps>) =>
 export type WithSublistToggle = (Sublist: ComponentType<FinalProps>) => ComponentType<FinalProps>;
 
 export type ListAccordionComponents = {
-  Wrapper: ComponentType<StylableProps & HTMLProps<HTMLButtonElement>>,
+  Wrapper: ComponentType<StylableProps & HTMLProps<HTMLDivElement>>,
   Icon: ComponentType<StylableProps>,
 };
 
