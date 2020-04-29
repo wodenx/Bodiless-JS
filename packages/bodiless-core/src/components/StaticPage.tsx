@@ -14,7 +14,7 @@
 
 import React, { FC } from 'react';
 
-import PageEditContext from '../PageEditContext';
+import PageEditContext, { getSize } from '../PageEditContext';
 import { PageEditContextInterface } from '../PageEditContext/types';
 
 class StaticContext implements PageEditContextInterface {
@@ -47,6 +47,11 @@ class StaticContext implements PageEditContextInterface {
   pageOverlay = {
     data: {},
     timeoutId: 0,
+  };
+
+  deviceSize = {
+    width: window.innerWidth,
+    size: getSize(window.innerWidth),
   };
 
   getMenuOptions = () => [];
