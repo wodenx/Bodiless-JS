@@ -20,7 +20,9 @@ import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { flowRight } from 'lodash';
 import { v1 } from 'uuid';
 import { observer } from 'mobx-react-lite';
-import { useNode, withNodeKey, withNode } from '@bodiless/core';
+import {
+  useNode, withNodeKey, withNode, useEditContext, contextMenuForm, ContextProvider,
+} from '@bodiless/core';
 import Layout from '../../../components/Layout';
 
 type Notification = {
@@ -49,6 +51,14 @@ const NotificationViewer = () => {
     <pre>{JSON.stringify(notifications, undefined, 2)}</pre>
   );
 };
+
+const DefaultActiveMenuOptions = observer(({ children }: any) => {
+  const context = useEditContext();
+  useEffect(() => {
+    context.activate();
+  });
+  return <>{children}</>;
+});
 
 const NotificationProvider: FC = ({ children }) => {
   const [notifications, setNotifications] = useState<NotificationProviderItem[]>([]);
@@ -139,14 +149,38 @@ const ChildWithNotifications = asBodiless(() => {
   );
 });
 
+const NotificationButtonProvider: FC = ({ children }) => {
+  const { notifications } = useContext(NotificationContext);
+  const handler = () => contextMenuForm({})(
+    () => (
+      <>{notifications.map(n => <p key={n.id}>{n.message}</p>)}</>
+    ),
+  );
+  const getMenuOptions = () => [{
+    name: 'Notifications',
+    icon: 'mail',
+    isActive: () => notifications.length > 0,
+    handler,
+  }];
+  return (
+    <ContextProvider getMenuOptions={getMenuOptions}>
+      {children}
+    </ContextProvider>
+  );
+};
+
 
 export default (props: any) => (
   <Page {...props}>
     <Layout>
       <h1 className="text-3xl font-bold">Notifications</h1>
       <NotificationProvider>
-        <ChildWithNotifications />
-        <NotificationViewer />
+        <NotificationButtonProvider>
+          <DefaultActiveMenuOptions>
+            <ChildWithNotifications />
+            <NotificationViewer />
+          </DefaultActiveMenuOptions>
+        </NotificationButtonProvider>
       </NotificationProvider>
     </Layout>
   </Page>
