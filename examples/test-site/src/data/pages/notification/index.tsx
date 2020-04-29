@@ -24,26 +24,37 @@ import { useNode, withNodeKey, withNode } from '@bodiless/core';
 import Layout from '../../../components/Layout';
 
 type Notification = {
-  owner?: string,
   id: string,
   message: string,
+};
+
+type NotificationProviderItem = Notification & {
+  owner: string,
 };
 
 type Notifier = (owner: string, notifications: Notification[]) => void;
 type ContextType = {
   notify: Notifier,
+  notifications: Notification[],
 };
 
 const NotificationContext = React.createContext<ContextType>({
   notify: () => undefined,
+  notifications: [],
 });
 
+const NotificationViewer = () => {
+  const { notifications } = useContext(NotificationContext);
+  return (
+    <pre>{JSON.stringify(notifications, undefined, 2)}</pre>
+  );
+};
 
 const NotificationProvider: FC = ({ children }) => {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<NotificationProviderItem[]>([]);
   const notify = useCallback(
     (owner: string, newNotifications: Notification[]) => setNotifications(
-      (oldNotifications: Notification[]) => oldNotifications
+      (oldNotifications: NotificationProviderItem[]) => oldNotifications
         .filter(n => n.owner !== owner)
         .concat(
           newNotifications.map(n => ({ ...n, owner })),
@@ -53,17 +64,9 @@ const NotificationProvider: FC = ({ children }) => {
   );
 
   return (
-    <div>
-      <div>
-        <pre>
-          {JSON.stringify(notifications, undefined, 2)}
-        </pre>
-      </div>
-      <NotificationContext.Provider value={{ notify }}>
-        {children}
-      </NotificationContext.Provider>
-
-    </div>
+    <NotificationContext.Provider value={{ notify, notifications }}>
+      {children}
+    </NotificationContext.Provider>
   );
 };
 
@@ -118,8 +121,8 @@ export default (props: any) => (
     <Layout>
       <h1 className="text-3xl font-bold">Notifications</h1>
       <NotificationProvider>
-        Hello.
         <ChildWithNotifications />
+        <NotificationViewer />
       </NotificationProvider>
     </Layout>
   </Page>
