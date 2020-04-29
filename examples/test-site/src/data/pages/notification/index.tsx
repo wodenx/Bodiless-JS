@@ -84,33 +84,57 @@ type Props = {
   owner?: string,
 };
 
-const ChildWithNotifications = asBodiless(({ owner: ownerProp }: Props) => {
-  const { node } = useNode<Data>();
+type Options = {
+  owner?: string,
+};
 
-  const owner = ownerProp || useRef(v1()).current;
-
+/**
+ * The useNotify() hook allows you to register notifications which should be
+ * displayed to the user upon clicking the "Notifications" button on the main
+ * menu.
+ *
+ * Note that you are responsible for maintaining and persisting the notifications
+ * you want to display. Every time your component re-renders, all the notifications
+ * it owns will be regenerated from the list provided to this hook.
+ *
+ * @param notifications An array of Notification objects which should be displayed
+ */
+const useNotify = (notifications: Notification[]) => {
+  const owner = useRef(v1()).current;
   const { notify } = useContext(NotificationContext);
   useEffect(
-    () => notify(owner, node.data.notifications || []),
-    [notify, owner, node.data.notifications],
+    () => notify(owner, notifications || []),
+    [notify, owner, notifications],
   );
+};
+
+const useNotifyFromNode = () => {
+  const { node } = useNode<Data>();
+  useNotify(node.data.notifications);
+  return {
+    notifications: node.data.notifications || [],
+    setNotifications: (notifications: Notification[]) => node.setData({ notifications }),
+  };
+};
+
+const ChildWithNotifications = asBodiless(() => {
+  const { notifications, setNotifications } = useNotifyFromNode();
+
   const addRandomNotification = useCallback(
     () => {
       const id = v1();
       const message = `Notification ${id}`;
-      const notifications = node.data.notifications || [];
-      node.setData({
-        notifications: [...notifications, { id, message }],
-      });
+      setNotifications([...notifications, { id, message }]);
     },
-    [node, node.data],
+    [notifications, setNotifications],
   );
   return (
     <div className="border p-2">
       <h2 className="text-lg">I Have Notifications</h2>
       {/* <pre>{JSON.stringify(myNotifications, undefined, 2)}</pre> */}
       <button type="button" className="border p-2 m-2" onClick={addRandomNotification}>Add a notification</button>
-      <button type="button" className="vborder p-2 m-2" onClick={() => node.setData({ notifications: [] })}>Clear All</button>
+      <button type="button" className="vborder p-2 m-2" onClick={() => setNotifications([])}>Clear All</button>
+
     </div>
   );
 });
