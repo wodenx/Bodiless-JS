@@ -31,10 +31,19 @@ export type TMenuOption = {
 
 export type TMenuOptionGetter = () => TMenuOption[];
 
+export type DeviceSize = {
+  width: number,
+  size: string,
+};
+
 export type TPageOverlayStore = {
   data: TOverlaySettings,
   timeoutId: number,
 };
+
+export interface CanControlDeviceSize {
+  deviceSize: DeviceSize,
+}
 
 export interface CanControlEditMode {
   isEdit: boolean;
@@ -74,6 +83,8 @@ export interface PageEditStore {
   toggleEdit(): void;
   togglePosition(): void;
   contextTrail: string[];
+  innerWidth: number;
+  deviceSize: DeviceSize;
 }
 
 export interface PageEditContextInterface extends
@@ -82,6 +93,7 @@ export interface PageEditContextInterface extends
   CanControlMenuPosition,
   CanGetContextMenuOptions,
   CanControlPageOverlay,
+  CanControlDeviceSize,
   DefinesLocalEditContext
 {
   readonly id: string;

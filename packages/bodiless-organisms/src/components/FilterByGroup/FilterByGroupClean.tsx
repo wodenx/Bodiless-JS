@@ -17,6 +17,8 @@ import { flow } from 'lodash';
 import {
   designable, Div, Button, withoutProps, H3,
 } from '@bodiless/fclasses';
+import { useEditContext } from '@bodiless/core';
+import { observer } from 'mobx-react-lite';
 import { ListAccordionTitle } from '@bodiless/components';
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
 import FilterClean from './Filter';
@@ -49,19 +51,22 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({
     Filter,
   } = components;
 
-  const [expanded, setExpanded] = useState(true);
+  const { deviceSize } = useEditContext();
+  const [expanded, setExpanded] = useState(deviceSize.size === 'lg');
   const { setSelectedTag } = useFilterByGroupContext();
+
+  const isExpanded = deviceSize.size === 'lg' || expanded;
 
   return (
     <Wrapper {...rest}>
       <FilterWrapper>
-        <ListAccordionTitle expanded={expanded} setExpanded={setExpanded}>
-          <FilterHeader>
+        <FilterHeader>
+          <ListAccordionTitle expanded={isExpanded} setExpanded={setExpanded}>
             <FilterTitle>{filterTitle}</FilterTitle>
-            <ResetButton className={expanded ? '' : 'hidden'} onClick={() => setSelectedTag()}>{resetButtonText}</ResetButton>
-          </FilterHeader>
-        </ListAccordionTitle>
-        <Div className={expanded ? 'block' : 'hidden'}>
+          </ListAccordionTitle>
+          <ResetButton className={isExpanded ? '' : 'hidden'} onClick={() => setSelectedTag()}>{resetButtonText}</ResetButton>
+        </FilterHeader>
+        <Div className={isExpanded ? 'block' : 'hidden'}>
           <Filter />
         </Div>
       </FilterWrapper>
@@ -73,6 +78,7 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({
 };
 
 const FilterByGroupClean = flow(
+  observer,
   withoutProps(['suggestions']),
   withFilterByGroupContext,
   designable(FilterByGroupComponentsStart),

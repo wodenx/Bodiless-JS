@@ -54,10 +54,11 @@ export type WithSublistToggle = (Sublist: ComponentType<FinalProps>) => Componen
 
 export type ListAccordionComponents = {
   Wrapper: ComponentType<StylableProps & HTMLProps<HTMLDivElement>>,
-  Icon: ComponentType<StylableProps>,
+  Icon: ComponentType<StylableProps & HTMLProps<HTMLSpanElement>>,
 };
 
 export type ListAccordionTitleProps = {
   expanded: boolean,
   setExpanded: React.Dispatch<React.SetStateAction<boolean>>,
+  alwaysExpanded?: boolean,
 } & DesignableComponentsProps<ListAccordionComponents>;

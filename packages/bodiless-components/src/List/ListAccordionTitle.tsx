@@ -20,7 +20,11 @@ import {
   Div,
   Span,
   addClasses,
+  addProps,
 } from '@bodiless/fclasses';
+import {
+  ifDesktop,
+} from '@bodiless/core';
 import {
   ListAccordionComponents,
   ListAccordionTitleProps,
@@ -35,15 +39,17 @@ const ListAccordionTitleBase: FC<ListAccordionTitleProps> = ({
   components,
   expanded,
   setExpanded,
+  alwaysExpanded,
   children,
   ...rest
 }) => {
   const { Wrapper, Icon } = components;
 
   return (
-    <Wrapper onClick={() => setExpanded(!expanded)} {...rest}>
+    <Wrapper onClick={() => setExpanded(alwaysExpanded ? true : !expanded)} {...rest}>
       {children}
       <Icon
+        className={alwaysExpanded ? 'hidden' : 'material-icons'}
         data-accordion-element="accordion-icon"
         data-accordion-icon={expanded ? 'remove' : 'add'}
       >
@@ -57,15 +63,23 @@ const ListAccordionTitleClean = flow(
   designable(listAccordionComponentsStart),
 )(ListAccordionTitleBase);
 
+const asResponsiveListAccordionTitle = flow(
+  ifDesktop(
+    addProps({ alwaysExpanded: true }),
+  ),
+);
+
 const ListAccordionTitle = flow(
   withDesign({
-    Wrapper: addClasses('flex justify-between w-full'),
-    Icon: addClasses('material-icons cursor-pointer select-none'),
+    Wrapper: addClasses('flex justify-between items-center'),
+    Icon: addClasses('cursor-pointer select-none'),
   }),
+  asResponsiveListAccordionTitle,
 )(ListAccordionTitleClean);
 
 export default ListAccordionTitle;
 export {
   ListAccordionTitle,
   ListAccordionTitleClean,
+  asResponsiveListAccordionTitle,
 };
