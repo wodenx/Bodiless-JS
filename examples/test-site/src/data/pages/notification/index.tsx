@@ -13,19 +13,23 @@
  */
 
 import React, {
-  useState, FC, useContext, useEffect, useCallback,
+  useState, FC, useContext, useEffect, useCallback, useRef,
 } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
-import { uniqBy } from 'lodash';
+import { flowRight } from 'lodash';
 import { v1 } from 'uuid';
+import { observer } from 'mobx-react-lite';
+import { useNode, withNodeKey, withNode } from '@bodiless/core';
 import Layout from '../../../components/Layout';
 
 type Notification = {
+  owner?: string,
   id: string,
   message: string,
 };
-type Notifier = (notifications: Notification[]) => void;
+
+type Notifier = (owner: string, notifications: Notification[]) => void;
 type ContextType = {
   notify: Notifier,
 };
@@ -38,8 +42,12 @@ const NotificationContext = React.createContext<ContextType>({
 const NotificationProvider: FC = ({ children }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const notify = useCallback(
-    (newNotifications: Notification[]) => setNotifications(
-      (oldNotifications: Notification[]) => uniqBy([...oldNotifications, ...newNotifications], 'id'),
+    (owner: string, newNotifications: Notification[]) => setNotifications(
+      (oldNotifications: Notification[]) => oldNotifications
+        .filter(n => n.owner !== owner)
+        .concat(
+          newNotifications.map(n => ({ ...n, owner })),
+        ),
     ),
     [setNotifications],
   );
@@ -59,35 +67,50 @@ const NotificationProvider: FC = ({ children }) => {
   );
 };
 
-const ChildWithNotifications = () => {
-  const [myNotifications, setMyNotifications] = useState<Notification[]>([
-    {
-      id: '1',
-      message: 'Notification1',
-    },
-    {
-      id: '2',
-      message: 'Notification 2',
-    },
-  ]);
+const asBodiless = flowRight(
+  withNodeKey('notifier'),
+  withNode,
+  observer,
+);
+
+type Data = {
+  notifications: Notification[],
+};
+
+type Props = {
+  owner?: string,
+};
+
+const ChildWithNotifications = asBodiless(({ owner: ownerProp }: Props) => {
+  const { node } = useNode<Data>();
+
+  const owner = ownerProp || useRef(v1()).current;
+
   const { notify } = useContext(NotificationContext);
-  useEffect(() => notify(myNotifications), [notify, myNotifications]);
+  useEffect(
+    () => notify(owner, node.data.notifications || []),
+    [notify, owner, node.data.notifications],
+  );
   const addRandomNotification = useCallback(
     () => {
       const id = v1();
       const message = `Notification ${id}`;
-      setMyNotifications(oldNotifications => [...oldNotifications, { id, message }]);
+      const notifications = node.data.notifications || [];
+      node.setData({
+        notifications: [...notifications, { id, message }],
+      });
     },
-    [setMyNotifications],
+    [node, node.data],
   );
   return (
     <div className="border p-2">
       <h2 className="text-lg">I Have Notifications</h2>
       {/* <pre>{JSON.stringify(myNotifications, undefined, 2)}</pre> */}
       <button type="button" className="border p-2 m-2" onClick={addRandomNotification}>Add a notification</button>
+      <button type="button" className="vborder p-2 m-2" onClick={() => node.setData({ notifications: [] })}>Clear All</button>
     </div>
   );
-};
+});
 
 
 export default (props: any) => (
