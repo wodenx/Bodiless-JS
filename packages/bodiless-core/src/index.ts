@@ -36,7 +36,7 @@ import {
   withoutProps,
 } from './hoc';
 import { ifToggledOff, ifToggledOn, withFlowToggle } from './withFlowToggle';
-import { ifDesktop } from './withResponsiveToggle';
+import { ifViewportIs, ifViewportIsNot } from './withResponsiveToggle';
 import { ifEditable, ifReadOnly, withEditToggle } from './withEditToggle';
 import { TMenuOption, PageEditContextInterface } from './PageEditContext/types';
 import { EditButtonOptions } from './Types/EditButtonTypes';
@@ -50,6 +50,7 @@ import {
   useActivateOnEffectActivator,
 } from './ActivateContext';
 import withChild from './withChild';
+import PageDimensionsProvider, { usePageDimensionsContext } from './PageDimensionsProvider';
 
 export * from './components';
 export {
@@ -82,7 +83,8 @@ export {
   DefaultContentNode,
   ifEditable,
   ifReadOnly,
-  ifDesktop,
+  ifViewportIs,
+  ifViewportIsNot,
   withEditToggle,
   withoutProps,
   ActivateOnEffectProvider,
@@ -95,6 +97,8 @@ export {
   ifToggledOff,
   ifToggledOn,
   withFlowToggle,
+  PageDimensionsProvider,
+  usePageDimensionsContext,
 };
 
 export type Bodiless<P, Q> = (C: ComponentType<P> | string) => ComponentType<Q>;

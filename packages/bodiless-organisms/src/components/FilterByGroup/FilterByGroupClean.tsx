@@ -17,7 +17,7 @@ import { flow } from 'lodash';
 import {
   designable, Div, Button, withoutProps, H3,
 } from '@bodiless/fclasses';
-import { useEditContext } from '@bodiless/core';
+import { usePageDimensionsContext } from '@bodiless/core';
 import { observer } from 'mobx-react-lite';
 import { ListAccordionTitle } from '@bodiless/components';
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
@@ -51,11 +51,11 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({
     Filter,
   } = components;
 
-  const { deviceSize } = useEditContext();
-  const [expanded, setExpanded] = useState(deviceSize.size === 'lg');
+  const { size } = usePageDimensionsContext();
+  const [expanded, setExpanded] = useState(size === 'lg');
   const { setSelectedTag } = useFilterByGroupContext();
 
-  const isExpanded = deviceSize.size === 'lg' || expanded;
+  const isExpanded = size === 'lg' || expanded;
 
   return (
     <Wrapper {...rest}>

@@ -16,7 +16,6 @@ import React, { ConsumerProps, FC } from 'react';
 import { Observer } from 'mobx-react';
 import { v1 } from 'uuid';
 import { action, computed, observable } from 'mobx';
-import { throttle } from 'lodash';
 import {
   DefinesLocalEditContext,
   PageEditContextInterface,
@@ -42,21 +41,6 @@ export const reduceRecursively = <T extends any>(
   return context.parent
     ? reduceRecursively(newAccumulator, callback, context.parent)
     : newAccumulator;
-};
-
-export const getSize = (size: number) => {
-  type Sizes = {
-    [size: string]: number;
-  };
-
-  const sizes: Sizes = {
-    sm: 640,
-    md: 768,
-    lg: 1024,
-    xl: 1280,
-  };
-
-  return Object.keys(sizes).find(item => size <= sizes[item]) || 'xxl';
 };
 
 // Helper function to aggregate information from all nested contexts.
@@ -105,14 +89,6 @@ export class PageEditStore implements PageEditStoreInterface {
     timeoutId: 0,
   };
 
-  @observable innerWidth: number = window.innerWidth;
-
-  constructor() {
-    window.addEventListener('resize', throttle(() => {
-      this.innerWidth = window.innerWidth;
-    }, 500));
-  }
-
   @action
   setActiveContext(context?: PageEditContext) {
     if (context) this.activeContext = context;
@@ -148,13 +124,6 @@ export class PageEditStore implements PageEditStoreInterface {
 
   @computed get contextTrail() {
     return reduceRecursively<string>([], context => [context.id], this.activeContext);
-  }
-
-  @computed get deviceSize() {
-    return {
-      width: this.innerWidth,
-      size: getSize(this.innerWidth),
-    };
   }
 }
 
@@ -299,10 +268,6 @@ Please try your operation again if it was not successful.`,
       ...passedSettings,
     };
     this.showPageOverlay(settings);
-  }
-
-  get deviceSize() {
-    return this.store.deviceSize;
   }
 }
 

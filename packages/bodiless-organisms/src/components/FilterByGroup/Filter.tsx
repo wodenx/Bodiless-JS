@@ -24,6 +24,8 @@ import {
   ifEditable,
   withContextActivator,
   withLocalContextMenu,
+  ifViewportIs,
+  ifViewportIsNot,
 } from '@bodiless/core';
 import {
   designable,
@@ -40,6 +42,7 @@ import {
   asEditable,
   asEditableList,
   withAccordionSublist,
+  withBasicSublist,
   withTagButton,
   useTagsAccessors,
 } from '@bodiless/components';
@@ -177,7 +180,7 @@ const TestFilterComponentsStart: FilterComponents = {
 };
 
 class FilterBase extends React.PureComponent {
-  Filter = Div;
+  Filter: FC = Div;
 
   RestProps = {};
 
@@ -187,7 +190,10 @@ class FilterBase extends React.PureComponent {
     const { TagList, CategoryList } = components;
 
     this.RestProps = rest;
-    this.Filter = withAccordionSublist(TagList)(CategoryList);
+    this.Filter = flow(
+      ifViewportIs('lg')(withBasicSublist(TagList)),
+      ifViewportIsNot('lg')(withAccordionSublist(TagList)),
+    )(CategoryList);
   }
 
   render() {

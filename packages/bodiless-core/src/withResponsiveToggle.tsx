@@ -12,12 +12,18 @@
  * limitations under the License.
  */
 
-import { useEditContext } from './hooks';
-import { ifToggledOn } from './withFlowToggle';
+import { ifToggledOn, ifToggledOff } from './withFlowToggle';
+import { usePageDimensionsContext } from './PageDimensionsProvider';
 
-export const useDesktopToggle = () => {
-  const { deviceSize } = useEditContext();
-  return deviceSize.size === 'lg';
+const useResponsiveToggle = (sizes: string[] | string) => () => {
+  const { size } = usePageDimensionsContext();
+  return Array.isArray(sizes) ? sizes.includes(size) : sizes === size;
 };
 
-export const ifDesktop = ifToggledOn(useDesktopToggle);
+const ifViewportIs = (sizes: string[] | string) => ifToggledOn(useResponsiveToggle(sizes));
+const ifViewportIsNot = (sizes: string[] | string) => ifToggledOff(useResponsiveToggle(sizes));
+
+export {
+  ifViewportIs,
+  ifViewportIsNot,
+};
