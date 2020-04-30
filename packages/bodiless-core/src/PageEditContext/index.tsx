@@ -42,7 +42,6 @@ export const reduceRecursively = <T extends any>(
     ? reduceRecursively(newAccumulator, callback, context.parent)
     : newAccumulator;
 };
-
 // Helper function to aggregate information from all nested contexts.
 // @TODO Convert to private method
 

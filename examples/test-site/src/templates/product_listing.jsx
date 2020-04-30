@@ -22,6 +22,8 @@ import {
   ProductListingImage,
   ProductListingFlowContainer,
 } from '../components/ProductListing';
+import FilterByGroup from '../components/FilterByGroup';
+import { FilterableProductTout } from '../components/ProductTout';
 
 export default props => (
   <Page {...props}>
@@ -34,6 +36,12 @@ export default props => (
       </SectionMargin>
       <SectionMargin>
         <ProductListingFlowContainer nodeKey="product_listing_touts" />
+      </SectionMargin>
+      <SectionMargin>
+        <FilterByGroup>
+          <FilterableProductTout nodeKey="product_a" />
+          <FilterableProductTout nodeKey="product_b" />
+        </FilterByGroup>
       </SectionMargin>
     </Layout>
   </Page>

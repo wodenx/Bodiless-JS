@@ -18,13 +18,14 @@ import {
 import {
   ProductClean,
 } from '@bodiless/organisms';
+import { asTaggableItem, withFilterByTags } from '@bodiless/components';
 import { BVInlineRatings } from '@bodiless/bv';
 import { withEditorBasic, withEditorSimple } from '../Editors';
 import {
   asEditableLink,
   asEditableImage,
 } from '../Elements.token';
-import asProductToutDefaultStyle from './token';
+import { asProductToutDefaultStyle, asProductToutFilterable } from './token';
 
 export const asProductTout = flow(
   withDesign({
@@ -42,3 +43,13 @@ export const ProductTout = flow(
   asProductTout,
   asProductToutDefaultStyle,
 )(ProductClean);
+
+export const asFilterableProductTout = flow(
+  withFilterByTags,
+  asTaggableItem(),
+  asProductToutFilterable,
+);
+
+export const FilterableProductTout = flow(
+  asFilterableProductTout,
+)(ProductTout);

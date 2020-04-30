@@ -55,7 +55,7 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({
   const [expanded, setExpanded] = useState(size === 'lg');
   const { setSelectedTag } = useFilterByGroupContext();
 
-  const isExpanded = size === 'lg' || expanded;
+  const isExpanded = ['lg', 'xl', 'xxl'].includes(size) || expanded;
 
   return (
     <Wrapper {...rest}>

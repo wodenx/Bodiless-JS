@@ -191,8 +191,8 @@ class FilterBase extends React.PureComponent {
 
     this.RestProps = rest;
     this.Filter = flow(
-      ifViewportIs('lg')(withBasicSublist(TagList)),
-      ifViewportIsNot('lg')(withAccordionSublist(TagList)),
+      ifViewportIs(['lg', 'xl', 'xxl'])(withBasicSublist(TagList)),
+      ifViewportIsNot(['lg', 'xl', 'xxl'])(withAccordionSublist(TagList)),
     )(CategoryList);
   }
 

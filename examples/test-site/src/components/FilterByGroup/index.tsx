@@ -56,11 +56,11 @@ const asFilterByGroup = flow(
   addProps({ resetButtonText: 'Show All Products' }),
   asResponsiveFilterByGroup,
   withDesign({
-    Wrapper: addClasses('flex flex-col m-5'),
+    Wrapper: addClasses('flex flex-col'),
     FilterWrapper: addClasses('p-2 bg-gray-400 flex flex-col'),
     FilterHeader: addClasses('flex flex-col'),
     FilterTitle: addClasses('my-2 text-xl font-bold'),
-    ContentWrapper: addClasses('p-2'),
+    ContentWrapper: addClasses('flex p-2'),
     ResetButton: flow(
       addClasses('my-2 underline self-start'),
       asTextColorPrimary,

@@ -46,7 +46,7 @@ const ListAccordionTitleBase: FC<ListAccordionTitleProps> = ({
     <Wrapper onClick={() => setExpanded(!expanded)} {...rest}>
       {children}
       <Icon
-        className={size === 'lg' ? 'hidden' : 'material-icons'}
+        className={['lg', 'xl', 'xxl'].includes(size) ? 'hidden' : 'material-icons'}
         data-accordion-element="accordion-icon"
         data-accordion-icon={expanded ? 'remove' : 'add'}
       >

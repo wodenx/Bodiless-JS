@@ -42,7 +42,7 @@ const PageDimensionsContext = createContext<PageDimensions>({
 });
 
 const mapBreakpointsSize = (breakpoints: BreakpointsType, width: number) => (
-  Object.keys(breakpoints).find(item => width <= breakpoints[item]) || 'xxl'
+  Object.keys(breakpoints).slice().reverse().find(item => width >= breakpoints[item]) || 'sm'
 );
 
 const usePageDimensionsContext = () => useContext(PageDimensionsContext);
