@@ -12,17 +12,19 @@
  * limitations under the License.
  */
 
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
+import { observer } from 'mobx-react-lite';
 import { flow } from 'lodash';
 import {
   designable, Div, Button, withoutProps, H3,
+  withDesign,
 } from '@bodiless/fclasses';
-import { usePageDimensionsContext } from '@bodiless/core';
-import { observer } from 'mobx-react-lite';
-import { ListAccordionTitle } from '@bodiless/components';
+import { ifViewportIsNot } from '@bodiless/core';
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
 import FilterClean from './Filter';
 import { useFilterByGroupContext, withFilterByGroupContext } from './FilterByGroupContext';
+
+import { asAccordionWrapper, asAccordionBody, asAccodionTitle } from '../Accordion';
 
 const FilterByGroupComponentsStart:FilterByGroupComponents = {
   Wrapper: Div,
@@ -51,24 +53,16 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({
     Filter,
   } = components;
 
-  const { size } = usePageDimensionsContext();
-  const [expanded, setExpanded] = useState(size === 'lg');
   const { setSelectedTag } = useFilterByGroupContext();
-
-  const isExpanded = ['lg', 'xl', 'xxl'].includes(size) || expanded;
 
   return (
     <Wrapper {...rest}>
       <FilterWrapper>
         <FilterHeader>
-          <ListAccordionTitle expanded={isExpanded} setExpanded={setExpanded}>
-            <FilterTitle>{filterTitle}</FilterTitle>
-          </ListAccordionTitle>
-          <ResetButton className={isExpanded ? '' : 'hidden'} onClick={() => setSelectedTag()}>{resetButtonText}</ResetButton>
+          <FilterTitle>{filterTitle}</FilterTitle>
+          <ResetButton onClick={() => setSelectedTag()}>{resetButtonText}</ResetButton>
         </FilterHeader>
-        <Div className={isExpanded ? 'block' : 'hidden'}>
-          <Filter />
-        </Div>
+        <Filter />
       </FilterWrapper>
       <ContentWrapper>
         {children}
@@ -77,11 +71,23 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({
   );
 };
 
+const asResponsiveFilterByGroup = flow(
+  ifViewportIsNot(['lg', 'xl', 'xxl'])(
+    withDesign({
+      FilterWrapper: asAccordionWrapper,
+      FilterHeader: asAccodionTitle,
+      Filter: asAccordionBody,
+      ResetButton: asAccordionBody,
+    }),
+  ),
+);
+
 const FilterByGroupClean = flow(
   observer,
   withoutProps(['suggestions']),
   withFilterByGroupContext,
   designable(FilterByGroupComponentsStart),
+  asResponsiveFilterByGroup,
 )(FilterByGroupBase);
 
 export default FilterByGroupClean;

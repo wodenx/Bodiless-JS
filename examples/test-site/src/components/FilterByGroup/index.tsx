@@ -48,7 +48,7 @@ const withCategoryList = withDesign({
 const asResponsiveFilterByGroup = withDesign({
   Wrapper: addClasses('lg:flex-row'),
   FilterWrapper: addClasses('md:w-1/3 lg:mr-5'),
-  FilterHeader: addClasses('lg:flex-row lg:justify-between lg:items-center lg:w-full'),
+  FilterHeader: addClasses('lg:flex-row lg:justify-between lg:items-center'),
 });
 
 const asFilterByGroup = flow(
@@ -58,7 +58,7 @@ const asFilterByGroup = flow(
   withDesign({
     Wrapper: addClasses('flex flex-col'),
     FilterWrapper: addClasses('p-2 bg-gray-400 flex flex-col'),
-    FilterHeader: addClasses('flex flex-col'),
+    FilterHeader: addClasses('flex flex-col w-full'),
     FilterTitle: addClasses('my-2 text-xl font-bold'),
     ContentWrapper: addClasses('p-2 w-full'),
     ResetButton: flow(

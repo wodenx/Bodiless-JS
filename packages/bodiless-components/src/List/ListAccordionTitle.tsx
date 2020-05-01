@@ -21,7 +21,6 @@ import {
   Span,
   addClasses,
 } from '@bodiless/fclasses';
-import { usePageDimensionsContext } from '@bodiless/core';
 import {
   ListAccordionComponents,
   ListAccordionTitleProps,
@@ -40,13 +39,11 @@ const ListAccordionTitleBase: FC<ListAccordionTitleProps> = ({
   ...rest
 }) => {
   const { Wrapper, Icon } = components;
-  const { size } = usePageDimensionsContext();
 
   return (
     <Wrapper onClick={() => setExpanded(!expanded)} {...rest}>
       {children}
       <Icon
-        className={['lg', 'xl', 'xxl'].includes(size) ? 'hidden' : 'material-icons'}
         data-accordion-element="accordion-icon"
         data-accordion-icon={expanded ? 'remove' : 'add'}
       >
@@ -63,7 +60,7 @@ const ListAccordionTitleClean = flow(
 const ListAccordionTitle = flow(
   withDesign({
     Wrapper: addClasses('flex justify-between items-center'),
-    Icon: addClasses('cursor-pointer select-none'),
+    Icon: addClasses('material-icons cursor-pointer select-none'),
   }),
 )(ListAccordionTitleClean);
 
