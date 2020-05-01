@@ -48,12 +48,4 @@ const asProductToutDefaultStyle = withDesign({
   ),
 });
 
-const asProductToutFilterable = withDesign({
-  Wrapper: addClasses('mx-3 sm:mx-0 w-1/2 md:w-1/3').removeClasses('w-full'),
-});
-
 export default asProductToutDefaultStyle;
-export {
-  asProductToutDefaultStyle,
-  asProductToutFilterable,
-};

@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { HTMLProps } from 'react';
+import React, { HTMLProps, ComponentType as CT } from 'react';
 import {
   withContextActivator,
   withNode,
@@ -23,15 +23,36 @@ import {
   Bodiless,
   withNodeKey,
   withoutProps,
+  useNodeDataHandlers,
+  TagType,
 } from '@bodiless/core';
-import { flowRight } from 'lodash';
+import { flowRight, isEmpty } from 'lodash';
 import { withTagButton } from '../TagButton';
 // Type of the data used by this component.
 // @Todo: Determine if this type is necessary?
 type Props = HTMLProps<HTMLElement>;
 
-const emptyValue = {
-  tags: '',
+type WithRegisterSuggestionsType = {
+  registerSuggestions: (tags: TagType[]) => void,
+};
+
+type ComponentTagData = {
+  tags?: TagType[],
+};
+
+const emptyValue:ComponentTagData = {
+  tags: [],
+};
+
+const useRegisterTags = <P extends WithRegisterSuggestionsType>(Component: CT<P>) => (props: P) => {
+  const { registerSuggestions } = props;
+  const { componentData } = useNodeDataHandlers<ComponentTagData>();
+
+  if (!isEmpty(componentData) && componentData.tags) {
+    registerSuggestions([...componentData.tags]);
+  }
+
+  return <Component {...props} />;
 };
 
 // Composed hoc which creates editable version of the component.
@@ -44,6 +65,7 @@ const asTaggableItem = (nodeKey?: string) => flowRight(
   withNodeKey(nodeKey),
   withNode,
   withNodeDataHandlers(emptyValue),
+  useRegisterTags,
   ifEditable(
     withTagButton(),
     withContextActivator('onClick'),

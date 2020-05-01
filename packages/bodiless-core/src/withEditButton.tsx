@@ -32,7 +32,7 @@ export type EditButtonProps<D> = {
   componentData: D;
   unwrap?: () => void;
   isActive?: () => boolean;
-  onSubmit?: () => void;
+  onSubmit?: (values: D) => void;
 };
 
 export type EditButtonOptions<P, D> = {
@@ -63,7 +63,7 @@ export const createMenuOptionHook = <P extends object, D extends object>({
     const submitValues = (values: D) => {
       setComponentData(values);
       Object.assign(componentData, values);
-      if (onSubmit) onSubmit();
+      if (onSubmit) onSubmit(Object.assign(componentData, values));
     };
     const render = (p: ContextMenuFormBodyProps<D>) => renderForm({
       ...p,

@@ -22,15 +22,15 @@ import {
   withDesign,
 } from '@bodiless/fclasses';
 
-import { ProductTout } from '../ProductTout';
+import { FilterableProductTout } from '../ProductTout';
 
 const withProductVariations = withFacet('Product');
 
 const productVariations = {
-  ProductToutVariations: flow(
-    replaceWith(ProductTout),
-    withDesc('Product.\n'),
-    withProductVariations('Product')(),
+  FilterableProductToutVariations: flow(
+    replaceWith(FilterableProductTout),
+    withDesc('Filterable Product.\n'),
+    withProductVariations('Filterable Product')(),
   ),
 };
 

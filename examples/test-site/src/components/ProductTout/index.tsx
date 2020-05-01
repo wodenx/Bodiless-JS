@@ -27,13 +27,16 @@ import {
   asEditableLink,
   asEditableImage,
 } from '../Elements.token';
-import { asProductToutDefaultStyle, asProductToutFilterable } from './token';
+import asProductToutDefaultStyle from './token';
 
 const withTagButtonProps = <P extends object>(Component: CT<P>) => (props: P) => {
-  const { getSuggestions, selectedTag } = useFilterByGroupContext();
+  const { getSuggestions, selectedTag, useRegisterSuggestions } = useFilterByGroupContext();
+  const registerSuggestions = useRegisterSuggestions();
 
   const tagButtonProps = {
     getSuggestions,
+    registerSuggestions,
+    onSubmit: (values: any) => registerSuggestions(values.tags),
     selectedTags: [selectedTag],
   };
 
@@ -61,7 +64,6 @@ export const asFilterableProductTout = flow(
   withFilterByTags,
   asTaggableItem(),
   withTagButtonProps,
-  asProductToutFilterable,
 );
 
 export const FilterableProductTout = flow(
