@@ -1,0 +1,12 @@
+{
+  "tags": [
+    {
+      "id": "1",
+      "name": "DefaultTag 1"
+    },
+    {
+      "id": "2",
+      "name": "DefaultTag 2"
+    }
+  ]
+}

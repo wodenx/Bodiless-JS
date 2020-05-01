@@ -11,12 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import React, { ComponentType as CT } from 'react';
 import { flow } from 'lodash';
 import {
   withDesign,
 } from '@bodiless/fclasses';
 import {
   ProductClean,
+  useFilterByGroupContext,
 } from '@bodiless/organisms';
 import { asTaggableItem, withFilterByTags } from '@bodiless/components';
 import { BVInlineRatings } from '@bodiless/bv';
@@ -26,6 +28,17 @@ import {
   asEditableImage,
 } from '../Elements.token';
 import { asProductToutDefaultStyle, asProductToutFilterable } from './token';
+
+const withTagButtonProps = <P extends object>(Component: CT<P>) => (props: P) => {
+  const { getSuggestions, selectedTag } = useFilterByGroupContext();
+
+  const tagButtonProps = {
+    getSuggestions,
+    selectedTags: [selectedTag],
+  };
+
+  return <Component {...props} {...tagButtonProps} />;
+};
 
 export const asProductTout = flow(
   withDesign({
@@ -47,6 +60,7 @@ export const ProductTout = flow(
 export const asFilterableProductTout = flow(
   withFilterByTags,
   asTaggableItem(),
+  withTagButtonProps,
   asProductToutFilterable,
 );
 
