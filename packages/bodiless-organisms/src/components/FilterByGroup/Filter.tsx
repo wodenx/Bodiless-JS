@@ -77,6 +77,19 @@ const withTagButtonProps = <P extends object>(Component: CT<P>) => (props: P) =>
   return <Component {...props} {...tagButtonProps} />;
 };
 
+const withOnTagDelete = <P extends object>(Component: CT<P>) => (props: P) => {
+  const {
+    setSelectedNode,
+    setSelectedTag,
+  } = useFilterByGroupContext();
+
+  const onDelete = (deletedItem: any) => {
+    setSelectedTag();
+    setSelectedNode();
+  };
+  return <Component {...props} onDelete={onDelete} />;
+};
+
 const TagTitleBase: FC<TagTitleProps> = ({
   components,
   emptyTitleText = 'Select Tag...',
@@ -171,6 +184,7 @@ const TestFilterComponentsStart: FilterComponents = {
     }),
   )(List),
   TagList: flow(
+    withOnTagDelete,
     asEditableList,
     withDesign({
       Title: replaceWith(TagTitle),

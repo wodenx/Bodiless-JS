@@ -37,7 +37,7 @@ const withTagButtonProps = <P extends object>(Component: CT<P>) => (props: P) =>
     getSuggestions,
     registerSuggestions,
     onSubmit: (values: any) => registerSuggestions(values.tags),
-    selectedTags: [selectedTag],
+    selectedTags: selectedTag ? [selectedTag] : [],
   };
 
   return <Component {...props} {...tagButtonProps} />;

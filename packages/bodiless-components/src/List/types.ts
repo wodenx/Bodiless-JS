@@ -31,6 +31,7 @@ export type ListDesignableComponents = {
 
 export type Props = {
   unwrap?: Function,
+  onDelete?: Function,
 } & DesignableComponentsProps<ListDesignableComponents> & HTMLProps<HTMLElement>;
 
 export type FinalProps =

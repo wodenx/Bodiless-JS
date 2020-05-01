@@ -38,7 +38,7 @@ const useToggleByTags = <P extends object>({
   const tags = getTags();
 
   // Show all items if there is no selected tag.
-  if (isEmpty(selectedTags.filter(x => x !== undefined))) {
+  if (isEmpty(selectedTags)) {
     return true;
   }
 
