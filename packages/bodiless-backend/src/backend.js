@@ -138,6 +138,56 @@ class GitCmd {
     return new GitCmd();
   }
 }
+
+const getCurrentBranch = async () => {
+  const result = await GitCmd.cmd().add('rev-parse', '--abbrev-ref', 'HEAD').exec();
+  return result.stdout.trim();
+};
+
+const getMergeBase = async (a, b) => {
+  const mergeBase = await GitCmd.cmd()
+    .add('merge-base', a, b)
+    .exec();
+  return mergeBase.stdout.trim();
+}
+
+const compare = async (show, comparedTo) => {
+  const mergeBase = await getMergeBase(show, comparedTo);
+  const commitsPromise = GitCmd.cmd()
+    .add('rev-list', '--oneline', '--left-only', `${show}...${comparedTo}`)
+    .exec();
+  const filesPromise = GitCmd.cmd()
+    .add('diff', '--name-only', show, mergeBase)
+    .exec();
+  const result = await Promise.all([commitsPromise, filesPromise]);
+  return {
+    commits: result[0].stdout.trim().split('\n').map(l => l.trim()).filter(l => l.length > 0),
+    diff: result[1].stdout.trim().split('\n').map(l => l.trim()).filter(l => l.length > 0),
+  };
+};
+
+const getStatus = async () => {
+  try {
+    await GitCmd.cmd().add('fetch', 'origin').exec();
+    const branch = await getCurrentBranch();
+    // @TODO: Deal with case where upstream branch doesn't exist.
+    const result = await Promise.all([
+      compare(`origin/${branch}`, branch),
+      compare('origin/master', `origin/${branch}`),
+      compare(branch, 'origin/master'),
+    ]);
+    const status = {
+      upstream: result[0],
+      production: result[1],
+      local: result[2],
+    };
+    console.log(status);
+    return status;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 /*
 This Class lets us buildout and execute a GitCommit
 */
@@ -324,6 +374,7 @@ class Backend {
       res.header('Content-Type', 'application/json');
       next();
     });
+    this.setRoute(`${backendPrefix}/status`, Backend.getStatus);
     this.setRoute(`${backendPrefix}/get/commits`, Backend.getLatestCommits);
     this.setRoute(`${backendPrefix}/change/amend`, Backend.setChangeAmend);
     this.setRoute(`${backendPrefix}/change/commit`, Backend.setChangeCommit);
@@ -368,26 +419,25 @@ class Backend {
     }
   }
 
+  static getStatus(route) {
+    route.get(async (req, res) => {
+      try {
+        const status = await getStatus();
+        res.send(status);
+      } catch (error) {
+        res.send(error.info);
+      }
+    });
+  }
+
   static getLatestCommits(route) {
     route.post(async (req, res) => {
       try {
-        await GitCmd.cmd().add('fetch', '--all').exec();
-        const branch = await GitCmd.cmd().add('rev-parse', '--abbrev-ref').exec();
-        const prodCommits = await GitCmd.cmd()
-          .add('rev-list', '--oneline', '--right-only', `origin/${branch}...origin/master`)
+        await GitCmd.cmd().add('fetch', '--all');
+        const gitLog = await GitCmd.cmd()
+          .add('log', '--pretty=format:%H%n%ad%n%an%n%s%n')
           .exec();
-        const upstreamCommits = await GitCmd.cmd()
-          .add('rev-list', '--oneline', '--right-only', `${branch}...origin/${branch}`)
-          .exec();
-        const localCommits = await GitCmd.cmd()
-          .add('rev-list', '--oneline', '--right-only', `${branch}...origin/master`)
-          .exec();
-        const rsp = JSON.stringify({
-          localCommits: localCommits.split('\n'),
-          upstreamCommits: upstreamCommits.split('\n'),
-          prodCommits: prodCommits.split('\n'),
-        });
-        res.send(rsp);
+        res.send(gitLog);
       } catch (error) {
         res.send(error.info);
       }

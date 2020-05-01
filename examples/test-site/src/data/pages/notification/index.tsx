@@ -158,7 +158,8 @@ const NotificationButtonProvider: FC = ({ children }) => {
   );
   const getMenuOptions = () => [{
     name: 'Notifications',
-    icon: 'mail',
+    label: 'Alerts',
+    icon: notifications.length > 0 ? 'notification_important' : 'notifications',
     isActive: () => notifications.length > 0,
     handler,
   }];
