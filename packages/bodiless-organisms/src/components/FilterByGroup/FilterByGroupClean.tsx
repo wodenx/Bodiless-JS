@@ -13,7 +13,6 @@
  */
 
 import React, { FC } from 'react';
-import { observer } from 'mobx-react-lite';
 import { flow } from 'lodash';
 import {
   designable, Div, Button, withoutProps, H3,
@@ -83,7 +82,6 @@ const asResponsiveFilterByGroup = flow(
 );
 
 const FilterByGroupClean = flow(
-  observer,
   withoutProps(['suggestions']),
   withFilterByGroupContext,
   designable(FilterByGroupComponentsStart),

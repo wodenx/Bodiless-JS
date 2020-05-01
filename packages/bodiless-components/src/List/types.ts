@@ -61,5 +61,4 @@ export type ListAccordionComponents = {
 export type ListAccordionTitleProps = {
   expanded: boolean,
   setExpanded: React.Dispatch<React.SetStateAction<boolean>>,
-  alwaysExpanded?: boolean,
 } & DesignableComponentsProps<ListAccordionComponents>;
