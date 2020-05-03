@@ -32,7 +32,7 @@ export type BreakpointsType = {
 };
 
 export type PageDimensionsProviderProps = {
-  breakpoints: BreakpointsType,
+  breakpoints?: BreakpointsType,
 };
 
 const PageDimensionsContext = createContext<PageDimensions>({
