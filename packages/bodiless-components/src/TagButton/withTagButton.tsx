@@ -20,14 +20,11 @@ import {
   TagType,
 } from '@bodiless/core';
 import React, { HTMLProps } from 'react';
-import { TagButtonProps } from './types';
-
-type Data = {
-  tags: TagType[],
-};
+import { TagButtonProps, TagsNodeType } from './types';
 
 // Options used to create an edit button.
-export const tagButtonOptions:EditButtonOptions<TagButtonProps & HTMLProps<HTMLElement>, Data> = {
+// eslint-disable-next-line max-len
+export const tagButtonOptions:EditButtonOptions<TagButtonProps & HTMLProps<HTMLElement>, TagsNodeType> = {
   icon: 'local_offer',
   name: 'Tag',
   renderForm: ({ ui, componentProps }) => {

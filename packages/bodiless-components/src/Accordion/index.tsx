@@ -44,17 +44,19 @@ const AccordionProvider: FC = ({ children }) => {
 };
 
 
-const asAccordionWrapper = <P extends Object>(Component: ComponentType<P>) => (props: P) => (
+const asAccordionWrapper = <P extends Object>(
+  Component: ComponentType<P> | string,
+) => (props: P) => (
   <AccordionProvider>
     <Component {...props} />
   </AccordionProvider>
-);
+  );
 
-const asAccodionTitle = <P extends Object>(Component: ComponentType<P>) => (props: P) => {
+const asAccodionTitle = <P extends Object>(Component: ComponentType<P> | string) => (props: P) => {
   const { expanded, setExpanded } = useAccordionContext();
 
   return (
-    <Div className="flex items-baseline" onClick={() => setExpanded(!expanded)}>
+    <Div className="flex items-baseline justify-between" onClick={() => setExpanded(!expanded)}>
       <Component {...props} />
       <Span
         className="material-icons"
@@ -70,11 +72,9 @@ const asAccodionTitle = <P extends Object>(Component: ComponentType<P>) => (prop
 const asAccordionBody = <P extends Object>(Component: ComponentType<P>) => (props: P) => {
   const { expanded } = useAccordionContext();
 
-  return (
-    <Div className={expanded ? 'block' : 'hidden'}>
-      <Component {...props} />
-    </Div>
-  );
+  return expanded
+    ? (<Component {...props} />)
+    : (<></>);
 };
 
 export {

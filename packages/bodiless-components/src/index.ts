@@ -29,7 +29,6 @@ import asEditableList from './List/asEditableList';
 import asBasicSublist from './List/asBasicSublist';
 import withSublist, { withBasicSublist, withAccordionSublist } from './List/withSublist';
 import withDeleteSublistOnUnwrap from './List/withDeleteSublistOnUnwrap';
-import { ListAccordionTitle } from './List/ListAccordionTitle';
 import { withMeta, withMetaTitle, withMetaHtml } from './Meta/Meta';
 import asBodilessHelmet from './Helmet/Helemet';
 import withEvent from './GTM/gtm';
@@ -37,6 +36,8 @@ import { withToggle, withToggleTo, withToggleButton } from './Toggle';
 import withEditPlaceholder from './Placeholder';
 import { TagButtonProps, withTagButton, useTagsAccessors } from './TagButton';
 import withFilterByTags from './withFilterByTags';
+
+export * from './Accordion';
 
 export {
   asBodilessLink,
@@ -47,7 +48,6 @@ export {
   withLinkToggle,
   List,
   ListDesignableComponents,
-  ListAccordionTitle,
   asEditableList,
   asBasicSublist,
   withBasicSublist,

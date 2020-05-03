@@ -13,7 +13,7 @@
  */
 
 import { HTMLProps, ComponentType, PropsWithChildren } from 'react';
-import { DesignableComponentsProps, DesignableProps, StylableProps } from '@bodiless/fclasses';
+import { DesignableComponentsProps, DesignableProps } from '@bodiless/fclasses';
 import { WithNodeProps } from '@bodiless/core';
 
 export type TitleProps = {
@@ -52,13 +52,3 @@ export type UseItemWithSublist = (Sublist: ComponentType<FinalProps>) =>
 };
 
 export type WithSublistToggle = (Sublist: ComponentType<FinalProps>) => ComponentType<FinalProps>;
-
-export type ListAccordionComponents = {
-  Wrapper: ComponentType<StylableProps & HTMLProps<HTMLDivElement>>,
-  Icon: ComponentType<StylableProps & HTMLProps<HTMLSpanElement>>,
-};
-
-export type ListAccordionTitleProps = {
-  expanded: boolean,
-  setExpanded: React.Dispatch<React.SetStateAction<boolean>>,
-} & DesignableComponentsProps<ListAccordionComponents>;

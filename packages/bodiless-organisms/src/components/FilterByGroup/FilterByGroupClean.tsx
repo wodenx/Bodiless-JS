@@ -19,11 +19,11 @@ import {
   withDesign,
 } from '@bodiless/fclasses';
 import { ifViewportIsNot } from '@bodiless/core';
+import { asAccordionWrapper, asAccordionBody, asAccodionTitle } from '@bodiless/components';
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
 import FilterClean from './Filter';
 import { useFilterByGroupContext, withFilterByGroupContext } from './FilterByGroupContext';
 
-import { asAccordionWrapper, asAccordionBody, asAccodionTitle } from '../Accordion';
 
 const FilterByGroupComponentsStart:FilterByGroupComponents = {
   Wrapper: Div,

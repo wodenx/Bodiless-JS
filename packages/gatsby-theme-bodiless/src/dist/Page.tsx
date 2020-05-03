@@ -15,6 +15,7 @@
 import React, { FC, ComponentType, useEffect } from 'react';
 import {
   PageDimensionsProvider,
+  BreakpointsType,
   StaticPage,
   ContextWrapperProps,
   useEditContext,
@@ -38,6 +39,7 @@ type UI = Partial<FinalUI>;
 
 export type Props = NodeProviderProps & PageProviderProps & {
   ui?: UI,
+  breakpoints?: BreakpointsType,
 };
 
 const defaultUI: FinalUI = {
@@ -47,11 +49,13 @@ const defaultUI: FinalUI = {
 
 const getUI = (ui: UI = {}): FinalUI => ({ ...defaultUI, ...ui });
 
-const Page: FC<Props> = observer(({ children, ui, ...rest }) => {
+const Page: FC<Props> = observer(({
+  children,
+  ui,
+  breakpoints,
+  ...rest
+}) => {
   const { PageEditor: Editor, ContextWrapper: Wrapper } = getUI(ui);
-  const breakpoints = {
-    sm: 640, md: 768, lg: 1024, xl: 1280,
-  };
 
   if (process.env.NODE_ENV === 'development') {
     return (

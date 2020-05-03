@@ -27,11 +27,11 @@ type PageDimensions = {
   size: string,
 };
 
-type BreakpointsType = {
+export type BreakpointsType = {
   [size: string]: number;
 };
 
-type PageDimensionsProviderProps = {
+export type PageDimensionsProviderProps = {
   breakpoints: BreakpointsType,
 };
 
@@ -41,7 +41,7 @@ const PageDimensionsContext = createContext<PageDimensions>({
   size: 'sm',
 });
 
-const mapBreakpointsSize = (breakpoints: BreakpointsType, width: number) => (
+const mapBreakpointsSize = (breakpoints: BreakpointsType = {}, width: number) => (
   Object.keys(breakpoints).slice().reverse().find(item => width >= breakpoints[item]) || 'sm'
 );
 

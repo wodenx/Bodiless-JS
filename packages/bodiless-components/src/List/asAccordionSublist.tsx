@@ -15,13 +15,14 @@
 import React, {
   ComponentType as CT,
   PropsWithChildren,
-  useState,
 } from 'react';
+import { flow } from 'lodash';
+import { asComponent } from '@bodiless/fclasses';
 import { withToggleTo } from '../Toggle';
 import {
   FinalProps as ListProps,
 } from './types';
-import { ListAccordionTitle } from './ListAccordionTitle';
+import { asAccordionWrapper, asAccordionBody, asAccodionTitle } from '../Accordion';
 
 /**
  * Takes a sublist component and returns a HOC which, when applied to a list item,
@@ -31,24 +32,25 @@ import { ListAccordionTitle } from './ListAccordionTitle';
  */
 const asAccordionSublist = (Sublist: CT<ListProps>) => (
   (Item: CT<PropsWithChildren<{}>> | string) => {
-    const ItemWithSublist: CT<ListProps> = ({ children, ...rest }) => {
-      const [expanded, setExpanded] = useState(true);
+    const AccordionItem = asAccordionWrapper(Item);
+    const AccordionBody = asAccordionBody(Sublist);
+    const AccordionTitle = flow(
+      asAccodionTitle,
+      asComponent,
+    )('div');
 
-      return (
-        <Item>
-          <ListAccordionTitle expanded={expanded} setExpanded={setExpanded}>
-            {children}
-          </ListAccordionTitle>
-
-          <div className={expanded ? 'block' : 'hidden'}>
-            <Sublist {...rest} />
-          </div>
-        </Item>
-      );
-    };
+    const ItemWithSublist: CT<ListProps> = ({ children, ...rest }) => (
+      <AccordionItem>
+        <AccordionTitle>
+          {children}
+        </AccordionTitle>
+        <AccordionBody {...rest} />
+      </AccordionItem>
+    );
     const ItemWithoutSublist: CT<ListProps> = ({ wrap, nodeKey, ...rest }) => (
       <Item {...rest} />
     );
+
     return withToggleTo(ItemWithoutSublist)(ItemWithSublist);
   }
 );

@@ -50,7 +50,7 @@ import {
   useActivateOnEffectActivator,
 } from './ActivateContext';
 import withChild from './withChild';
-import PageDimensionsProvider, { usePageDimensionsContext } from './PageDimensionsProvider';
+import PageDimensionsProvider, { usePageDimensionsContext, BreakpointsType } from './PageDimensionsProvider';
 
 export * from './components';
 export {
@@ -98,6 +98,7 @@ export {
   withFlowToggle,
   PageDimensionsProvider,
   usePageDimensionsContext,
+  BreakpointsType,
   useEditToggle,
 };
 

@@ -13,7 +13,7 @@
  */
 
 /* eslint-disable arrow-body-style, max-len, @typescript-eslint/no-unused-vars */
-import React, { FC, ComponentType as CT } from 'react';
+import React, { FC, ComponentType, HTMLProps } from 'react';
 import { flow, isEmpty } from 'lodash';
 import {
   withNodeKey,
@@ -61,7 +61,7 @@ const tagTitleComponentsStart: TagTitleComponents = {
   FilterGroupItemLabel: Label,
 };
 
-const withTagButtonProps = <P extends object>(Component: CT<P>) => (props: P) => {
+const withTagButtonProps = <P extends object>(Component: ComponentType<P>) => (props: P) => {
   const { getSuggestions } = useFilterByGroupContext();
 
   const tagButtonProps = {
@@ -77,7 +77,7 @@ const withTagButtonProps = <P extends object>(Component: CT<P>) => (props: P) =>
   return <Component {...props} {...tagButtonProps} />;
 };
 
-const withOnTagDelete = <P extends object>(Component: CT<P>) => (props: P) => {
+const withUnselectOnDelete = <P extends object>(Component: ComponentType<P>) => (props: P) => {
   const {
     setSelectedNode,
     setSelectedTag,
@@ -184,7 +184,7 @@ const TestFilterComponentsStart: FilterComponents = {
     }),
   )(List),
   TagList: flow(
-    withOnTagDelete,
+    withUnselectOnDelete,
     asEditableList,
     withDesign({
       Title: replaceWith(TagTitle),
@@ -194,7 +194,7 @@ const TestFilterComponentsStart: FilterComponents = {
 };
 
 class FilterBase extends React.PureComponent {
-  Filter: FC = Div;
+  Filter: ComponentType<HTMLProps<HTMLHeadingElement>> = Div;
 
   RestProps = {};
 
