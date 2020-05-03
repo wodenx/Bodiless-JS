@@ -92,10 +92,7 @@ const TagTitleBase: FC<TagTitleProps> = ({
     selectedNode,
     setSelectedNode,
     setSelectedTag,
-    useRegisterSuggestions,
   } = useFilterByGroupContext();
-
-  useRegisterSuggestions()([tag]);
 
   const onSelect = () => {
     setSelectedNode(nodeId);
@@ -147,7 +144,7 @@ const TagTitle = flow(
     'registerSuggestions',
   ]),
   ifEditable(
-    withTagButton(),
+    withTagButton,
     withContextActivator('onClick'),
     withLocalContextMenu,
   ),

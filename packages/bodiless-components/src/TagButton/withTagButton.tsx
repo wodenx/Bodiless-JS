@@ -12,15 +12,17 @@
  * limitations under the License.
  */
 
+import React, { HTMLProps, ComponentType } from 'react';
+import { flow, isEmpty } from 'lodash';
 import {
   EditButtonOptions,
   withEditButton,
   getUI,
   useEditContext,
   TagType,
+  useNodeDataHandlers,
 } from '@bodiless/core';
-import React, { HTMLProps } from 'react';
-import { TagButtonProps, TagsNodeType } from './types';
+import { TagButtonProps, TagsNodeType, WithRegisterSuggestionsType } from './types';
 
 // Options used to create an edit button.
 // eslint-disable-next-line max-len
@@ -83,7 +85,24 @@ export const tagButtonOptions:EditButtonOptions<TagButtonProps & HTMLProps<HTMLE
 
   global: false,
   local: true,
-
 };
-const withTagButton = () => withEditButton(tagButtonOptions);
+
+const withRegisteredTags = <P extends WithRegisterSuggestionsType>(
+  Component: ComponentType<P>,
+) => (props: P) => {
+    const { registerSuggestions } = props;
+    const { componentData } = useNodeDataHandlers<TagsNodeType>();
+
+    if (!isEmpty(componentData) && componentData.tags) {
+      registerSuggestions([...componentData.tags]);
+    }
+
+    return <Component {...props} />;
+  };
+
+const withTagButton = flow(
+  withEditButton(tagButtonOptions),
+  withRegisteredTags,
+);
+
 export default withTagButton;
