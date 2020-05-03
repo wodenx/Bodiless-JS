@@ -12,17 +12,14 @@
  * limitations under the License.
  */
 
-import FilterByGroupClean from './FilterByGroupClean';
-import { TestableFilterByGroup, asTestableFilterByGroup } from './FilterByGroupTestable';
-import { useFilterByGroupContext, withFBGSuggestions, withSuggestionProps } from './FilterByGroupContext';
-import asFilterableByGroup from './asFilterableByGroup';
+import { flow } from 'lodash';
+import { asTaggableItem, withFilterByTags } from '@bodiless/components';
+import { withSuggestionProps } from './FilterByGroupContext';
 
-export {
-  FilterByGroupClean,
-  TestableFilterByGroup,
-  asTestableFilterByGroup,
-  asFilterableByGroup,
-  withFBGSuggestions,
-  useFilterByGroupContext,
-  withSuggestionProps,
-};
+const asFilterableByGroup = flow(
+  withFilterByTags,
+  asTaggableItem(),
+  withSuggestionProps(),
+);
+
+export default asFilterableByGroup;

@@ -14,7 +14,7 @@
 
 import React from 'react';
 import { graphql } from 'gatsby';
-import { Page } from '@bodiless/gatsby-theme-bodiless';
+import Page from '../../../components/Page';
 
 import Layout from '../../../components/Layout';
 import FilterByGroup, { ContextLogger } from '../../../components/FilterByGroup';

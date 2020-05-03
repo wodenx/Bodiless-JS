@@ -19,11 +19,12 @@ import React, {
   createContext,
   FC,
   useState,
-  ComponentType as CT,
+  ComponentType,
 } from 'react';
 import { v1 } from 'uuid';
 import { uniqBy } from 'lodash';
 import { TagType } from '@bodiless/core';
+import { TagButtonProps } from '@bodiless/components';
 import { FBGContextOptions, SuggestionsRefType, FBGContextType } from './types';
 
 const FilterByGroupContext = createContext<FBGContextType>({
@@ -84,27 +85,34 @@ const FilterByGroupProvider: FC<FBGContextOptions> = ({
 };
 
 const withFilterByGroupContext = <P extends object>(
-  Component: CT<P> | string,
+  Component: ComponentType<P> | string,
 ) => (props: P & FBGContextOptions) => (
     <FilterByGroupProvider suggestions={props.suggestions}>
       <Component {...props} />
     </FilterByGroupProvider>
   );
 
-const withRegisterSuggestions = <P extends object>(Component: CT<P>) => (props: P) => {
-  const { useRegisterSuggestions } = useFilterByGroupContext();
+const withSuggestionProps = (
+  suggestionOptions?: TagButtonProps,
+) => <P extends object>(Component: ComponentType<P>) => (props: P) => {
+  const { getSuggestions, selectedTag, useRegisterSuggestions } = useFilterByGroupContext();
+  const registerSuggestions = useRegisterSuggestions();
 
-  return <Component {...props} registerSuggestions={useRegisterSuggestions()} />;
-};
+  const defaultProps = {
+    getSuggestions,
+    registerSuggestions,
+    onSubmit: (values: any) => registerSuggestions(values.tags),
+    selectedTags: selectedTag ? [selectedTag] : [],
+  };
 
-const withGetSuggestions = <P extends object>(Component: CT<P>) => (props: P) => {
-  const { getSuggestions } = useFilterByGroupContext();
-  return <Component {...props} getSuggestions={getSuggestions} />;
+  const suggestionProps = Object.assign(defaultProps, suggestionOptions);
+
+  return <Component {...props} {...suggestionProps} />;
 };
 
 const withFBGSuggestions = <P extends object>({
   suggestions,
-}: FBGContextOptions) => (Component: CT<P> | string) => (props: P) => (
+}: FBGContextOptions) => (Component: ComponentType<P> | string) => (props: P) => (
     <Component {...props} suggestions={suggestions} />
   );
 
@@ -114,7 +122,6 @@ export {
   FilterByGroupContext,
   useFilterByGroupContext,
   withFilterByGroupContext,
-  withRegisterSuggestions,
-  withGetSuggestions,
   withFBGSuggestions,
+  withSuggestionProps,
 };

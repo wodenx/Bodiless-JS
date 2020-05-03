@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 import { flow } from 'lodash';
+import { asFilterableByGroup } from '@bodiless/organisms';
 import {
   withFacet,
   withDesc,
@@ -22,13 +23,14 @@ import {
   withDesign,
 } from '@bodiless/fclasses';
 
-import { FilterableProductTout } from '../ProductTout';
+import { ProductTout } from '../ProductTout';
 
 const withProductVariations = withFacet('Product');
 
 const productVariations = {
   FilterableProductToutVariations: flow(
-    replaceWith(FilterableProductTout),
+    replaceWith(ProductTout),
+    asFilterableByGroup,
     withDesc('Filterable Product.\n'),
     withProductVariations('Filterable Product')(),
   ),

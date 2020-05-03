@@ -11,18 +11,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {
+  withDesign,
+  addClasses,
+} from '@bodiless/fclasses';
 
-import FilterByGroupClean from './FilterByGroupClean';
-import { TestableFilterByGroup, asTestableFilterByGroup } from './FilterByGroupTestable';
-import { useFilterByGroupContext, withFBGSuggestions, withSuggestionProps } from './FilterByGroupContext';
-import asFilterableByGroup from './asFilterableByGroup';
+const asResponsiveFilterByGroup = withDesign({
+  Wrapper: addClasses('lg:flex-row'),
+  FilterWrapper: addClasses('md:w-1/3 lg:mr-5'),
+  FilterHeader: addClasses('lg:flex-row lg:justify-between lg:items-center'),
+});
 
-export {
-  FilterByGroupClean,
-  TestableFilterByGroup,
-  asTestableFilterByGroup,
-  asFilterableByGroup,
-  withFBGSuggestions,
-  useFilterByGroupContext,
-  withSuggestionProps,
-};
+export default asResponsiveFilterByGroup;

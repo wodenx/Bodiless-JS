@@ -52,29 +52,13 @@ import {
   FilterProps,
   FilterComponents,
 } from './types';
-import { useFilterByGroupContext } from './FilterByGroupContext';
+import { useFilterByGroupContext, withSuggestionProps } from './FilterByGroupContext';
 
 const tagTitleComponentsStart: TagTitleComponents = {
   FilterInputWrapper: Div,
   FilterGroupItemInput: Input,
   FilterGroupItemPlaceholder: Label,
   FilterGroupItemLabel: Label,
-};
-
-const withTagButtonProps = <P extends object>(Component: ComponentType<P>) => (props: P) => {
-  const { getSuggestions } = useFilterByGroupContext();
-
-  const tagButtonProps = {
-    allowMultipleTags: false,
-    getSuggestions,
-    placeholder: 'Add or Create',
-    formTitle: 'Groups',
-    formBodyText: 'Select from available groups:',
-    seeAllText: 'View All Groups',
-    noSuggestionsText: 'No matching groups found.',
-  };
-
-  return <Component {...props} {...tagButtonProps} />;
 };
 
 const withUnselectOnDelete = <P extends object>(Component: ComponentType<P>) => (props: P) => {
@@ -159,6 +143,8 @@ const TagTitle = flow(
     'seeAllText',
     'formTitle',
     'formBodyText',
+    'selectedTags',
+    'registerSuggestions',
   ]),
   ifEditable(
     withTagButton(),
@@ -166,7 +152,14 @@ const TagTitle = flow(
     withLocalContextMenu,
   ),
   ifReadOnly(withoutProps(['setComponentData'])),
-  withTagButtonProps,
+  withSuggestionProps({
+    allowMultipleTags: false,
+    placeholder: 'Add or Create',
+    formTitle: 'Groups',
+    formBodyText: 'Select from available groups:',
+    seeAllText: 'View All Groups',
+    noSuggestionsText: 'No matching groups found.',
+  }),
   withNodeDataHandlers({ tags: [] }),
   withNode,
   withNodeKey('tag'),

@@ -20,6 +20,7 @@ import {
   addProps,
 } from '@bodiless/fclasses';
 import { asTextColorPrimary } from '../Elements.token';
+import asResponsiveFilterByGroup from './token';
 
 const suggestions = [
   { id: '1', name: 'DefaultTag 1' },
@@ -43,12 +44,6 @@ const withTagListStyles = withDesign({
 
 const withCategoryList = withDesign({
   Title: addClasses('font-bold'),
-});
-
-const asResponsiveFilterByGroup = withDesign({
-  Wrapper: addClasses('lg:flex-row'),
-  FilterWrapper: addClasses('md:w-1/3 lg:mr-5'),
-  FilterHeader: addClasses('lg:flex-row lg:justify-between lg:items-center'),
 });
 
 const asFilterByGroup = flow(

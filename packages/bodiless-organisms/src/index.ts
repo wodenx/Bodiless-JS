@@ -63,9 +63,10 @@ export {
 export {
   FilterByGroupClean,
   asTestableFilterByGroup,
+  asFilterableByGroup,
   withFBGSuggestions,
   useFilterByGroupContext,
-  withRegisterSuggestions,
+  withSuggestionProps,
 } from './components/FilterByGroup';
 
 export {

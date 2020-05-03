@@ -11,16 +11,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { ComponentType as CT } from 'react';
+
 import { flow } from 'lodash';
 import {
   withDesign,
 } from '@bodiless/fclasses';
-import {
-  ProductClean,
-  useFilterByGroupContext,
-} from '@bodiless/organisms';
-import { asTaggableItem, withFilterByTags } from '@bodiless/components';
+import { ProductClean } from '@bodiless/organisms';
 import { BVInlineRatings } from '@bodiless/bv';
 import { withEditorBasic, withEditorSimple } from '../Editors';
 import {
@@ -28,20 +24,6 @@ import {
   asEditableImage,
 } from '../Elements.token';
 import asProductToutDefaultStyle from './token';
-
-const withTagButtonProps = <P extends object>(Component: CT<P>) => (props: P) => {
-  const { getSuggestions, selectedTag, useRegisterSuggestions } = useFilterByGroupContext();
-  const registerSuggestions = useRegisterSuggestions();
-
-  const tagButtonProps = {
-    getSuggestions,
-    registerSuggestions,
-    onSubmit: (values: any) => registerSuggestions(values.tags),
-    selectedTags: selectedTag ? [selectedTag] : [],
-  };
-
-  return <Component {...props} {...tagButtonProps} />;
-};
 
 export const asProductTout = flow(
   withDesign({
@@ -59,13 +41,3 @@ export const ProductTout = flow(
   asProductTout,
   asProductToutDefaultStyle,
 )(ProductClean);
-
-export const asFilterableProductTout = flow(
-  withFilterByTags,
-  asTaggableItem(),
-  withTagButtonProps,
-);
-
-export const FilterableProductTout = flow(
-  asFilterableProductTout,
-)(ProductTout);
