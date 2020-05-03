@@ -101,7 +101,6 @@ const withSuggestionProps = (
   const defaultProps = {
     getSuggestions,
     registerSuggestions,
-    onSubmit: (values: any) => registerSuggestions(values.tags),
     selectedTags: selectedTag ? [selectedTag] : [],
   };
 
