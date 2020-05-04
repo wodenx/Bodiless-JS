@@ -14,7 +14,6 @@
 
 import React from 'react';
 import { graphql } from 'gatsby';
-// import { Page } from '@bodiless/gatsby-theme-bodiless';
 import Layout from '../components/Layout';
 import { SectionMargin } from '../components/Product';
 import Page from '../components/Page';

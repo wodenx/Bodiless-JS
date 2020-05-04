@@ -24,9 +24,10 @@ import {
 } from '@bodiless/core';
 import { TagButtonProps, TagsNodeType, WithRegisterSuggestionsType } from './types';
 
+type TagButtonType = EditButtonOptions<TagButtonProps & HTMLProps<HTMLElement>, TagsNodeType>;
+
 // Options used to create an edit button.
-// eslint-disable-next-line max-len
-export const tagButtonOptions:EditButtonOptions<TagButtonProps & HTMLProps<HTMLElement>, TagsNodeType> = {
+export const tagButtonOptions:TagButtonType = {
   icon: 'local_offer',
   name: 'Tag',
   renderForm: ({ ui, componentProps }) => {
