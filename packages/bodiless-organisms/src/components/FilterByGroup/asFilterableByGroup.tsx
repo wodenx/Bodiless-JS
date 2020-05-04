@@ -19,7 +19,13 @@ import { withTagProps } from './FilterByGroupContext';
 const asFilterableByGroup = flow(
   withFilterByTags,
   asTaggableItem(),
-  withTagProps(),
+  withTagProps({
+    placeholder: 'Add or Create',
+    formTitle: 'Groups',
+    formBodyText: 'Select from available groups:',
+    seeAllText: 'View All Groups',
+    noSuggestionsText: 'No matching groups found.',
+  }),
 );
 
 export default asFilterableByGroup;

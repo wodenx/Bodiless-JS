@@ -58,12 +58,17 @@ const FilterByGroupBase: FC<FilterByGroupProps> = ({
 
   const { setSelectedTag } = useFilterByGroupContext();
 
+  const onReset = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setSelectedTag();
+  };
+
   return (
     <Wrapper {...rest}>
       <FilterWrapper>
         <FilterHeader>
           <FilterTitle>{filterTitle}</FilterTitle>
-          <ResetButton onClick={() => setSelectedTag()}>{resetButtonText}</ResetButton>
+          <ResetButton onClick={onReset}>{resetButtonText}</ResetButton>
         </FilterHeader>
         <Filter />
       </FilterWrapper>
@@ -87,9 +92,9 @@ const asResponsiveFilterByGroup = flow(
 
 const FilterByGroupClean = flow(
   withoutProps(['suggestions']),
-  withFilterByGroupContext,
   designable(FilterByGroupComponentsStart),
   asResponsiveFilterByGroup,
+  withFilterByGroupContext,
 )(FilterByGroupBase);
 
 export default FilterByGroupClean;
