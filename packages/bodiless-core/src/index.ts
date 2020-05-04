@@ -36,7 +36,6 @@ import {
   withoutProps,
 } from './hoc';
 import { ifToggledOff, ifToggledOn, withFlowToggle } from './withFlowToggle';
-import { ifViewportIs, ifViewportIsNot } from './withResponsiveToggle';
 import { ifEditable, ifReadOnly, useEditToggle } from './withEditToggle';
 import { TMenuOption, PageEditContextInterface } from './PageEditContext/types';
 import { EditButtonOptions } from './Types/EditButtonTypes';
@@ -50,7 +49,6 @@ import {
   useActivateOnEffectActivator,
 } from './ActivateContext';
 import withChild from './withChild';
-import PageDimensionsProvider, { usePageDimensionsContext, BreakpointsType } from './PageDimensionsProvider';
 
 export * from './components';
 export {
@@ -83,8 +81,6 @@ export {
   DefaultContentNode,
   ifEditable,
   ifReadOnly,
-  ifViewportIs,
-  ifViewportIsNot,
   withoutProps,
   ActivateOnEffectProvider,
   withActivateOnEffect,
@@ -96,9 +92,6 @@ export {
   ifToggledOff,
   ifToggledOn,
   withFlowToggle,
-  PageDimensionsProvider,
-  usePageDimensionsContext,
-  BreakpointsType,
   useEditToggle,
 };
 

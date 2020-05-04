@@ -24,8 +24,6 @@ import {
   ifEditable,
   withContextActivator,
   withLocalContextMenu,
-  ifViewportIs,
-  ifViewportIsNot,
 } from '@bodiless/core';
 import {
   designable,
@@ -45,6 +43,8 @@ import {
   withBasicSublist,
   withTagButton,
   useTagsAccessors,
+  ifViewportIs,
+  ifViewportIsNot,
 } from '@bodiless/components';
 import {
   TagTitleProps,
@@ -52,7 +52,7 @@ import {
   FilterProps,
   FilterComponents,
 } from './types';
-import { useFilterByGroupContext, withSuggestionProps } from './FilterByGroupContext';
+import { useFilterByGroupContext, withTagProps } from './FilterByGroupContext';
 
 const tagTitleComponentsStart: TagTitleComponents = {
   FilterInputWrapper: Div,
@@ -149,7 +149,7 @@ const TagTitle = flow(
     withLocalContextMenu,
   ),
   ifReadOnly(withoutProps(['setComponentData'])),
-  withSuggestionProps({
+  withTagProps({
     allowMultipleTags: false,
     placeholder: 'Add or Create',
     formTitle: 'Groups',

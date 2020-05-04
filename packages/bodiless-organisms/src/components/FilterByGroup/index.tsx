@@ -14,7 +14,7 @@
 
 import FilterByGroupClean from './FilterByGroupClean';
 import { TestableFilterByGroup, asTestableFilterByGroup } from './FilterByGroupTestable';
-import { useFilterByGroupContext, withFBGSuggestions, withSuggestionProps } from './FilterByGroupContext';
+import { useFilterByGroupContext, withFBGSuggestions, withTagProps } from './FilterByGroupContext';
 import asFilterableByGroup from './asFilterableByGroup';
 
 export {
@@ -24,5 +24,5 @@ export {
   asFilterableByGroup,
   withFBGSuggestions,
   useFilterByGroupContext,
-  withSuggestionProps,
+  withTagProps,
 };

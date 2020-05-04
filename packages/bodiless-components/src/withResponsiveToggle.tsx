@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { ifToggledOn, ifToggledOff } from './withFlowToggle';
+import { ifToggledOn, ifToggledOff } from '@bodiless/core';
 import { usePageDimensionsContext } from './PageDimensionsProvider';
 
 const useResponsiveToggle = (sizes: string[] | string) => () => {

@@ -14,14 +14,14 @@
 
 import { flow } from 'lodash';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
-import { addProps } from '@bodiless/fclasses';
+import { withPageDimensionsContext } from '@bodiless/components';
 
 const breakpoints = {
   sm: 640, md: 768, lg: 1024, xl: 1280,
 };
 
 const asResponsivePage = flow(
-  addProps({ breakpoints }),
+  withPageDimensionsContext({ breakpoints }),
 )(Page);
 
 export default asResponsivePage;

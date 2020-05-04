@@ -18,6 +18,7 @@ import React, {
   useState,
   useEffect,
   useContext,
+  ComponentType,
 } from 'react';
 import { throttle } from 'lodash';
 
@@ -77,7 +78,16 @@ const PageDimensionsProvider: FC<PageDimensionsProviderProps> = ({ children, bre
   );
 };
 
+const withPageDimensionsContext = <P extends object>({
+  breakpoints,
+}: PageDimensionsProviderProps) => (Component: ComponentType<P> | string) => (props: P) => (
+  <PageDimensionsProvider breakpoints={breakpoints}>
+    <Component {...props} />
+  </PageDimensionsProvider>
+  );
+
 export default PageDimensionsProvider;
 export {
+  withPageDimensionsContext,
   usePageDimensionsContext,
 };

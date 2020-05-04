@@ -14,12 +14,12 @@
 
 import { flow } from 'lodash';
 import { asTaggableItem, withFilterByTags } from '@bodiless/components';
-import { withSuggestionProps } from './FilterByGroupContext';
+import { withTagProps } from './FilterByGroupContext';
 
 const asFilterableByGroup = flow(
   withFilterByTags,
   asTaggableItem(),
-  withSuggestionProps(),
+  withTagProps(),
 );
 
 export default asFilterableByGroup;

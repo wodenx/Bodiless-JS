@@ -18,8 +18,12 @@ import {
   designable, Div, Button, withoutProps, H3,
   withDesign,
 } from '@bodiless/fclasses';
-import { ifViewportIsNot } from '@bodiless/core';
-import { asAccordionWrapper, asAccordionBody, asAccodionTitle } from '@bodiless/components';
+import {
+  asAccordionWrapper,
+  asAccordionBody,
+  asAccodionTitle,
+  ifViewportIsNot,
+} from '@bodiless/components';
 import { FilterByGroupComponents, FilterByGroupProps } from './types';
 import FilterClean from './Filter';
 import { useFilterByGroupContext, withFilterByGroupContext } from './FilterByGroupContext';

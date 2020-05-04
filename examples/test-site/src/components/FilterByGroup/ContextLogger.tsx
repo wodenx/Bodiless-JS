@@ -19,7 +19,7 @@ import {
 } from '@bodiless/fclasses';
 import {
   useFilterByGroupContext,
-  withSuggestionProps,
+  withTagProps,
 } from '@bodiless/organisms';
 import { BodilessTag, TagType } from '@bodiless/core';
 
@@ -72,7 +72,7 @@ const ContextLoggerBase: FC<Props> = () => {
 };
 
 const ContextLogger = flow(
-  withSuggestionProps(),
+  withTagProps(),
 )(ContextLoggerBase);
 
 export default ContextLogger;

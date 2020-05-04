@@ -66,7 +66,7 @@ export {
   asFilterableByGroup,
   withFBGSuggestions,
   useFilterByGroupContext,
-  withSuggestionProps,
+  withTagProps,
 } from './components/FilterByGroup';
 
 export {

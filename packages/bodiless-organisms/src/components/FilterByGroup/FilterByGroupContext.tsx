@@ -92,7 +92,7 @@ const withFilterByGroupContext = <P extends object>(
     </FilterByGroupProvider>
   );
 
-const withSuggestionProps = (
+const withTagProps = (
   suggestionOptions?: TagButtonProps,
 ) => <P extends object>(Component: ComponentType<P>) => (props: P) => {
   const { getSuggestions, selectedTag, useRegisterSuggestions } = useFilterByGroupContext();
@@ -122,5 +122,5 @@ export {
   useFilterByGroupContext,
   withFilterByGroupContext,
   withFBGSuggestions,
-  withSuggestionProps,
+  withTagProps,
 };
