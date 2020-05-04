@@ -48,23 +48,29 @@ const mapBreakpointsSize = (breakpoints: BreakpointsType = {}, width: number) =>
 
 const usePageDimensionsContext = () => useContext(PageDimensionsContext);
 
+const isWindowDefined = typeof window !== 'undefined';
+
+const getDimensions = (breakpoints?: BreakpointsType): PageDimensions => {
+  if (isWindowDefined) {
+    return {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      size: mapBreakpointsSize(breakpoints, window.innerWidth),
+    };
+  }
+
+  return { width: 0, height: 0, size: 'sm' };
+};
+
 const PageDimensionsProvider: FC<PageDimensionsProviderProps> = ({ children, breakpoints }) => {
-  const [dimensions, setDimensions] = useState<PageDimensions>({
-    width: window.innerWidth,
-    height: window.innerHeight,
-    size: mapBreakpointsSize(breakpoints, window.innerWidth),
-  });
+  const [dimensions, setDimensions] = useState<PageDimensions>(getDimensions(breakpoints));
 
   useEffect(() => {
     const handleResize = () => {
-      setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-        size: mapBreakpointsSize(breakpoints, window.innerWidth),
-      });
+      setDimensions(getDimensions(breakpoints));
     };
 
-    window.addEventListener('resize', throttle(handleResize, 500));
+    if (isWindowDefined) window.addEventListener('resize', throttle(handleResize, 500));
 
     return () => {
       window.removeEventListener('resize', handleResize);
