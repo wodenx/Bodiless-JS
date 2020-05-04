@@ -151,6 +151,11 @@ const getMergeBase = async (a, b) => {
   return mergeBase.stdout.trim();
 }
 
+/**
+ * Compares two refs.
+ * @param {*} show 
+ * @param {*} comparedTo 
+ */
 const compare = async (show, comparedTo) => {
   const mergeBase = await getMergeBase(show, comparedTo);
   const commitsPromise = GitCmd.cmd()
