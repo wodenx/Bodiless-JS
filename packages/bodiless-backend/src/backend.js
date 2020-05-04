@@ -22,6 +22,7 @@ const formidable = require('formidable');
 const tmp = require('tmp');
 const path = require('path');
 const Page = require('./page');
+const GitCmd = require('./GitCmd');
 const Logger = require('./logger');
 
 const backendPrefix = process.env.GATSBY_BACKEND_PREFIX || '/___backend';
@@ -73,69 +74,6 @@ class Git {
         resolve(results);
       });
     });
-  }
-}
-/*
-This Class wraps spawn and lets us build out git commands with standard responses
-*/
-class GitCmd {
-  constructor() {
-    this.cmd = 'git';
-    this.params = [];
-    this.files = [];
-  }
-
-  add(...params) {
-    this.params.push(...params);
-    return this;
-  }
-
-  addFiles(...files) {
-    this.files.push(...files);
-    // const rawFiles = [...arguments]
-    // this.files.push(...rawFiles.map((file) => file.replace(/ /,'\ ')))
-    return this;
-  }
-
-  spawn() {
-    const args = [...this.params, ...this.files];
-    logger.log([`Spawning command: ${this.cmd}`, ...args]);
-    return spawn(this.cmd, args);
-  }
-
-  exec() {
-    return new Promise((resolve, reject) => {
-      const cmd = this.spawn();
-      let stderr = '';
-      let stdout = '';
-      cmd.stdout.on('data', data => {
-        stdout += data.toString();
-      });
-      cmd.stderr.on('data', data => {
-        stderr += data.toString();
-      });
-      cmd.on('close', code => {
-        logger.log(stdout, stderr, code);
-        if (code === 0) {
-          resolve({ stdout, stderr, code });
-          return;
-        }
-        // Allow plumbing commands with --quiet flag to return either 0 or 1.
-        if (this.params.includes('--quiet')) {
-          resolve({ stdout, stderr, code });
-          return;
-        }
-
-        const error = new Error(`${stderr}`);
-        error.code = `${code}`;
-        error.info = { stdout, stderr, code };
-        reject(error);
-      });
-    });
-  }
-
-  static cmd() {
-    return new GitCmd();
   }
 }
 
