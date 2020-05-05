@@ -20,7 +20,8 @@ const logger = new Logger('BACKEND');
 This Class wraps spawn and lets us build out git commands with standard responses
 */
 class GitCmd {
-  constructor() {
+  constructor(options) {
+    this.options = options || {};
     this.cmd = 'git';
     this.params = [];
     this.files = [];
@@ -41,7 +42,7 @@ class GitCmd {
   spawn() {
     const args = [...this.params, ...this.files];
     logger.log([`Spawning command: ${this.cmd}`, ...args]);
-    return spawn(this.cmd, args);
+    return spawn(this.cmd, args, this.options);
   }
 
   exec() {
@@ -75,8 +76,8 @@ class GitCmd {
     });
   }
 
-  static cmd() {
-    return new GitCmd();
+  static cmd(options) {
+    return new GitCmd(options);
   }
 }
 

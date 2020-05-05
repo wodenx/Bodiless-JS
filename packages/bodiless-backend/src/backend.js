@@ -17,10 +17,11 @@
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
-const { spawn } = require('child_process');
+const { spawn } = require('child_process'); 
 const formidable = require('formidable');
 const tmp = require('tmp');
 const path = require('path');
+const { v1 } = require('uuid');
 const Page = require('./page');
 const GitCmd = require('./GitCmd');
 const Logger = require('./logger');
@@ -130,6 +131,32 @@ const compare = async (show, comparedTo) => {
     diff: result[1].stdout.trim().split('\n').map(l => l.trim()).filter(l => l.length > 0),
   };
 };
+
+const getRemote = async (remote = 'origin') => {
+  const result = await GitCmd.cmd().add('remote', 'get-url', remote).exec();
+  return result.trim();
+}
+
+const clone = (url, options = {}) => {
+  const cmd = GitCmd.cmd().add('clone', url);
+  if (options.branch) cmd.add('-b', options.branch);
+  if (options.directory) cmd.add(directory);
+  return cmd.exec();
+}
+
+const getConflicts = async (from, to) => {
+  const [origin, branch] = await Promise.all([
+    getRemote('origin'),
+    getCurrentBranch(),
+  ]);
+  const directory = path.resolve(process.env.BODILESS_BACKEND_TMP || '/tmp', v1());
+  await clone(origin, { directory, branch });
+  const mergeCmd = GitCmd.cmd({ cwd: directory })
+    .add('merge', 'origin/master')
+
+
+
+}
 
 /**
  * Returns an object describing local and upstream changes on the changeset branch.
