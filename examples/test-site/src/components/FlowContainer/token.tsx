@@ -24,7 +24,7 @@ const asFlowContainerWithMargins = withDesign({
 
 const asFlowContainerFullWidth = withDesign({
   Wrapper: addClasses('w-full'),
-  ComponentWrapper: addClasses('w-1/2 md:w-1/3'),
+  ComponentWrapper: addClasses('w-full md:w-1/3'),
 });
 
 export {
