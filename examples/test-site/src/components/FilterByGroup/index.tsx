@@ -14,57 +14,19 @@
 
 import { flow } from 'lodash';
 import { FilterByGroupClean, asTestableFilterByGroup, withFBGSuggestions } from '@bodiless/organisms';
-import {
-  withDesign,
-  addClasses,
-  addProps,
-} from '@bodiless/fclasses';
-import { asTextColorPrimary } from '../Elements.token';
-import asResponsiveFilterByGroup from './token';
-
-const suggestions = [
-  { id: '1', name: 'DefaultTag 1' },
-  { id: '2', name: 'DefaultTag 2' },
-  { id: '3', name: 'DefaultTag 3' },
-  { id: '4', name: 'DefaultTag 4' },
-];
-
-const withTagListStyles = withDesign({
-  Title: flow(
-    addProps({ emptyTitleText: 'Group' }),
-    withDesign({
-      FilterInputWrapper: addClasses('flex pb-2 items-center'),
-      FilterGroupItemInput: addClasses('mr-3'),
-      FilterGroupItemPlaceholder: addClasses('text-gray-600'),
-      FilterGroupItemLabel: addClasses(''),
-    }),
-  ),
-  Wrapper: addClasses('m-2 pl-2'),
-});
-
-const withCategoryList = withDesign({
-  Title: addClasses('font-bold'),
-});
+import { addProps } from '@bodiless/fclasses';
+import { asFilterByGroupResponsive, asFilterByGroupDefaultStyle } from './token';
 
 const asFilterByGroup = flow(
-  withFBGSuggestions({ suggestions }),
-  addProps({ resetButtonText: 'Show All Products' }),
-  asResponsiveFilterByGroup,
-  withDesign({
-    Wrapper: addClasses('flex flex-col'),
-    FilterWrapper: addClasses('p-2 bg-gray-400 flex flex-col'),
-    FilterHeader: addClasses('flex flex-col w-full'),
-    FilterTitle: addClasses('my-2 text-xl font-bold'),
-    ContentWrapper: addClasses('p-2 w-full'),
-    ResetButton: flow(
-      addClasses('my-2 underline self-start'),
-      asTextColorPrimary,
-    ),
-    Filter: withDesign({
-      TagList: withTagListStyles,
-      CategoryList: withCategoryList,
-    }),
-  }),
+  withFBGSuggestions(
+    { id: '1', name: 'DefaultTag 1' },
+    { id: '2', name: 'DefaultTag 2' },
+    { id: '3', name: 'DefaultTag 3' },
+    { id: '4', name: 'DefaultTag 4' },
+  ),
+  addProps({ resetButtonText: 'Show all Products' }),
+  asFilterByGroupResponsive,
+  asFilterByGroupDefaultStyle,
   asTestableFilterByGroup,
 );
 

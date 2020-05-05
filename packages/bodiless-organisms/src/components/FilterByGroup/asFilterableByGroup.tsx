@@ -21,7 +21,7 @@ const asFilterableByGroup = flow(
   asTaggableItem(),
   withTagProps({
     placeholder: 'Add or Create',
-    formTitle: 'Groups',
+    formTitle: 'Group Membership',
     formBodyText: 'Select from available groups:',
     seeAllText: 'View All Groups',
     noSuggestionsText: 'No matching groups found.',

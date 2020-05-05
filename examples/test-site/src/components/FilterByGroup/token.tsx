@@ -11,15 +11,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { flow } from 'lodash';
 import {
   withDesign,
   addClasses,
+  addProps,
 } from '@bodiless/fclasses';
+import { asTextColorPrimary } from '../Elements.token';
 
-const asResponsiveFilterByGroup = withDesign({
-  Wrapper: addClasses('lg:flex-row'),
+const asFilterByGroupResponsive = withDesign({
+  Wrapper: addClasses('lg:flex-row lg:min-h-screen'),
   FilterWrapper: addClasses('md:w-1/3 lg:mr-5'),
   FilterHeader: addClasses('lg:flex-row lg:justify-between lg:items-center'),
 });
 
-export default asResponsiveFilterByGroup;
+const withTagListStyles = withDesign({
+  Title: flow(
+    addProps({ emptyTitleText: 'Group' }),
+    withDesign({
+      FilterInputWrapper: addClasses('flex pb-2 items-center'),
+      FilterGroupItemInput: addClasses('mr-3'),
+      FilterGroupItemPlaceholder: addClasses('text-gray-600'),
+      FilterGroupItemLabel: addClasses(''),
+    }),
+  ),
+  Wrapper: addClasses('m-2 pl-2'),
+});
+
+const withCategoryList = withDesign({
+  Title: addClasses('font-bold'),
+});
+
+const asFilterByGroupDefaultStyle = withDesign({
+  Wrapper: addClasses('flex flex-col'),
+  FilterWrapper: addClasses('p-2 bg-gray-400 flex flex-col'),
+  FilterHeader: addClasses('flex flex-col w-full'),
+  FilterTitle: addClasses('my-2 text-xl font-bold'),
+  ContentWrapper: addClasses('p-2 w-full'),
+  ResetButton: flow(
+    addClasses('my-2 underline self-start'),
+    asTextColorPrimary,
+  ),
+  Filter: withDesign({
+    TagList: withTagListStyles,
+    CategoryList: withCategoryList,
+  }),
+});
+
+export default asFilterByGroupResponsive;
+export {
+  asFilterByGroupDefaultStyle,
+  asFilterByGroupResponsive,
+};
