@@ -17,13 +17,15 @@ import { FilterByGroupClean, asTestableFilterByGroup, withFBGSuggestions } from 
 import { addProps } from '@bodiless/fclasses';
 import { asFilterByGroupResponsive, asFilterByGroupDefaultStyle } from './token';
 
+const suggestions = [
+  { id: '1', name: 'DefaultTag 1' },
+  { id: '2', name: 'DefaultTag 2' },
+  { id: '3', name: 'DefaultTag 3' },
+  { id: '4', name: 'DefaultTag 4' },
+];
+
 const asFilterByGroup = flow(
-  withFBGSuggestions(
-    { id: '1', name: 'DefaultTag 1' },
-    { id: '2', name: 'DefaultTag 2' },
-    { id: '3', name: 'DefaultTag 3' },
-    { id: '4', name: 'DefaultTag 4' },
-  ),
+  withFBGSuggestions({ suggestions }),
   addProps({ resetButtonText: 'Show all Products' }),
   asFilterByGroupResponsive,
   asFilterByGroupDefaultStyle,
