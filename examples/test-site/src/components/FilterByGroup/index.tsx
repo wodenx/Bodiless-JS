@@ -26,7 +26,7 @@ const suggestions = [
 
 const asFilterByGroup = flow(
   withFBGSuggestions({ suggestions }),
-  addProps({ resetButtonText: 'Show all Products' }),
+  addProps({ resetButtonText: 'Show All Products' }),
   asFilterByGroupResponsive,
   asFilterByGroupDefaultStyle,
   asTestableFilterByGroup,
