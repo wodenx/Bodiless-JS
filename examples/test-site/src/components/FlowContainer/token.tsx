@@ -12,11 +12,13 @@
  * limitations under the License.
  */
 
+import { flow } from 'lodash';
+import { withParentNode } from '@bodiless/core';
+import { asFilterableByGroup } from '@bodiless/organisms';
 import {
   addClasses,
   withDesign,
 } from '@bodiless/fclasses';
-import { asFilterableByGroup } from '@bodiless/organisms';
 
 const asFlowContainerWithMargins = withDesign({
   Wrapper: addClasses('md:-m-5 py-5'),
@@ -29,7 +31,10 @@ const asFlowContainerFullWidth = withDesign({
 });
 
 const asFlowContainerFilterable = withDesign({
-  ComponentWrapper: asFilterableByGroup,
+  ComponentWrapper: flow(
+    withParentNode,
+    asFilterableByGroup(),
+  ),
 });
 
 export {

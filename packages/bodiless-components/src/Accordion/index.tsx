@@ -27,14 +27,14 @@ type AccordionContextType = {
 };
 
 const AccordionContext = createContext<AccordionContextType>({
-  expanded: true,
+  expanded: false,
   setExpanded: () => null,
 });
 
 const useAccordionContext = () => useContext(AccordionContext);
 
 const AccordionProvider: FC = ({ children }) => {
-  const [expanded, setExpanded] = useState<boolean>(true);
+  const [expanded, setExpanded] = useState<boolean>(false);
 
   return (
     <AccordionContext.Provider value={{ expanded, setExpanded }}>

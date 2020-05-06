@@ -18,6 +18,7 @@ import PageEditContext from './PageEditContext';
 import asStatic from './asStatic';
 import { useEditContext, useUUID, useContextActivator } from './hooks';
 import withNode, { withNodeKey } from './withNode';
+import withParentNode from './withParentNode';
 import {
   withDefaultContent,
   withResetButton,
@@ -73,6 +74,7 @@ export {
   EditButtonOptions,
   withNode,
   withNodeKey,
+  withParentNode,
   contextMenuForm,
   withData,
   NodeProvider,
