@@ -19,7 +19,7 @@ import {
 import { asFilterableByGroup } from '@bodiless/organisms';
 
 const asFlowContainerWithMargins = withDesign({
-  Wrapper: addClasses('-m-5 py-5'),
+  Wrapper: addClasses('md:-m-5 py-5'),
   ComponentWrapper: addClasses('p-5'),
 });
 
