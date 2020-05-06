@@ -16,6 +16,7 @@ import {
   addClasses,
   withDesign,
 } from '@bodiless/fclasses';
+import { asFilterableByGroup } from '@bodiless/organisms';
 
 const asFlowContainerWithMargins = withDesign({
   Wrapper: addClasses('-m-5 py-5'),
@@ -27,7 +28,12 @@ const asFlowContainerFullWidth = withDesign({
   ComponentWrapper: addClasses('w-full md:w-1/3'),
 });
 
+const asFlowContainerFilterable = withDesign({
+  ComponentWrapper: asFilterableByGroup,
+});
+
 export {
   asFlowContainerWithMargins,
   asFlowContainerFullWidth,
+  asFlowContainerFilterable,
 };
