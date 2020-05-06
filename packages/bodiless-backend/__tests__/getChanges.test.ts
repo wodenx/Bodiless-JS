@@ -28,7 +28,7 @@ const cleanGitFixture = () => () => {
   const tmp = resolveRelativeToMe('tmp');
   rimraf.sync(tmp);
   process.chdir(originalCwd);
-}
+};
 
 describe('getChanges', () => {
   beforeEach(cloneGitFixture('get-changes', 'test-upstream-changes'));
@@ -61,7 +61,7 @@ describe('getChanges', () => {
     expect(commits).toEqual([
       '229389a Upstream remove file',
       'a6eb035 Upstream add file',
-      '9da0814 Upstream change'
+      '9da0814 Upstream change',
     ]);
   });
 });
