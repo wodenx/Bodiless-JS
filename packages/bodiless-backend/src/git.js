@@ -63,7 +63,7 @@ const compare = async (show, comparedTo) => {
   const result = await Promise.all([commitsPromise, filesPromise]);
   return {
     commits: result[0].stdout.trim().split('\n').map(l => l.trim()).filter(l => l.length > 0),
-    diff: result[1].stdout.trim().split('\n').map(l => l.trim()).filter(l => l.length > 0),
+    files: result[1].stdout.trim().split('\n').map(l => l.trim()).filter(l => l.length > 0),
   };
 };
 
