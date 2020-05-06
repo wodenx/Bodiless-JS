@@ -30,7 +30,7 @@ const getUpstreamBranch = async (branch, remote = 'origin') => {
     return `${remote}/${branch}`;
   } catch (e) {
     // Catch only the error where the upstream branch doesn't exist.
-    if (e.code === 2) return undefined;
+    if (e.code === '2') return undefined;
     throw e;
   }
 };
