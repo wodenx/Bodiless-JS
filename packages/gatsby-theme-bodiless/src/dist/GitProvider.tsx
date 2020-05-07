@@ -25,7 +25,7 @@ import {
 import { AxiosPromise } from 'axios';
 import BackendClient from './BackendClient';
 import CommitsList from './CommitsList';
-
+import RemoteChanges from './RemoteChanges';
 
 const backendFilePath = process.env.BODILESS_BACKEND_DATA_FILE_PATH || '';
 const backendStaticPath = process.env.BODILESS_BACKEND_STATIC_PATH || '';
@@ -91,7 +91,7 @@ const formGetCommitsList = (client: Client) => contextMenuForm({
     const { ComponentFormTitle } = getUI(ui);
     return (
       <>
-        <ComponentFormTitle>Latest Commits</ComponentFormTitle>
+        <ComponentFormTitle>Latest ComformGitPullmits</ComponentFormTitle>
         <CommitsList client={client} />
       </>
     );
@@ -119,24 +119,22 @@ const formGitCommit = (client: Client) => contextMenuForm({
   },
 );
 
-// Currently descoping the Pull Changes Button Functionality.
-// Might use it later.
-
-// const formGitPull = (client: Client) => contextMenuForm({
-//   submitValues: () => handle(client.pull()),
-// })(
-//   ({ ui }: any) => {
-//     const { ComponentFormTitle, ComponentFormLabel } = getUI(ui);
-//     return (
-//       <>
-//         <ComponentFormTitle>Download Changes</ComponentFormTitle>
-//         <ComponentFormLabel htmlFor="pull-txt">
-//           Download remote changes
-//         </ComponentFormLabel>
-//       </>
-//     );
-//   },
-// );
+const formGitPull = (client: Client) => contextMenuForm({
+  submitValues: () => {},
+})(
+  ({ ui }: any) => {
+    const { ComponentFormTitle, ComponentFormLabel } = getUI(ui);
+    return (
+      <>
+        <ComponentFormTitle>Download Changes</ComponentFormTitle>
+        <ComponentFormLabel htmlFor="pull-txt">
+          Download remote changes
+        </ComponentFormLabel>
+        <RemoteChanges client={client} />
+      </>
+    );
+  },
+);
 
 const formGitReset = (client: Client, context: any) => contextMenuForm({
   submitValues: async () => {
@@ -189,13 +187,11 @@ const getMenuOptions = (client: Client = defaultClient, context: any): TMenuOpti
       isHidden: () => !context.isEdit,
       handler: () => saveChanges,
     },
-    // Currently descoping the Pull Changes Button Functionality.
-    // Might use it later.
-    // {
-    //   name: 'pullchanges',
-    //   icon: 'cloud_download',
-    //   handler: () => formGitPull(client),
-    // },
+    {
+      name: 'pull',
+      icon: 'cloud_download',
+      handler: () => formGitPull(client),
+    },
     {
       name: 'resetchanges',
       icon: 'undo',
