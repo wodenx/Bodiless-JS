@@ -39,9 +39,11 @@ const handleResponse = ({ upstream }: ResponseData) => {
   const { commits, files } = upstream;
   if (isEmpty(commits)) {
     message = 'There aren\'t any changes to download.';
-  } else if (!isEmpty(files) && files.some(file => file.includes('package.json'))) {
+  } else if (files.some(file => file.includes('package.json'))) {
     // @Todo how do we determine if a change require restart?
     message = 'Upstream changes are available but cannot be fetched via the UI';
+  } else {
+    message = commits.join('\r\n');
   }
   return renderSelectableList(message);
 };
@@ -51,7 +53,7 @@ type Props = {
 };
 
 const WrappedSpinner = () => (
-  <div className="bl-pt-5">
+  <div className="bl-pt-3">
     <Spinner color="bl-bg-white" />
   </div>
 );
