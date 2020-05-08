@@ -120,16 +120,13 @@ const formGitCommit = (client: Client) => contextMenuForm({
 );
 
 const formGitPull = (client: Client) => contextMenuForm({
-  submitValues: () => {},
+  submitValues: (values: any) => { console.log(values)},
 })(
   ({ ui }: any) => {
-    const { ComponentFormTitle, ComponentFormLabel } = getUI(ui);
+    const { ComponentFormTitle } = getUI(ui);
     return (
       <>
-        <ComponentFormTitle>Download Changes</ComponentFormTitle>
-        <ComponentFormLabel htmlFor="pull-txt">
-          Download remote changes
-        </ComponentFormLabel>
+        <ComponentFormTitle>Pull Changes</ComponentFormTitle>
         <RemoteChanges client={client} />
       </>
     );
@@ -188,7 +185,8 @@ const getMenuOptions = (client: Client = defaultClient, context: any): TMenuOpti
       handler: () => saveChanges,
     },
     {
-      name: 'pull',
+      name: 'Pull',
+      label: 'Pull',
       icon: 'cloud_download',
       handler: () => formGitPull(client),
     },

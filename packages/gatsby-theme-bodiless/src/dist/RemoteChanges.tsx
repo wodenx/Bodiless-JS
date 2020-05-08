@@ -16,7 +16,6 @@ import React, { useState, useEffect } from 'react';
 import { useEditContext } from '@bodiless/core';
 import { Spinner } from '@bodiless/ui';
 import { isEmpty } from 'lodash';
-import BackendClient from './BackendClient';
 
 type ResponseData = {
   upstream: Upstream;
@@ -28,28 +27,40 @@ type Upstream = {
   files: [string];
 };
 
-const renderSelectableList = (message: string) => (
+const renderRespContent = (content: any) => (
   <div className="bl-h-xl-grid-1 bl-overflow-auto bl-max-w-xl-grid-4">
-    {message}
+    {content}
   </div>
 );
 
+type CommitListProps = {
+  commits : [string];
+};
+
+const RemoteCommitList = (props : CommitListProps) => {
+  const { commits } = props;
+  const listItems = commits.map((commit, index) => (
+    <li key={index.toString()}>{commit}</li>
+  ));
+  return (
+    <ul>{listItems}</ul>
+  );
+};
+
 const handleResponse = ({ upstream }: ResponseData) => {
-  let message = '';
   const { commits, files } = upstream;
   if (isEmpty(commits)) {
-    message = 'There aren\'t any changes to download.';
-  } else if (files.some(file => file.includes('package.json'))) {
-    // @Todo how do we determine if a change require restart?
-    message = 'Upstream changes are available but cannot be fetched via the UI';
-  } else {
-    message = commits.join('\r\n');
+    return renderRespContent('There aren\'t any changes to download.');
+  } if (files.some(file => file.includes('package-lock.json'))) {
+    return renderRespContent(
+      'Upstream changes are available but cannot be fetched via the UI',
+    );
   }
-  return renderSelectableList(message);
+  return <RemoteCommitList commits={commits} />;
 };
 
 type Props = {
-  client: BackendClient;
+  client: any;
 };
 
 const WrappedSpinner = () => (
