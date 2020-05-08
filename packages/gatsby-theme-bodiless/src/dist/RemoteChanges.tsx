@@ -16,6 +16,8 @@ import React, { useState, useEffect } from 'react';
 import { useEditContext } from '@bodiless/core';
 import { Spinner } from '@bodiless/ui';
 import { isEmpty } from 'lodash';
+import { useFormApi, Checkbox, Text } from 'informed';
+
 
 type ResponseData = {
   upstream: Upstream;
@@ -27,12 +29,6 @@ type Upstream = {
   files: [string];
 };
 
-const renderRespContent = (content: any) => (
-  <div className="bl-h-xl-grid-1 bl-overflow-auto bl-max-w-xl-grid-4">
-    {content}
-  </div>
-);
-
 type CommitListProps = {
   commits : [string];
 };
@@ -43,18 +39,19 @@ const RemoteCommitList = (props : CommitListProps) => {
     <li key={index.toString()}>{commit}</li>
   ));
   return (
-    <ul>{listItems}</ul>
+    <>
+      <Text type="hidden" field="allowed" initialValue />
+      <ul>{listItems}</ul>
+    </>
   );
 };
 
 const handleResponse = ({ upstream }: ResponseData) => {
   const { commits, files } = upstream;
   if (isEmpty(commits)) {
-    return renderRespContent('There aren\'t any changes to download.');
+    return 'There aren\'t any changes to download.';
   } if (files.some(file => file.includes('package-lock.json'))) {
-    return renderRespContent(
-      'Upstream changes are available but cannot be fetched via the UI',
-    );
+    return 'Upstream changes are available but cannot be fetched via the UI';
   }
   return <RemoteCommitList commits={commits} />;
 };
@@ -63,7 +60,7 @@ type Props = {
   client: any;
 };
 
-const WrappedSpinner = () => (
+const Wrapper = () => (
   <div className="bl-pt-3">
     <Spinner color="bl-bg-white" />
   </div>
@@ -74,10 +71,9 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const RemoteChanges = ({ client }: Props) => {
   const [state, setState] = useState<{ content: any }>({
-    content: <WrappedSpinner />,
+    content: <Wrapper />,
   });
   const context = useEditContext();
-
   useEffect(() => {
     (async () => {
       try {

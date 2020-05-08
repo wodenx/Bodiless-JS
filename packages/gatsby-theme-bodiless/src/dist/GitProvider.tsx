@@ -91,7 +91,7 @@ const formGetCommitsList = (client: Client) => contextMenuForm({
     const { ComponentFormTitle } = getUI(ui);
     return (
       <>
-        <ComponentFormTitle>Latest ComformGitPullmits</ComponentFormTitle>
+        <ComponentFormTitle>Latest Commits</ComponentFormTitle>
         <CommitsList client={client} />
       </>
     );
@@ -120,18 +120,16 @@ const formGitCommit = (client: Client) => contextMenuForm({
 );
 
 const formGitPull = (client: Client) => contextMenuForm({
-  submitValues: (values: any) => { console.log(values); },
-})(
-  ({ ui }: any) => {
-    const { ComponentFormTitle } = getUI(ui);
-    return (
-      <>
-        <ComponentFormTitle>Pull Changes</ComponentFormTitle>
-        <RemoteChanges client={client} />
-      </>
-    );
-  },
-);
+  submitValues: values => { console.log(values); },
+})(({ ui }: any) => {
+  const { ComponentFormTitle } = getUI(ui);
+  return (
+    <>
+      <ComponentFormTitle>Pull Changes</ComponentFormTitle>
+      <RemoteChanges client={client} />
+    </>
+  );
+});
 
 const formGitReset = (client: Client, context: any) => contextMenuForm({
   submitValues: async () => {
