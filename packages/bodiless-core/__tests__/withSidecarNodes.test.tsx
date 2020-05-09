@@ -102,7 +102,7 @@ describe('withSidecarNodes', () => {
     expect(span.text()).toBe('root$test$baz');
   });
 
-  it.only('supports nested sidecars', () => {
+  it('supports nested sidecars', () => {
     const EnhancedCompoundPrinter = withSidecarNodes(withFoo('foo'))(CompoundPrinter);
     const EnhancedPrinter = withSidecarNodes(withBar('bar'))(NodePathPrinter);
     const wrapper = mount(<EnhancedCompoundPrinter
@@ -110,9 +110,11 @@ describe('withSidecarNodes', () => {
       id="test"
       nodeKey="test"
     />);
-    console.log(wrapper.debug());
-    const span = wrapper.find('span#baz');
-    expect(span.text()).toBe('root$test$baz');
+    const innerSpan = wrapper.find('span#baz');
+    expect(innerSpan.text()).toBe('root$test$baz');
+    expect(innerSpan.prop('data-enh-bar')).toBe('root$test$baz$bar');
+    const outerSpan = wrapper.find('span#test');
+    expect(outerSpan.prop('data-enh-foo')).toBe('root$test$foo');
   });
 
   it('adds new peers and restores original node', () => {

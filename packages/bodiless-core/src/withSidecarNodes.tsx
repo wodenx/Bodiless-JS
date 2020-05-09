@@ -7,30 +7,17 @@ import withNode from './withNode';
 
 const SidecarNodeContext = createContext<ContentNode<any>>(DefaultContentNode.dummy());
 
-const SidecarProvider = ({ node, children }: any) => (
-  <SidecarNodeContext.Provider value={node}>
-    {children}
+const startSidecarNodes = <P extends object>(Component: ComponentType<P>) => (props: P) => (
+  <SidecarNodeContext.Provider value={useNode().node}>
+    <Component {...props} />
   </SidecarNodeContext.Provider>
 );
 
-
-const startSidecarNodes = <P extends object>(Component: ComponentType<P>) => (props: P) => {
-  const { node } = useNode();
-  return (
-    <SidecarProvider node={node}>
-      <Component {...props} />
-    </SidecarProvider>
-  );
-};
-
-const endSidecarNodes = <P extends object>(Component: ComponentType<P>) => (props: P) => {
-  const node = useContext(SidecarNodeContext);
-  return (
-    <NodeProvider node={node}>
-      <Component {...props} />
-    </NodeProvider>
-  );
-};
+const endSidecarNodes = <P extends object>(Component: ComponentType<P>) => (props: P) => (
+  <NodeProvider node={useContext(SidecarNodeContext)}>
+    <Component {...props} />
+  </NodeProvider>
+);
 
 type HOC = (Component: ComponentType<any>) => ComponentType<any>;
 
