@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
 import { flowRight } from 'lodash';
-import { mount } from 'enzyme';
+import { mount, render } from 'enzyme';
 import withNode, { withNodeKey } from '../src/withNode';
 import { useNode } from '../src/NodeProvider';
 import withSidecarNodes from '../src/withSidecarNodes';
@@ -31,7 +31,7 @@ const NodePathPrinter = withNode(
 const CompoundPrinter = withNode(
   ({ printer: Printer, ...rest }: any) => (
     <span {...rest}>
-      <Printer nodeKey="baz" id="baz" />
+      <Printer id="baz" />
     </span>
   ),
 );
@@ -92,24 +92,26 @@ describe('withSidecarNodes', () => {
     expect(span.prop('data-enh-bar')).toBe('root$test$bar');
   });
 
+  const nestedBaseline: { Printer: ComponentType<any>, Compound: ComponentType<any> } = {
+    Printer: withNodeKey('baz')(NodePathPrinter),
+    Compound: withNodeKey('test')(CompoundPrinter),
+  };
+
+  const mountNested = ({ Printer, Compound }: any) => render(<Compound printer={Printer} id="test" />);
+
   it('is tested against the correct baseline for nested sidecars', () => {
-    const wrapper = mount(<CompoundPrinter
-      printer={NodePathPrinter}
-      id="test"
-      nodeKey="test"
-    />);
+    const wrapper = mountNested(nestedBaseline);
     const span = wrapper.find('span#baz');
     expect(span.text()).toBe('root$test$baz');
   });
 
-  it('supports nested sidecars', () => {
-    const EnhancedCompoundPrinter = withSidecarNodes(withFoo('foo'))(CompoundPrinter);
-    const EnhancedPrinter = withSidecarNodes(withBar('bar'))(NodePathPrinter);
-    const wrapper = mount(<EnhancedCompoundPrinter
-      printer={EnhancedPrinter}
-      id="test"
-      nodeKey="test"
-    />);
+
+  it.only('supports nested sidecars', () => {
+    const { Printer: BaselinePrinter, Compound: BaselineCompound } = nestedBaseline;
+    const Compound = withSidecarNodes(withFoo('foo'))(BaselineCompound);
+    const Printer = withSidecarNodes(withBar('bar'))(BaselinePrinter);
+    const wrapper = mountNested({ Printer, Compound });
+    console.log(wrapper.parent().html());
     const innerSpan = wrapper.find('span#baz');
     expect(innerSpan.text()).toBe('root$test$baz');
     expect(innerSpan.prop('data-enh-bar')).toBe('root$test$baz$bar');
