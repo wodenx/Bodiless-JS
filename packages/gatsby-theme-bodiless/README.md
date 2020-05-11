@@ -1,6 +1,6 @@
 # `@bodiless/gatsby-theme-bodiless`
 
-> TODO: descriptionX
+> TODO: description
 
 ## Usage
 
