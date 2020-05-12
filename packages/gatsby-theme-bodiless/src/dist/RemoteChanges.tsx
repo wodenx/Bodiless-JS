@@ -16,8 +16,7 @@ import React, { useState, useEffect } from 'react';
 import { useEditContext } from '@bodiless/core';
 import { Spinner } from '@bodiless/ui';
 import { isEmpty } from 'lodash';
-import { useFormApi, Checkbox, Text } from 'informed';
-
+import { useFormApi, Text } from 'informed';
 
 type ResponseData = {
   upstream: Upstream;
@@ -29,22 +28,17 @@ type Upstream = {
   files: [string];
 };
 
-type CommitListProps = {
-  commits : [string];
+type PullCommitsProps = {
+  message : string;
 };
 
-const RemoteCommitList = (props : CommitListProps) => {
-  const { commits } = props;
-  const listItems = commits.map((commit, index) => (
-    <li key={index.toString()}>{commit}</li>
-  ));
-  return (
-    <>
-      <Text type="hidden" field="allowed" initialValue />
-      <ul>{listItems}</ul>
-    </>
-  );
-};
+const FetchedChanged = ({ message } : PullCommitsProps) => (
+  <>
+    <Text type="hidden" field="allowed" initialValue />
+    <Text type="hidden" field="pulled" initialValue={false} />
+    {message}
+  </>
+);
 
 const handleResponse = ({ upstream }: ResponseData) => {
   const { commits, files } = upstream;
@@ -53,11 +47,31 @@ const handleResponse = ({ upstream }: ResponseData) => {
   } if (files.some(file => file.includes('package-lock.json'))) {
     return 'Upstream changes are available but cannot be fetched via the UI';
   }
-  return <RemoteCommitList commits={commits} />;
+  return <FetchedChanged message="There are changes ready to be pulled. Click check to initiate." />;
 };
 
 type Props = {
   client: any;
+};
+
+// @Todo remove.
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+const RemoteChanges = ({ client }: Props) => {
+  const formApi = useFormApi();
+  const formState = formApi.getState();
+  if (formState.submits > 0 && formApi.getValue('allowed') === true) {
+    return (
+      <>
+        <PullChanges client={client} />
+      </>
+    );
+  }
+  return (
+    <>
+      <Changes client={client} />
+    </>
+  );
 };
 
 const Wrapper = () => (
@@ -66,10 +80,7 @@ const Wrapper = () => (
   </div>
 );
 
-// @Todo remove.
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-const RemoteChanges = ({ client }: Props) => {
+const Changes = ({ client }: Props) => {
   const [state, setState] = useState<{ content: any }>({
     content: <Wrapper />,
   });
@@ -81,8 +92,6 @@ const RemoteChanges = ({ client }: Props) => {
           hasSpinner: false,
           maxTimeoutInSeconds: 10,
         });
-        // @todo delay to see the spinner, remove.
-        await delay(3000);
         const response = await client.getChanges();
         setState({
           content: handleResponse(response.data),
@@ -92,6 +101,49 @@ const RemoteChanges = ({ client }: Props) => {
         context.showError({
           message: error.message || 'An unexpected error has occurred',
         });
+        setState({
+          content: 'An unexpected error has occurred',
+        });
+      }
+    })();
+  }, []);
+
+  const { content } = state;
+  return content;
+};
+
+const PullChanges = ({ client }: Props) => {
+  const [state, setState] = useState<{ content: any }>({
+    content: <Wrapper />,
+  });
+  const context = useEditContext();
+  const formApi = useFormApi();
+  useEffect(() => {
+    (async () => {
+      try {
+        console.log('in pull changes');
+        context.showPageOverlay({
+          hasSpinner: false,
+          maxTimeoutInSeconds: 10,
+        });
+        // @todo delay to see the spinner, remove.
+        await delay(1);
+        const response = await client.pull();
+        if (response.status === 200) {
+          formApi.setValue('pulled', true);
+          setState({
+            content: 'success', // <Text type="hidden" field="pulled" initialValue />,
+          });
+        } else {
+          setState({
+            content: 'An error occurred. Please try again later.',
+          });
+        }
+        context.hidePageOverlay();
+      } catch (error) {
+        // context.showError({
+        //   message: error.message || 'An unexpected error has occurred',
+        // });
         setState({
           content: 'An unexpected error has occurred',
         });

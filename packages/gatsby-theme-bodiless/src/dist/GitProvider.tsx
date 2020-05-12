@@ -120,7 +120,14 @@ const formGitCommit = (client: Client) => contextMenuForm({
 );
 
 const formGitPull = (client: Client) => contextMenuForm({
-  submitValues: values => { console.log(values); },
+  submitValues: (values : any) => {
+    console.log(values);
+    const { allowed, pulled } = values;
+    if (allowed && pulled) {
+      return false;
+    }
+    return true;
+  },
 })(({ ui }: any) => {
   const { ComponentFormTitle } = getUI(ui);
   return (

@@ -1,0 +1,142 @@
+diff --git a/packages/gatsby-theme-bodiless/src/dist/RemoteChanges.tsx b/packages/gatsby-theme-bodiless/src/dist/RemoteChanges.tsx
+index 955d590..52c789f 100644
+--- a/packages/gatsby-theme-bodiless/src/dist/RemoteChanges.tsx
++++ b/packages/gatsby-theme-bodiless/src/dist/RemoteChanges.tsx
+@@ -16,8 +16,7 @@ import React, { useState, useEffect } from 'react';
+ import { useEditContext } from '@bodiless/core';
+ import { Spinner } from '@bodiless/ui';
+ import { isEmpty } from 'lodash';
+-import { useFormApi, Checkbox, Text } from 'informed';
+-
++import { useFormApi, Text } from 'informed';
+ 
+ type ResponseData = {
+   upstream: Upstream;
+@@ -29,22 +28,22 @@ type Upstream = {
+   files: [string];
+ };
+ 
+-type CommitListProps = {
+-  commits : [string];
++type PullCommitsProps = {
++  message : string;
+ };
+ 
+-const RemoteCommitList = (props : CommitListProps) => {
+-  const { commits } = props;
+-  const listItems = commits.map((commit, index) => (
+-    <li key={index.toString()}>{commit}</li>
+-  ));
+-  return (
+-    <>
+-      <Text type="hidden" field="allowed" initialValue />
+-      <ul>{listItems}</ul>
+-    </>
+-  );
+-};
++const PullCommits = ({ message } : PullCommitsProps) => (
++  <>
++    <Text type="hidden" field="allowed" initialValue />
++    {message}
++  </>
++);
++
++const Wrapper = () => (
++  <div className="bl-pt-3">
++    <Spinner color="bl-bg-white" />
++  </div>
++);
+ 
+ const handleResponse = ({ upstream }: ResponseData) => {
+   const { commits, files } = upstream;
+@@ -53,23 +52,34 @@ const handleResponse = ({ upstream }: ResponseData) => {
+   } if (files.some(file => file.includes('package-lock.json'))) {
+     return 'Upstream changes are available but cannot be fetched via the UI';
+   }
+-  return <RemoteCommitList commits={commits} />;
++  return <PullCommits message="There are changes ready to be pulled. Click check to initiate." />;
+ };
+ 
+ type Props = {
+   client: any;
+ };
+ 
+-const Wrapper = () => (
+-  <div className="bl-pt-3">
+-    <Spinner color="bl-bg-white" />
+-  </div>
+-);
+-
+ // @Todo remove.
+ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+ 
+ const RemoteChanges = ({ client }: Props) => {
++  const formState = useFormApi().getState();
++
++  if (formState.submits === 0) {
++    return (
++      <>
++        <Changes client={client} />
++      </>
++    );
++  }
++  return (
++    <>
++      <PullChanges client={client} />
++    </>
++  );
++};
++
++const Changes = ({ client }: Props) => {
+   const [state, setState] = useState<{ content: any }>({
+     content: <Wrapper />,
+   });
+@@ -82,7 +92,7 @@ const RemoteChanges = ({ client }: Props) => {
+           maxTimeoutInSeconds: 10,
+         });
+         // @todo delay to see the spinner, remove.
+-        await delay(3000);
++        await delay(1);
+         const response = await client.getChanges();
+         setState({
+           content: handleResponse(response.data),
+@@ -103,4 +113,39 @@ const RemoteChanges = ({ client }: Props) => {
+   return content;
+ };
+ 
++const PullChanges = ({ client }: Props) => {
++  const [state, setState] = useState<{ content: any }>({
++    content: <Wrapper />,
++  });
++  const context = useEditContext();
++  useEffect(() => {
++    (async () => {
++      try {
++        context.showPageOverlay({
++          hasSpinner: false,
++          maxTimeoutInSeconds: 10,
++        });
++        // @todo delay to see the spinner, remove.
++        await delay(1);
++        const response = await client.pull();
++        setState({
++          content: handleResponse(response.data),
++        });
++        context.hidePageOverlay();
++      } catch (error) {
++        context.showError({
++          message: error.message || 'An unexpected error has occurred',
++        });
++        setState({
++          content: 'An unexpected error has occurred',
++        });
++      }
++    })();
++  }, []);
++
++  const { content } = state;
++  return content;
++};
++
+ export default RemoteChanges;
++export { PullChanges };
