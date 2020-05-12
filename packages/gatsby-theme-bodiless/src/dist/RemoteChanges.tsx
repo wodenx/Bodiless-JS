@@ -60,7 +60,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const RemoteChanges = ({ client }: Props) => {
   const formApi = useFormApi();
   const formState = formApi.getState();
-  if (formState.submits > 0 && formApi.getValue('allowed') === true) {
+  if (formState.submits === 1 && formApi.getValue('allowed') === true) {
     return (
       <>
         <PullChanges client={client} />
