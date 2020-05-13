@@ -2,7 +2,7 @@
 
 ## Overview
 
-Most components will consume and render some *data* (content and/or
+Most components will consume and render some GG*data* (content and/or
 configuration). For example, a link component might take a target href, some
 link text, etc. and render a clickable link on the page. A "where to buy"
 component might take a product ID and some credentials for an external service,
@@ -139,7 +139,7 @@ The node can then be accessed via the `useNode` hook.
 const ComponentWithData = withNode(
   props => {
     const { node } = useNode();
-    return (<span {,,,props}>{node.data}</span>);
+    return (<span {...props}>{node.data}</span>);
   }
 );
 export default (props: any) => (
@@ -192,6 +192,7 @@ export default (props: any) => (
     </Layout>
   </Page>
 );
+```
 
 ### Nodes and the Filesystem
 
@@ -212,7 +213,7 @@ So, in the above example, there would be 4 files:
 ### "Sidecar" nodes.
 
 There are some cases in which having the data model mirror the component hierarchy
-can be undesireable. For example, suppose we wanted to enhance our component above
+can be undesirable. For example, suppose we wanted to enhance our component above
 to add an `aria-label` attribute whose text was stored as content:
 ```
 const ComponentWithAriaLabel = withNode(
@@ -255,26 +256,60 @@ placed on a site and was rendering actual data. When replaced with the enhanced
 component, it's existing data (at `content.json`) will be used forthe
 aria-label, and the actual text displayed on the screen will be lost.
 
-What we really want to to attach the aria-label data as a child of the original
+What we really want to to attach the aria-label data alongside the original
 component. This will leave the original data intact and give us a more rational
 hierarchy. To achieve this, Bodiless provides the notion of a sidecar node:
 ```
 const ComponentWithAriaLabel = withSidecarNodes(
   withNodeKey('aria-label'),
   withAriaLabel,
-);
+)(ComponentWithData);
 ```
 In effect, this creates a sub-hierarchy off of the current node which is used
 for all the enclosed enhancements. The resulting hierarchy makes much more
 sense:
 ```
 content.json // contains the orignial content.
-content$aria-label.json // contains the aria-label data.
+aria-label.json // contains the aria-label data.
+
+If you wanted to bundle these together, you could create a parent node which owns both:
+```
+const ComponentWithAriaLabel = flowRight(
+  withNode,
+  withSidecarNodes(
+    withNodeKey('aria-label'),
+    withAriaLabel,
+  ),
+  withNodeKey('component'),
+)(ComponentWithData);
+```
+giving
+```
 
 
-### Node Keys and the Design API
 
-Note that node keys can also be assigned using the `withNodeKey` HOC. That is
+### Component Data Composition
+
+The examples above can be refactored to make them more composable.
+
+Instead of defining our `ComponentWithData` as a Component, we can abstract that functionality
+to an HOC (a very common pattern in Bodiless-JS).
+```
+const asComponentWithData = BaseComponent => {
+  const ComponentWIthData = props => (
+    <BaseComponent {...props}>
+      {useNode().node.data}
+    </BaseComponent>
+};
+export default nodeKey => flowRight(
+  withNodeKey(nodeKey),
+  withNode,
+  asComponentWithData,
+);
+```
+
+Note the use of `withNodeKey()` in the above. This is simply providing a shorthand way
+to provide our enhancement with a node key.
 ```
 const Blurb1 = withNodeKey('blurb-1');
 ...
@@ -285,18 +320,16 @@ is equivalent to
 <Blurb nodeKey="blurb-1" />
 ```
 
-This pattern becomes particularly powerful when enhancing a compound component
-using he [Design API](../FClasses). Assuming we made blurb "designable", we
-could easily create a version which added data:
+This pattern becomes particularly powerful when enhancing a compound component using
+the [Design API](../FClasses). Assuming we made blurb "designable", we could
+easily create a "behavioral token" which adds data:
 
 ```javascript
 const asBlurbWithData = flow(
   withNode, 
   withDesign({
-    Title: withNodeKey('title'),
-    Body: withNodeKey('body'),
+    Title: asComponentWithData('title'),
+    Body: asComponentWithData('body'),
   }
 );
 ```
-
-

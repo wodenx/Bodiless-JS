@@ -23,11 +23,6 @@ import { ifToggledOn } from '../src/withFlowToggle';
 type HOC = (C: ComponentType<any>) => ComponentType<any>;
 type Bodiless = (key?: string) => HOC;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const withProps: (propsToAdd: any) => HOC = propsToAdd => Component => props => (
-  <Component {...propsToAdd} {...props} />
-);
-
 const withPropEnhancement = (id: string) => (Component: ComponentType<any>) => (
   (props: any) => {
     const { node } = useNode();
@@ -56,21 +51,6 @@ const withBaz: Bodiless = (nodeKey?: string) => flowRight(
   withNodeKey(nodeKey),
   withNode,
   withPropEnhancement('baz'),
-);
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const withWrapperEnhancement = (id: string) => (Component: ComponentType<any>) => (
-  (props: any) => {
-    const { node } = useNode();
-    const enhancement = {
-      [`data-enh-${id}`]: node.path.join('$'),
-    };
-    return (
-      <span {...enhancement} id={`enh-${id}`}>
-        <Component {...props} />
-      </span>
-    );
-  }
 );
 
 const spanWithId = (id: string) => (props: any) => <span {...props} id={id} />;
