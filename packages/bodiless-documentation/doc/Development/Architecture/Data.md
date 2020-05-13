@@ -2,7 +2,7 @@
 
 ## Overview
 
-Most components will consume and render some GG*data* (content and/or
+Most components will consume and render some *data* (content and/or
 configuration). For example, a link component might take a target href, some
 link text, etc. and render a clickable link on the page. A "where to buy"
 component might take a product ID and some credentials for an external service,
@@ -301,6 +301,9 @@ const asComponentWithData = BaseComponent => {
     <BaseComponent {...props}>
       {useNode().node.data}
     </BaseComponent>
+  );
+  ComponentWithData.displayName = 'ComponentWithData';
+  return ComponentWithData;
 };
 export default nodeKey => flowRight(
   withNodeKey(nodeKey),
