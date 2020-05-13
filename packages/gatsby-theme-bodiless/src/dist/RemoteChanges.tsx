@@ -63,7 +63,7 @@ const Wrapper = () => (
   </div>
 );
 
-const handleResponse = ({ upstream }: ResponseData) => {
+const handleChangesResponse = ({ upstream }: ResponseData) => {
   const { commits, files } = upstream;
   if (isEmpty(commits)) {
     return 'There aren\'t any changes to download.';
@@ -103,7 +103,7 @@ const FetchChanges = ({ client }: Props) => {
         const response = await client.getChanges();
         if (!unmounted) {
           setState({
-            content: handleResponse(response.data),
+            content: handleChangesResponse(response.data),
           });
           context.hidePageOverlay();
         }
