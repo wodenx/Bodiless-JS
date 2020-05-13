@@ -13,7 +13,7 @@
  */
 
 import React, {
-  useState, useEffect, SetStateAction, Dispatch, useRef,
+  useState, useEffect, SetStateAction, Dispatch,
 } from 'react';
 import { useEditContext } from '@bodiless/core';
 import { Spinner } from '@bodiless/ui';
