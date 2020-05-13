@@ -140,6 +140,6 @@ export default class BackendClient {
   }
 
   getChanges() {
-    return this.get(`${this.prefix}/changes`, {});
+    return this.get(`${this.prefix}/changes`);
   }
 }

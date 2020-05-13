@@ -102,30 +102,36 @@ const formGetCommitsList = (client: Client) => contextMenuForm({
 const cookies = new Cookies();
 const author = cookies.get('author');
 const formGitCommit = (client: Client) => contextMenuForm({
-  submitValues: (submitValues: any) => handle(client.commit(submitValues.commitMessage,
-    [backendFilePath, backendStaticPath], [], [], author)),
-})(
-  ({ ui }: any) => {
-    const { ComponentFormTitle, ComponentFormLabel, ComponentFormText } = getUI(ui);
-    return (
-      <>
-        <ComponentFormTitle>Upload Changes</ComponentFormTitle>
-        <ComponentFormLabel htmlFor="commit-txt">
-          Description:
-        </ComponentFormLabel>
-        <ComponentFormText field="commitMessage" id="commit-txt" />
-      </>
+  submitValues: (submitValues: any) => {
+    handle(
+      client.commit(
+        submitValues.commitMessage,
+        [backendFilePath, backendStaticPath],
+        [],
+        [],
+        author,
+      ),
     );
   },
-);
+})(({ ui }: any) => {
+  const { ComponentFormTitle, ComponentFormLabel, ComponentFormText } = getUI(
+    ui,
+  );
+  return (
+    <>
+      <ComponentFormTitle>Upload Changes</ComponentFormTitle>
+      <ComponentFormLabel htmlFor="commit-txt">
+          Description:
+      </ComponentFormLabel>
+      <ComponentFormText field="commitMessage" id="commit-txt" />
+    </>
+  );
+});
 
 const formGitPull = (client: Client) => contextMenuForm({
   submitValues: (values : any) => {
-    console.log(values);
-    const { allowed, pulled } = values;
-    if (allowed && pulled) {
-      return false;
-    }
+    const { allowed } = values;
+    if (!allowed) return false;
     return true;
   },
 })(({ ui }: any) => {
@@ -139,24 +145,26 @@ const formGitPull = (client: Client) => contextMenuForm({
 });
 
 const formGitReset = (client: Client, context: any) => contextMenuForm({
-  submitValues: async () => {
-    context.showPageOverlay({
-      message: 'Revert is in progress. This may take a minute.',
-      maxTimeoutInSeconds: 10,
-    });
-    try {
-      await client.reset();
+  submitValues: () => {
+    (async () => {
       context.showPageOverlay({
-        message: 'Revert completed.',
-        hasSpinner: false,
-        hasCloseButton: true,
-        onClose: () => {
-          window.location.reload();
-        },
+        message: 'Revert is in progress. This may take a minute.',
+        maxTimeoutInSeconds: 10,
       });
-    } catch {
-      context.showError();
-    }
+      try {
+        await client.reset();
+        context.showPageOverlay({
+          message: 'Revert completed.',
+          hasSpinner: false,
+          hasCloseButton: true,
+          onClose: () => {
+            window.location.reload();
+          },
+        });
+      } catch {
+        context.showError();
+      }
+    })();
   },
 })(
   ({ ui }: any) => {
