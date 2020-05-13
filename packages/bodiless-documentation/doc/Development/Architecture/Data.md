@@ -285,8 +285,9 @@ const ComponentWithAriaLabel = flowRight(
 ```
 giving
 ```
-
-
+content$aria-label.json
+content$component.json
+```
 
 ### Component Data Composition
 
