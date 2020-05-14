@@ -14,7 +14,7 @@
 
 import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import {  mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { FetchChanges } from '../src/dist/RemoteChanges';
 
 const changes = {
