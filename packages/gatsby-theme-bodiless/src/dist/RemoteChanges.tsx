@@ -37,6 +37,12 @@ type PullStatus = {
   error?: string;
 };
 
+const SpinnerWrapper = () => (
+  <div className="bl-pt-3">
+    <Spinner color="bl-bg-white" />
+  </div>
+);
+
 /**
  * Component for showing and pulling remote changes.
  *
@@ -49,19 +55,16 @@ const RemoteChanges = ({ client }: Props) => {
   const [pullStatus, setPullStatus] = useState<PullStatus>({ complete: false, error: '' });
   const { complete, error } = pullStatus;
   if (error) return <>{error}</>;
-  if (complete) return <>Operation completed.</>;
+  if (complete) {
+    return <>Operation completed.</>;
+  }
   // @Todo revise the use of formState, possibly use informed multistep.
   if (formApi.getState().submits === 1 && formApi.getValue('allowed') === true) {
     return <PullChanges client={client} setPullStatus={setPullStatus} />;
   }
-  return (<FetchChanges client={client} />);
+  if (formApi.getState().submits === 0) return (<FetchChanges client={client} />);
+  return <SpinnerWrapper />;
 };
-
-const Wrapper = () => (
-  <div className="bl-pt-3">
-    <Spinner color="bl-bg-white" />
-  </div>
-);
 
 const handleChangesResponse = ({ upstream }: ResponseData) => {
   const { commits, files } = upstream;
@@ -69,7 +72,7 @@ const handleChangesResponse = ({ upstream }: ResponseData) => {
     return 'There aren\'t any changes to download.';
   }
   if (files.some(file => file.includes('package-lock.json'))) {
-    return 'Upstream changes are available but cannot be fetched via the UI';
+    return 'Upstream changes are available but cannot be fetched via the UI.';
   }
   return (
     <>
@@ -88,12 +91,10 @@ const handleChangesResponse = ({ upstream }: ResponseData) => {
  */
 const FetchChanges = ({ client }: Props) => {
   const [state, setState] = useState<{ content: any }>({
-    content: <Wrapper />,
+    content: <SpinnerWrapper />,
   });
   const context = useEditContext();
   useEffect(() => {
-    // Use unmounted to cancel subscription in useEffect cleanup function.
-    let unmounted = false;
     (async () => {
       try {
         context.showPageOverlay({
@@ -101,28 +102,17 @@ const FetchChanges = ({ client }: Props) => {
           maxTimeoutInSeconds: 10,
         });
         const response = await client.getChanges();
-        if (!unmounted) {
-          setState({
-            content: handleChangesResponse(response.data),
-          });
-          context.hidePageOverlay();
-        }
-      } catch (error) {
-        context.showError({
-          message: error.message || 'An unexpected error has occurred',
+        setState({
+          content: handleChangesResponse(response.data),
         });
-        if (!unmounted) {
-          setState({
-            content: 'An unexpected error has occurred',
-          });
-        }
+        context.hidePageOverlay();
+      } catch (error) {
+        setState({
+          content: 'An unexpected error has occurred',
+        });
       }
     })();
-    return () => {
-      unmounted = true;
-    };
   }, []);
-
   const { content } = state;
   return content;
 };
@@ -160,8 +150,9 @@ const PullChanges = ({ client, setPullStatus }: PullChangesProps) => {
         }
         context.hidePageOverlay();
       } catch (error) {
-        context.showError({
-          message: error.message || 'An unexpected error has occurred',
+        setPullStatus({
+          complete: false,
+          error: 'An unexpected error has occurred.',
         });
       }
     })();
@@ -172,3 +163,4 @@ const PullChanges = ({ client, setPullStatus }: PullChangesProps) => {
 };
 
 export default RemoteChanges;
+export { PullChanges, FetchChanges };
