@@ -51,32 +51,31 @@ const SpinnerWrapper = () => (
  * @constructor
  */
 const RemoteChanges = ({ client }: Props) => {
-  const formApi = useFormApi();
+  const [state, setState] = useState<{ content: any }>({
+    content: <SpinnerWrapper />,
+  });
   const [pullStatus, setPullStatus] = useState<PullStatus>({ complete: false, error: '' });
-  const { complete, error } = pullStatus;
-  if (error) return <>{error}</>;
-  if (complete) {
-    return <>Operation completed.</>;
-  }
+  const formApi = useFormApi();
   // @Todo revise the use of formState, possibly use informed multistep.
-  if (formApi.getState().submits === 1 && formApi.getValue('allowed') === true) {
-    return <PullChanges client={client} setPullStatus={setPullStatus} />;
+  if (formApi.getState().submits > 0) {
+    return <PullChanges client={client} formApi={formApi} pullStatus={pullStatus} setPullStatus={setPullStatus} />;
   }
-  if (formApi.getState().submits === 0) return (<FetchChanges client={client} />);
-  return <SpinnerWrapper />;
+  // if (formApi.getState().submits === 0) return (<FetchChanges client={client} />);
+  return (<FetchChanges client={client} formApi={formApi} state={state} setState={setState} />);
+  //return <SpinnerWrapper />;
 };
 
-const handleChangesResponse = ({ upstream }: ResponseData) => {
+const handleChangesResponse = ({ upstream }: ResponseData, formApi) => {
   const { commits, files } = upstream;
-  if (isEmpty(commits)) {
-    return 'There aren\'t any changes to download.';
-  }
-  if (files.some(file => file.includes('package-lock.json'))) {
-    return 'Upstream changes are available but cannot be fetched via the UI.';
-  }
+  // if (isEmpty(commits)) {
+  //   return 'There aren\'t any changes to download.';
+  // }
+  // if (files.some(file => file.includes('package-lock.json'))) {
+  //   return 'Upstream changes are available but cannot be fetched via the UI.';
+  // }
+  formApi.setValue('allowed', true);
   return (
     <>
-      <Text type="hidden" field="allowed" initialValue />
       There are changes ready to be pulled. Click check (✓) to initiate.
     </>
   );
@@ -89,10 +88,7 @@ const handleChangesResponse = ({ upstream }: ResponseData) => {
  * @param {BackendClient} client
  * @constructor
  */
-const FetchChanges = ({ client }: Props) => {
-  const [state, setState] = useState<{ content: any }>({
-    content: <SpinnerWrapper />,
-  });
+const FetchChanges = ({ client, formApi, state, setState }: Props) => {
   const context = useEditContext();
   useEffect(() => {
     (async () => {
@@ -103,7 +99,7 @@ const FetchChanges = ({ client }: Props) => {
         });
         const response = await client.getChanges();
         setState({
-          content: handleChangesResponse(response.data),
+          content: handleChangesResponse(response.data, formApi),
         });
         context.hidePageOverlay();
       } catch (error) {
@@ -130,8 +126,13 @@ type PullChangesProps = {
  * @param setPullStatus
  * @constructor
  */
-const PullChanges = ({ client, setPullStatus }: PullChangesProps) => {
+const PullChanges = ({ client, formApi, pullStatus, setPullStatus }: PullChangesProps) => {
   const context = useEditContext();
+  const { complete, error } = pullStatus;
+  if (error) return <>{error}</>;
+  if (complete) {
+    return <>Operation completed.</>;
+  }
   useEffect(() => {
     (async () => {
       try {
@@ -140,6 +141,7 @@ const PullChanges = ({ client, setPullStatus }: PullChangesProps) => {
           maxTimeoutInSeconds: 10,
         });
         const response = await client.getChanges(); // @Todo replace client.pull();
+        // formApi.setValue('allowed', false);
         if (response.status === 200) {
           setPullStatus({ complete: true });
         } else {

@@ -135,10 +135,11 @@ const formGitPull = (client: Client) => contextMenuForm({
     return true;
   },
 })(({ ui }: any) => {
-  const { ComponentFormTitle } = getUI(ui);
+  const { ComponentFormTitle, ComponentFormText } = getUI(ui);
   return (
     <>
       <ComponentFormTitle>Pull Changes</ComponentFormTitle>
+      <ComponentFormText type="hidden" field="allowed" initialValue={false} />
       <RemoteChanges client={client} />
     </>
   );
