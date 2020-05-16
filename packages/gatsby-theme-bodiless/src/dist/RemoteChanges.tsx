@@ -130,11 +130,6 @@ const PullChanges = ({ client, formApi }: PullChangesProps) => {
   console.log('here');
   const context = useEditContext();
   const [pullStatus, setPullStatus] = useState<PullStatus>({ complete: false, error: '' });
-  const { complete, error } = pullStatus;
-  if (error) return <>{error}</>;
-  if (complete) {
-    return <>Operation completed.</>;
-  }
   useEffect(() => {
     (async () => {
       try {
@@ -162,6 +157,11 @@ const PullChanges = ({ client, formApi }: PullChangesProps) => {
     })();
     return () => {};
   }, []);
+  const { complete, error } = pullStatus;
+  if (error) return <>{error}</>;
+  if (complete) {
+    return <>Operation completed.</>;
+  }
 
   return <SpinnerWrapper />;
 };
