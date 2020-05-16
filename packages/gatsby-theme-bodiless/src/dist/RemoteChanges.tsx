@@ -51,18 +51,14 @@ const SpinnerWrapper = () => (
  * @constructor
  */
 const RemoteChanges = ({ client }: Props) => {
-  const [state, setState] = useState<{ content: any }>({
-    content: <SpinnerWrapper />,
-  });
-  const [pullStatus, setPullStatus] = useState<PullStatus>({ complete: false, error: '' });
+  //const [pullStatus, setPullStatus] = useState<PullStatus>({ complete: false, error: '' });
   const formApi = useFormApi();
   // @Todo revise the use of formState, possibly use informed multistep.
   if (formApi.getState().submits > 0) {
-    return <PullChanges client={client} formApi={formApi} pullStatus={pullStatus} setPullStatus={setPullStatus} />;
+    return <PullChanges client={client} formApi={formApi} />;
   }
   // if (formApi.getState().submits === 0) return (<FetchChanges client={client} />);
-  return (<FetchChanges client={client} formApi={formApi} state={state} setState={setState} />);
-  //return <SpinnerWrapper />;
+  return (<FetchChanges client={client} formApi={formApi} />);
 };
 
 const handleChangesResponse = ({ upstream }: ResponseData, formApi) => {
@@ -88,7 +84,10 @@ const handleChangesResponse = ({ upstream }: ResponseData, formApi) => {
  * @param {BackendClient} client
  * @constructor
  */
-const FetchChanges = ({ client, formApi, state, setState }: Props) => {
+const FetchChanges = ({ client, formApi }: Props) => {
+  const [state, setState] = useState<{ content: any }>({
+    content: <SpinnerWrapper />,
+  });
   const context = useEditContext();
   useEffect(() => {
     (async () => {
@@ -126,8 +125,11 @@ type PullChangesProps = {
  * @param setPullStatus
  * @constructor
  */
-const PullChanges = ({ client, formApi, pullStatus, setPullStatus }: PullChangesProps) => {
+
+const PullChanges = ({ client, formApi }: PullChangesProps) => {
+  console.log('here');
   const context = useEditContext();
+  const [pullStatus, setPullStatus] = useState<PullStatus>({ complete: false, error: '' });
   const { complete, error } = pullStatus;
   if (error) return <>{error}</>;
   if (complete) {
@@ -141,7 +143,7 @@ const PullChanges = ({ client, formApi, pullStatus, setPullStatus }: PullChanges
           maxTimeoutInSeconds: 10,
         });
         const response = await client.getChanges(); // @Todo replace client.pull();
-        // formApi.setValue('allowed', false);
+        formApi.setValue('allowed', false);
         if (response.status === 200) {
           setPullStatus({ complete: true });
         } else {
@@ -161,7 +163,7 @@ const PullChanges = ({ client, formApi, pullStatus, setPullStatus }: PullChanges
     return () => {};
   }, []);
 
-  return null;
+  return <SpinnerWrapper />;
 };
 
 export default RemoteChanges;
