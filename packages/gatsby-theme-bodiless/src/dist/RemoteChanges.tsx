@@ -51,14 +51,12 @@ const SpinnerWrapper = () => (
  * @constructor
  */
 const RemoteChanges = ({ client }: Props) => {
-  //const [pullStatus, setPullStatus] = useState<PullStatus>({ complete: false, error: '' });
   const formApi = useFormApi();
   // @Todo revise the use of formState, possibly use informed multistep.
-  if (formApi.getState().submits > 0) {
-    return <PullChanges client={client} formApi={formApi} />;
+  if (formApi.getState().submits === 0) {
+    return (<FetchChanges client={client} />);
   }
-  // if (formApi.getState().submits === 0) return (<FetchChanges client={client} />);
-  return (<FetchChanges client={client} formApi={formApi} />);
+  return <PullChanges client={client} />;
 };
 
 const handleChangesResponse = ({ upstream }: ResponseData, formApi) => {
@@ -84,10 +82,11 @@ const handleChangesResponse = ({ upstream }: ResponseData, formApi) => {
  * @param {BackendClient} client
  * @constructor
  */
-const FetchChanges = ({ client, formApi }: Props) => {
+const FetchChanges = ({ client }: Props) => {
   const [state, setState] = useState<{ content: any }>({
     content: <SpinnerWrapper />,
   });
+  const formApi = useFormApi();
   const context = useEditContext();
   useEffect(() => {
     (async () => {
@@ -126,9 +125,9 @@ type PullChangesProps = {
  * @constructor
  */
 
-const PullChanges = ({ client, formApi }: PullChangesProps) => {
-  console.log('here');
+const PullChanges = ({ client }: PullChangesProps) => {
   const context = useEditContext();
+  const formApi = useFormApi();
   const [pullStatus, setPullStatus] = useState<PullStatus>({ complete: false, error: '' });
   useEffect(() => {
     (async () => {
