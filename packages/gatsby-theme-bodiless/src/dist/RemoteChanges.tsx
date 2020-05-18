@@ -59,7 +59,15 @@ const RemoteChanges = ({ client }: Props) => {
   return <PullChanges client={client} />;
 };
 
-const handleChangesResponse = ({ upstream }: ResponseData, formApi) => {
+enum ChangeStatus {
+  Pending,
+  NoChanges,
+  CanBePulled,
+  CannotBePulled,
+  Error,
+};
+
+const handleChangesResponse = ({ upstream }: ResponseData) => {
   const { commits, files } = upstream;
   // if (isEmpty(commits)) {
   //   return 'There aren\'t any changes to download.';
@@ -67,12 +75,10 @@ const handleChangesResponse = ({ upstream }: ResponseData, formApi) => {
   // if (files.some(file => file.includes('package-lock.json'))) {
   //   return 'Upstream changes are available but cannot be fetched via the UI.';
   // }
-  formApi.setValue('allowed', true);
-  return (
-    <>
-      There are changes ready to be pulled. Click check (✓) to initiate.
-    </>
-  );
+  return {
+    status: ChangeStatus.CanBePulled,
+    message: 'There are changes ready to be pulled. Click check (✓) to initiate.',
+  };
 };
 
 /**
@@ -83,8 +89,9 @@ const handleChangesResponse = ({ upstream }: ResponseData, formApi) => {
  * @constructor
  */
 const FetchChanges = ({ client }: Props) => {
-  const [state, setState] = useState<{ content: any }>({
-    content: <SpinnerWrapper />,
+  const [state, setState] = useState<{ status: ChangeStatus, message: string }>({
+    status: ChangeStatus.Pending,
+    message: '',
   });
   const formApi = useFormApi();
   const context = useEditContext();
@@ -93,22 +100,31 @@ const FetchChanges = ({ client }: Props) => {
       try {
         context.showPageOverlay({
           hasSpinner: false,
-          maxTimeoutInSeconds: 10,
         });
         const response = await client.getChanges();
-        setState({
-          content: handleChangesResponse(response.data, formApi),
-        });
-        context.hidePageOverlay();
+        if (response.status !== 200) {
+          throw new Error(`Error pulling changes, status=${response.status}`);
+        }
+        const newState = handleChangesResponse(response.data);
+        if (newState.status === ChangeStatus.CanBePulled) {
+          formApi.setValue('keepOpen', true);
+        }
+        setState(newState);
       } catch (error) {
         setState({
-          content: 'An unexpected error has occurred',
+          status: ChangeStatus.Error,
+          message: error.message,
         });
+      } finally {
+        context.hidePageOverlay();
       }
     })();
   }, []);
-  const { content } = state;
-  return content;
+  const { status, message } = state;
+  if (status === ChangeStatus.Pending) {
+    return <SpinnerWrapper />;
+  }
+  return <>{message}</>;
 };
 
 type PullChangesProps = {
@@ -131,27 +147,23 @@ const PullChanges = ({ client }: PullChangesProps) => {
   const [pullStatus, setPullStatus] = useState<PullStatus>({ complete: false, error: '' });
   useEffect(() => {
     (async () => {
-      try {
+      try { 
         context.showPageOverlay({
           hasSpinner: false,
-          maxTimeoutInSeconds: 10,
         });
         const response = await client.getChanges(); // @Todo replace client.pull();
-        formApi.setValue('allowed', false);
-        if (response.status === 200) {
-          setPullStatus({ complete: true });
-        } else {
-          setPullStatus({
-            complete: false,
-            error: 'An unexpected error has occurred.',
-          });
+        if (response.status !== 200) {
+          throw new Error(`Error pulling changes, status=${response.status}`);
         }
-        context.hidePageOverlay();
+        setPullStatus({ complete: true });
       } catch (error) {
         setPullStatus({
           complete: false,
-          error: 'An unexpected error has occurred.',
+          error: error.message,
         });
+      } finally {
+        context.hidePageOverlay();
+        formApi.setValue('keepOpen', false);
       }
     })();
     return () => {};
