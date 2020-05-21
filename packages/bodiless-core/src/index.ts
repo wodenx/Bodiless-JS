@@ -58,7 +58,7 @@ export {
   withNodeAndHandlers,
   withNodeDataHandlers,
   withLocalContextMenu,
-  PageContextProvider as ContextProvider,
+  PageContextProvider,
   withMenuOptions,
   PageEditContext,
   useEditContext,
