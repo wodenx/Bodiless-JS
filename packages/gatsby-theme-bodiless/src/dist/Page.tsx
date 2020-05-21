@@ -23,6 +23,11 @@ import { ContextWrapper, PageEditor } from '@bodiless/core-ui';
 import GatsbyNodeProvider, {
   Props as NodeProviderProps,
 } from './GatsbyNodeProvider';
+import {
+  NotificationProvider,
+  NotificationButtonProvider,
+  DefaultActiveMenuOptions as NotificationActiveMenuOptions,
+} from './NotificationProvider';
 import GitProvider from './GitProvider';
 import NewPageProvider from './NewPageProvider';
 import GatsbyPageProvider, {
@@ -55,11 +60,17 @@ const Page: FC<Props> = observer(({ children, ui, ...rest }) => {
           <Editor>
             <NewPageProvider>
               <GitProvider>
-                <Wrapper clickable>
-                  <DefaultActiveMenuOptions>
-                    {children}
-                  </DefaultActiveMenuOptions>
-                </Wrapper>
+                <NotificationProvider>
+                  <NotificationButtonProvider>
+                    <NotificationActiveMenuOptions>
+                      <Wrapper clickable>
+                        <DefaultActiveMenuOptions>
+                          {children}
+                        </DefaultActiveMenuOptions>
+                      </Wrapper>
+                    </NotificationActiveMenuOptions>
+                  </NotificationButtonProvider>
+                </NotificationProvider>
               </GitProvider>
             </NewPageProvider>
           </Editor>

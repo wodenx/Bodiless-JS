@@ -18,6 +18,7 @@ import BackendClient from './dist/BackendClient';
 import GitProvider from './dist/GitProvider';
 import NewPageProvider from './dist/NewPageProvider';
 import GatsbyPageProvider, { useGatsbyPageContext } from './dist/GatsbyPageProvider';
+import { useNotifyFromNode, NotificationContext } from './dist/NotificationProvider';
 import Page from './dist/Page';
 
 export {
@@ -28,6 +29,8 @@ export {
   NewPageProvider,
   GatsbyPageProvider,
   useGatsbyPageContext,
+  useNotifyFromNode,
+  NotificationContext,
   Page,
 };
 
