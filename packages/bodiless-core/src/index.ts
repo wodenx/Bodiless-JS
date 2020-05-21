@@ -49,6 +49,13 @@ import {
   useActivateOnEffect,
   useActivateOnEffectActivator,
 } from './ActivateContext';
+import {
+  NotificationProvider,
+  NotificationButtonProvider,
+  useNotifyFromNode,
+  NotificationContext,
+  DefaultActiveMenuOptions as NotificationActiveMenuOptions,
+} from './NotificationProvider';
 import withChild from './withChild';
 
 export * from './components';
@@ -90,6 +97,11 @@ export {
   ifToggledOn,
   withFlowToggle,
   useEditToggle,
+  NotificationProvider,
+  NotificationButtonProvider,
+  NotificationActiveMenuOptions,
+  useNotifyFromNode,
+  NotificationContext,
 };
 
 export type {

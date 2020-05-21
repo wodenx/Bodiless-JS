@@ -17,17 +17,15 @@ import {
   StaticPage,
   ContextWrapperProps,
   useEditContext,
+  NotificationProvider,
+  NotificationButtonProvider,
+  NotificationActiveMenuOptions,
 } from '@bodiless/core';
 import { observer } from 'mobx-react-lite';
 import { ContextWrapper, PageEditor } from '@bodiless/core-ui';
 import GatsbyNodeProvider, {
   Props as NodeProviderProps,
 } from './GatsbyNodeProvider';
-import {
-  NotificationProvider,
-  NotificationButtonProvider,
-  DefaultActiveMenuOptions as NotificationActiveMenuOptions,
-} from './NotificationProvider';
 import GitProvider from './GitProvider';
 import NewPageProvider from './NewPageProvider';
 import GatsbyPageProvider, {

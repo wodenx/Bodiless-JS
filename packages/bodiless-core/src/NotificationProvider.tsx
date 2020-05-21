@@ -21,14 +21,11 @@ import React, {
   useRef,
 } from 'react';
 import { observer } from 'mobx-react-lite';
-import {
-  useNode,
-  useEditContext,
-  contextMenuForm,
-  ContextProvider,
-} from '@bodiless/core';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { v1 } from 'uuid';
+import { useNode } from './NodeProvider';
+import { useEditContext } from './hooks';
+import PageContextProvide from './PageContextProvider';
+import contextMenuForm from './contextMenuForm';
 
 type NotificationProvider = {
   id: string,
@@ -127,9 +124,9 @@ const NotificationButtonProvider: FC = ({ children }) => {
     handler,
   }];
   return (
-    <ContextProvider getMenuOptions={getMenuOptions}>
+    <PageContextProvide getMenuOptions={getMenuOptions}>
       {children}
-    </ContextProvider>
+    </PageContextProvide>
   );
 };
 

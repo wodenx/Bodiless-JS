@@ -14,8 +14,13 @@
 
 import React, { useCallback, useContext } from 'react';
 import { graphql } from 'gatsby';
-import { Page, useNotifyFromNode, NotificationContext } from '@bodiless/gatsby-theme-bodiless';
-import { withNode, withNodeKey } from '@bodiless/core';
+import {
+  withNode,
+  withNodeKey,
+  useNotifyFromNode,
+  NotificationContext,
+} from '@bodiless/core';
+import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { flowRight } from 'lodash';
 import { observer } from 'mobx-react-lite';
 // eslint-disable-next-line import/no-extraneous-dependencies
