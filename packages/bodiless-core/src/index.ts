@@ -18,6 +18,7 @@ import PageEditContext from './PageEditContext';
 import asStatic from './asStatic';
 import { useEditContext, useUUID, useContextActivator } from './hooks';
 import withNode, { withNodeKey } from './withNode';
+import withSidecarNodes, { startSidecarNodes, endSidecarNodes } from './withSidecarNodes';
 import {
   withDefaultContent,
   withResetButton,
@@ -37,11 +38,11 @@ import {
 } from './hoc';
 import { ifToggledOff, ifToggledOn, withFlowToggle } from './withFlowToggle';
 import { ifEditable, ifReadOnly, useEditToggle } from './withEditToggle';
-import { TMenuOption, PageEditContextInterface } from './PageEditContext/types';
-import { EditButtonOptions } from './Types/EditButtonTypes';
-import { TMenuOptionGetter } from './Types/PageContextProviderTypes';
-import { WithNodeProps } from './Types/NodeTypes';
-import { TOverlaySettings } from './Types/PageOverlayTypes';
+import type { TMenuOption, PageEditContextInterface } from './PageEditContext/types';
+import type { EditButtonOptions } from './Types/EditButtonTypes';
+import type { TMenuOptionGetter } from './Types/PageContextProviderTypes';
+import type { WithNodeProps } from './Types/NodeTypes';
+import type { TOverlaySettings } from './Types/PageOverlayTypes';
 import {
   ActivateOnEffectProvider,
   withActivateOnEffect,
@@ -57,10 +58,6 @@ export {
   withNodeAndHandlers,
   withNodeDataHandlers,
   withLocalContextMenu,
-  PageEditContextInterface,
-  TMenuOption,
-  TMenuOptionGetter,
-  TOverlaySettings,
   PageContextProvider as ContextProvider,
   withPageContext as withMenuOptions,
   PageEditContext,
@@ -68,11 +65,11 @@ export {
   useContextActivator,
   useUUID,
   withEditButton,
-  EditButtonProps,
-  WithNodeProps,
-  EditButtonOptions,
   withNode,
   withNodeKey,
+  withSidecarNodes,
+  startSidecarNodes,
+  endSidecarNodes,
   contextMenuForm,
   withData,
   NodeProvider,
@@ -93,6 +90,16 @@ export {
   ifToggledOn,
   withFlowToggle,
   useEditToggle,
+};
+
+export type {
+  PageEditContextInterface,
+  TMenuOption,
+  TMenuOptionGetter,
+  WithNodeProps,
+  EditButtonOptions,
+  EditButtonProps,
+  TOverlaySettings,
 };
 
 export type Bodiless<P, Q> = (C: ComponentType<P> | string) => ComponentType<Q>;

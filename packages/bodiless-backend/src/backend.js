@@ -22,6 +22,8 @@ const formidable = require('formidable');
 const tmp = require('tmp');
 const path = require('path');
 const Page = require('./page');
+const GitCmd = require('./GitCmd');
+const { getChanges } = require('./git');
 const Logger = require('./logger');
 
 const backendPrefix = process.env.GATSBY_BACKEND_PREFIX || '/___backend';
@@ -75,123 +77,6 @@ class Git {
     });
   }
 }
-/*
-This Class wraps spawn and lets us build out git commands with standard responses
-*/
-class GitCmd {
-  constructor() {
-    this.cmd = 'git';
-    this.params = [];
-    this.files = [];
-  }
-
-  add(...params) {
-    this.params.push(...params);
-    return this;
-  }
-
-  addFiles(...files) {
-    this.files.push(...files);
-    // const rawFiles = [...arguments]
-    // this.files.push(...rawFiles.map((file) => file.replace(/ /,'\ ')))
-    return this;
-  }
-
-  spawn() {
-    const args = [...this.params, ...this.files];
-    logger.log([`Spawning command: ${this.cmd}`, ...args]);
-    return spawn(this.cmd, args);
-  }
-
-  exec() {
-    return new Promise((resolve, reject) => {
-      const cmd = this.spawn();
-      let stderr = '';
-      let stdout = '';
-      cmd.stdout.on('data', data => {
-        stdout += data.toString();
-      });
-      cmd.stderr.on('data', data => {
-        stderr += data.toString();
-      });
-      cmd.on('close', code => {
-        logger.log(stdout, stderr, code);
-        if (code === 0) {
-          resolve({ stdout, stderr, code });
-          return;
-        }
-        // Allow plumbing commands with --quiet flag to return either 0 or 1.
-        if (this.params.includes('--quiet')) {
-          resolve({ stdout, stderr, code });
-          return;
-        }
-
-        const error = new Error(`${stderr}`);
-        error.code = `${code}`;
-        error.info = { stdout, stderr, code };
-        reject(error);
-      });
-    });
-  }
-
-  static cmd() {
-    return new GitCmd();
-  }
-}
-
-const getCurrentBranch = async () => {
-  const result = await GitCmd.cmd().add('rev-parse', '--abbrev-ref', 'HEAD').exec();
-  return result.stdout.trim();
-};
-
-const getMergeBase = async (a, b) => {
-  const mergeBase = await GitCmd.cmd()
-    .add('merge-base', a, b)
-    .exec();
-  return mergeBase.stdout.trim();
-}
-
-/**
- * Compares two refs.
- * @param {*} show 
- * @param {*} comparedTo 
- */
-const compare = async (show, comparedTo) => {
-  const mergeBase = await getMergeBase(show, comparedTo);
-  const commitsPromise = GitCmd.cmd()
-    .add('rev-list', '--oneline', '--left-only', `${show}...${comparedTo}`)
-    .exec();
-  const filesPromise = GitCmd.cmd()
-    .add('diff', '--name-only', show, mergeBase)
-    .exec();
-  const result = await Promise.all([commitsPromise, filesPromise]);
-  return {
-    commits: result[0].stdout.trim().split('\n').map(l => l.trim()).filter(l => l.length > 0),
-    diff: result[1].stdout.trim().split('\n').map(l => l.trim()).filter(l => l.length > 0),
-  };
-};
-
-const getStatus = async () => {
-  try {
-    await GitCmd.cmd().add('fetch', 'origin').exec();
-    const branch = await getCurrentBranch();
-    // @TODO: Deal with case where upstream branch doesn't exist.
-    const result = await Promise.all([
-      compare(`origin/${branch}`, branch),
-      compare('origin/master', `origin/${branch}`),
-      compare(branch, 'origin/master'),
-    ]);
-    const status = {
-      upstream: result[0],
-      production: result[1],
-      local: result[2],
-    };
-    console.log(status);
-    return status;
-  } catch (e) {
-    console.log(e);
-  }
-};
 
 /*
 This Class lets us buildout and execute a GitCommit
@@ -379,6 +264,7 @@ class Backend {
       res.header('Content-Type', 'application/json');
       next();
     });
+    this.setRoute(`${backendPrefix}/changes`, Backend.getChanges);
     this.setRoute(`${backendPrefix}/status`, Backend.getStatus);
     this.setRoute(`${backendPrefix}/get/commits`, Backend.getLatestCommits);
     this.setRoute(`${backendPrefix}/change/amend`, Backend.setChangeAmend);
@@ -422,6 +308,19 @@ class Backend {
       error.code = 405;
       Backend.exitWithErrorResponse(error, res);
     }
+  }
+
+  static getChanges(route) {
+    route.get(async (req, res) => {
+      try {
+        const status = await getChanges();
+        res.send(status);
+      } catch (error) {
+        logger.log(error);
+        error.code = 500;
+        Backend.exitWithErrorResponse(error, res);
+      }
+    });
   }
 
   static getStatus(route) {
