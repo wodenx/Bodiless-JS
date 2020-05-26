@@ -265,7 +265,6 @@ class Backend {
       next();
     });
     this.setRoute(`${backendPrefix}/changes`, Backend.getChanges);
-    this.setRoute(`${backendPrefix}/status`, Backend.getStatus);
     this.setRoute(`${backendPrefix}/get/commits`, Backend.getLatestCommits);
     this.setRoute(`${backendPrefix}/change/amend`, Backend.setChangeAmend);
     this.setRoute(`${backendPrefix}/change/commit`, Backend.setChangeCommit);
@@ -319,17 +318,6 @@ class Backend {
         logger.log(error);
         error.code = 500;
         Backend.exitWithErrorResponse(error, res);
-      }
-    });
-  }
-
-  static getStatus(route) {
-    route.get(async (req, res) => {
-      try {
-        const status = await getStatus();
-        res.send(status);
-      } catch (error) {
-        res.send(error.info);
       }
     });
   }
