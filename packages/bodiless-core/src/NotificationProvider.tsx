@@ -20,27 +20,25 @@ import React, {
   useCallback,
   useRef,
 } from 'react';
-import { observer } from 'mobx-react-lite';
 import { v1 } from 'uuid';
 import { useNode } from './NodeProvider';
-import { useEditContext } from './hooks';
 import PageContextProvide from './PageContextProvider';
 import contextMenuForm from './contextMenuForm';
 
-type NotificationProvider = {
+type Notification = {
   id: string,
   message: string,
 };
 
-type NotificationProviderItem = NotificationProvider & {
+type NotificationProviderItem = Notification & {
   owner: string,
 };
 
-type Notifier = (owner: string, notifications: NotificationProvider[]) => void;
+type Notifier = (owner: string, notifications: Notification[]) => void;
 
 type ContextType = {
   notify: Notifier,
-  notifications: NotificationProvider[],
+  notifications: Notification[],
 };
 
 const NotificationContext = React.createContext<ContextType>({
@@ -48,18 +46,10 @@ const NotificationContext = React.createContext<ContextType>({
   notifications: [],
 });
 
-const DefaultActiveMenuOptions = observer(({ children }: any) => {
-  const context = useEditContext();
-  useEffect(() => {
-    context.activate();
-  });
-  return <>{children}</>;
-});
-
 const NotificationProvider: FC = ({ children }) => {
   const [notifications, setNotifications] = useState<NotificationProviderItem[]>([]);
   const notify = useCallback(
-    (owner: string, newNotifications: NotificationProvider[]) => setNotifications(
+    (owner: string, newNotifications: Notification[]) => setNotifications(
       (oldNotifications: NotificationProviderItem[]) => oldNotifications
         .filter(n => n.owner !== owner)
         .concat(
@@ -77,7 +67,7 @@ const NotificationProvider: FC = ({ children }) => {
 };
 
 type Data = {
-  notifications: NotificationProvider[],
+  notifications: Notification[],
 };
 
 /**
@@ -91,7 +81,7 @@ type Data = {
  *
  * @param notifications An array of Notification objects which should be displayed
  */
-const useNotify = (notifications: NotificationProvider[]) => {
+const useNotify = (notifications: Notification[]) => {
   const owner = useRef(v1()).current;
   const { notify } = useContext(NotificationContext);
   useEffect(
@@ -105,7 +95,7 @@ const useNotifyFromNode = () => {
   useNotify(node.data.notifications);
   return {
     notifications: node.data.notifications || [],
-    setNotifications: (notifications: NotificationProvider[]) => node.setData({ notifications }),
+    setNotifications: (notifications: Notification[]) => node.setData({ notifications }),
   };
 };
 
@@ -136,6 +126,5 @@ export {
   NotificationButtonProvider,
   useNotify,
   useNotifyFromNode,
-  DefaultActiveMenuOptions,
   NotificationContext,
 };

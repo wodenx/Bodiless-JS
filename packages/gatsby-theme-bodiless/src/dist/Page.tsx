@@ -19,7 +19,6 @@ import {
   useEditContext,
   NotificationProvider,
   NotificationButtonProvider,
-  NotificationActiveMenuOptions,
 } from '@bodiless/core';
 import { observer } from 'mobx-react-lite';
 import { ContextWrapper, PageEditor } from '@bodiless/core-ui';
@@ -60,13 +59,11 @@ const Page: FC<Props> = observer(({ children, ui, ...rest }) => {
               <GitProvider>
                 <NotificationProvider>
                   <NotificationButtonProvider>
-                    <NotificationActiveMenuOptions>
-                      <Wrapper clickable>
-                        <DefaultActiveMenuOptions>
-                          {children}
-                        </DefaultActiveMenuOptions>
-                      </Wrapper>
-                    </NotificationActiveMenuOptions>
+                    <Wrapper clickable>
+                      <DefaultActiveMenuOptions>
+                        {children}
+                      </DefaultActiveMenuOptions>
+                    </Wrapper>
                   </NotificationButtonProvider>
                 </NotificationProvider>
               </GitProvider>

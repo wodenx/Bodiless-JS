@@ -54,7 +54,6 @@ import {
   NotificationButtonProvider,
   useNotifyFromNode,
   NotificationContext,
-  DefaultActiveMenuOptions as NotificationActiveMenuOptions,
 } from './NotificationProvider';
 import withChild from './withChild';
 
@@ -99,7 +98,6 @@ export {
   useEditToggle,
   NotificationProvider,
   NotificationButtonProvider,
-  NotificationActiveMenuOptions,
   useNotifyFromNode,
   NotificationContext,
 };
