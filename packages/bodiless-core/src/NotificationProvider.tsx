@@ -22,7 +22,7 @@ import React, {
 } from 'react';
 import { v1 } from 'uuid';
 import { useNode } from './NodeProvider';
-import PageContextProvide from './PageContextProvider';
+import PageContextProvider from './PageContextProvider';
 import contextMenuForm from './contextMenuForm';
 
 type Notification = {
@@ -114,9 +114,9 @@ const NotificationButtonProvider: FC = ({ children }) => {
     handler,
   }];
   return (
-    <PageContextProvide getMenuOptions={getMenuOptions}>
+    <PageContextProvider getMenuOptions={getMenuOptions}>
       {children}
-    </PageContextProvide>
+    </PageContextProvider>
   );
 };
 
