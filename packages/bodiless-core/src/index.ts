@@ -51,10 +51,10 @@ import {
 } from './ActivateContext';
 import {
   NotificationProvider,
-  NotificationButtonProvider,
   useNotifyFromNode,
   NotificationContext,
 } from './NotificationProvider';
+import NotificationButtonProvider from './NotificationButtonProvider';
 import withChild from './withChild';
 
 export * from './components';

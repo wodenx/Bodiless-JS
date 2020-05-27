@@ -42,7 +42,6 @@ const NotificationViewer = () => {
 
 const ChildWithNotifications = asBodiless(() => {
   const { notifications, setNotifications } = useNotifyFromNode();
-
   const addRandomNotification = useCallback(
     () => {
       const id = v1();

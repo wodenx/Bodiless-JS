@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 Johnson & Johnson
+ * Copyright © 2020 Johnson & Johnson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@ import React, {
 } from 'react';
 import { v1 } from 'uuid';
 import { useNode } from './NodeProvider';
-import PageContextProvider from './PageContextProvider';
-import contextMenuForm from './contextMenuForm';
 
 type Notification = {
   id: string,
@@ -46,6 +44,12 @@ const NotificationContext = React.createContext<ContextType>({
   notifications: [],
 });
 
+/**
+ * A component used to provide notifications.
+ *
+ * @param children
+ * @constructor
+ */
 const NotificationProvider: FC = ({ children }) => {
   const [notifications, setNotifications] = useState<NotificationProviderItem[]>([]);
   const notify = useCallback(
@@ -99,31 +103,9 @@ const useNotifyFromNode = () => {
   };
 };
 
-const NotificationButtonProvider: FC = ({ children }) => {
-  const { notifications } = useContext(NotificationContext);
-  const handler = () => contextMenuForm({})(
-    () => (
-      <>{notifications.map(n => <p key={n.id}>{n.message}</p>)}</>
-    ),
-  );
-  const getMenuOptions = () => [{
-    name: 'Notifications',
-    label: 'Alerts',
-    icon: notifications.length > 0 ? 'notification_important' : 'notifications',
-    isActive: () => notifications.length > 0,
-    handler,
-  }];
-  return (
-    <PageContextProvider getMenuOptions={getMenuOptions}>
-      {children}
-    </PageContextProvider>
-  );
-};
-
 export {
   NotificationProvider,
   NotificationProviderItem,
-  NotificationButtonProvider,
   useNotify,
   useNotifyFromNode,
   NotificationContext,
