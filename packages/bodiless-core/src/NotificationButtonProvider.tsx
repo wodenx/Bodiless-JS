@@ -43,4 +43,4 @@ const NotificationButtonProvider: FC = ({ children }) => {
   );
 };
 
-export default NotificationButtonProvider
+export default NotificationButtonProvider;
