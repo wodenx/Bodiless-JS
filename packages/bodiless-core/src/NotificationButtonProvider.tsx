@@ -18,6 +18,7 @@ import PageContextProvider from './PageContextProvider';
 import { NotificationContext } from './NotificationProvider';
 
 /**
+ * Provide a component to display notifications.
  *
  * @param children
  * @constructor
