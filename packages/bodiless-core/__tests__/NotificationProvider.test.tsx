@@ -12,25 +12,25 @@
  * limitations under the License.
  */
 
-import { mount } from 'enzyme';
-import React, { useContext } from 'react';
-import { NotificationContext, useNotify } from '../src/NotificationProvider';
-
-const mockNotifications = [
-  {
-    id: '0',
-    message: 'foo',
-  },
-];
-const ChildWithNotifications = () => {
-  useNotify(mockNotifications);
-  return null;
-};
-describe(' useNotify', () => {
-  it('renders the notifications', () => {
-    const Wrapper = mount(
-      <ChildWithNotifications />,
-    );
-    console.log(Wrapper.debug());
-  });
-});
+// import { mount } from 'enzyme';
+// import React, { useContext } from 'react';
+// import { NotificationContext, useNotify } from '../src/NotificationProvider';
+//
+// const mockNotifications = [
+//   {
+//     id: '0',
+//     message: 'foo',
+//   },
+// ];
+// const ChildWithNotifications = () => {
+//   useNotify(mockNotifications);
+//   return null;
+// };
+// describe(' useNotify', () => {
+//   it('renders the notifications', () => {
+//     const Wrapper = mount(
+//       <ChildWithNotifications />,
+//     );
+//     console.log(Wrapper.debug());
+//   });
+// });
