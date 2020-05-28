@@ -45,6 +45,8 @@ const NotificationContext = React.createContext<NotificationsContextType>({
   notifications: [],
 });
 
+const useNotifications = () => useContext(NotificationContext);
+
 const NotifyContext = React.createContext<NotifyContextType>({
   notify: () => undefined,
 });
@@ -118,6 +120,5 @@ export {
   NotificationProviderItem,
   useNotify,
   useNotifyFromNode,
-  NotificationContext,
-  NotifyContext,
+  useNotifications,
 };

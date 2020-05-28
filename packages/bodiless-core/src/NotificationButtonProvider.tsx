@@ -12,10 +12,10 @@
  * limitations under the License.
  */
 
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import contextMenuForm from './contextMenuForm';
 import PageContextProvider from './PageContextProvider';
-import { NotificationContext } from './NotificationProvider';
+import { useNotifications } from './NotificationProvider';
 import { getUI } from './components';
 
 const NotificationItem = (props : any) => {
@@ -29,7 +29,7 @@ const NotificationItem = (props : any) => {
 };
 
 const NotificationList = () => {
-  const { notifications } = useContext(NotificationContext);
+  const { notifications } = useNotifications();
   if (notifications.length === 0) return (<p>There are no alerts.</p>);
   return (
     <div className="bl-flex-grow">{notifications.map(n => (<NotificationItem notification={n} />))}</div>
@@ -53,7 +53,7 @@ const Form = contextMenuForm({})(({ ui }) => {
  * @constructor
  */
 const NotificationButtonProvider: FC = ({ children }) => {
-  const { notifications } = useContext(NotificationContext);
+  const { notifications } = useNotifications();
   const getMenuOptions = () => [{
     name: 'Notifications',
     label: 'Alerts',

@@ -12,14 +12,13 @@
  * limitations under the License.
  */
 
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { graphql } from 'gatsby';
 import {
   withNode,
   withNodeKey,
   useNotifyFromNode,
-  NotificationContext,
-  NotifyContext,
+  useNotifications,
 } from '@bodiless/core';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { flowRight } from 'lodash';
@@ -36,8 +35,7 @@ const asBodiless = flowRight(
 
 const AComponentWhoObservesNotify = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { notify } = useContext(NotifyContext);
-
+  const { notifications } = useNotifications();
   const renderCounter = React.useRef(0);
   renderCounter.current += 1;
   return (
@@ -49,7 +47,7 @@ const AComponentWhoObservesNotify = () => {
 };
 
 const NotificationViewer = () => {
-  const { notifications } = useContext(NotificationContext);
+  const { notifications } = useNotifications();
   return (
     <pre>{JSON.stringify(notifications, undefined, 2)}</pre>
   );
