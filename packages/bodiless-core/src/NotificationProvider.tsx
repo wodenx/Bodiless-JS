@@ -13,14 +13,13 @@
  */
 
 import React, {
-  useState,
   FC,
   useContext,
   useEffect,
-  useCallback,
   useRef,
 } from 'react';
 import { v1 } from 'uuid';
+import { observable, action } from 'mobx';
 import { useNode } from './NodeProvider';
 
 type Notification = {
@@ -32,17 +31,31 @@ type NotificationProviderItem = Notification & {
   owner: string,
 };
 
-type Notifier = (owner: string, notifications: Notification[]) => void;
+class NotificationStore {
+  @observable
+  notifications: NotificationProviderItem[] = [];
+
+  @action
+  notify(owner: string, newNotifications: Notification[]) {
+    this.notifications = this.notifications
+      .filter(n => n.owner !== owner)
+      .concat(
+        newNotifications.map(n => ({ ...n, owner })),
+      );
+  }
+}
 
 type ContextType = {
-  notify: Notifier,
-  notifications: Notification[],
+  getNotifications: () => Notification[],
+  notify: (owner: string, newNotifications: Notification[]) => void,
 };
 
-const NotificationContext = React.createContext<ContextType>({
+const defaultContext: ContextType = {
+  getNotifications: () => [],
   notify: () => undefined,
-  notifications: [],
-});
+};
+
+const NotificationContext = React.createContext(defaultContext);
 
 /**
  * A component used to provide notifications.
@@ -51,20 +64,13 @@ const NotificationContext = React.createContext<ContextType>({
  * @constructor
  */
 const NotificationProvider: FC = ({ children }) => {
-  const [notifications, setNotifications] = useState<NotificationProviderItem[]>([]);
-  const notify = useCallback(
-    (owner: string, newNotifications: Notification[]) => setNotifications(
-      (oldNotifications: NotificationProviderItem[]) => oldNotifications
-        .filter(n => n.owner !== owner)
-        .concat(
-          newNotifications.map(n => ({ ...n, owner })),
-        ),
-    ),
-    [setNotifications],
-  );
-
+  const store = useRef(new NotificationStore()).current;
+  const value = {
+    getNotifications: () => store.notifications,
+    notify: store.notify.bind(store),
+  };
   return (
-    <NotificationContext.Provider value={{ notify, notifications }}>
+    <NotificationContext.Provider value={value}>
       {children}
     </NotificationContext.Provider>
   );

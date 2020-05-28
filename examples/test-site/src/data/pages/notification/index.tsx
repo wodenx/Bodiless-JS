@@ -46,12 +46,13 @@ const AComponentWhoObservesNotify = () => {
   );
 };
 
-const NotificationViewer = () => {
-  const { notifications } = useContext(NotificationContext);
+const NotificationViewer = observer(() => {
+  const { getNotifications } = useContext(NotificationContext);
+  const notifications = getNotifications();
   return (
     <pre>{JSON.stringify(notifications, undefined, 2)}</pre>
   );
-};
+});
 
 const ChildWithNotifications = asBodiless(() => {
   const { notifications, setNotifications } = useNotifyFromNode();
