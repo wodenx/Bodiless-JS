@@ -16,15 +16,35 @@ import React, { FC, useContext } from 'react';
 import contextMenuForm from './contextMenuForm';
 import PageContextProvider from './PageContextProvider';
 import { NotificationContext } from './NotificationProvider';
+import { getUI } from './components';
 
-const NotificationList = () => {
-  const { notifications } = useContext(NotificationContext);
+const NotificationItem = (props : any) => {
+  const { notification } = props;
   return (
-    <>{notifications.map(n => <p key={n.id}>{n.message}</p>)}</>
+    <>
+      <p className="bl-py-grid-1 bl-px-grid-1 bl-max-w-xl-grid-1" key={notification.id}>{notification.message}</p>
+      <hr />
+    </>
   );
 };
 
-const Form = contextMenuForm({})(() => <NotificationList />);
+const NotificationList = () => {
+  const { notifications } = useContext(NotificationContext);
+  if (notifications.length === 0) return (<p>There are no alerts.</p>);
+  return (
+    <div className="bl-flex-grow">{notifications.map(n => (<NotificationItem notification={n} />))}</div>
+  );
+};
+
+const Form = contextMenuForm({})(({ ui }) => {
+  const { ComponentFormTitle } = getUI(ui);
+  return (
+    <>
+      <ComponentFormTitle>Alerts</ComponentFormTitle>
+      <NotificationList />
+    </>
+  );
+});
 
 /**
  * Provide a component to display notifications.

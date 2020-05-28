@@ -60,7 +60,7 @@ const ChildWithNotifications = asBodiless(() => {
   const addRandomNotification = useCallback(
     () => {
       const id = v1();
-      const message = `Notification ${id}`;
+      const message = 'Lorem Ipsum is simply dumy text of the printing and typesetting industry.';
       setNotifications([...notifications, { id, message }]);
     },
     [notifications, setNotifications],
