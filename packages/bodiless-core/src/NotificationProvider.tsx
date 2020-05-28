@@ -83,13 +83,16 @@ type Data = {
  * you want to display. Every time your component re-renders, all the notifications
  * it owns will be regenerated from the list provided to this hook.
  *
- * @param notifications An array of Notification objects which should be displayed
+ * @param notifications An array of Notification objects which should be displayed.
  */
 const useNotify = (notifications: Notification[]) => {
   const owner = useRef(v1()).current;
   const { notify } = useContext(NotificationContext);
   useEffect(
-    () => notify(owner, notifications || []),
+    () => {
+      notify(owner, notifications || []);
+      return () => notify(owner, []);
+    },
     [notify, owner, notifications],
   );
 };
