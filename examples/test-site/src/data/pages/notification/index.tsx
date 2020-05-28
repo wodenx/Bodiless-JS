@@ -33,6 +33,19 @@ const asBodiless = flowRight(
   observer,
 );
 
+const AComponentWhoObservesNotify = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { notify } = useContext(NotificationContext);
+  const renderCounter = React.useRef(0);
+  renderCounter.current += 1;
+  return (
+    <div>
+      Render Count:
+      {renderCounter.current}
+    </div>
+  );
+};
+
 const NotificationViewer = () => {
   const { notifications } = useContext(NotificationContext);
   return (
@@ -67,6 +80,7 @@ export default (props: any) => (
       <h1 className="text-3xl font-bold">Notifications</h1>
       <ChildWithNotifications />
       <NotificationViewer />
+      <AComponentWhoObservesNotify />
     </Layout>
   </Page>
 );
