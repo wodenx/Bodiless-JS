@@ -17,6 +17,15 @@ import contextMenuForm from './contextMenuForm';
 import PageContextProvider from './PageContextProvider';
 import { NotificationContext } from './NotificationProvider';
 
+const NotificationList = () => {
+  const { notifications } = useContext(NotificationContext);
+  return (
+    <>{notifications.map(n => <p key={n.id}>{n.message}</p>)}</>
+  );
+};
+
+const Form = contextMenuForm({})(() => <NotificationList />);
+
 /**
  * Provide a component to display notifications.
  *
@@ -25,17 +34,12 @@ import { NotificationContext } from './NotificationProvider';
  */
 const NotificationButtonProvider: FC = ({ children }) => {
   const { notifications } = useContext(NotificationContext);
-  const handler = () => contextMenuForm({})(
-    () => (
-      <>{notifications.map(n => <p key={n.id}>{n.message}</p>)}</>
-    ),
-  );
   const getMenuOptions = () => [{
     name: 'Notifications',
     label: 'Alerts',
     icon: notifications.length > 0 ? 'notification_important' : 'notifications',
     isActive: () => notifications.length > 0,
-    handler,
+    handler: () => Form,
   }];
   return (
     <PageContextProvider getMenuOptions={getMenuOptions}>
