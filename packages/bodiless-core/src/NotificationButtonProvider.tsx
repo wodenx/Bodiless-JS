@@ -13,14 +13,12 @@
  */
 
 import React, { FC, useContext } from 'react';
-import { observer } from 'mobx-react-lite';
 import contextMenuForm from './contextMenuForm';
 import PageContextProvider from './PageContextProvider';
 import { NotificationContext } from './NotificationProvider';
 
 const NotificationList = () => {
-  const { getNotifications } = useContext(NotificationContext);
-  const notifications = getNotifications();
+  const { notifications } = useContext(NotificationContext);
   return (
     <>{notifications.map(n => <p key={n.id}>{n.message}</p>)}</>
   );
@@ -35,8 +33,7 @@ const Form = contextMenuForm({})(() => <NotificationList />);
  * @constructor
  */
 const NotificationButtonProvider: FC = ({ children }) => {
-  const { getNotifications } = useContext(NotificationContext);
-  const notifications = getNotifications();
+  const { notifications } = useContext(NotificationContext);
   const getMenuOptions = () => [{
     name: 'Notifications',
     label: 'Alerts',
@@ -51,4 +48,4 @@ const NotificationButtonProvider: FC = ({ children }) => {
   );
 };
 
-export default observer(NotificationButtonProvider);
+export default NotificationButtonProvider;
