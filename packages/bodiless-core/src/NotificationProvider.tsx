@@ -34,14 +34,19 @@ type NotificationProviderItem = Notification & {
 
 type Notifier = (owner: string, notifications: Notification[]) => void;
 
-type ContextType = {
-  notify: Notifier,
+type NotificationsContextType = {
   notifications: Notification[],
 };
+type NotifyContextType = {
+  notify: Notifier,
+};
 
-const NotificationContext = React.createContext<ContextType>({
-  notify: () => undefined,
+const NotificationContext = React.createContext<NotificationsContextType>({
   notifications: [],
+});
+
+const NotifyContext = React.createContext<NotifyContextType>({
+  notify: () => undefined,
 });
 
 /**
@@ -64,8 +69,10 @@ const NotificationProvider: FC = ({ children }) => {
   );
 
   return (
-    <NotificationContext.Provider value={{ notify, notifications }}>
-      {children}
+    <NotificationContext.Provider value={{ notifications }}>
+      <NotifyContext.Provider value={{ notify }}>
+        {children}
+      </NotifyContext.Provider>
     </NotificationContext.Provider>
   );
 };
@@ -87,7 +94,7 @@ type Data = {
  */
 const useNotify = (notifications: Notification[]) => {
   const owner = useRef(v1()).current;
-  const { notify } = useContext(NotificationContext);
+  const { notify } = useContext(NotifyContext);
   useEffect(
     () => {
       notify(owner, notifications || []);
@@ -112,4 +119,5 @@ export {
   useNotify,
   useNotifyFromNode,
   NotificationContext,
+  NotifyContext,
 };

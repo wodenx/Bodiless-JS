@@ -19,6 +19,7 @@ import {
   withNodeKey,
   useNotifyFromNode,
   NotificationContext,
+  NotifyContext,
 } from '@bodiless/core';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { flowRight } from 'lodash';
@@ -35,7 +36,8 @@ const asBodiless = flowRight(
 
 const AComponentWhoObservesNotify = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { notify } = useContext(NotificationContext);
+  const { notify } = useContext(NotifyContext);
+
   const renderCounter = React.useRef(0);
   renderCounter.current += 1;
   return (
