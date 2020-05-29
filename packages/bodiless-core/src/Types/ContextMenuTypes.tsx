@@ -51,8 +51,6 @@ export type UI = {
   Tooltip?: FC<Tooltip['props']>;
   ReactTags?: ComponentType<ReactTagsFieldProps>;
   // @TODO: Add other controls from informed.
-  ComponentFormList?: ComponentType<HTMLProps<HTMLUListElement>> | string;
-  ComponentFormListItem?: ComponentType<HTMLProps<HTMLLIElement>> | string;
   ComponentFormNotification?: ComponentType<HTMLProps<HTMLDivElement>> | string;
 };
 
