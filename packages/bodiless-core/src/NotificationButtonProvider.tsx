@@ -18,21 +18,21 @@ import PageContextProvider from './PageContextProvider';
 import { useNotifications } from './NotificationProvider';
 import { getUI } from './components';
 
-const NotificationItem = (props : any) => {
-  const { notification } = props;
-  return (
-    <>
-      <p className="bl-py-grid-1 bl-px-grid-1 bl-max-w-xl-grid-1" key={notification.id}>{notification.message}</p>
-      <hr />
-    </>
-  );
-};
-
-const NotificationList = () => {
+const NotificationList = ({ ui } : any) => {
+  const { ComponentFormNotification } = getUI(ui);
   const { notifications } = useNotifications();
   if (notifications.length === 0) return (<p>There are no alerts.</p>);
   return (
-    <div className="bl-flex-grow">{notifications.map(n => (<NotificationItem notification={n} />))}</div>
+    <>
+      {notifications.map(n => (
+        <>
+          <ComponentFormNotification key={n.id}>
+            {n.message}
+          </ComponentFormNotification>
+          <hr />
+        </>
+      ))}
+    </>
   );
 };
 
@@ -41,7 +41,7 @@ const Form = contextMenuForm({})(({ ui }) => {
   return (
     <>
       <ComponentFormTitle>Alerts</ComponentFormTitle>
-      <NotificationList />
+      <NotificationList ui={ui} />
     </>
   );
 });

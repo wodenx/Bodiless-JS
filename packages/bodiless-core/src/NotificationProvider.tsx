@@ -17,8 +17,8 @@ import React, {
   FC,
   useContext,
   useEffect,
-  useCallback,
   useRef,
+  useMemo,
 } from 'react';
 import { v1 } from 'uuid';
 import { useNode } from './NodeProvider';
@@ -59,20 +59,20 @@ const NotifyContext = React.createContext<NotifyContextType>({
  */
 const NotificationProvider: FC = ({ children }) => {
   const [notifications, setNotifications] = useState<NotificationProviderItem[]>([]);
-  const notify = useCallback(
-    (owner: string, newNotifications: Notification[]) => setNotifications(
-      (oldNotifications: NotificationProviderItem[]) => oldNotifications
-        .filter(n => n.owner !== owner)
-        .concat(
-          newNotifications.map(n => ({ ...n, owner })),
-        ),
-    ),
-    [setNotifications],
+  const notify = (owner: string, newNotifications: Notification[]) => setNotifications(
+    (oldNotifications: NotificationProviderItem[]) => oldNotifications
+      .filter(n => n.owner !== owner)
+      .concat(
+        newNotifications.map(n => ({ ...n, owner })),
+      ),
   );
+  // We memoize the notifier context value to prevent unnecessary re-renders
+  // of subscribers to only this context.
+  const notifyContextValue = useMemo(() => ({ notify }), [setNotifications]);
 
   return (
     <NotificationContext.Provider value={{ notifications }}>
-      <NotifyContext.Provider value={{ notify }}>
+      <NotifyContext.Provider value={notifyContextValue}>
         {children}
       </NotifyContext.Provider>
     </NotificationContext.Provider>

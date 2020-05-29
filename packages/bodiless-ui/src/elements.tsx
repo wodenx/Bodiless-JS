@@ -51,6 +51,10 @@ export const ComponentFormTitle = addClasses(
   'bl-text-lg bl-font-bold bl-text-grey-100 bl-block bl-mb-grid-2',
 )(Title);
 
+export const ComponentFormNotification = addClasses(
+  'bl-py-grid-1 bl-px-grid-1 bl-max-w-xl-grid-1',
+)(Div);
+
 export const ComponentFormLabel = addClasses(
   'bl-text-xs bl-text-grey-100 bl-block',
 )(Label);
