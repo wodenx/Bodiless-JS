@@ -29,7 +29,7 @@ import withData from './withData';
 import NodeProvider, { useNode, useNodeDataHandlers } from './NodeProvider';
 import { DefaultContentNode } from './ContentNode';
 import {
-  withPageContext,
+  withMenuOptions,
   withNodeAndHandlers,
   withNodeDataHandlers,
   withLocalContextMenu,
@@ -66,8 +66,8 @@ export {
   withNodeAndHandlers,
   withNodeDataHandlers,
   withLocalContextMenu,
-  PageContextProvider as ContextProvider,
-  withPageContext as withMenuOptions,
+  PageContextProvider,
+  withMenuOptions,
   PageEditContext,
   useEditContext,
   useContextActivator,
