@@ -15,6 +15,7 @@
 import React, { Fragment, ComponentType } from 'react';
 import {
   useNode, TMenuOption, withMenuOptions, useEditContext,
+  ifToggledOff as ifToggledOffCore, ifToggledOn as ifToggledOnCore,
 } from '@bodiless/core';
 import { observer } from 'mobx-react-lite';
 
@@ -31,6 +32,11 @@ const useAccessors = () => {
     },
   };
 };
+
+const useToggleFromNode = () => useAccessors().isOn();
+
+const ifToggledOn = ifToggledOnCore(useToggleFromNode);
+const ifToggledOff = ifToggledOffCore(useToggleFromNode);
 
 const withToggleTo = <Q extends object>(OffComp: ComponentType<Q> | string) => (
   <P extends object>(OnComp: ComponentType<P>) => observer(
@@ -105,4 +111,6 @@ export {
   withToggle,
   withToggleButton,
   withWrapOnSubmit,
+  ifToggledOn,
+  ifToggledOff,
 };

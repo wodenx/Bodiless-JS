@@ -46,6 +46,9 @@ import {
   ifViewportIsNot,
 } from './withResponsiveToggle';
 
+import asBodilessList from './List2/asBodilessList';
+import asBodilessListItem from './List2/asBodilessListItem';
+
 export {
   asBodilessLink,
   Image,
@@ -87,6 +90,8 @@ export {
   BreakpointsType,
   ifViewportIs,
   ifViewportIsNot,
+  asBodilessList,
+  asBodilessListItem,
 };
 
 export type {
