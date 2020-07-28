@@ -14,10 +14,10 @@
 
 import React, { ComponentType } from 'react';
 import {
-  withMenuOptions, useEditContext, withLocalContextMenu, withContextActivator, withoutProps, ifEditable,
+  withMenuOptions, useEditContext, withLocalContextMenu,
+  withContextActivator, withoutProps, ifEditable,
 } from '@bodiless/core';
 import { flow, identity } from 'lodash';
-import { observer } from 'mobx-react-lite';
 import { Design } from '@bodiless/fclasses/lib/Design';
 
 import { TitleProps, FinalProps, ListDesignableComponents } from './types';
