@@ -15,12 +15,13 @@
 import React, { FC } from 'react';
 import { shallow, mount } from 'enzyme';
 import { observable } from 'mobx';
-import { withContextActivator, withLocalContextMenu, withNodeDataHandlers, withOnlyProps } from '../src/hoc';
+import {
+  withContextActivator, withLocalContextMenu, withNodeDataHandlers, withOnlyProps,
+} from '../src/hoc';
 
 const TestComponent = ({ element: Element }: any) => (
   <Element><div>Test Component</div></Element>
 );
-
 
 describe('withOnlyProps', () => {
   it('keeps only the specified props', () => {
