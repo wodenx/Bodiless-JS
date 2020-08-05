@@ -31,7 +31,7 @@ export const withoutProps = <Q extends object>(keys: string[]) => (
 );
 
 /**
- * Creates an HOC which strips all but hte speciried props.
+ * Creates an HOC which strips all but the specified props.
  *
  * @param keys A list of the prop-names to keep.
  *
