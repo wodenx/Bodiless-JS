@@ -21,6 +21,7 @@ import { useEditContext } from '../hooks';
 
 const ContextMenuItem = observer((props: IProps) => {
   const { option, index } = props;
+  console.log('rendered context menu item', option.name);
   const [renderForm, setRenderForm$] = useState<(props:ContextMenuFormProps) => JSX.Element>();
   const [isToolTipShown, setIsToolTipShown] = useState(false);
   const ui = useContextMenuUIContext();
