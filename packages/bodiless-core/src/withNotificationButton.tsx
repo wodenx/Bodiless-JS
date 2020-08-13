@@ -16,11 +16,11 @@ import React, { useCallback } from 'react';
 import { ContextMenuForm } from './contextMenuForm';
 import { useRegisterMenuOptions } from './PageContextProvider';
 import { useNotifications } from './NotificationProvider';
-import { useContextMenuUIContext } from './components/ContextMenuContext';
+import { useMenuOptionUI } from './components/ContextMenuContext';
 import type { ContextMenuFormProps } from './Types/ContextMenuTypes';
 
 const NotificationList = () => {
-  const { ComponentFormList, ComponentFormListItem } = useContextMenuUIContext();
+  const { ComponentFormList, ComponentFormListItem } = useMenuOptionUI();
   const { notifications } = useNotifications();
   if (notifications.length === 0) return (<p>There are no alerts.</p>);
   return (
@@ -35,7 +35,7 @@ const NotificationList = () => {
 };
 
 const RenderForm = (props: ContextMenuFormProps) => {
-  const { ComponentFormTitle } = useContextMenuUIContext();
+  const { ComponentFormTitle } = useMenuOptionUI();
   return (
     <ContextMenuForm {...props}>
       <ComponentFormTitle>Alerts</ComponentFormTitle>

@@ -2,7 +2,7 @@ import React, { ComponentType as CT } from 'react';
 import { flowRight } from 'lodash';
 import { v1 } from 'uuid';
 import {
-  useFormUI, useRegisterSnippet, withCompoundForm, withEditFormSnippet,
+  useMenuOptionUI, useRegisterSnippet, withCompoundForm, withEditFormSnippet,
 } from '@bodiless/core';
 import type { FormSnippet, UseGetMenuOptions } from '@bodiless/core';
 import { Div } from '@bodiless/fclasses';
@@ -33,7 +33,7 @@ export const withMetaSnippet = (
     const {
       name, label, placeholder, useFormElement,
     } = options;
-    const { ComponentFormLabel, ComponentFormText } = useFormUI();
+    const { ComponentFormLabel, ComponentFormText } = useMenuOptionUI();
     const Field = useFormElement ? useFormElement() : ComponentFormText;
     return (
       <Div key={name}>
@@ -59,7 +59,7 @@ const withMetaFormHeader = (headerProps: HeaderProps | undefined) => (Component:
     id: v1(),
     render: () => {
       if (!headerProps) return <></>;
-      const { ComponentFormTitle, ComponentFormDescription } = useFormUI();
+      const { ComponentFormTitle, ComponentFormDescription } = useMenuOptionUI();
       return (
         <Div key="form-header">
           <ComponentFormTitle>{headerProps.title}</ComponentFormTitle>

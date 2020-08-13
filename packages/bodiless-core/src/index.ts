@@ -62,7 +62,7 @@ import useNotificationButton from './withNotificationButton';
 import withChild from './withChild';
 import asBodilessComponent, { withActivatorWrapper } from './asBodilessComponent';
 import type { Options as BodilessOptions, AsBodiless } from './asBodilessComponent';
-import { useContextMenuUIContext as useFormUI } from './components/ContextMenuContext';
+import { useMenuOptionUI } from './components/ContextMenuContext';
 import ContextSubMenu from './ContextMenu/ContextSubMenu';
 import useSwitcherButton from './useSwitcherButton';
 import OnNodeErrorNotification from './OnNodeErrorNotification';
@@ -98,7 +98,7 @@ export {
   useContextMenuForm,
   ContextMenuForm,
   ContextSubMenu,
-  useFormUI,
+  useMenuOptionUI,
   withData,
   NodeProvider,
   useNode,

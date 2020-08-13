@@ -15,14 +15,14 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { useContextMenuContext, useContextMenuUIContext } from './ContextMenuContext';
+import { useContextMenuContext, useMenuOptionUI } from './ContextMenuContext';
 import type { IContextMenuItemProps as IProps, ContextMenuFormProps } from '../Types/ContextMenuTypes';
 
 const ContextMenuItem = observer((props: IProps) => {
   const { option, index } = props;
   const [renderForm, setRenderForm$] = useState<(props:ContextMenuFormProps) => JSX.Element>();
   const [isToolTipShown, setIsToolTipShown] = useState(false);
-  const ui = useContextMenuUIContext();
+  const ui = useMenuOptionUI();
   const {
     ToolbarDivider, Icon, ToolbarButton,
     FormWrapper, Tooltip,

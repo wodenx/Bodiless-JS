@@ -23,7 +23,7 @@ import {
   withMetaForm,
 } from '@bodiless/components';
 import {
-  useFormUI,
+  useMenuOptionUI,
 } from '@bodiless/core';
 
 const withMetaPageTitle = withTitle({
@@ -34,7 +34,7 @@ const withMetaPageTitle = withTitle({
 
 const withMetaPageDescription = withMeta({
   name: 'description',
-  useFormElement: () => useFormUI().ComponentFormTextArea,
+  useFormElement: () => useMenuOptionUI().ComponentFormTextArea,
   label: 'Description',
   placeholder: 'Rec < 160 char',
 });

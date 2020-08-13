@@ -17,7 +17,7 @@ import { graphql } from 'gatsby';
 import { flowRight } from 'lodash';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  useFormUI, withCompoundForm,
+  useMenuOptionUI, withCompoundForm,
   withNodeDataHandlers,
   withNodeKey, withNode, withEditFormSnippet, withoutProps,
   WithNodeKeyProps, withData,
@@ -46,7 +46,7 @@ const PropsViewer = (props: any) => (
 );
 
 const TestSnippet = (data: any) => {
-  const { ComponentFormLabel, ComponentFormText } = useFormUI();
+  const { ComponentFormLabel, ComponentFormText } = useMenuOptionUI();
   return (
     <>
       {Object.keys(data).map(

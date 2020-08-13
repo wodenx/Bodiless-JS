@@ -14,7 +14,7 @@
 
 import React, { FC, ReactNode, useCallback } from 'react';
 import { Form, FormApi, FormState } from 'informed';
-import { useContextMenuUIContext } from './components/ContextMenuContext';
+import { useMenuOptionUI } from './components/ContextMenuContext';
 import type { ContextMenuFormProps } from './Types/ContextMenuTypes';
 
 export type Options<D> = {
@@ -49,7 +49,7 @@ export const FormChrome: FC<FormChromeProps> = (props) => {
   } = props;
   const {
     ComponentFormTitle, ComponentFormCloseButton, ComponentFormSubmitButton,
-  } = useContextMenuUIContext();
+  } = useMenuOptionUI();
 
   return (
     <>

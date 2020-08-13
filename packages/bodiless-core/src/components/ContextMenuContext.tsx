@@ -62,7 +62,7 @@ const ContextMenuContext = createContext<ContextType>({});
 const ContextMenuUIContext = createContext<UI>({});
 
 const useContextMenuContext = () => useContext(ContextMenuContext);
-const useContextMenuUIContext = () => getUI(useContext(ContextMenuUIContext));
+const useMenuOptionUI = () => getUI(useContext(ContextMenuUIContext));
 
 const ContextMenuProvider: FC<ContextType & ContextUIType> = ({ children, setRenderForm, ui }) => (
   <ContextMenuUIContext.Provider value={getUI(ui)}>
@@ -75,6 +75,6 @@ const ContextMenuProvider: FC<ContextType & ContextUIType> = ({ children, setRen
 export default ContextMenuProvider;
 export {
   useContextMenuContext,
-  useContextMenuUIContext,
+  useMenuOptionUI,
   getUI,
 };
