@@ -24,6 +24,7 @@ import {
 } from 'informed';
 import Tooltip from 'rc-tooltip';
 import { ReactTagsFieldProps } from '../components/ReactTagsField';
+import type { OnClickElsewhereProps } from '../withOnClickElsewhere';
 
 export type TMenuOption = {
   name: string;
@@ -60,7 +61,7 @@ export type UI = {
   Icon?: ComponentType<IconVariantProps> | string;
   Toolbar?: ComponentType<HTMLProps<HTMLDivElement>> | string;
   ToolbarButton?: ComponentType<ButtonVariantProps> | string;
-  FormWrapper?: ComponentType<HTMLProps<HTMLDivElement>> | string;
+  FormWrapper?: ComponentType<HTMLProps<HTMLDivElement>&OnClickElsewhereProps>;
   ToolbarDivider?: ComponentType<HTMLProps<HTMLHRElement>> | string;
   ComponentFormFieldWrapper?: ComponentType<HTMLProps<HTMLDivElement>> | string;
   ComponentFormTitle?: ComponentType<HTMLProps<HTMLHeadingElement>> | string;

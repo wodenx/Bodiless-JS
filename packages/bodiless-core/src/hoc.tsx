@@ -13,7 +13,9 @@
  */
 
 import { observer } from 'mobx-react-lite';
-import React, { ComponentType as CT, EventHandler, ComponentType } from 'react';
+import React, {
+  ComponentType as CT, EventHandler, ComponentType,
+} from 'react';
 import { flowRight, omit, pick } from 'lodash';
 import { useContextActivator, useExtendHandler } from './hooks';
 import { useNodeDataHandlers } from './NodeProvider';
@@ -93,21 +95,3 @@ export const withNodeAndHandlers = (defaultData?: any) => flowRight(
   withNode,
   withNodeDataHandlers(defaultData),
 );
-
-// type OnClickElsewhereProps = {
-//   onClickElsewhere: Function,
-// };
-
-// export const withOnClickElsewhere = <P extends object>(Component: ComponentType<P>|string) => (
-//  const WithOnClickElsewhere = (props: P & OnClickElsewhereProps) => {
-//    const { onClickElsewhere } = props;
-//    const ref = useRef();
-//    const handler = useCallback((e: MouseEvent) => {
-//      const target = e.target;
-//
-//    }
-//    useEffect(() => {
-//      document
-//    }
-//  }
-// )

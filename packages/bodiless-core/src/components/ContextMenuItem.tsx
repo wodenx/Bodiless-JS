@@ -13,18 +13,19 @@
  */
 
 import React, {
-  useState, createContext, useContext,
+  useState, createContext, useContext, useCallback,
 } from 'react';
 import ReactTooltip from 'rc-tooltip';
 import { observer } from 'mobx-react-lite';
 import { getUI as getFormUI } from '../contextMenuForm';
 import type { UI, IContextMenuItemProps as IProps, ContextMenuFormProps } from '../Types/ContextMenuTypes';
 import { useEditContext } from '../hooks';
+import withOnClickElsewhere from '../withOnClickElsewhere';
 
 const defaultUI = {
   Icon: 'span',
   ToolbarButton: 'div',
-  FormWrapper: 'div',
+  FormWrapper: withOnClickElsewhere('div'),
   ToolbarDivider: 'div',
   Form: 'form',
   Tooltip: ReactTooltip,
@@ -67,6 +68,7 @@ const ContextMenuItem = (props: IProps) => {
   const context = useEditContext();
 
   const onToolbarButtonClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+    if (isToolTipShown) return;
     const menuForm = option.handler ? option.handler(event) : undefined;
     if (menuForm) {
       if (!option.local) context.toggleLocalTooltipsDisabled(true);
@@ -80,11 +82,11 @@ const ContextMenuItem = (props: IProps) => {
   };
 
   // Reset form and tooltip state
-  const onFormClose = (): void => {
+  const onFormClose = useCallback((): void => {
     context.toggleLocalTooltipsDisabled(false);
     setIsToolTipShown(false);
     setRenderForm(undefined);
-  };
+  }, []);
 
   function getContextMenuForm(): JSX.Element {
     if (renderForm) {
@@ -94,7 +96,7 @@ const ContextMenuItem = (props: IProps) => {
         'aria-label': `Context Menu ${option.label || option.name} Form`,
       };
       return (
-        <FormWrapper onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}>
+        <FormWrapper onClickElsewhere={onFormClose} data-bl-activator>
           <UIContext.Provider value={finalUI}>
             {renderForm(formProps)}
           </UIContext.Provider>
@@ -121,9 +123,9 @@ const ContextMenuItem = (props: IProps) => {
       aria-label={option.label || option.name}
     >
       <Tooltip
-        trigger={['click']}
         overlay={getContextMenuForm()}
         visible={isToolTipShown}
+        destroyTooltipOnHide
       >
         <Icon isActive={isActive || isToolTipShown}>{option.icon}</Icon>
       </Tooltip>
