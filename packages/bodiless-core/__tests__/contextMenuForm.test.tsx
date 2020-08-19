@@ -91,13 +91,13 @@ describe('ContextMenuForm (High Level)', () => {
     const close = jest.fn();
     const Form = (props: ContextMenuFormProps) => {
       const [state, setState] = useState('unclicked');
-      const renderFormBody: FormBodyRenderer<{}> = () => (
+      const renderForm: FormBodyRenderer<{}> = () => (
         <button type="button" id="clickme" onClick={() => setState('clicked')}>{state}</button>
       );
       const submitValues = () => submit(state);
       return (
         <ContextMenuForm {...props} submitValues={submitValues}>
-          {renderFormBody}
+          {renderForm}
         </ContextMenuForm>
       );
     };

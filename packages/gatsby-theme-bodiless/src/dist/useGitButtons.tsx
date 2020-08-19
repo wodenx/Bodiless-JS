@@ -13,7 +13,9 @@
  */
 
 /* eslint-disable no-alert */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState, useEffect, useCallback, useMemo,
+} from 'react';
 import Cookies from 'universal-cookie';
 import {
   contextMenuForm,
@@ -267,8 +269,10 @@ const useGitButtons = ({ client = defaultClient } = {}) => {
     }
   }, []);
 
+  const menuOptions = useMemo(() => getMenuOptions(client, context, notifyOfChanges), []);
+
   useRegisterMenuOptions({
-    getMenuOptions: () => getMenuOptions(client, context, notifyOfChanges),
+    getMenuOptions: () => menuOptions,
     name: 'Git',
   });
 };

@@ -30,7 +30,6 @@ describe('withEditButton', () => {
     };
     const consumedProps = {
       setComponentData: jest.fn(),
-      unwrap: jest.fn(),
       isActive: jest.fn(),
     };
     const passedProps = {

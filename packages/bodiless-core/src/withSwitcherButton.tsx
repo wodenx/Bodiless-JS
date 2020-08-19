@@ -12,9 +12,9 @@
  * limitations under the License.
  */
 
-import { useCallback } from 'react';
-import { useRegisterMenuOptions } from './PageContextProvider';
+import { useMemo } from 'react';
 import { useEditContext } from './hooks';
+import { withMenuOptions } from './PageContextProvider';
 
 /**
  * Provide a component Button to switch the position of the global menu.
@@ -22,20 +22,19 @@ import { useEditContext } from './hooks';
  * @param children
  * @constructor
  */
-const useSwitcherButton = () => {
+const useMenuOptions = () => {
   const context = useEditContext();
-  const getMenuOptions = useCallback(() => [{
+  return useMemo(() => [{
     name: 'switcher',
     icon: 'compare_arrows',
-    handler: () => {
-      context.togglePosition();
-      context.refresh();
-    },
-  }], []);
-  useRegisterMenuOptions({
-    getMenuOptions,
-    name: 'Switcher',
-  });
+    handler: () => context.togglePosition(),
+  }], [context.togglePosition]);
 };
 
-export default useSwitcherButton;
+const withSwitcherButton = withMenuOptions({
+  useMenuOptions,
+  name: 'Switcher',
+  peer: true,
+});
+
+export default withSwitcherButton;

@@ -12,13 +12,34 @@
  * limitations under the License.
  */
 
-import { useEditContext, useActivateOnEffect } from '@bodiless/core';
+import { useMemo } from 'react';
+import { omit } from 'lodash';
+import {
+  useEditContext, useActivateOnEffect, useGetMenuOptions, TMenuOptionGetter,
+} from '@bodiless/core';
 import { EditFlowContainerProps, FlowContainerItem } from './types';
 import { useFlowContainerDataHandlers, useItemHandlers } from './model';
 import { ComponentSelectorProps } from '../ComponentSelector/types';
 import componentSelectorForm from '../ComponentSelector/componentSelectorForm';
 
 /**
+ * @private
+ *
+ * Removes components from the design which are part of the actual flow container design,
+ * not intended to appear as options in the component selector.
+ *
+ * @param props The original props of the flow container.
+ *
+ * @return The props with irrelevant components removed.
+ */
+const withNoDesign = (props:EditFlowContainerProps):EditFlowContainerProps => ({
+  ...props,
+  components: omit(props.components, ['Wrapper', 'ComponentWrapper']),
+});
+
+/**
+ * @private
+ *
  * Returns actions which can be executed upon selecting a component in the
  * component selector.
  *
@@ -47,54 +68,95 @@ const useComponentSelectorActions = (
   return { insertItem, replaceItem };
 };
 
-function useGetMenuOptions(props: EditFlowContainerProps, item?: FlowContainerItem) {
+function useDeleteButton(props: EditFlowContainerProps, item: FlowContainerItem) {
   const context = useEditContext();
-  const { setId } = useActivateOnEffect();
-  const { maxComponents } = props;
-  const { getItems } = useItemHandlers();
   const { deleteFlowContainerItem } = useFlowContainerDataHandlers();
-  const { insertItem, replaceItem } = useComponentSelectorActions(item);
-  const addButton = {
+  const { setId } = useActivateOnEffect();
+
+  const handler = () => {
+    const newContextItem = deleteFlowContainerItem(item.uuid);
+    // Set the context to the next item in the flow container (if it exists)
+    // or to the flow container itself (if not).
+    if (newContextItem !== undefined) setId(newContextItem.uuid);
+    else context.activate();
+  };
+
+  return {
+    name: 'delete',
+    label: 'Delete',
+    icon: 'delete',
+    handler,
+    isHidden: () => !context.isEdit,
+  };
+}
+
+function useAddButton(props: EditFlowContainerProps, item?: FlowContainerItem) {
+  const { maxComponents = Infinity } = props;
+  const context = useEditContext();
+  const { insertItem } = useComponentSelectorActions(item);
+  const { getItems } = useItemHandlers();
+  const isHidden = item
+    ? () => !context.isEdit || getItems().length >= maxComponents
+    : () => !context.isEdit || getItems().length > 0;
+  return {
     icon: 'add',
     label: 'Add',
     name: 'add',
     handler: () => componentSelectorForm(props, insertItem),
+    isHidden,
   };
-  const deleteButton = !item ? undefined : {
-    name: 'delete',
-    label: 'Delete',
-    icon: 'delete',
-    handler: () => {
-      const newContextItem = deleteFlowContainerItem(item.uuid);
-      // Set the context to the next item in the flow container (if it exists)
-      // or to the flow container itself (if not).
-      if (newContextItem !== undefined) setId(newContextItem.uuid);
-      else context.activate();
-    },
-  };
-  const swapButton = !item ? undefined : {
+}
+
+function useSwapButton(props: EditFlowContainerProps, item: FlowContainerItem) {
+  const context = useEditContext();
+  const { replaceItem } = useComponentSelectorActions(item);
+  return {
     name: 'swap',
     label: 'Swap',
     icon: 'repeat',
     handler: () => componentSelectorForm(props, replaceItem),
-  };
-
-  const getFlowContainerButtons = (nItems: Number) => (
-    // The flow container itself only has an add button when empty (otherwise an add button.
-    // will be attached to each item).
-    nItems ? [] : [addButton]
-  );
-  const getItemButtons = (nItems: Number) => (
-    // An item only has an add button if we have not hit the maximum allowed items.
-    maxComponents && nItems >= maxComponents
-      ? [swapButton!, deleteButton!]
-      : [addButton, swapButton!, deleteButton!]
-  );
-
-  return () => {
-    if (!context.isEdit) return [];
-    const nItems = getItems().length;
-    return item ? getItemButtons(nItems) : getFlowContainerButtons(nItems);
+    isHidden: () => !context.isEdit,
   };
 }
-export default useGetMenuOptions;
+
+function useMenuOptions(props: EditFlowContainerProps) {
+  const addButton = useAddButton(withNoDesign(props));
+  return useMemo(() => [addButton], []);
+}
+
+/**
+ * @private
+ *
+ * Returns a 'useGetMenuOptions' hook which is passed to each flow container item. When invoked,
+ * this hook returns a memoized 'getMenuOptions' callback, suitable for passing to
+ * PageContextProvider.
+ *
+ * The reasons for this extra indirection (a hook returning a hook) are:
+ * - we want to build the menu options using the node of the flow container
+ * - We want the options added using the context of the item
+ * - The memoization of the options has to happen in the context of the item to avoid changing the
+ *   order of hooks in the container as items are added and removed.
+ * - The item must memoize the callback itself and use PageContextProvider directly
+ *   rather than relying on `withMenuOptions`. This is because we don't want to call
+ *   the `withMenuOptions` HOC in the context of a render.
+ *
+ * @param props Props passed to this component
+ * @param item The flow container item for which to create the hook.
+ *
+ * @return A `useGetMenuOptinos` hook which will be passed to the item.
+ */
+function useItemUseGetMenuOptions(props: EditFlowContainerProps, item: FlowContainerItem) {
+  const props$ = withNoDesign(props);
+  const buttons = [
+    useAddButton(props$, item),
+    useSwapButton(props$, item),
+    useDeleteButton(props$, item),
+  ];
+
+  return () => {
+    const options = useMemo(() => buttons, []);
+    return useGetMenuOptions(options) as TMenuOptionGetter;
+  };
+}
+
+export { useMenuOptions, useItemUseGetMenuOptions };

@@ -13,11 +13,13 @@
  */
 
 import { ComponentType } from 'react';
-import PageContextProvider, { withMenuOptions, useRegisterMenuOptions } from './PageContextProvider';
+import PageContextProvider, { withMenuOptions, useRegisterMenuOptions, useGetMenuOptions } from './PageContextProvider';
 import PageEditContext from './PageEditContext';
 import asStatic from './asStatic';
 import asReadOnly from './asReadOnly';
-import { useEditContext, useUUID, useContextActivator } from './hooks';
+import {
+  useEditContext, useUUID, useContextActivator, useExtendHandler,
+} from './hooks';
 import withNode, { withNodeKey } from './withNode';
 import withSidecarNodes, { startSidecarNodes, endSidecarNodes } from './withSidecarNodes';
 import {
@@ -37,6 +39,7 @@ import {
   withLocalContextMenu,
   withContextActivator,
   withoutProps,
+  withExtendHandler,
   withOnlyProps,
 } from './hoc';
 import { ifToggledOff, ifToggledOn, withFlowToggle } from './withFlowToggle';
@@ -44,7 +47,7 @@ import { ifEditable, ifReadOnly, useEditToggle } from './withEditToggle';
 import type { ContextMenuFormProps, IContextMenuItemProps, TMenuOption } from './Types/ContextMenuTypes';
 import type { PageEditContextInterface } from './PageEditContext/types';
 import type { EditButtonOptions, EditButtonProps } from './Types/EditButtonTypes';
-import type { TMenuOptionGetter, UseGetMenuOptions } from './Types/PageContextProviderTypes';
+import type { TMenuOptionGetter } from './Types/PageContextProviderTypes';
 import type { WithNodeProps, WithNodeKeyProps } from './Types/NodeTypes';
 import type { TOverlaySettings } from './Types/PageOverlayTypes';
 import type { Snippet as FormSnippet } from './withCompoundForm';
@@ -59,13 +62,13 @@ import {
   useNotifications,
   useNotify,
 } from './NotificationProvider';
-import useNotificationButton from './withNotificationButton';
+import withNotificationButton from './withNotificationButton';
 import withChild from './withChild';
 import asBodilessComponent, { withActivatorWrapper } from './asBodilessComponent';
 import type { Options as BodilessOptions, AsBodiless } from './asBodilessComponent';
 import { useMenuOptionUI } from './components/ContextMenuContext';
 import ContextSubMenu from './ContextMenu/ContextSubMenu';
-import useSwitcherButton from './useSwitcherButton';
+import withSwitcherButton from './withSwitcherButton';
 import OnNodeErrorNotification from './OnNodeErrorNotification';
 
 export * from './components';
@@ -81,6 +84,7 @@ export {
   PageContextProvider,
   withMenuOptions,
   useRegisterMenuOptions,
+  useGetMenuOptions,
   PageEditContext,
   useEditContext,
   useContextActivator,
@@ -122,9 +126,11 @@ export {
   useEditToggle,
   useNotifications,
   useNotify,
+  withExtendHandler,
+  useExtendHandler,
   NotificationProvider,
-  useNotificationButton,
-  useSwitcherButton,
+  withNotificationButton,
+  withSwitcherButton,
   OnNodeErrorNotification,
 };
 
@@ -133,7 +139,6 @@ export type {
   PageEditContextInterface,
   TMenuOption,
   TMenuOptionGetter,
-  UseGetMenuOptions,
   WithNodeProps,
   WithNodeKeyProps,
   EditButtonOptions,

@@ -12,32 +12,37 @@
  * limitations under the License.
  */
 
+import { useMemo } from 'react';
 import { flowRight } from 'lodash';
 import { withoutProps } from './hoc';
-import { PageEditContextInterface } from './PageEditContext/types';
 import useContextMenuForm, {
   FormBodyProps as ContextMenuFormBodyProps,
 } from './contextMenuForm';
 import { withMenuOptions } from './PageContextProvider';
-import type { TMenuOptionGetter } from './Types/PageContextProviderTypes';
-import type { EditButtonProps, EditButtonOptions } from './Types/EditButtonTypes';
+import type { EditButtonProps, EditButtonOptions, FormBodyRenderer } from './Types/EditButtonTypes';
 
-export const useEditFormProps = <P extends object, D extends object>({
-  componentData,
-  setComponentData,
-  onSubmit,
-  dataHandler,
-}: P & EditButtonProps<D>) => {
-  const initialValues = componentData;
+export const useEditFormProps = <P extends object, D extends object>(
+  props: P & EditButtonProps<D> & { renderForm: FormBodyRenderer<P, D> },
+) => {
+  const {
+    componentData: initialValues,
+    setComponentData,
+    onSubmit,
+    dataHandler,
+    renderForm: renderForm$,
+  } = props;
+
+  // Pass component props to the render function.
+  const renderForm = (p: ContextMenuFormBodyProps<D>) => renderForm$({
+    ...p,
+    // @TODO: Avoid passing all the props.
+    componentProps: props,
+  });
 
   const initialValues$ = dataHandler && dataHandler.initialValueHandler
     ? dataHandler.initialValueHandler(initialValues) : initialValues;
   const submitValues = (values: D) => {
     setComponentData(values);
-    Object.assign(componentData, values);
-    // @todo: refactor - replace this workaround fix.
-    Object.assign(initialValues$, dataHandler && dataHandler.initialValueHandler
-      ? dataHandler.initialValueHandler(initialValues) : initialValues);
     if (onSubmit) onSubmit();
   };
   const submitValues$ = dataHandler && dataHandler.submitValueHandler
@@ -45,6 +50,7 @@ export const useEditFormProps = <P extends object, D extends object>({
   return {
     submitValues: submitValues$,
     initialValues: initialValues$,
+    renderForm,
   };
 };
 
@@ -55,22 +61,12 @@ export const createMenuOptionHook = <P extends object, D extends object>({
   global,
   local,
   renderForm,
-  useGetMenuOptions,
 }: EditButtonOptions<P, D>) => (
     props: P & EditButtonProps<D>,
-    context: PageEditContextInterface,
   ) => {
-    const { unwrap, isActive } = props;
-    const renderFormBody = (p: ContextMenuFormBodyProps<D>) => renderForm({
-      ...p,
-      unwrap,
-      componentProps: props,
-    });
-    const form = useContextMenuForm({
-      ...useEditFormProps(props),
-      renderFormBody,
-    });
-    const getMenuOptions: TMenuOptionGetter = () => [
+    const { isActive } = props;
+    const form = useContextMenuForm(useEditFormProps({ ...props, renderForm }));
+    const menuOptions = useMemo(() => [
       {
         icon,
         name,
@@ -78,26 +74,20 @@ export const createMenuOptionHook = <P extends object, D extends object>({
         isActive,
         global,
         local,
-        // @TODO: Align this onSubmit prop received from ContextMenu with closeForm
         handler: () => form,
       },
-    ];
-    // If a hook providing additional menu options was specified, then call it.
-    if (useGetMenuOptions) {
-      const getMenuOptions$1 = useGetMenuOptions(props, context) || (() => []);
-      return () => [...getMenuOptions(), ...getMenuOptions$1()];
-    }
-    return getMenuOptions;
+    ], [...Object.values(props)]);
+    return menuOptions;
   };
 
 const withEditButton = <P extends object, D extends object>(
   options: EditButtonOptions<P, D>,
 ) => flowRight(
     withMenuOptions({
-      useGetMenuOptions: createMenuOptionHook(options),
+      useMenuOptions: createMenuOptionHook(options),
       name: options.name,
     }),
-    withoutProps(['setComponentData', 'unwrap', 'isActive']),
+    withoutProps(['setComponentData', 'isActive']),
   );
 
 export default withEditButton;

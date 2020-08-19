@@ -12,13 +12,15 @@
  * limitations under the License.
  */
 
-import { Fragment, FC } from 'react';
+import React, { Fragment, FC } from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { shallow } from 'enzyme';
 import { useEditContext, TMenuOption } from '@bodiless/core';
 import { DesignableComponents } from '@bodiless/fclasses';
 import { EditFlowContainerProps } from '../../src/FlowContainer/types';
 import componentSelectorForm from '../../src/ComponentSelector/componentSelectorForm';
 import { useItemHandlers, useFlowContainerDataHandlers } from '../../src/FlowContainer/model';
-import useGetMenuOptions from '../../src/FlowContainer/useGetMenuOptions';
+import { useMenuOptions, useItemUseGetMenuOptions } from '../../src/FlowContainer/useGetMenuOptions';
 
 jest.mock('../../src/ComponentSelector/componentSelectorForm');
 jest.mock('../../src/FlowContainer/model');
@@ -36,6 +38,7 @@ jest.mock('@bodiless/core', () => ({
   useActivateOnEffect: jest.fn(() => activateOnEffect),
   useNode: jest.fn(),
   contextMenuForm: jest.fn(() => contextMenuFormInner),
+  useGetMenuOptions: jest.fn((options: TMenuOption[]) => () => options),
 }));
 
 const Foo: FC = Fragment;
@@ -48,6 +51,18 @@ const item = {
 };
 
 describe('useGetMenuOptions', () => {
+  const logMenuOptions = jest.fn();
+
+  const getLoggedMenuOptions = (index = 0): TMenuOption[] => (
+    logMenuOptions.mock.calls[index][0].filter(
+      (op: TMenuOption) => {
+        if (op.isHidden === undefined) return true;
+        if (typeof op.isHidden === 'function') return !op.isHidden();
+        return !op.isHidden;
+      },
+    )
+  );
+
   function setIsEdit(isEdit: boolean) {
     (useEditContext as jest.Mock).mockReturnValue(
       { ...useEditContext(), isEdit },
@@ -77,14 +92,21 @@ describe('useGetMenuOptions', () => {
   });
 
   describe('item getMenuOptions', () => {
-    function getMenuOptions(maxComponents?: number) {
+    function LogMenuOptions({ maxComponents }: { maxComponents?: number }) {
       const props: EditFlowContainerProps = {
         components,
       };
       if (maxComponents) {
         props.maxComponents = maxComponents;
       }
-      return useGetMenuOptions(props, item)();
+      const hook = useItemUseGetMenuOptions(props, item);
+      logMenuOptions(hook()());
+      return null;
+    }
+    function getMenuOptions(maxComponents?: number) {
+      logMenuOptions.mockClear();
+      shallow(<LogMenuOptions maxComponents={maxComponents} />);
+      return getLoggedMenuOptions();
     }
 
     beforeEach(() => {
@@ -144,11 +166,18 @@ describe('useGetMenuOptions', () => {
   });
 
   describe('flow container getMenuOptions', () => {
-    function getMenuOptions() {
-      const props = {
+    function LogMenuOptions() {
+      const props: EditFlowContainerProps = {
         components,
       };
-      return useGetMenuOptions(props)();
+      logMenuOptions(useMenuOptions(props));
+      return null;
+    }
+
+    function getMenuOptions() {
+      logMenuOptions.mockClear();
+      shallow(<LogMenuOptions />);
+      return getLoggedMenuOptions();
     }
 
     it('Returns no buttons when edit mode is off', () => {
@@ -172,6 +201,7 @@ describe('useGetMenuOptions', () => {
       // @ts-ignore jest mock methods don't exist on mocked imports.
       getItems.mockReturnValue([]);
       const { insertFlowContainerItem } = useFlowContainerDataHandlers();
+      shallow(<LogMenuOptions />);
       const options = getMenuOptions();
       expect(options.length).toBe(1);
       expect(options[0].name).toBe('add');

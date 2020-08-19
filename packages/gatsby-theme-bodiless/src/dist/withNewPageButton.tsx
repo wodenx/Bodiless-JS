@@ -13,13 +13,12 @@
  */
 
 /* eslint-disable no-alert */
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   contextMenuForm,
   getUI,
   useEditContext,
-  useRegisterMenuOptions,
-  TMenuOptionGetter,
+  withMenuOptions,
 } from '@bodiless/core';
 import { AxiosPromise } from 'axios';
 import BackendClient from './BackendClient';
@@ -105,11 +104,11 @@ Click ok to visit the new page; if it does not load, wait a while and reload.`;
 
 const defaultClient = new BackendClient();
 
-const useGetMenuOptions = (): TMenuOptionGetter => {
+const useMenuOptions = () => {
   const context = useEditContext();
   const gatsbyPage = useGatsbyPageContext();
 
-  return () => [
+  const menuOptions = useMemo(() => [
     {
       name: 'newpage',
       icon: 'note_add',
@@ -117,14 +116,14 @@ const useGetMenuOptions = (): TMenuOptionGetter => {
       isHidden: () => !context.isEdit,
       handler: () => formPageAdd(defaultClient, gatsbyPage.subPageTemplate, context),
     },
-  ];
+  ], []);
+  return menuOptions;
 };
 
-const useNewPageButton = () => {
-  useRegisterMenuOptions({
-    getMenuOptions: useGetMenuOptions(),
-    name: 'NewPage',
-  });
-};
+const withNewPageButton = withMenuOptions({
+  useMenuOptions,
+  name: 'NewPage',
+  peer: true,
+});
 
-export default useNewPageButton;
+export default withNewPageButton;

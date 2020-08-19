@@ -45,10 +45,10 @@ type AsBodiless<P, D> = (nodeKeys?: WithNodeKeyProps, defaultData?: D) => HOC<P,
  */
 export const withActivatorWrapper = <P extends object>(event: string, Wrapper: CT<any>|string) => (
   (Component: CT<P>) => (props: P) => {
-    const eventProp = pick(props, event);
+    const eventProps = pick(props, event, 'data-bl-activator');
     const rest = omit(props, event) as P;
     return (
-      <Wrapper {...eventProp}>
+      <Wrapper {...eventProps}>
         <Component {...rest} />
       </Wrapper>
     );
@@ -86,8 +86,8 @@ const asBodilessComponent = <P extends object, D extends object>(options: Option
       ifEditable(
         withEditButton(rest),
         withContextActivator(activateEvent),
-        Wrapper ? withActivatorWrapper(activateEvent, Wrapper) : identity,
         withLocalContextMenu,
+        Wrapper ? withActivatorWrapper(activateEvent, Wrapper) : identity,
       ),
       withData,
     );

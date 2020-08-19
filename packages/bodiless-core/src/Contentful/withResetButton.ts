@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 
+import { useMemo } from 'react';
 import { flowRight } from 'lodash';
 import {
   withContextActivator,
@@ -25,12 +26,12 @@ type MenuOptionWithNodeKey = TMenuOption & {
   nodeKey?: string;
 };
 
-const useGetMenuOptions = (menuOptionWithNodeKey?: MenuOptionWithNodeKey) => () => {
+const useMenuOptions = (menuOptionWithNodeKey?: MenuOptionWithNodeKey) => () => {
   const { node } = useNode();
   const { nodeKey, ...menuOption } = menuOptionWithNodeKey || { nodeKey: undefined };
   const nodeKeyToDelete = nodeKey ? node.path.concat(nodeKey) : undefined;
   // TODO: we should disable or remove the button when the node is already reverted
-  return () => ([
+  const menuOptions = useMemo(() => ([
     {
       icon: 'undo',
       name: 'Reset',
@@ -40,11 +41,12 @@ const useGetMenuOptions = (menuOptionWithNodeKey?: MenuOptionWithNodeKey) => () 
       global: false,
       ...menuOption,
     },
-  ]);
+  ]), [nodeKeyToDelete]);
+  return menuOptions;
 };
 
 const withResetButton = (menuOptionWithNodeKey?: MenuOptionWithNodeKey) => flowRight(
-  withMenuOptions({ useGetMenuOptions: useGetMenuOptions(menuOptionWithNodeKey) }),
+  withMenuOptions({ useMenuOptions: useMenuOptions(menuOptionWithNodeKey) }),
   withContextActivator('onClick'),
   withLocalContextMenu,
 );

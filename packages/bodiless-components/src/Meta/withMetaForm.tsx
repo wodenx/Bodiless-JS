@@ -4,7 +4,7 @@ import { v1 } from 'uuid';
 import {
   useMenuOptionUI, useRegisterSnippet, withCompoundForm, withEditFormSnippet,
 } from '@bodiless/core';
-import type { FormSnippet, UseGetMenuOptions } from '@bodiless/core';
+import type { FormSnippet, TMenuOption } from '@bodiless/core';
 import { Div } from '@bodiless/fclasses';
 
 export enum FieldType {
@@ -29,7 +29,7 @@ export type MetaSnippetOptions = {
 export const withMetaSnippet = (
   options: MetaSnippetOptions,
 ) => withEditFormSnippet({
-  render: () => {
+  renderForm: () => {
     const {
       name, label, placeholder, useFormElement,
     } = options;
@@ -83,11 +83,11 @@ const defaultMetaFormHeader = {
 };
 
 const withMetaForm = (
-  useGetMenuOptions: UseGetMenuOptions<any>,
+  useMenuOptions: (props: any) => TMenuOption[],
   metaFormHeader?: HeaderProps,
 ) => flowRight(
   withCompoundForm({
-    useGetMenuOptions, name: 'Meta', peer: true, id: 'meta',
+    useMenuOptions, name: 'Meta', peer: true, id: 'meta',
   }),
   withMetaFormHeader(metaFormHeader || defaultMetaFormHeader),
 );

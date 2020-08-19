@@ -14,7 +14,7 @@
 
 import React, { useCallback } from 'react';
 import { ContextMenuForm } from './contextMenuForm';
-import { useRegisterMenuOptions } from './PageContextProvider';
+import { withMenuOptions } from './PageContextProvider';
 import { useNotifications } from './NotificationProvider';
 import { useMenuOptionUI } from './components/ContextMenuContext';
 import type { ContextMenuFormProps } from './Types/ContextMenuTypes';
@@ -49,21 +49,28 @@ const renderForm = (props: ContextMenuFormProps) => <RenderForm {...props} />;
 /**
  * @private
  *
- * Hook to add a notification button.
+ * Hook to return the notification button.
  */
-const useNotificationButton = () => {
-  const { hasNotifications } = useNotifications();
-  const getMenuOptions = useCallback(() => [{
+const useMenuOptions = () => {
+  const { notifications } = useNotifications();
+  const handler = useCallback(() => renderForm, []);
+  const menuOptions = [{
     name: 'Notifications',
     label: 'Alerts',
-    icon: () => (hasNotifications() ? 'notification_important' : 'notifications'),
-    isActive: () => hasNotifications(),
-    handler: () => renderForm,
-  }], [hasNotifications]);
-  useRegisterMenuOptions({
-    getMenuOptions,
-    name: 'Notifications',
-  });
+    icon: notifications.length > 0 ? 'notification_important' : 'notifications',
+    isActive: notifications.length > 0,
+    handler,
+  }];
+  return menuOptions;
 };
 
-export default useNotificationButton;
+/**
+ * HOC to add a notification button to the current context.
+ */
+const withNotificationButton = withMenuOptions({
+  name: 'Notifications',
+  useMenuOptions,
+  peer: true,
+});
+
+export default withNotificationButton;
