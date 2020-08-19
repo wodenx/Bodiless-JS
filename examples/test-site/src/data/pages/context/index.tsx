@@ -20,11 +20,12 @@ import { observer } from 'mobx-react-lite';
 import { flow } from 'lodash';
 import {
   flowIf, hasProp, addClasses, withoutProps, StylableProps,
+  removeClasses,
 } from '@bodiless/fclasses';
 import { Div } from '@bodiless/ui';
 import {
   TMenuOptionGetter,
-  ContextProvider,
+  PageContextProvider,
   withNode,
   useNodeDataHandlers,
   useEditContext,
@@ -34,10 +35,12 @@ import {
   ContextWrapper,
   ContextWrapperProps,
 } from '@bodiless/core';
-import { Editable, Link, Image } from '@bodiless/components';
+import { Editable } from '@bodiless/components';
+import { Image } from '@bodiless/components-ui';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 
 import Layout from '../../../components/Layout';
+import EditableLink from '../../../components/Link';
 
 type Values = { text: string };
 const demoForm = (text: string) => contextMenuForm<Values>({
@@ -76,7 +79,10 @@ const ui = {
     withoutProps<VariantProps>(['isActive']),
     addClasses('border border-blue m-2 p-2').flow,
     flowIf(hasProp('isActive'))(
-      addClasses('border-red').removeClasses('border-blue'),
+      flow(
+        addClasses('border-red'),
+        removeClasses('border-blue'),
+      ),
     ),
   )(Div),
 };
@@ -106,14 +112,14 @@ const EditableBox: React.FC<BoxProps> = ({
   children,
   className,
 }) => (
-  <ContextProvider
+  <PageContextProvider
     getMenuOptions={getMenuOptions || emptyMenuOptionsGetter}
     name={name}
   >
     <LocalContextMenu>
       <StaticBox className={className}>{children}</StaticBox>
     </LocalContextMenu>
-  </ContextProvider>
+  </PageContextProvider>
 );
 const Box: React.FC<BoxProps> = observer(props => {
   const { isEdit } = useEditContext();
@@ -165,9 +171,9 @@ const BasicTest = () => {
       <div className="w-full">Outer Box</div>
       <Box getMenuOptions={leftOptions} name="left" className="flex-1">
         Left Box&nbsp;
-        <Link nodeKey="linkit">This is an editable Nodelink.</Link>
+        <EditableLink nodeKey="linkit">This is an editable Nodelink.</EditableLink>
         <Editable nodeKey="test" placeholder="bob" />
-        <Link nodeKey="test2"><Editable nodeKey="text2text" placeholder="link me!" /></Link>
+        <EditableLink nodeKey="test2"><Editable nodeKey="text2text" placeholder="link me!" /></EditableLink>
       </Box>
       <Box getMenuOptions={rightOptions} name="left" className="flex-1">
         <Image nodeKey="imageit" />

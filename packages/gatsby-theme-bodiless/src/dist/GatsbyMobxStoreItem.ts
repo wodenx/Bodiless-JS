@@ -20,17 +20,22 @@ import {
 import GatsbyMobxStore from './GatsbyMobxStore';
 import { ItemStateEvent } from './types';
 
-export enum ItemState {
+enum ItemState {
   Clean,
   Flushing,
   Locked,
   Queued,
 }
 
+export const DEFAULT_REQUEST_DELAY = 500;
+const MAXIMUM_REQUEST_DELAY = 5 * 60 * 1000; // 5 minutes
+
 export default class GatsbyMobxStoreItem {
   @observable data = {};
 
   @observable state: ItemState = ItemState.Clean;
+
+  @observable isDeleted = false;
 
   key: string;
 
@@ -38,7 +43,9 @@ export default class GatsbyMobxStoreItem {
 
   lockTimeout?: NodeJS.Timeout;
 
-  postTimeout?: NodeJS.Timeout;
+  requestTimeout?: NodeJS.Timeout;
+
+  requestDelay: number = DEFAULT_REQUEST_DELAY;
 
   private shouldAccept() {
     const isClean = this.state === ItemState.Clean;
@@ -57,39 +64,43 @@ export default class GatsbyMobxStoreItem {
 
   @action private setData(data: any) {
     this.data = data;
+    this.isDeleted = false;
   }
 
   @action private setState(state: ItemState) {
     this.state = state;
   }
 
-  @action private updateState(event: ItemStateEvent) {
+  private updateState(event: ItemStateEvent) {
     switch (event) {
       case ItemStateEvent.UpdateFromBrowser:
         if (this.state === ItemState.Clean || this.state === ItemState.Locked) {
-          this.scheduleDataPost();
+          this.scheduleRequest();
         }
         this.setState(ItemState.Queued);
         break;
       case ItemStateEvent.UpdateFromServer:
-        // If an update happens from the server
-        // Then we do not update state
         break;
-      case ItemStateEvent.OnPostTimeout:
-        if (this.state === ItemState.Queued) {
-          this.setState(ItemState.Flushing);
-          this.postData();
-        }
+      case ItemStateEvent.OnRequestStart:
+        this.setState(ItemState.Flushing);
         break;
-      case ItemStateEvent.OnPostEnd:
+      case ItemStateEvent.OnRequestEnd:
+        this.requestDelay = DEFAULT_REQUEST_DELAY;
         if (this.state === ItemState.Queued) {
-          this.scheduleDataPost();
+          this.scheduleRequest();
           break;
         }
         // Lock the item for a period of time before setting it to clean
         // So that mitigate the problem with stale data coming from the server
         this.setState(ItemState.Locked);
         this.setLockTimeout();
+        break;
+      case ItemStateEvent.OnRequestError:
+        // incrementally increasing time between each subsequent retry
+        // ensure new delay is not greater than defined maximum
+        this.requestDelay = Math.min(this.requestDelay * 2, MAXIMUM_REQUEST_DELAY);
+        this.scheduleRequest();
+        this.setState(ItemState.Queued);
         break;
       case ItemStateEvent.OnLockTimeout:
         if (this.state === ItemState.Locked) {
@@ -117,23 +128,26 @@ export default class GatsbyMobxStoreItem {
     return resourcePath;
   }
 
-  // Post this.data back to filesystem if item state is dirty.
-  private postData() {
+  private request() {
+    this.updateState(ItemStateEvent.OnRequestStart);
     if (this.shouldSave()) {
-      this.store.client.savePath(this.getResoucePath(), this.data)
-        .then(() => this.updateState(ItemStateEvent.OnPostEnd));
+      const requestPromise = this.isDeleted
+        ? this.store.client.deletePath(this.getResoucePath())
+        : this.store.client.savePath(this.getResoucePath(), this.data);
+      requestPromise
+        .then(() => this.updateState(ItemStateEvent.OnRequestEnd))
+        .catch(() => this.updateState(ItemStateEvent.OnRequestError));
     } else {
-      this.updateState(ItemStateEvent.OnPostEnd);
+      this.updateState(ItemStateEvent.OnRequestEnd);
     }
   }
 
-  private scheduleDataPost() {
-    if (this.postTimeout !== undefined) {
-      clearTimeout(this.postTimeout);
+  // eslint-disable-next-line class-methods-use-this
+  private scheduleRequest() {
+    if (this.requestTimeout !== undefined) {
+      clearTimeout(this.requestTimeout);
     }
-    this.postTimeout = setTimeout(() => {
-      this.updateState(ItemStateEvent.OnPostTimeout);
-    }, 500);
+    this.requestTimeout = setTimeout(this.request.bind(this), this.requestDelay);
   }
 
   private setLockTimeout() {
@@ -172,6 +186,11 @@ export default class GatsbyMobxStoreItem {
       default:
         throw new Error('Invalid item event specified.');
     }
+  }
+
+  delete() {
+    this.isDeleted = true;
+    this.updateState(ItemStateEvent.UpdateFromBrowser);
   }
 
   isPending() {

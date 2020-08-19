@@ -28,6 +28,26 @@ const plugins = [
   },
 ];
 
+const tagManagerEnabled = (process.env.GOOGLE_TAGMANAGER_ENABLED || '1') === '1';
+if (tagManagerEnabled) {
+  /**
+   * Google Tag Manager plugin.
+   */
+  plugins.push({
+    resolve: 'gatsby-plugin-google-tagmanager',
+    options: {
+      id: process.env.GOOGLE_TAGMANAGER_ID || 'GTM-XXXXXXX',
+      // datalayer to be set before GTM is loaded
+      // should be an object or a function that is executed in the browser
+      // Defaults to null
+      // Specify optional GTM environment details.
+      // gtmAuth: 'YOUR_GOOGLE_TAGMANAGER_ENVIRONMENT_AUTH_STRING',
+      // gtmPreview: 'YOUR_GOOGLE_TAGMANAGER_ENVIRONMENT_PREVIEW_NAME',
+      dataLayerName: 'globalDataLayer',
+    },
+  });
+}
+
 const robotsTxtPolicy = [
   {
     userAgent: '*',
@@ -38,13 +58,12 @@ process.env.ROBOTSTXT_POLICY = JSON.stringify(robotsTxtPolicy);
 
 module.exports = {
   developMiddleware: app => {
-    app.use('/___docs', express.static('doc'));
+    app.use('/___docs', express.static('doc', { fallthrough: false }));
   },
   siteMetadata: {
     siteUrl: 'https://www.example.com',
     title: 'BodilessJS',
     logo: '/images/bodiless_logo.png',
   },
-
   plugins,
 };

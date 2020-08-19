@@ -28,11 +28,12 @@ const asSlateCustomComponent = <P extends WithNodeProps>(Component: CT<P>) => ({
   const actions = {
     // tslint: disable-next-line:no-unused-vars
     setNode: (path: string[], data: any) => setComponentData(data),
+    deleteNode: () => {},
   };
   const contentNode = new DefaultContentNode(actions, getters, 'slatenode');
   return (
     <NodeProvider node={contentNode}>
-      <Component nodeKey="data" {...rest as P} />
+      <Component {...rest as P} />
     </NodeProvider>
   );
 };

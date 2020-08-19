@@ -13,8 +13,16 @@
  */
 
 import {
-  stylable, addClasses, HOC, removeClasses, StylableProps,
+  stylable, addClasses, removeClasses,
+  addClassesIf,
+  removeClassesIf,
 } from './FClasses';
+
+import type {
+  HOC,
+  StylableProps,
+} from './FClasses';
+
 import addProps from './addProps';
 import {
   asComponent,
@@ -23,14 +31,16 @@ import {
   replaceWith,
   startWith,
   remove,
+  designable,
+  varyDesign,
+  extendDesign,
+} from './Design';
+import type {
   Design,
   DesignableProps,
   DesignElement,
   DesignableComponentsProps,
   DesignableComponents,
-  designable,
-  varyDesign,
-  extendDesign,
 } from './Design';
 import { flowIf, hasProp, withoutProps } from './hoc-util';
 
@@ -39,7 +49,6 @@ export * from './StyledHTML';
 export {
   addProps,
   stylable,
-  StylableProps,
   addClasses,
   removeClasses,
   withDesign,
@@ -50,14 +59,20 @@ export {
   flowIf,
   hasProp,
   withoutProps,
+  designable,
+  varyDesign,
+  extendDesign,
+  asComponent,
+  addClassesIf,
+  removeClassesIf,
+};
+
+export type {
+  StylableProps,
   Design,
   DesignableProps,
   DesignElement,
   DesignableComponentsProps,
   DesignableComponents,
   HOC,
-  designable,
-  varyDesign,
-  extendDesign,
-  asComponent,
 };

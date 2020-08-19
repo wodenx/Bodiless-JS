@@ -17,38 +17,47 @@ import {
   Div,
   Img,
   addClasses,
+  addProps,
 } from '@bodiless/fclasses';
 import Tout from '../Tout';
-import { asEditorSimple } from '../Editors';
+import { withEditorSimple } from '../Editors';
 import {
   asHeader1,
   asImage,
   asEditableImage,
   asYMargin,
   asNegXMargin,
+  withPadding5,
 } from '../Elements.token';
 import {
+  asToutWithPaddings,
   asToutDefaultStyle,
   asToutVertical,
 } from '../Tout/token';
 
+const asTestableProductTitle = addProps({ 'data-product-element': 'title' });
 export const ProductTitle = flow(
   asHeader1,
-  asEditorSimple('product_title', 'Product Title'),
+  withEditorSimple('product_title', 'Product Title'),
+  asTestableProductTitle,
 )(H1);
 
 const asProductImage = addClasses('w-full');
+const asTestableProductImage = addProps({ 'data-product-element': 'image' });
 export const ProductImage = flow(
   asProductImage,
   asImage,
   asEditableImage('product_image'),
+  asTestableProductImage,
 )(Img);
 
 export const ProductTout = flow(
+  asToutWithPaddings,
   asToutDefaultStyle,
   asToutVertical,
 )(Tout);
 
+export const SectionContent = withPadding5(Div);
 export const SectionMargin = asYMargin(Div);
 export const SectionNegXMargin = flow(
   asYMargin,

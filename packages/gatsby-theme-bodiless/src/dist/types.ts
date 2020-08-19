@@ -12,11 +12,34 @@
  * limitations under the License.
  */
 
-// eslint-disable-next-line import/prefer-default-export
+import { AxiosPromise } from 'axios';
+
 export enum ItemStateEvent {
   UpdateFromServer,
   UpdateFromBrowser,
+  DeleteFromBrowser,
   OnLockTimeout,
-  OnPostEnd,
-  OnPostTimeout,
+  OnRequestEnd,
+  OnRequestStart,
+  OnRequestError,
 }
+
+export type ConflictsResponseType = {
+  hasConflict: boolean,
+  files?: string[],
+};
+
+export type GitClient = {
+  commit: (
+    message: string,
+    directories: string[],
+    paths: string[],
+    files: string[],
+    author?: string,
+  ) => AxiosPromise<any>,
+  getChanges: () => AxiosPromise<any>,
+  getConflicts: () => AxiosPromise<ConflictsResponseType>,
+  getLatestCommits: () => AxiosPromise<any>,
+  pull: () => AxiosPromise<any>,
+  reset: () => AxiosPromise<any>,
+};

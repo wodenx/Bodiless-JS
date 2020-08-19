@@ -1,7 +1,7 @@
 {
   "name": "bodiless-js",
   "description": "Bodiless-JS",
-  "version": "0.0.41",
+  "version": "0.0.53",
   "keywords": [
     "gatsby"
   ],
@@ -13,6 +13,7 @@
     "build:watch": "cross-env NODE_ENV=development lerna run build:watch --parallel",
     "build:env-vars": "cross-env NODE_ENV=production lerna run build:env-vars --stream",
     "build:doc": "cross-env NODE_ENV=production lerna run build:doc --stream",
+    "build:api-doc": "cross-env NODE_ENV=production lerna run build:api-doc --stream",
     "clean": "lerna run clean && rimraf .eslintcache examples/*/.env.development examples/*/.env.production",
     "cy:run": "cypress run --browser chrome --record --key 0dcfb624-e152-453a-9375-aa710adb57ab",
     "copyright": "node ./scripts/add-copyright",
@@ -25,8 +26,10 @@
     "new": "node ./scripts/new-starter",
     "publish:all": "npm run build && lerna publish --registry $NPM_REGISTRY",
     "publish:from-package": "npm run build && lerna publish from-package --registry $NPM_REGISTRY",
-    "scan": "ts-complexity --max-complexity 10 --pattern \"packages/**/src/**/*.ts(x)\"",
-    "scan:target": "ts-complexity --max-complexity 1 --pattern",
+    "publish:patch": "lerna version patch --conventional-commits --force-publish",
+    "publish:minor": "lerna version minor --conventional-commits",
+    "publish:major": "lerna version major --conventional-commits",
+    "lerna:publish": "lerna publish from-git --yes --dist-tag latest",
     "serve": "lerna run serve --scope @bodiless/test-site --stream",
     "setup": "npm run bootstrap && npm run build:packages",
     "sites:pack": "lerna exec --no-private --stream -- npm pack",
@@ -47,31 +50,30 @@
   "dependencies": {
     "@types/html2canvas": "0.0.35",
     "complexity-report": "^2.0.0-alpha",
-    "cypress": "^3.8.3",
+    "cypress": "^4.11.0",
     "cypress-failed-log": "^2.6.0",
     "debug": "^4.1.1",
     "html2canvas": "^1.0.0-rc.3",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "start-server-and-test": "^1.10.8",
-    "symlink-dir": "^3.0.3",
-    "ts-complexity": "0.0.3"
+    "symlink-dir": "^3.0.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.3",
+    "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.2.1",
     "@babel/plugin-proposal-decorators": "^7.4.0",
     "@babel/runtime": "^7.4.2",
     "@types/enzyme": "^3.9.1",
     "@types/jest": "^24.0.18",
-    "@types/lodash": "^4.14.149",
+    "@types/lodash": "^4.14.158",
     "@types/rc-tooltip": "^3.7.1",
     "@types/react-dom": "^16.8.5",
     "@types/slate": "^0.44.0",
     "@types/slate-react": "^0.21.1",
     "@types/uuid": "^3.4.4",
-    "@typescript-eslint/eslint-plugin": "^2.14.0",
-    "@typescript-eslint/parser": "^2.14.0",
+    "@typescript-eslint/eslint-plugin": "^2.29.0",
+    "@typescript-eslint/parser": "^2.29.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.9.0",
     "cross-env": "^5.2.0",
@@ -82,15 +84,15 @@
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "enzyme-to-json": "^3.3.5",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb": "17.1.0",
-    "eslint-config-airbnb-typescript": "^4.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "18.1.0",
+    "eslint-config-airbnb-typescript": "^7.2.1",
     "eslint-config-prettier": "^4.2.0",
-    "eslint-plugin-import": "^2.17.2",
-    "eslint-plugin-jest": "^22.1.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jest": "^23.8.2",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-prettier": "^3.0.1",
-    "eslint-plugin-react": "^7.11.0",
+    "eslint-plugin-react": "^7.19.0",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
     "husky": "^3.0.0",
@@ -102,18 +104,21 @@
     "lerna": "^3.11.0",
     "npm-run-all": "^4.1.5",
     "ora": "^4.0.2",
+    "postcss-cli": "^7.1.0",
     "react-test-renderer": "16.8.4",
     "rimraf": "^2.6.3",
     "ts-jest": "^24.0.2",
     "tslint": "^5.12.1",
     "tslint-config-airbnb": "^5.11.1",
-    "typescript": "^3.4.5"
+    "typescript": "^3.9.7",
+    "typedoc": "^0.17.8",
+    "typedoc-plugin-markdown": "^2.3.1"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/johnsonandjohnson/bodiless-js.git"
   },
   "engines": {
-    "node": ">=10.5"
+    "node": ">=12.18"
   }
 }

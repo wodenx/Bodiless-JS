@@ -15,7 +15,7 @@
 import { SortableElement, SortableHandle } from 'react-sortable-hoc';
 import React, { ComponentType, HTMLProps } from 'react';
 import CleanReresizable, { ResizeCallback, ResizableProps } from 're-resizable';
-import { SnapData } from '../FlexboxGrid/utils/appendTailwindWidthClass';
+import { SnapData } from '../FlowContainer/utils/appendTailwindWidthClass';
 
 const ENABLED_DRAG_SIDES = {
   top: false,
@@ -81,7 +81,7 @@ const SortableResizableWrapper = SortableElement((props: Props) => {
   const { DragHandle, ResizeHandle, Reresizable } = getUI(ui);
 
   const childrenWithDragHandle = (
-    <React.Fragment>
+    <>
       <Handle
         component={DragHandle}
         style={{
@@ -89,7 +89,7 @@ const SortableResizableWrapper = SortableElement((props: Props) => {
         }}
       />
       {children}
-    </React.Fragment>
+    </>
   );
 
   return (

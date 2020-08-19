@@ -14,6 +14,7 @@
 
 import React, { FC } from 'react';
 import ReactTooltip from 'rc-tooltip';
+import { flow } from 'lodash';
 import { addClasses, addProps } from '@bodiless/fclasses';
 import {
   ContextMenu, ContextMenuProps,
@@ -21,9 +22,11 @@ import {
 import {
   ComponentFormTitle, ComponentFormLabel, ComponentFormText, ComponentFormButton,
   ComponentFormCloseButton, ComponentFormSubmitButton, Icon, Div, ToolbarButton,
-  ComponentFormUnwrapButton,
+  ComponentFormUnwrapButton, ComponentFormTextArea, ComponentFormDescription, ComponentFormWarning,
+  ComponentFormFieldWrapper, ComponentFormFieldTitle, ComponentFormCheckBox, ComponentFormRadio,
+  ComponentFormRadioGroup, ComponentFormSelect, ComponentFormOption,
 } from '@bodiless/ui';
-import { flow } from 'lodash';
+import ReactTagsField from './ReactTags';
 
 // For accessibility attributes, see https://www.w3.org/TR/wai-aria-practices/examples/toolbar/toolbar.html
 const Toolbar = flow(
@@ -34,22 +37,33 @@ const Toolbar = flow(
 const LocalTooltip: FC<ReactTooltip['props']> = props => (
   <ReactTooltip
     {...props}
-    placement="bottom"
+    placement="bottomLeft"
   />
 );
 
 const ui = {
   ComponentFormText,
+  ComponentFormTextArea,
+  ComponentFormFieldWrapper,
+  ComponentFormFieldTitle,
+  ComponentFormCheckBox,
+  ComponentFormRadio,
+  ComponentFormRadioGroup,
+  ComponentFormSelect,
+  ComponentFormOption,
   ComponentFormButton,
   ComponentFormCloseButton,
   ComponentFormUnwrapButton,
   ComponentFormSubmitButton,
   ComponentFormTitle,
   ComponentFormLabel,
+  ComponentFormDescription,
+  ComponentFormWarning,
   Icon,
   Toolbar,
   ToolbarButton,
   Tooltip: LocalTooltip,
+  ReactTags: ReactTagsField,
 };
 
 const LocalContextMenu: FC<ContextMenuProps> = props => (

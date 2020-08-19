@@ -14,6 +14,7 @@
 
 // Internal mobx store which holds the state.
 import React from 'react';
+import { TOverlaySettings } from '../Types/PageOverlayTypes';
 
 export type TMenuOption = {
   name: string;
@@ -29,6 +30,12 @@ export type TMenuOption = {
 };
 
 export type TMenuOptionGetter = () => TMenuOption[];
+
+export type TPageOverlayStore = {
+  data: TOverlaySettings,
+  timeoutId: number,
+};
+
 export interface CanControlEditMode {
   isEdit: boolean;
   toggleEdit: (mode?: boolean) => void;
@@ -36,6 +43,16 @@ export interface CanControlEditMode {
 export interface CanControlMenuPosition {
   isPositionToggled: boolean;
   togglePosition: (mode?: boolean) => void;
+}
+export interface CanControlPageOverlay {
+  pageOverlay: TPageOverlayStore,
+  showPageOverlay: (settings?: TOverlaySettings) => void;
+  hidePageOverlay: (settings?: TOverlaySettings) => void;
+  showError: (settings?: TOverlaySettings) => void;
+}
+export interface CanControlLocalTooltipsVisibility {
+  areLocalTooltipsDisabled: boolean;
+  toggleLocalTooltipsDisabled: (isDisabled?: boolean) => void;
 }
 export interface CanGetContextMenuOptions {
   contextMenuOptions: TMenuOption[];
@@ -61,6 +78,8 @@ export interface PageEditStore {
   toggleEdit(): void;
   togglePosition(): void;
   contextTrail: string[];
+  areLocalTooltipsDisabled: boolean;
+  toggleLocalTooltipsDisabled(isDisabled?: boolean): void;
 }
 
 export interface PageEditContextInterface extends
@@ -68,7 +87,10 @@ export interface PageEditContextInterface extends
   CanControlEditMode,
   CanControlMenuPosition,
   CanGetContextMenuOptions,
-  DefinesLocalEditContext
+  CanControlPageOverlay,
+  DefinesLocalEditContext,
+  CanControlLocalTooltipsVisibility
+// eslint-disable-next-line @typescript-eslint/brace-style
 {
   readonly id: string;
   readonly name: string;

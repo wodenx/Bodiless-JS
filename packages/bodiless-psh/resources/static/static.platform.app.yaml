@@ -18,7 +18,7 @@
 name: 'static'
 
 # The type key specifies the language and version for your application.
-type: 'nodejs:10'
+type: 'nodejs:12'
 
 build:
     flavor: none
@@ -46,6 +46,10 @@ web:
             index: ['index.html']
             scripts: false
             allow: true
+            passthru: false
+            expires: 6h
+        '/___docs':
+            expires: 6h
 
 variables:
     env:

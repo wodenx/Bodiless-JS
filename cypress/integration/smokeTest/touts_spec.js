@@ -1,14 +1,23 @@
+/**
+ * Copyright © 2020 Johnson & Johnson
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 describe('Tout testing', function () {
 
   before(function () {
     cy.visit('/touts/')
     cy.clickEdit()
   })
-
-  after(function () {
-    cy.revertChanges()
-  })
-
 
   const title = 'AT - Title 1'
   const description = 'AT - Description 1'
@@ -50,6 +59,7 @@ describe('Tout testing', function () {
 
   it('touts: 3 - filling in CTA text', () => {
     cy.xpath(ctaLabelXpath)
+      .click()
       .type(ctaLabel)
       .should('have.text', ctaLabel)
   })
@@ -104,10 +114,11 @@ describe('Tout testing', function () {
       .should('have.attr', 'src', '/' + imageOriginal)
       .and('have.attr', 'alt', imageAltText)
     cy.xpath(imageLinkXpath)
-      .should('have.attr', 'href', '#' + toutUrl)
+      .should('have.attr', 'href', toutUrl)
     cy.xpath(ctaButtonXpath)
       .click()
     cy.url().should('include', toutUrl)
+    cy.visit('/touts/');
   })
 
 
@@ -123,7 +134,7 @@ describe('Tout testing', function () {
       .should('have.attr', 'src', '/' + imageOriginal)
       .and('have.attr', 'alt', imageAltText)
     cy.xpath(imageLinkXpath)
-      .should('have.attr', 'href', '#' + toutUrl)
+      .should('have.attr', 'href', toutUrl)
   })
 
   it('touts: 9 - editing Title', () => {
@@ -142,6 +153,7 @@ describe('Tout testing', function () {
 
   it('touts: 11 - editing CTA label', () => {
     cy.xpath(ctaLabelXpath)
+      .click()
       .type(editedPostfix)
       .should('have.text', ctaLabel + editedPostfix)
   })
@@ -186,10 +198,11 @@ describe('Tout testing', function () {
       .should('have.attr', 'src', '/' + imageUpdated)
       .and('have.attr', 'alt', imageAltText + editedPostfix)
     cy.xpath(ctaButtonXpath)
-      .should('have.attr', 'href', '#' + toutUrl + editedToutUrl)
+      .should('have.attr', 'href', toutUrl + editedToutUrl)
     cy.xpath(imagePlaceholderXpath)
       .click()
     cy.url().should('include', toutUrl + editedToutUrl)
+    cy.visit('/touts/');
   })
 
 
@@ -205,8 +218,6 @@ describe('Tout testing', function () {
       .should('have.attr', 'src', '/' + imageUpdated)
       .and('have.attr', 'alt', imageAltText + editedPostfix)
     cy.xpath(imageLinkXpath)
-      .should('have.attr', 'href', '#' + toutUrl + editedToutUrl)
+      .should('have.attr', 'href', toutUrl + editedToutUrl)
   })
-
-
 })

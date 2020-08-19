@@ -15,12 +15,10 @@
 import { flow } from 'lodash';
 import { addClasses } from '@bodiless/fclasses';
 import {
-  asBodilessImage,
   asBodilessLink,
-  Editable,
-  withPlaceholder,
+  asEditable as asEditableCore,
 } from '@bodiless/components';
-import { withChild, withNodeKey } from '@bodiless/core';
+import { asBodilessImage } from '@bodiless/components-ui';
 import {
   asAlignCenter,
   asAlignRight,
@@ -36,6 +34,7 @@ const asXMargin = addClasses('mx-2');
 const asYMargin = addClasses('my-2');
 const asNegXMargin = addClasses('-mx-1');
 const asNegYMargin = addClasses('-my-1');
+const withPadding5 = addClasses('p-5');
 
 /* Responsive design */
 const asMobileOnly = addClasses('block lg:hidden');
@@ -68,12 +67,7 @@ const asImageRounded = addClasses('rounded-lg');
 const asEditableLink = asBodilessLink;
 
 /* Edit component */
-const asEditable = (nodeKey?: string, placeholder?: string) => withChild(
-  flow(
-    withNodeKey(nodeKey),
-    withPlaceholder(placeholder),
-  )(Editable),
-);
+const asEditable = asEditableCore;
 
 // Tout Components
 const asCta = addClasses('bg-orange-700 hover:bg-orange-600 text-center text-white p-2 rounded');
@@ -109,4 +103,5 @@ export {
   asNegXMargin,
   asNegYMargin,
   asBlockQuote,
+  withPadding5,
 };

@@ -16,11 +16,15 @@ import {
   ComponentType,
   HTMLProps,
   ReactNode,
-  FC,
 } from 'react';
-import { FieldProps } from 'informed';
+import {
+  FieldProps,
+  ChildFieldProps,
+  SelectFieldProps,
+} from 'informed';
 import Tooltip from 'rc-tooltip';
 import { TMenuOption } from '../PageEditContext/types';
+import { ReactTagsFieldProps } from '../components/ReactTagsField';
 
 export type ButtonVariantProps = HTMLProps<HTMLDivElement> & {
   isActive?: boolean;
@@ -38,17 +42,29 @@ export type UI = {
   ToolbarButton?: ComponentType<ButtonVariantProps> | string;
   FormWrapper?: ComponentType<HTMLProps<HTMLDivElement>> | string;
   ToolbarDivider?: ComponentType<HTMLProps<HTMLHRElement>> | string;
+  ComponentFormFieldWrapper?: ComponentType<HTMLProps<HTMLDivElement>> | string;
   ComponentFormTitle?: ComponentType<HTMLProps<HTMLHeadingElement>> | string;
   ComponentFormLabel?: ComponentType<HTMLProps<HTMLLabelElement>> | string;
+  ComponentFormDescription?: ComponentType<HTMLProps<HTMLDivElement>> | string;
   ComponentFormButton?: ComponentType<HTMLProps<HTMLButtonElement>> | string;
   ComponentFormCloseButton?: ComponentType<HTMLProps<HTMLButtonElement>> | string;
   ComponentFormSubmitButton?: ComponentType<HTMLProps<HTMLButtonElement>> | string;
   ComponentFormUnwrapButton?: ComponentType<HTMLProps<HTMLButtonElement>> | string;
   ComponentFormText?: ComponentType<FieldProps<any, any>>;
+  ComponentFormTextArea?: ComponentType<FieldProps<any, any>>;
+  ComponentFormRadioGroup?: ComponentType<FieldProps<any, any>>;
+  ComponentFormFieldTitle?: ComponentType<HTMLProps<HTMLDivElement>> | string;
+  ComponentFormRadio?: ComponentType<ChildFieldProps<any, any>>;
+  ComponentFormCheckBox?: ComponentType<FieldProps<any, any>>;
+  ComponentFormSelect?: ComponentType<SelectFieldProps<any, any>>;
+  ComponentFormOption?: ComponentType<ChildFieldProps<any, any>>;
   ComponentFormError?: ComponentType<HTMLProps<HTMLDivElement>> | string;
+  ComponentFormWarning?: ComponentType<HTMLProps<HTMLDivElement>> | string;
   Form?: ComponentType<HTMLProps<HTMLFormElement>> | string;
-  Tooltip?: FC<Tooltip['props']>;
-  // @TODO: Add other controls from informed.
+  Tooltip?: ComponentType<Tooltip['props']>;
+  ReactTags?: ComponentType<ReactTagsFieldProps>;
+  ComponentFormList?: ComponentType<HTMLProps<HTMLUListElement>> | string;
+  ComponentFormListItem?: ComponentType<HTMLProps<HTMLLIElement>> | string;
 };
 
 export type IContextMenuProps = {

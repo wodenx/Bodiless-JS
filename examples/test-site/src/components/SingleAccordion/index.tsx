@@ -15,20 +15,34 @@
 import { flow } from 'lodash';
 import {
   SingleAccordionClean,
+  asTestableAccordion,
 } from '@bodiless/organisms';
+import {
+  withNode, withContextActivator, ifEditable,
+} from '@bodiless/core';
 import { withDesign } from '@bodiless/fclasses';
 import asSingleAccordionDefaultStyle from './token';
-import { asEditorSimple, asEditorBasic } from '../Editors';
+import { withEditorSimple, withEditorBasic } from '../Editors';
 
 const asSingleAccordion = flow(
+  withNode,
   withDesign({
-    Title: asEditorSimple('title', 'Accordion Title'),
-    Body: asEditorBasic(
+    Title: flow(
+      withEditorSimple('title', 'Accordion Title'),
+      // The following is a hack to prevent accordion expanding/contracting while editing
+      // the title. It mimics previous behavior where the click was eaten by the editor.
+      // Now editors do not add a context activator if they have no buttons, so we have
+      // to put one here.
+      // @TODO: Refactor accordions: https://github.com/johnsonandjohnson/Bodiless-JS/issues/390
+      ifEditable(withContextActivator('onClick')),
+    ),
+    Body: withEditorBasic(
       'body',
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.',
     ),
   }),
   asSingleAccordionDefaultStyle,
+  asTestableAccordion,
 );
 
 const SingleAccordion = asSingleAccordion(SingleAccordionClean);

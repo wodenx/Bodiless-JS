@@ -40,6 +40,7 @@ interface HtmlParserInterface {
   getBodyInlineScripts(): string
   getMetaTags(): string
   getImages(): string
+  clean(): void
   replaceString(oldHtmlString: string, newHtmlString: string): void
   replace(selector: string, newElement: string): void
   transformAbsoluteToRelative(pageUrl: string): void
@@ -52,20 +53,30 @@ interface HtmlParserInterface {
 type TransformerType = (attrValue: string, element: CheerioElement) => string;
 
 export default class HtmlParser implements HtmlParserInterface {
+  // @ts-ignore the propery is not definitely assigned in the constructor
   html: string;
 
+  // @ts-ignore the propery is not definitely assigned in the constructor
   $: CheerioStatic;
 
   allowedTags: boolean;
 
   allowedAttributes: boolean;
 
+  private loadHtml(html: string) {
+    this.html = html;
+    this.$ = cheerio.load(html);
+  }
+
   constructor(html: string) {
-    const cleanHtml = this.cleanUpHtmlErrors(html);
-    this.html = cleanHtml;
-    this.$ = cheerio.load(cleanHtml);
+    this.loadHtml(html);
     this.allowedTags = false;
     this.allowedAttributes = false;
+  }
+
+  clean() {
+    const cleanHtml = this.cleanUpHtmlErrors(this.html);
+    this.loadHtml(cleanHtml);
   }
 
   getPageHtml(): string {
@@ -143,6 +154,20 @@ export default class HtmlParser implements HtmlParserInterface {
 
   replace(selector: string, newElement: string) {
     this.$(selector).replaceWith(newElement);
+  }
+
+  removeEmptyAttribute(selector: string, attributes: string[]): void {
+    if (!attributes) {
+      return;
+    }
+    const { $ } = this;
+    $(selector).each((i: number, elem: any) => {
+      attributes.forEach((item: string) => {
+        if (elem.attribs[item] !== undefined && elem.attribs[item] === '') {
+          $(elem).removeAttr(item);
+        }
+      });
+    });
   }
 
   transformRelativeToInternal(pageUrl: string) {
@@ -249,7 +274,7 @@ export default class HtmlParser implements HtmlParserInterface {
         const text = $(element).html();
         if (text !== null) {
           const withoutNewLine = text.replace(/\n\s+/g, '\n');
-          $(element).html(withoutNewLine);
+          $(element).text(withoutNewLine);
         }
       }
     });
@@ -296,6 +321,10 @@ export default class HtmlParser implements HtmlParserInterface {
   private shouldSkipTextToAttributeTransformation(tag: string, element: CheerioElement): boolean {
     let skip = false;
     if (tag === 'script' && this.$(element).attr('src')) {
+      skip = true;
+    }
+    // skip if html element text is empty
+    if (!this.$(element).html()) {
       skip = true;
     }
     return skip;

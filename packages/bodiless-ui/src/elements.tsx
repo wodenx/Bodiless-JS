@@ -14,9 +14,21 @@
 
 import React, { FC, HTMLProps } from 'react';
 import { flow } from 'lodash';
-import { Text as BaseText } from 'informed';
 import {
-  stylable, addClasses, StylableProps, withoutProps, flowIf, hasProp, addProps, removeClasses,
+  Text as BaseText,
+  TextArea as BaseTextArea,
+  RadioGroup as BaseRadioGroup,
+  Radio as BaseRadio,
+  Checkbox as BaseCheckBox,
+  Select as BaseSelect,
+  Option as BaseOption,
+  FieldProps,
+  ChildFieldProps,
+  SelectFieldProps,
+} from 'informed';
+import {
+  Li, Ul, stylable, addClasses, StylableProps, withoutProps, flowIf, hasProp, addProps,
+  removeClasses,
 } from '@bodiless/fclasses';
 import { ButtonVariantProps, withChild } from '@bodiless/core';
 
@@ -31,15 +43,15 @@ export const Div = stylable<HTMLProps<HTMLDivElement>>('div');
 export const Span = stylable<HTMLProps<HTMLSpanElement>>('span');
 export const Button = stylable<HTMLProps<HTMLButtonElement>>('button');
 export const Hr = stylable<HTMLProps<HTMLHRElement>>('hr');
-export const Text = stylable(BaseText);
+export const Form = stylable<HTMLProps<HTMLFormElement>>('form');
+export const Text = stylable<FieldProps<any, any>>(BaseText);
+export const TextArea = stylable<FieldProps<any, any>>(BaseTextArea);
+export const RadioGroup = stylable<FieldProps<any, any>>(BaseRadioGroup);
+export const Radio = stylable<ChildFieldProps<any, any>>(BaseRadio);
+export const CheckBox = stylable<FieldProps<any, any>>(BaseCheckBox);
+export const Select = stylable<SelectFieldProps<any, any>>(BaseSelect);
+export const Option = stylable<ChildFieldProps<any, any>>(BaseOption);
 export const Anchor = stylable<HTMLProps<HTMLAnchorElement>>('a');
-
-const CheckBoxBase: FC<HTMLProps<HTMLInputElement>> = props => <input {...props} type="checkbox" />;
-export const CheckBox = stylable(CheckBoxBase);
-
-export const StyledLink = addClasses(
-  'bl-text-primary hover:bl-underline',
-)(Anchor);
 
 export const Icon = flow(
   addClasses('bl-rounded bl-p-grid-1 material-icons'),
@@ -55,6 +67,26 @@ export const ComponentFormTitle = addClasses(
   'bl-text-lg bl-font-bold bl-text-grey-100 bl-block bl-mb-grid-2',
 )(Title);
 
+export const ComponentFormFieldWrapper = addClasses(
+  'bl-mb-grid-3 bl-w-full',
+)(Div);
+
+export const ComponentFormFieldTitle = addClasses(
+  'bl-mb-grid-2 bl-font-bold bl-text-grey-100',
+)(Div);
+
+export const ComponentFormDescription = addClasses(
+  'bl-text-xs bl-text-grey-100 bl-block bl-mb-grid-2 bl-max-w-xl-grid-1',
+)(Div);
+
+export const ComponentFormListItem = addClasses(
+  'first:bl-border-t-0 bl-border-t bl-py-grid-1 bl-px-grid-1 bl-max-w-xl-grid-1',
+)(Li);
+
+export const ComponentFormList = addClasses(
+  'list-none bl-max-h-xl-grid-1 bl-overflow-y-scroll',
+)(Ul);
+
 export const ComponentFormLabel = addClasses(
   'bl-text-xs bl-text-grey-100 bl-block',
 )(Label);
@@ -62,6 +94,29 @@ export const ComponentFormLabel = addClasses(
 export const ComponentFormText = addClasses(
   'bl-text-grey-900 bg-grey-100 bl-text-xs bl-w-full bl-min-w-xl-grid-1 bl-block bl-my-grid-2 bl-p-grid-1',
 )(Text);
+
+export const ComponentFormTextArea = addClasses(
+  'bl-resize bl-text-grey-900 bg-grey-100 bl-text-xs bl-w-full bl-min-w-xl-grid-1 bl-min-h-grid-16 bl-block bl-my-grid-2 bl-p-grid-1',
+)(TextArea);
+
+export const ComponentFormRadioGroup = addClasses(
+  'bl-mb-grid-2',
+)(RadioGroup);
+
+export const ComponentFormRadio = addClasses(
+  'bl-mr-grid-2 bl-mb-grid-2 align-baseline',
+)(Radio);
+
+export const ComponentFormCheckBox = addClasses(
+  'bl-mr-grid-2 bl-mb-grid-2 align-baseline',
+)(CheckBox);
+
+export const ComponentFormSelect = addClasses(
+  `bl-text-grey-900 bg-grey-100 bl-text-xs bl-w-full
+  bl-min-w-xl-grid-1 bl-block bl-my-grid-2 bl-p-grid-1`,
+)(Select);
+
+export const ComponentFormOption = Option;
 
 export const ComponentFormButton = addClasses(
   'bl-text-grey-200 bl-cursor-pointer hover:bl-text-green',
@@ -91,12 +146,14 @@ export const ComponentFormError = addClasses(
 
 export const SubmitButton: FC<HTMLProps<HTMLButtonElement> & StylableProps> = props => <ComponentFormButton type="submit" {...props} />;
 
-
 export const ToolbarButton = flow(
   withoutProps<ButtonVariantProps>(['isActive', 'isFirst', 'isDisabled']),
   addClasses('bl-cursor-pointer bl-text-grey-200 bl-block'),
   flowIf(hasProp('isDisabled'))(
-    addClasses('bl-text-grey-600').removeClasses('bl-text-grey-200'),
+    flow(
+      addClasses('bl-text-grey-600'),
+      removeClasses('bl-text-grey-200'),
+    ),
   ),
   addProps({ type: 'button' }),
 )(Button);
@@ -104,3 +161,18 @@ export const ToolbarButton = flow(
 export const ResizeHandle = addClasses(
   'bl-block bl-text-2xl bl-absolute material-icons bl-z-1 bl-text-red bl-rotate-45deg bl-bottom-grid-0 bl-right-grid-0',
 )(Span);
+
+export const Warning = flow(
+  addClasses('bl-w-grid-7 bl-text-yellow-500'),
+)((props: JSX.IntrinsicAttributes) => (
+  <Icon {...props}>report_problem_outlined</Icon>
+));
+
+export const ComponentFormWarning = flow(
+  addClasses('bl-float-left bl-flex bl-items-center'),
+)(({ children, ...rest }: any) => (
+  <Div {...rest}>
+    <Warning />
+    {children}
+  </Div>
+));

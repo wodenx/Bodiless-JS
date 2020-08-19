@@ -35,29 +35,46 @@ type Props = {
   client?: Client;
 };
 
-const formPageAdd = (client: Client, template: string) => contextMenuForm({
-  submitValues: async (submittedValues: any) => {
-    const pathname = window.location.pathname
-      ? window.location.pathname.replace(/\/?$/, '/')
-      : '';
-    const newPagePath = pathname + submittedValues.path;
-    const result = await handle(client.savePage(newPagePath, template));
-    if (result) {
-      const isPageVerified = await verifyPage(newPagePath);
-      if (!isPageVerified) {
-        alert(`unable to verify page creation.
+const formPageAdd = (client: Client, template: string, context: any) => contextMenuForm({
+  submitValues: (submittedValues: any) => {
+    (async () => {
+      context.showPageOverlay({
+        message: 'The page is creating.',
+        maxTimeoutInSeconds: 10,
+      });
+      const pathname = window.location.pathname
+        ? window.location.pathname.replace(/\/?$/, '/')
+        : '';
+      const newPagePath = pathname + submittedValues.path;
+      const result = await handle(client.savePage(newPagePath, template));
+      if (result.response) {
+        const isPageVerified = await verifyPage(newPagePath);
+        if (!isPageVerified) {
+          const errorMessage = `Unable to verify page creation.
 It is likely that your new page was created but is not yet available.
-Click ok to visit the new page; if it does not load, wait a while and reload.`);
+Click ok to visit the new page; if it does not load, wait a while and reload.`;
+          context.showError({
+            message: errorMessage,
+            onClose: () => {
+              window.location.href = newPagePath;
+            },
+          });
+        } else {
+          window.location.href = newPagePath;
+        }
+      } else {
+        context.showError({
+          message: result.message,
+        });
       }
-      window.location.href = newPagePath;
-    }
+    })();
   },
 })(({ ui, formState }: any) => {
   const {
     ComponentFormTitle,
     ComponentFormLabel,
     ComponentFormText,
-    ComponentFormError,
+    ComponentFormWarning,
   } = getUI(
     ui,
   );
@@ -72,7 +89,7 @@ Click ok to visit the new page; if it does not load, wait a while and reload.`);
     <>
       <ComponentFormTitle>Add a New Page</ComponentFormTitle>
       <ComponentFormLabel htmlFor="new-page-path">
-          URL
+        URL
         <br />
         {`${currentPage}...`}
       </ComponentFormLabel>
@@ -84,7 +101,7 @@ Click ok to visit the new page; if it does not load, wait a while and reload.`);
         validateOnBlur
       />
       {formState.errors && formState.errors.path && (
-      <ComponentFormError>{formState.errors.path}</ComponentFormError>
+      <ComponentFormWarning>{formState.errors.path}</ComponentFormWarning>
       )}
     </>
   );
@@ -102,7 +119,7 @@ const useGetMenuOptions = (): () => TMenuOption[] => {
       icon: 'note_add',
       label: 'Page',
       isHidden: () => !context.isEdit,
-      handler: () => formPageAdd(defaultClient, gatsbyPage.subPageTemplate),
+      handler: () => formPageAdd(defaultClient, gatsbyPage.subPageTemplate, context),
     },
   ];
 };

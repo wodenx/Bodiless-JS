@@ -36,6 +36,7 @@ class GatsbyNodeProvider extends Component<Props, State> implements DataSource {
     };
   }
 
+  // eslint-disable-next-line react/state-in-constructor
   readonly state: State;
 
   // React hook inserts props into mobx store.
@@ -60,7 +61,7 @@ class GatsbyNodeProvider extends Component<Props, State> implements DataSource {
   // Create ContentNode instance for consumption by React components.
   getRootNode(collection = 'Page') {
     const { store } = this.state;
-    const actions = pick(store, ['setNode']);
+    const actions = pick(store, ['setNode', 'deleteNode']);
     const getters = pick(store, ['getNode', 'getKeys']);
 
     const node = new DefaultContentNode(actions, getters, collection);

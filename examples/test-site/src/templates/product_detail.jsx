@@ -13,18 +13,23 @@
  */
 
 import React from 'react';
-import { flow } from 'lodash';
+import Helmet from 'react-helmet';
+import { flow, flowRight } from 'lodash';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { BVRatingsSummary, BVReviews } from '@bodiless/bv';
+import { withNode } from '@bodiless/core';
 import {
+  addProps,
   withDesign,
   replaceWith,
   removeClasses,
 } from '@bodiless/fclasses';
 import {
   SingleAccordionClean,
+  asTestableAccordion,
 } from '@bodiless/organisms';
+import { withEvent, asBodilessHelmet } from '@bodiless/components';
 import Layout from '../components/Layout';
 import {
   ProductTitle,
@@ -34,27 +39,36 @@ import {
   ProductDetailImageWrapper,
   ProductDetailAccWrapper,
 } from '../components/Product';
-import { FlexBoxDefault } from '../components/Flexbox';
-import { asEditorBasic } from '../components/Editors';
+import { FlowContainerDefault } from '../components/FlowContainer';
+import { withEditorBasic } from '../components/Editors';
 import asSingleAccordionDefaultStyle from '../components/SingleAccordion/token';
 
 // Do not allow editors to set accordion titles.
-const NonEditableTitle = ({ producttitle }) => (
-  <h2>
+const NonEditableTitle = ({ producttitle, ...rest }) => (
+  <h2 {...rest}>
     {producttitle}
   </h2>
 );
 
+const asTestableProductAccordion = label => flow(
+  asTestableAccordion,
+  withDesign({
+    Wrapper: addProps({ 'aria-label': label }),
+  }),
+);
+
 const asProductAccordion = title => flow(
+  withNode,
   asSingleAccordionDefaultStyle,
   withDesign({
     Wrapper: removeClasses('p-1'),
-    Title: replaceWith(() => <NonEditableTitle producttitle={title} />),
-    Body: asEditorBasic(
+    Title: replaceWith(props => <NonEditableTitle {...props} producttitle={title} />),
+    Body: withEditorBasic(
       'body',
       'Enter Product Information',
     ),
   }),
+  asTestableProductAccordion(title),
 );
 
 const ProductOverAcc = asProductAccordion('Overview')(SingleAccordionClean);
@@ -66,9 +80,27 @@ const ProductInactIngAcc = asProductAccordion('Inactive Ingredients')(SingleAcco
 const ProductStorAcc = asProductAccordion('Storage')(SingleAccordionClean);
 const ProductWarnAcc = asProductAccordion('Warnings')(SingleAccordionClean);
 
+const asTestableRatingsSummary = addProps({ 'data-product-element': 'ratings-summary' });
+const ProductRatingsSummary = asTestableRatingsSummary(BVRatingsSummary);
+
+const asTestableProductReviews = addProps({ 'data-product-element': 'reviews' });
+const ProductReviews = asTestableProductReviews(BVReviews);
+
+const asTestableFlowContainer = withDesign({
+  Wrapper: addProps({ 'data-product-element': 'flow-container' }),
+});
+const ProductFlowContainer = asTestableFlowContainer(FlowContainerDefault);
+
+const ExampleGTMHelmetEvent = flowRight(
+  asBodilessHelmet('datalayer'),
+  // On product pages, we may add product related datalayer info:
+  withEvent('digitalData', { event: 'Product Viewed' }, 'product-viewed'),
+)(Helmet);
+
 export default (props: any) => (
   <Page {...props}>
     <Layout>
+      <ExampleGTMHelmetEvent />
       <SectionMargin>
         <div className="flex flex-wrap md:items-end md:flex-row-reverse">
           <div className="w-full md:flex-1 md:flex-grow-0 md:flex-shrink-0 text-right"><p>Placeholder_for_Share</p></div>
@@ -78,7 +110,7 @@ export default (props: any) => (
         </div>
       </SectionMargin>
       <SectionMargin>
-        <BVRatingsSummary />
+        <ProductRatingsSummary />
       </SectionMargin>
       <SectionMargin>
         <div className="flex flex-wrap">
@@ -98,10 +130,10 @@ export default (props: any) => (
         </div>
       </SectionMargin>
       <SectionMargin>
-        <BVReviews />
+        <ProductReviews />
       </SectionMargin>
       <SectionNegXMargin>
-        <FlexBoxDefault
+        <ProductFlowContainer
           nodeKey="product_touts"
           maxComponents={3}
         />

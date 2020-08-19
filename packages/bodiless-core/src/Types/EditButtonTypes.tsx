@@ -26,7 +26,8 @@ export type EditButtonOptions<P, D> = {
   name: string;
   global?: boolean;
   local?: boolean;
-  renderForm: FormBodyRenderer<D>;
+  label?: string,
+  renderForm: FormBodyRenderer<P, D>;
   // Allow additional buttons.
   useGetMenuOptions?: UseGetMenuOptions<P>;
 };

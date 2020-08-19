@@ -28,6 +28,7 @@ import { TMenuOption } from '../PageEditContext/types';
 type CompleteUI = {
   GlobalContextMenu: React.ComponentType<ContextMenuProps>;
   LocalContextMenu: React.ComponentType<ContextMenuProps>;
+  PageOverlay?: FC;
 };
 export type UI = Partial<CompleteUI>;
 
@@ -59,14 +60,6 @@ const PageEditor: FC<Props> = ({ children, ui }) => {
   // a real function.
   const getMenuOptions = () => [
     {
-      name: 'switcher',
-      icon: 'compare_arrows',
-      handler: () => {
-        context.togglePosition();
-        context.refresh();
-      },
-    },
-    {
       name: 'docs',
       icon: 'description',
       label: 'Docs',
@@ -80,10 +73,6 @@ const PageEditor: FC<Props> = ({ children, ui }) => {
       label: 'Edit',
       isActive: () => context.isEdit,
       handler: () => {
-        // Force page reload after switching back to edit.
-        if (!context.isEdit) {
-          window.location.reload();
-        }
         // Set edit mode on/off.
         context.toggleEdit();
         context.refresh();
@@ -96,11 +85,14 @@ const PageEditor: FC<Props> = ({ children, ui }) => {
     ...ui,
   };
 
+  const { PageOverlay = () => null } = newUI;
+
   return (
     <uiContext.Provider value={newUI}>
       <PageContextProvider name="page" getMenuOptions={getMenuOptions}>
         {children}
         <GlobalContextMenu />
+        <PageOverlay />
       </PageContextProvider>
     </uiContext.Provider>
   );

@@ -14,7 +14,7 @@
 
 import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import CommitsList from '../src/dist/CommitsList';
 
 const mockedGitLogOutput = `
@@ -39,20 +39,15 @@ const mockedClient = {
 };
 
 describe('CommitsList component', () => {
-  it('should show a loader icon while a request to the back-end is processed', () => {
-    const wrapper = shallow(<CommitsList client={mockedClient} />);
-    expect(wrapper.text().includes('Loading')).toBe(true);
+  it('should show a spinner while a request to the back-end is processed', () => {
+    const wrapper = mount(<CommitsList client={mockedClient} />);
+    expect(wrapper.find('.bodiless-spinner').length > 0).toBe(true);
   });
   it('should render a list of selectable items once a responce is recieved', async () => {
-    const wrapper = shallow(<CommitsList client={mockedClient} />);
-    const instance = wrapper.instance();
-    // The condition below is just to solve TS2722 error:
-    // "Cannot invoke an object which is possibly 'undefined'".
-    // We actually expect that componentDidMount is always defined.
-    if (instance && instance.componentDidMount) {
-      await instance.componentDidMount();
+    const wrapper = mount(<CommitsList client={mockedClient} />);
+    return new Promise(resolve => setImmediate(resolve)).then(() => {
       wrapper.update();
       expect(wrapper.find('input[type="radio"]').length > 0).toBe(true);
-    }
+    });
   });
 });

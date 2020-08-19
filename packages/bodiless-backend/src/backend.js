@@ -22,6 +22,8 @@ const formidable = require('formidable');
 const tmp = require('tmp');
 const path = require('path');
 const Page = require('./page');
+const GitCmd = require('./GitCmd');
+const { getChanges, getConflicts, mergeMaster } = require('./git');
 const Logger = require('./logger');
 
 const backendPrefix = process.env.GATSBY_BACKEND_PREFIX || '/___backend';
@@ -29,6 +31,7 @@ const backendFilePath = process.env.BODILESS_BACKEND_DATA_FILE_PATH || '';
 const defaultBackendPagePath = path.resolve(backendFilePath, 'pages');
 const backendPagePath = process.env.BODILESS_BACKEND_DATA_PAGE_PATH || defaultBackendPagePath;
 const backendStaticPath = process.env.BODILESS_BACKEND_STATIC_PATH || '';
+const backendPublicPath = process.env.BODILESS_BACKEND_PUBLIC_PAGE_PATH || 'public/page-data';
 const isExtendedLogging = (process.env.BODILESS_BACKEND_EXTENDED_LOGGING_ENABLED || '0') === '1';
 const canCommit = (process.env.BODILESS_BACKEND_COMMIT_ENABLED || '0') === '1';
 
@@ -75,69 +78,7 @@ class Git {
     });
   }
 }
-/*
-This Class wraps spawn and lets us build out git commands with standard responses
-*/
-class GitCmd {
-  constructor() {
-    this.cmd = 'git';
-    this.params = [];
-    this.files = [];
-  }
 
-  add(...params) {
-    this.params.push(...params);
-    return this;
-  }
-
-  addFiles(...files) {
-    this.files.push(...files);
-    // const rawFiles = [...arguments]
-    // this.files.push(...rawFiles.map((file) => file.replace(/ /,'\ ')))
-    return this;
-  }
-
-  spawn() {
-    const args = [...this.params, ...this.files];
-    logger.log([`Spawning command: ${this.cmd}`, ...args]);
-    return spawn(this.cmd, args);
-  }
-
-  exec() {
-    return new Promise((resolve, reject) => {
-      const cmd = this.spawn();
-      let stderr = '';
-      let stdout = '';
-      cmd.stdout.on('data', data => {
-        stdout += data.toString();
-      });
-      cmd.stderr.on('data', data => {
-        stderr += data.toString();
-      });
-      cmd.on('close', code => {
-        logger.log(stdout, stderr, code);
-        if (code === 0) {
-          resolve({ stdout, stderr, code });
-          return;
-        }
-        // Allow plumbing commands with --quiet flag to return either 0 or 1.
-        if (this.params.includes('--quiet')) {
-          resolve({ stdout, stderr, code });
-          return;
-        }
-
-        const error = new Error(`${stderr}`);
-        error.code = `${code}`;
-        error.info = { stdout, stderr, code };
-        reject(error);
-      });
-    });
-  }
-
-  static cmd() {
-    return new GitCmd();
-  }
-}
 /*
 This Class lets us buildout and execute a GitCommit
 */
@@ -178,7 +119,7 @@ class GitCommit {
 
     // Check if there are any unstaged files left before rebasing.
     const dirty = await GitCmd.cmd()
-      .add('diff-files', '--quiet')
+      .add('diff', '--quiet')
       .exec();
     if (dirty.code) {
       await GitCmd.cmd()
@@ -324,12 +265,15 @@ class Backend {
       res.header('Content-Type', 'application/json');
       next();
     });
+    this.setRoute(`${backendPrefix}/changes`, Backend.getChanges);
+    this.setRoute(`${backendPrefix}/changes/conflicts`, Backend.getConflicts);
     this.setRoute(`${backendPrefix}/get/commits`, Backend.getLatestCommits);
     this.setRoute(`${backendPrefix}/change/amend`, Backend.setChangeAmend);
     this.setRoute(`${backendPrefix}/change/commit`, Backend.setChangeCommit);
     this.setRoute(`${backendPrefix}/change/push`, Backend.setChangePush);
     this.setRoute(`${backendPrefix}/change/reset`, Backend.setChangeReset);
     this.setRoute(`${backendPrefix}/change/pull`, Backend.setChangePull);
+    this.setRoute(`${backendPrefix}/merge/master`, Backend.mergeMaster);
     this.setRoute(`${backendPrefix}/asset`, Backend.setAsset);
     this.setRoute(`${backendPrefix}/set/current`, Backend.setSetCurrent);
     this.setRoute(`${backendPrefix}/set/list`, Backend.setSetList);
@@ -354,7 +298,7 @@ class Backend {
       res.status(500);
     }
     // End response process to prevent any further queued promises/events from responding.
-    res.send(error.message).end();
+    res.send(Backend.sanitizeOutput(error.message)).end();
   }
 
   static gitCommitsEnabled(res) {
@@ -366,6 +310,32 @@ class Backend {
       error.code = 405;
       Backend.exitWithErrorResponse(error, res);
     }
+  }
+
+  static getChanges(route) {
+    route.get(async (req, res) => {
+      try {
+        const status = await getChanges();
+        res.send(status);
+      } catch (error) {
+        logger.log(error);
+        error.code = 500;
+        Backend.exitWithErrorResponse(error, res);
+      }
+    });
+  }
+
+  static getConflicts(route) {
+    route.get(async (req, res) => {
+      try {
+        const status = await getConflicts();
+        res.send(status);
+      } catch (error) {
+        logger.log(error);
+        error.code = 500;
+        Backend.exitWithErrorResponse(error, res);
+      }
+    });
   }
 
   static getLatestCommits(route) {
@@ -386,18 +356,43 @@ class Backend {
     route.post(async (req, res) => {
       logger.log('Start reset');
       try {
-        // Clean up untracked files first.
+        // Clean up untracked files.
         if (backendFilePath && backendStaticPath) {
-          const gitCleanResponse = await GitCmd.cmd()
-            .add('clean', '-df', backendFilePath, backendStaticPath)
+          // Clean up public folder.
+          const gitStatus = await GitCmd.cmd()
+            .add('status', '--porcelain', backendPagePath)
             .exec();
-          res.send(gitCleanResponse.stdout);
+          const gitRootRelPath = await GitCmd.cmd()
+            .add('rev-parse', '--show-cdup')
+            .exec();
+          const reGetDeletedAndUntracked = /(?<= D |\?\? ).*/gm;
+          const deletedAndUntracked = gitStatus.stdout.match(reGetDeletedAndUntracked);
+          if (deletedAndUntracked !== null) {
+            const dataPagePath = path.join(backendFilePath, 'pages');
+            const obsoletePublicPages = deletedAndUntracked.map(gitPath => {
+              const publicPagePath = gitPath.replace(dataPagePath, backendPublicPath);
+              // Get absolute path considering location of .git folder
+              return path.resolve(
+                gitRootRelPath.stdout.trim(),
+                publicPagePath,
+              );
+            });
+            // Have to loop through every path since 'git clean' can work incorrectly when passing
+            // all the paths at once.
+            await Promise.all(obsoletePublicPages.map(
+              async (gitPath) => GitCmd.cmd().add('clean', '-dfx').addFiles(gitPath).exec(),
+            ));
+          }
+          // Clean up data folder.
+          await Promise.all([backendFilePath, backendStaticPath].map(
+            async (gitPath) => GitCmd.cmd().add('clean', '-df').addFiles(gitPath).exec(),
+          ));
         }
         // Discard changes in existing files.
-        const gitResetResponse = await GitCmd.cmd()
+        const cleanExisting = await GitCmd.cmd()
           .add('reset', '--hard', 'HEAD')
           .exec();
-        res.send(gitResetResponse.stdout);
+        res.send(cleanExisting.stdout);
       } catch (error) {
         // Need to inform user of merge operation fails.
         Backend.exitWithErrorResponse(error, res);
@@ -413,6 +408,19 @@ class Backend {
         .then(data => res.send(data.stdout))
         // Need to inform user of merge operation fails.
         .catch(error => Backend.exitWithErrorResponse(error, res));
+    });
+  }
+
+  static mergeMaster(route) {
+    route.post(async (req, res) => {
+      try {
+        const status = await mergeMaster();
+        res.send(status);
+      } catch (error) {
+        logger.log(error);
+        error.code = 500;
+        Backend.exitWithErrorResponse(error, res);
+      }
     });
   }
 
@@ -571,6 +579,20 @@ class Backend {
             logger.log(reason);
             res.send({});
           });
+      })
+      .delete((req, res) => {
+        const page = Backend.getPage(Backend.getPath(req));
+        logger.log(`Start deletion for:${page.file}`);
+        page
+          .delete()
+          .then(data => {
+            logger.log('Sending', data);
+            res.send(data);
+          })
+          .catch(reason => {
+            logger.log(reason);
+            res.send({});
+          });
       });
   }
 
@@ -617,6 +639,10 @@ class Backend {
           res.send({});
         });
     });
+  }
+
+  static sanitizeOutput(data) {
+    return data.replace(/(http|https):\/\/[^@]+:[^@]+@/gi, '$1://****:****@');
   }
 
   start(port) {

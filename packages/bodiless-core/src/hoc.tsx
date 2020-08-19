@@ -13,8 +13,8 @@
  */
 
 import { observer } from 'mobx-react-lite';
-import React, { ComponentType as CT } from 'react';
-import { flowRight, omit } from 'lodash';
+import React, { ComponentType as CT, FC } from 'react';
+import { flowRight, omit, pick } from 'lodash';
 import { useContextActivator, useEditContext } from './hooks';
 import { useNodeDataHandlers } from './NodeProvider';
 import withNode from './withNode';
@@ -28,6 +28,20 @@ export const withoutProps = <Q extends object>(keys: string[]) => (
   <P extends object>(Component: CT<P> | string) => (
     (props: P & Q) => <Component {...omit(props, keys) as P} />
   )
+);
+
+/**
+ * Creates an HOC which strips all but the specified props.
+ *
+ * @param keys A list of the prop-names to keep.
+ *
+ * @return An HOC which will strip all but the specified props.
+ */
+export const withOnlyProps = <Q extends object>(...keys: string[]) => (
+  <P extends object>(Component: CT<P> | string) => {
+    const WithOnlyProps: FC<P & Q> = props => <Component {...pick(props, keys) as P} />;
+    return WithOnlyProps;
+  }
 );
 
 export const withContextActivator = (
@@ -53,9 +67,13 @@ export const withLocalContextMenu = (Component: CT<any> | string) => {
 // @TODO: Combine withNode and withNodeDataHandlers and fix types
 export const withNodeDataHandlers = (defaultData?: any) => (
   Component: CT<any>,
-) => observer((props: any) => (
-  <Component {...props} {...useNodeDataHandlers(undefined, defaultData)} />
-));
+) => observer((props: any) => {
+  const enhancedDefaultData = {
+    ...defaultData,
+    ...(defaultData ? pick(props, Object.keys(defaultData)) : {}),
+  };
+  return (<Component {...props} {...useNodeDataHandlers(undefined, enhancedDefaultData)} />);
+});
 
 export const withNodeAndHandlers = (defaultData?: any) => flowRight(
   // @ts-ignore
@@ -74,7 +92,7 @@ type Options<P> = {
   id?: string;
 };
 
-export const withPageContext = <P extends object>({
+export const withMenuOptions = <P extends object>({
   useGetMenuOptions,
   name,
   id,

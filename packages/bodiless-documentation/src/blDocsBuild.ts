@@ -14,18 +14,18 @@
  */
 
 /* eslint-disable no-console */
-import path from 'path';
 import { flow } from 'lodash';
 import fs from 'fs-extra';
 // import cleanSymlinks from './cleanSymlinks';
 import locateFiles from './locateFiles';
-import { withTreeFromFile } from './tree';
+import { withTreeFromFile, getSimplePaths, validatePaths } from './tree';
 import {
   writeTree, writeResources, copyFile, symlinkFile,
 } from './write';
-import { writeSideBars, writeNavBar } from './createBar';
-import defaultToc from './defaultToc';
+import { writeSideBars } from './createBar';
 import { Tree } from './type';
+import readSettings from './readSettings';
+import buildApiDoc, { updateNavigation as apiDocUpdateNavigation } from './blApiDocsBuild';
 
 const buildSubTree = async (toc: any, namespace: string) => {
   // We start by using locateFiles and withTreeFromFile to build up an array of TreeHO and
@@ -43,15 +43,7 @@ const buildSubTree = async (toc: any, namespace: string) => {
 const blDocsBuild = async () => {
   const copier = process.env.BODILESS_DOCS_COPYFILES ? copyFile : symlinkFile;
   const docPath = './doc';
-  let toc: any;
-  try {
-    const tocPath = path.resolve('./bodiless.docs.toc.js');
-    // eslint-disable-next-line global-require
-    toc = require(tocPath).default(); // eslint-disable-line import/no-dynamic-require
-  } catch (e) {
-    console.warn('No local TOC. Falling back on bodiless default.');
-    toc = defaultToc();
-  }
+  const { toc } = readSettings();
 
   console.log('Building documentation tree');
   // The top level keys of the toc are namespaces defining which docs.json files to parse.
@@ -69,6 +61,9 @@ const blDocsBuild = async () => {
     pathsList[0],
   );
 
+  // Validate the paths for letter-case typos.
+  validatePaths(getSimplePaths(paths));
+
   // Now we use the tree we created above to write symlinks, sidebar and navbar.
   console.log('Writing symlinks');
   try {
@@ -79,23 +74,27 @@ const blDocsBuild = async () => {
   } catch (error) {
     console.warn('Error writing symlinks', error);
   }
-  console.log('Writing sidebars');
+
+  // Let api doc builder to update navigation links in runtime
+  const navigationPaths = apiDocUpdateNavigation(docPath, paths);
+
   try {
-    await writeSideBars(docPath, paths);
+    await writeSideBars(docPath, navigationPaths);
   } catch (error) {
     console.warn('Error writing sidebars', error);
   }
-  console.log('Writing navbar');
-  try {
-    await writeNavBar(docPath, paths);
-  } catch (error) {
-    console.warn('Error writing navbar', error);
-  }
+
   console.log('Writing resources');
   try {
     await writeResources(docPath, copier);
   } catch (error) {
-    console.warn('Error writing navbar', error);
+    console.warn('Error writing resources', error);
+  }
+  console.log('Building API docs');
+  try {
+    await buildApiDoc({ targetDocPath: docPath, copier });
+  } catch (error) {
+    console.warn('Error building API docs', error);
   }
   console.log('Done');
 };
