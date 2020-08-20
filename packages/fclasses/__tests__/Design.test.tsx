@@ -16,10 +16,12 @@
 import { mount } from 'enzyme';
 import React, { ComponentType, FC } from 'react';
 
+import { omit } from 'lodash';
 import {
   withDesign,
   DesignableProps,
   Design,
+  extendDesignable,
 } from '../src/Design';
 
 type SpanType = ComponentType<any>;
@@ -64,6 +66,35 @@ const DesignPrinter: FC<DesignableProps<MyDesignableComponents>> = ({ design }) 
     </div>
   );
 };
+
+describe('extendDesignable', () => {
+  const Test$: FC<any> = ({ design }: { design: { [key: string]: () => Function } }) => (
+    <span id="test">
+      {design ? Object.values(design).map(h => h()()) : 'no design'}
+    </span>
+  );
+  const design = {
+    foo: () => () => <span key="foo">foo</span>,
+    bar: () => () => <span key="bar">bar</span>,
+  };
+
+  it('Passes a design through to an underlying component', () => {
+    const Test = extendDesignable()({})(Test$);
+    const wrapper = mount(<Test design={design} />);
+    expect(wrapper.text()).toBe('foobar');
+  });
+
+  it('Strips the design when a transformer returns undefind', () => {
+    const Test = extendDesignable(() => undefined)({})(Test$);
+    const wrapper = mount(<Test design={design} />);
+    expect(wrapper.text()).toBe('no design');
+  });
+  it('Removes keys from the design correctly', () => {
+    const Test = extendDesignable((d: any) => omit(d, 'foo'))({})(Test$);
+    const wrapper = mount(<Test design={design} />);
+    expect(wrapper.text()).toBe('bar');
+  });
+});
 
 describe('withDesign', () => {
   it('applies a design correctly', () => {
