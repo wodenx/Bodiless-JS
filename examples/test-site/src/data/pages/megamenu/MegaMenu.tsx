@@ -39,6 +39,7 @@ import {
   asToutDefaultStyle,
   asToutWithPaddings,
 } from '../../../components/Tout/token';
+import asBodilessChamelion from './Chamelion';
 
 function stopPropagation(e: MouseEvent) {
   e.stopPropagation();
@@ -68,6 +69,18 @@ const ToutSubMenu = withDesign({
   Item: addClasses('w-1/3'),
 })(SubMenu);
 
+
+
+const sublistDesign = {
+  Basic: flow(replaceWith(SubMenu)),
+  Touts: flow(replaceWith(ToutSubMenu)),
+};;
+
+const ChamelionSubMenu = flow(
+  asBodilessChamelion('cham-sublist', { component: 'Basic' }),
+  withDesign(sublistDesign),
+)(SubMenu);
+
 const Menu = flow(
   asEditableMainMenu,
   withDesign({
@@ -83,4 +96,4 @@ const Menu = flow(
   asExceptMobile,
 )(List);
 
-export default withSubmenu(ToutSubMenu)(Menu);
+export default withSubmenu(ChamelionSubMenu)(Menu);
