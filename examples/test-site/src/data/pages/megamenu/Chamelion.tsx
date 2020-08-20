@@ -1,5 +1,5 @@
 import React, { FC, ComponentType } from 'react';
-import { DesignableComponents, designable } from '@bodiless/fclasses';
+import { DesignableComponents, extendDesignable } from '@bodiless/fclasses';
 import {
   useMenuOptionUI, asBodilessComponent, BodilessOptions, WithNodeKeyProps, withSidecarNodes,
 } from '@bodiless/core';
@@ -57,7 +57,7 @@ const options: BodilessOptions<ChamelionProps, ChamelionData> = {
 };
 
 const asBodilessChamelion = (nodeKeys?: WithNodeKeyProps, defaultData?: ChamelionData) => flowRight(
-  designable({}),
+  extendDesignable()({}),
   withSidecarNodes(
     asBodilessComponent(options)(nodeKeys, defaultData),
   ),

@@ -15,7 +15,7 @@ import { flow } from 'lodash';
 import { HOC, replaceWith } from '@bodiless/fclasses';
 import { asBodilessLink, withLinkToggle } from '@bodiless/components';
 import {
-  withNode, withNodeKey, withoutProps, withExtendHandler,
+  withNode, withNodeKey, withExtendHandler,
 } from '@bodiless/core';
 import AsEditable from './types/AsEditable';
 import MenuLink from './MenuLink';
@@ -35,7 +35,6 @@ const asMenuLink = (editable: AsEditable) => flow(
   withNode,
   withNodeKey('title'),
   editable('text', 'Menu Item'),
-  withoutProps(['design']),
 ) as HOC;
 
 export default asMenuLink;

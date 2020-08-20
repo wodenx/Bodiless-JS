@@ -18,6 +18,7 @@ import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
   startWith, withDesign, addClasses, stylable,
 } from '@bodiless/fclasses';
+import { observer } from 'mobx-react-lite';
 import { withTitle } from '@bodiless/layouts';
 
 import { flow } from 'lodash';
@@ -30,16 +31,18 @@ import Layout from '../../../components/Layout';
 import asBodilessChamelion from './Chamelion';
 import MegaMenu from './MegaMenu';
 import asChamelionTitle from './asChamelionTitle';
+import { asMenuLink } from '@bodiless/organisms';
+import { withEditorSimple } from '../../../components/Editors';
 
-const NodeTreePrinter = withNode(() => {
+const NodeTreePrinter$ = () => {
   const { node } = useNode();
   const path = node.path.join('$');
   const keys = node.keys.filter(k => k.startsWith(path));
   const chilluns = keys.map(key => (
-    <>
-      <h5>{key.split('$').slice(1).join('$')}</h5>
-      <pre>{JSON.stringify(node.peer(key).data)}</pre>
-    </>
+    <div key={key}>
+      {key.split('$').slice(1).join('$')}
+      <pre className="pl-5">{JSON.stringify(node.peer(key).data)}</pre>
+    </div>
   ));
   return (
     <>
@@ -47,29 +50,18 @@ const NodeTreePrinter = withNode(() => {
       <div>{chilluns}</div>
     </>
   );
-});
-
-const Editable = flow(
-  stylable,
-  asEditable('cham-text', 'text'),
-)('span');
-
-const Red = addClasses('text-red-500')(Editable);
-const Blue = addClasses('text-blue-500')(Editable);
-const Green = addClasses('text-green-500')(Editable);
-
-const design = {
-  Red: flow(startWith(Red), withTitle('Red text')),
-  Blue: flow(startWith(Blue), withTitle('Blue text')),
-  Green: flow(startWith(Green), withTitle('Green text')),
 };
+const NodeTreePrinter = flow(observer, withNode)(NodeTreePrinter$);
 
-const ExampleChamelion = flow(
-  asBodilessChamelion('cham-component', { component: 'Foo' }),
-  withDesign(design),
-)(Red);
+const Foo = (props: any) => <div id="foo" {...props} />;
 
-const MenuLinkChamelion = asChamelionTitle(Fragment);
+const MenuLinkChamelion = flow(
+  asChamelionTitle,
+  // asMenuLink(withEditorSimple),
+  withDesign({
+    Link: addClasses('italic'),
+  }),
+)(Foo);
 
 // const Sublist = flowRight(
 //   withDesign({ Title: addClasses('py-5') }),

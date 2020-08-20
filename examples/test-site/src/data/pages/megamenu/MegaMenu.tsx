@@ -22,11 +22,12 @@ import {
   withSubmenu,
   asMenuLink,
 } from '@bodiless/organisms';
-import { withDesign } from '@bodiless/fclasses';
+import { withDesign, addClasses, removeClasses } from '@bodiless/fclasses';
 import { withEditorSimple } from '../../../components/Editors';
 import { asExceptMobile } from '../../../components/Elements.token';
 
 import { withMenuListStyles, withMenuSublistStyles } from '../../../components/Menus/token';
+import asChamelionTitle from './asChamelionTitle';
 
 const SubMenu = flow(
   asEditableMainSubMenu,
@@ -40,10 +41,15 @@ const SubMenu = flow(
 const Menu = flow(
   asEditableMainMenu,
   withDesign({
-    Title: asMenuLink(withEditorSimple),
+    Title: asChamelionTitle,
   }),
   asHorizontalMenu,
   withMenuListStyles,
+  withDesign({
+    Title: withDesign({
+      ActiveLink: addClasses('italic'),
+    }),
+  }),
   asExceptMobile,
 )(List);
 
