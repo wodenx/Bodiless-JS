@@ -1,0 +1,6 @@
+.rc-menu-submenu.container ul {
+  display: flex;
+}
+.rc-menu-submenu.container ul.rc-menu-hidden {
+  display: none;
+}

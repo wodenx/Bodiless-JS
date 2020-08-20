@@ -12,27 +12,20 @@
  * limitations under the License.
  */
 
-import React, { Fragment } from 'react';
+import React from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  startWith, withDesign, addClasses, stylable,
+  withDesign, addClasses,
 } from '@bodiless/fclasses';
 import { observer } from 'mobx-react-lite';
-import { withTitle } from '@bodiless/layouts';
 
 import { flow } from 'lodash';
 import { useNode, withNode } from '@bodiless/core';
-import {
-  withSublist, List, asEditableList, withBasicSublist, asEditable,
-} from '@bodiless/components';
 import Layout from '../../../components/Layout';
 
-import asBodilessChamelion from './Chamelion';
 import MegaMenu from './MegaMenu';
 import asChamelionTitle from './asChamelionTitle';
-import { asMenuLink } from '@bodiless/organisms';
-import { withEditorSimple } from '../../../components/Editors';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -57,7 +50,6 @@ const Foo = (props: any) => <div id="foo" {...props} />;
 
 const MenuLinkChamelion = flow(
   asChamelionTitle,
-  // asMenuLink(withEditorSimple),
   withDesign({
     Link: addClasses('italic'),
   }),
@@ -80,7 +72,6 @@ export default (props: any) => (
       </div>
       <h3>Main Menu</h3>
       <MegaMenu nodeKey="list1" className="w-full" />
-      <h3>List Representation of Main Menu</h3>
       <h3>Keys</h3>
       <NodeTreePrinter nodeKey="list1" />
     </Layout>

@@ -22,12 +22,33 @@ import {
   withSubmenu,
   asMenuLink,
 } from '@bodiless/organisms';
-import { withDesign, addClasses, removeClasses } from '@bodiless/fclasses';
+import {
+  withDesign, addClasses, addProps,
+} from '@bodiless/fclasses';
+import { replaceWith } from '@bodiless/fclasses/src/Design';
+import { withExtendHandler } from '@bodiless/core';
 import { withEditorSimple } from '../../../components/Editors';
 import { asExceptMobile } from '../../../components/Elements.token';
+import './megamenu.css';
 
 import { withMenuListStyles, withMenuSublistStyles } from '../../../components/Menus/token';
 import asChamelionTitle from './asChamelionTitle';
+import Tout from '../../../components/Tout';
+import {
+  asToutHorizontal,
+  asToutDefaultStyle,
+  asToutWithPaddings,
+} from '../../../components/Tout/token';
+
+function stopPropagation(e: MouseEvent) {
+  e.stopPropagation();
+}
+
+const MenuTout = flow(
+  asToutWithPaddings,
+  asToutDefaultStyle,
+  asToutHorizontal,
+)(Tout);
 
 const SubMenu = flow(
   asEditableMainSubMenu,
@@ -37,6 +58,15 @@ const SubMenu = flow(
   asHorizontalSubMenu,
   withMenuSublistStyles,
 )(List);
+
+const ToutSubMenu = withDesign({
+  Title: flow(
+    replaceWith(MenuTout),
+    withExtendHandler('onClick', () => stopPropagation),
+  ),
+  Wrapper: addProps({ popupClassName: 'container' }),
+  Item: addClasses('w-1/3'),
+})(SubMenu);
 
 const Menu = flow(
   asEditableMainMenu,
@@ -53,4 +83,4 @@ const Menu = flow(
   asExceptMobile,
 )(List);
 
-export default withSubmenu(SubMenu)(Menu);
+export default withSubmenu(ToutSubMenu)(Menu);
