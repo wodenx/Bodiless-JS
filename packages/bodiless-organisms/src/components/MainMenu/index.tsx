@@ -18,7 +18,7 @@ import asEditableMainSubMenu from './asEditableMainSubMenu';
 import asHorizontalMenu from './asHorizontalMenu';
 import asHorizontalSubMenu from './asHorizontalSubMenu';
 import asMainMenu from './asMainMenu';
-import asMenu from './asMenu';
+import asStylableList from './asStylableList';
 import asMainSubMenu from './asMainSubMenu';
 import withSubmenu from './withSubmenu';
 import './menu.css';
@@ -31,7 +31,7 @@ export {
   asHorizontalSubMenu,
   asMainMenu,
   asMainSubMenu,
-  asMenu,
+  asStylableList,
   MenuLink,
   withSubmenu,
 };

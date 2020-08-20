@@ -33,7 +33,7 @@ export {
   asHorizontalSubMenu,
   asMainMenu,
   asMainSubMenu,
-  asMenu,
+  asStylableList,
   MenuLink,
   withSubmenu,
 } from './components/MainMenu/index';
