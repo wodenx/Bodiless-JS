@@ -11,17 +11,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { flow } from 'lodash';
-import { asEditableList } from '@bodiless/components';
-import asStylableList from './asStylableList';
+import { withDesign } from '@bodiless/fclasses';
+import AsEditable from './types/AsEditable';
+import asMenuLink from './asMenuLink';
 
 /**
- * HOC, produces *editable* menu
+ * HOC, that injects editable link toggle component into component design (usually Menu or Submenu)
  */
-const asEditableMenu = flow(
-  asEditableList,
-  asStylableList,
-);
+const withMenuLinkTitle = (editable: AsEditable) => withDesign({
+  Title: asMenuLink(editable),
+});
 
-export default asEditableMenu;
+export default withMenuLinkTitle;

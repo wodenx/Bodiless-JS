@@ -20,26 +20,31 @@ import {
   asEditableMainMenu,
   asEditableMainSubMenu,
   withSubmenu,
-  withMenuLinkTitle,
+  asMenuLink,
 } from '@bodiless/organisms';
-import { withEditorSimple } from '../Editors';
-import { asExceptMobile } from '../Elements.token';
+import { withDesign } from '@bodiless/fclasses';
+import { withEditorSimple } from '../../../components/Editors';
+import { asExceptMobile } from '../../../components/Elements.token';
 
-import { withMenuListStyles, withMenuSublistStyles } from './token';
+import { withMenuListStyles, withMenuSublistStyles } from '../../../components/Menus/token';
 
-const MenuSubList = flow(
+const SubMenu = flow(
   asEditableMainSubMenu,
-  withMenuLinkTitle(withEditorSimple),
+  withDesign({
+    Title: asMenuLink(withEditorSimple),
+  }),
   asHorizontalSubMenu,
   withMenuSublistStyles,
 )(List);
 
-const MenuList = flow(
+const Menu = flow(
   asEditableMainMenu,
-  withMenuLinkTitle(withEditorSimple),
+  withDesign({
+    Title: asMenuLink(withEditorSimple),
+  }),
   asHorizontalMenu,
   withMenuListStyles,
   asExceptMobile,
 )(List);
 
-export default withSubmenu(MenuSubList)(MenuList);
+export default withSubmenu(SubMenu)(Menu);

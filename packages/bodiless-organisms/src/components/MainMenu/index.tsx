@@ -12,6 +12,8 @@
  * limitations under the License.
  */
 import MenuLink from './MenuLink';
+import withMenuLinkTitle from './withMenuLinkTitle';
+import asMenuLink from './asMenuLink';
 import asEditableMainMenu from './asEditableMainMenu';
 import asEditableMenu from './asEditableMenu';
 import asEditableMainSubMenu from './asEditableMainSubMenu';
@@ -34,4 +36,6 @@ export {
   asStylableList,
   MenuLink,
   withSubmenu,
+  withMenuLinkTitle,
+  asMenuLink,
 };

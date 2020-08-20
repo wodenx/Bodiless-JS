@@ -36,6 +36,8 @@ export {
   asStylableList,
   MenuLink,
   withSubmenu,
+  withMenuLinkTitle,
+  asMenuLink,
 } from './components/MainMenu/index';
 
 export {

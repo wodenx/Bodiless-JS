@@ -28,7 +28,8 @@ import {
 import Layout from '../../../components/Layout';
 
 import asBodilessChamelion from './Chamelion';
-import MainMenu from '../../../components/Menus/MainMenu';
+import MegaMenu from './MegaMenu';
+import asChamelionTitle from './asChamelionTitle';
 
 const NodeTreePrinter = withNode(() => {
   const { node } = useNode();
@@ -36,7 +37,7 @@ const NodeTreePrinter = withNode(() => {
   const keys = node.keys.filter(k => k.startsWith(path));
   const chilluns = keys.map(key => (
     <>
-      <h5>{key}</h5>
+      <h5>{key.split('$').slice(1).join('$')}</h5>
       <pre>{JSON.stringify(node.peer(key).data)}</pre>
     </>
   ));
@@ -47,10 +48,6 @@ const NodeTreePrinter = withNode(() => {
     </>
   );
 });
-
-const Foo = () => <>Foo</>;
-const Bar = () => <>Bar</>;
-const Baz = () => <>Baz</>;
 
 const Editable = flow(
   stylable,
@@ -72,6 +69,8 @@ const ExampleChamelion = flow(
   withDesign(design),
 )(Red);
 
+const MenuLinkChamelion = asChamelionTitle(Fragment);
+
 // const Sublist = flowRight(
 //   withDesign({ Title: addClasses('py-5') }),
 //   asEditableList,
@@ -84,9 +83,11 @@ export default (props: any) => (
     <Layout>
       <h1 className="text-3xl font-bold">Chamelion</h1>
       <h3>Chamelion</h3>
-      <ExampleChamelion />
+      <div className="bg-black">
+        <MenuLinkChamelion />
+      </div>
       <h3>Main Menu</h3>
-      <MainMenu nodeKey="list1" className="w-full" />
+      <MegaMenu nodeKey="list1" className="w-full" />
       <h3>List Representation of Main Menu</h3>
       <h3>Keys</h3>
       <NodeTreePrinter nodeKey="list1" />
