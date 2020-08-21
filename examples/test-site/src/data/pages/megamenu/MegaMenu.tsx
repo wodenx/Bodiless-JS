@@ -12,77 +12,96 @@
  * limitations under the License.
  */
 
+import React, { ComponentType, PropsWithChildren, Fragment } from 'react';
 import { flow } from 'lodash';
 import { List } from '@bodiless/components';
 import {
   asHorizontalMenu,
   asHorizontalSubMenu,
-  asEditableMainMenu,
-  asEditableMainSubMenu,
   withSubmenu,
   asMenuLink,
 } from '@bodiless/organisms';
+
 import {
   withDesign, addClasses, addProps,
 } from '@bodiless/fclasses';
 import { replaceWith } from '@bodiless/fclasses/src/Design';
-import { withExtendHandler } from '@bodiless/core';
+import { withTitle } from '@bodiless/layouts';
+import { useNode, NodeProvider } from '@bodiless/core';
 import { withEditorSimple } from '../../../components/Editors';
 import { asExceptMobile } from '../../../components/Elements.token';
-import './megamenu.css';
 
 import { withMenuListStyles, withMenuSublistStyles } from '../../../components/Menus/token';
 import asChamelionTitle from './asChamelionTitle';
-import Tout from '../../../components/Tout';
-import {
-  asToutHorizontal,
-  asToutDefaultStyle,
-  asToutWithPaddings,
-} from '../../../components/Tout/token';
 import asBodilessChamelion from './Chamelion';
+import asMenuTout from './MenuTout';
+import asMenu, { asSubMenu } from './RCMenu';
 
-function stopPropagation(e: MouseEvent) {
-  e.stopPropagation();
-}
-
-const MenuTout = flow(
-  asToutWithPaddings,
-  asToutDefaultStyle,
-  asToutHorizontal,
-)(Tout);
-
-const SubMenu = flow(
-  asEditableMainSubMenu,
+// Basic SubMemu
+const asBasicSubMenu = flow(
+  replaceWith(List),
+  asSubMenu,
   withDesign({
     Title: asMenuLink(withEditorSimple),
   }),
   asHorizontalSubMenu,
   withMenuSublistStyles,
-)(List);
+);
 
-const ToutSubMenu = withDesign({
-  Title: flow(
-    replaceWith(MenuTout),
-    withExtendHandler('onClick', () => stopPropagation),
-  ),
-  Wrapper: addProps({ popupClassName: 'container' }),
-  Item: addClasses('w-1/3'),
-})(SubMenu);
+const asToutSubMenu = flow(
+  asBasicSubMenu,
+  withDesign({
+    Title: asMenuTout,
+    Wrapper: addProps({ popupClassName: 'container bl-mega-menu' }),
+    Item: addClasses('w-1/3'),
+  }),
+);
 
+export const asTitledItem = <P extends object>(Item: ComponentType<PropsWithChildren<P>>) => {
+  const TitledItem: ComponentType<P> = ({ children, ...rest }) => {
+    // prepare and pass the submenu title as a prop according to rc-menu <SubMenu /> specification
+    // wrap the title with current node,
+    // otherwise the title will read data from incorrect node when it is rendered by <SubMenu />
+    const { node } = useNode();
+    const children$ = <NodeProvider node={node}>{children}</NodeProvider>;
+    return (
+      <Item title={children$} {...rest as any} />
+    );
+  };
+  return TitledItem;
+};
 
-
-const sublistDesign = {
-  Basic: flow(replaceWith(SubMenu)),
-  Touts: flow(replaceWith(ToutSubMenu)),
-};;
+const sublistChamelionDesign = {
+  Basic: flow(asBasicSubMenu, withTitle('Basic sub-menu')),
+  Touts: flow(asToutSubMenu, withTitle('Tout sub-menu')),
+};
 
 const ChamelionSubMenu = flow(
   asBodilessChamelion('cham-sublist', { component: 'Basic' }),
-  withDesign(sublistDesign),
-)(SubMenu);
+  withDesign(sublistChamelionDesign),
+)(Fragment);
+
+// const Group = flow(
+//   asMenuItemGroup,
+//   withDesign({
+//     Title: asMenuLink(withEditorSimple),
+//   }),
+//   withMenuSublistStyles,
+//   asTitledItem,
+// )(List);
+//
+// const ColumnSubMenu = flow(
+//   asSubMenu,
+//   withDesign({
+//     Title: asMenuLink(withEditorSimple),
+//     Item: replaceWith(Group),
+//   }),
+//   asHorizontalSubMenu,
+//   withMenuSublistStyles,
+// )(List);
 
 const Menu = flow(
-  asEditableMainMenu,
+  asMenu,
   withDesign({
     Title: asChamelionTitle,
   }),
