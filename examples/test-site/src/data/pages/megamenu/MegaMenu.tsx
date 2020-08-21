@@ -62,9 +62,9 @@ const asGroup = flow(
   asMenuItemGroup,
   asTitledItem,
   withDesign({
-    Title: asMenuLink(asEditable),
+    Title: asMenuLink(withEditorSimple),
   }),
-  // withMenuSublistStyles,
+  withMenuSublistStyles,
 );
 
 // Basic SubMemu
