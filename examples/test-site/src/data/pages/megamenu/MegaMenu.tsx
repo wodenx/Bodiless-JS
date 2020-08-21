@@ -30,7 +30,7 @@ import {
 } from '@bodiless/fclasses';
 import { replaceWith } from '@bodiless/fclasses/src/Design';
 import { withTitle } from '@bodiless/layouts';
-import { useNode, NodeProvider, withNode, withNodeKey, withChild } from '@bodiless/core';
+import { useNode, NodeProvider, withNode, withNodeKey, withChild, withExtendHandler } from '@bodiless/core';
 import { withEditorSimple } from '../../../components/Editors';
 import { asExceptMobile } from '../../../components/Elements.token';
 
@@ -90,24 +90,28 @@ const asFixedTitle = flow(
   withNodeKey('editable'),
 );
 
-const FixedLink = (props: any) => <a {...props}></a>;
+const FixedLink = (props: any) => <a {...props} />;
 
-const asMenuLink$ = (editable: any) => flow(
-  replaceWith(FixedLink),
-  asBodilessLink('title-link'),
-  // withLinkToggle,
-  // withExtendHandler('onClick', () => stopPropagation),
-  // withNode, 
-  // withNodeKey('title'),
-  editable('text', 'Menu Item'),
-);
+function stopPropagation(e: MouseEvent) {
+  e.stopPropagation();
+}
+
+// const asMenuLink$ = (editable: any) => flow(
+//   replaceWith(FixedLink),
+//   asBodilessLink('title-link'),
+//   withLinkToggle,
+//   withExtendHandler('onClick', () => stopPropagation),
+//   withNode, 
+//   withNodeKey('title'),
+//   editable('text', 'Menu Item'),
+// );
 
 const asGroup = flow(
   replaceWith(List),
   asMenuItemGroup,
   asTitledItem,
   withDesign({
-    Title: asMenuLink$(asEditable),
+    Title: asMenuLink(asEditable),
     // Title: withChild(FixedSpan),
     // Title: replaceWith(FixedLink),
     // TItle: asFixedTitle,

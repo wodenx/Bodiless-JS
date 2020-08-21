@@ -48,8 +48,6 @@ const EditableText = observer((props: Props) => {
   const onInput = (event: any) => {
     const newText = event.currentTarget.innerHTML;
     node.setData({ text: newText });
-    // if (event.stopPropagation) event.stopPropagation();
-    // if (event.preventDefault) event.preventDefault();
   };
   const pasteAsPlainText = (event: ClipboardEvent<HTMLDivElement>) => {
     if (event.clipboardData) {
@@ -67,10 +65,6 @@ const EditableText = observer((props: Props) => {
       className="bodiless-inline-editable"
       onChange={onInput}
       onPaste={pasteAsPlainText}
-      onClick={e => {
-        e.stopPropagation();
-        e.preventDefault();
-      }}
       html={text}
       data-placeholder={placeholderDataAttr}
     />
