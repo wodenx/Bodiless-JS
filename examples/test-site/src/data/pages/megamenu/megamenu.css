@@ -1,6 +1,6 @@
-.rc-menu-submenu.bl-tout-sub-menu ul {
+.rc-menu-submenu.bl-mega-menu ul {
   display: flex;
 }
-.rc-menu-submenu.bl-tout-sub-menu ul.rc-menu-hidden {
+.rc-menu-submenu.bl-mega-menu ul.rc-menu-hidden {
   display: none;
 }
