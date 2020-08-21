@@ -12,17 +12,18 @@
  * limitations under the License.
  */
 
-import React, { ComponentType, PropsWithChildren, Fragment, FC } from 'react';
-import { flow, identity } from 'lodash';
-import { List, Editable, asBodilessLink, withLinkToggle, asEditable } from '@bodiless/components';
-import ContentEditable from 'react-contenteditable';
-import { observer } from 'mobx-react-lite';
+import React, {
+  ComponentType, PropsWithChildren, Fragment,
+} from 'react';
+import { flow } from 'lodash';
+import {
+  List, asEditable,
+} from '@bodiless/components';
 import {
   asHorizontalMenu,
   asHorizontalSubMenu,
   withSubmenu,
   asMenuLink,
-  MenuLink,
 } from '@bodiless/organisms';
 
 import {
@@ -30,7 +31,9 @@ import {
 } from '@bodiless/fclasses';
 import { replaceWith } from '@bodiless/fclasses/src/Design';
 import { withTitle } from '@bodiless/layouts';
-import { useNode, NodeProvider, withNode, withNodeKey, withChild, withExtendHandler } from '@bodiless/core';
+import {
+  useNode, NodeProvider,
+} from '@bodiless/core';
 import { withEditorSimple } from '../../../components/Editors';
 import { asExceptMobile } from '../../../components/Elements.token';
 
@@ -54,68 +57,12 @@ const asTitledItem = <P extends object>(Item: ComponentType<PropsWithChildren<P>
   return TitledItem;
 };
 
-const FixedTitle = () => {
-  const { node } = useNode<{ text: string }>();
-  const onInput = (event: any) => {
-    const newText = event.currentTarget.innerHTML;
-    node.setData({ text: newText });
-  };
-  const text = node.data.text !== undefined ? node.data.text : '';
-  return (
-    <button
-      type="button"
-      onClick={e => {
-        e.stopPropagation();
-        e.preventDefault();
-      }}
-    >
-      <Editable />
-      {/*
-      <ContentEditable
-        tagName="span"
-        className="bodiless-inline-editable"
-        html={text}
-        onChange={onInput}
-        placeholder="Placeholder"
-      />
-      */}
-    </button>
-  );
-};
-
-const asFixedTitle = flow(
-  replaceWith(FixedTitle),
-  observer,
-  withNode,
-  withNodeKey('editable'),
-);
-
-const FixedLink = (props: any) => <a {...props} />;
-
-function stopPropagation(e: MouseEvent) {
-  e.stopPropagation();
-}
-
-// const asMenuLink$ = (editable: any) => flow(
-//   replaceWith(FixedLink),
-//   asBodilessLink('title-link'),
-//   withLinkToggle,
-//   withExtendHandler('onClick', () => stopPropagation),
-//   withNode, 
-//   withNodeKey('title'),
-//   editable('text', 'Menu Item'),
-// );
-
 const asGroup = flow(
   replaceWith(List),
   asMenuItemGroup,
   asTitledItem,
   withDesign({
     Title: asMenuLink(asEditable),
-    // Title: withChild(FixedSpan),
-    // Title: replaceWith(FixedLink),
-    // TItle: asFixedTitle,
-    // Title: asMenuLink$,
   }),
   // withMenuSublistStyles,
 );
