@@ -1,6 +1,19 @@
-.rc-menu-submenu.bl-mega-menu ul {
+.rc-menu-submenu.bl-mega-menu ul.rc-menu-sub {
   display: flex;
 }
 .rc-menu-submenu.bl-mega-menu ul.rc-menu-hidden {
+  display: none;
+}
+
+.rc-tooltip.bl-menu-tooltip.rc-tooltip-placement-bottomLeft {
+  padding: 0;
+  opacity: 1;
+}
+
+.rc-tooltip.bl-menu-tooltip.rc-tooltip-placement-bottomLeft .rc-tooltip-inner {
+  padding: 0;
+}
+
+.rc-tooltip.bl-menu-tooltip.rc-tooltip-placement-bottomLeft .rc-tooltip-arrow {
   display: none;
 }

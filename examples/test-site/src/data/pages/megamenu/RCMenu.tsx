@@ -1,39 +1,33 @@
-import Menu, { ItemGroup, Item as MenuItem, SubMenu } from 'rc-menu';
-import type { MenuProps } from 'rc-menu';
-import { replaceWith, withDesign } from '@bodiless/fclasses';
-import { asStylableList } from '@bodiless/organisms';
-import { asEditableList } from '@bodiless/components';
-import { flow } from 'lodash';
-import { ComponentType } from 'react';
+import React, { ReactNode, FC } from 'react';
+import Tooltip from 'rc-tooltip';
 
-const asMenuBase = flow(
-  withDesign({
-    Item: replaceWith(MenuItem),
-  }),
-  asEditableList,
-  asStylableList,
-);
+type TitledItemProps = { title: ReactNode };
 
-const asMenu = flow(
-  withDesign({
-    // The cast is necessary bc of an error in rc-menu types.
-    Wrapper: replaceWith(Menu as ComponentType<MenuProps>),
-  }),
-  asMenuBase,
-);
+export const ItemGroup: FC<TitledItemProps> = props => {
+  const { title, ...rest } = props;
+  return (
+    <li>
+      {title}
+      <ul {...rest} />
+    </li>
+  );
+};
 
-export default asMenu;
+export const Item: FC<any> = props => <li {...props} />;
 
-export const asSubMenu = flow(
-  withDesign({
-    Wrapper: replaceWith(SubMenu),
-  }),
-  asMenuBase,
-);
+export const SubMenu: FC<TitledItemProps> = props => {
+  const { title, ...rest } = props;
+  return (
+    <Tooltip
+      overlay={<ul {...rest} />}
+      overlayClassName="bl-menu-tooltip"
+      placement="bottomLeft"
+    >
+      <li>{title}</li>
+    </Tooltip>
+  );
+};
 
-export const asMenuItemGroup = flow(
-  withDesign({
-    Wrapper: replaceWith(ItemGroup),
-  }),
-  asMenuBase,
-);
+const Menu: FC<any> = props => <ul {...props} />;
+
+export default Menu;

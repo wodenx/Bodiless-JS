@@ -17,7 +17,7 @@ import React, {
 } from 'react';
 import { flow } from 'lodash';
 import {
-  List, asEditable,
+  List,
 } from '@bodiless/components';
 import {
   asHorizontalMenu,
@@ -41,7 +41,7 @@ import { withMenuListStyles, withMenuSublistStyles } from '../../../components/M
 import asChamelionTitle from './asChamelionTitle';
 import asBodilessChamelion from './Chamelion';
 import asMenuTout from './MenuTout';
-import asMenu, { asSubMenu, asMenuItemGroup } from './RCMenu';
+import asMenu, { asSubMenu, asMenuItemGroup } from './asMenu';
 
 const asTitledItem = <P extends object>(Item: ComponentType<PropsWithChildren<P>>) => {
   const TitledItem: ComponentType<P> = ({ children, ...rest }) => {
@@ -63,6 +63,7 @@ const asGroup = flow(
   asTitledItem,
   withDesign({
     Title: asMenuLink(withEditorSimple),
+    Item: addClasses('block'),
   }),
   withMenuSublistStyles,
 );
@@ -124,8 +125,21 @@ const Menu = flow(
     Title: withDesign({
       ActiveLink: addClasses('italic'),
     }),
+    Item: addClasses('inline-block'),
   }),
   asExceptMobile,
 )(List);
+
+// const BasicSubMenu = asBasicSubMenu('ul');
+// const ToutSubMenu = asToutSubMenu('ul');
+//
+// const ChamelionBasicSubMenu = flow(
+//   asBodilessChamelion('cham-sublist'),
+//   withDesign({
+//     Basic: flow(replaceWith(BasicSubMenu), withTitle('Basic sub-menu')),
+//   }),
+// )(BasicSubMenu);
+
+// const WrappedBasicSubMenu = (props: any) => <ToutSubMenu {...props} />;
 
 export default withSubmenu(ChamelionSubMenu)(Menu);
