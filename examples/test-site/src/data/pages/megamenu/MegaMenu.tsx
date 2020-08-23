@@ -12,9 +12,7 @@
  * limitations under the License.
  */
 
-import React, {
-  ComponentType, PropsWithChildren, Fragment,
-} from 'react';
+import { Fragment } from 'react';
 import { flow } from 'lodash';
 import {
   List,
@@ -31,9 +29,6 @@ import {
 } from '@bodiless/fclasses';
 import { replaceWith } from '@bodiless/fclasses/src/Design';
 import { withTitle } from '@bodiless/layouts';
-import {
-  useNode, NodeProvider,
-} from '@bodiless/core';
 import { withEditorSimple } from '../../../components/Editors';
 import { asExceptMobile } from '../../../components/Elements.token';
 
@@ -41,24 +36,9 @@ import { withMenuListStyles, withMenuSublistStyles } from '../../../components/M
 import asChamelionTitle from './asChamelionTitle';
 import asBodilessChamelion from './Chamelion';
 import asMenuTout from './MenuTout';
-import asMenu, { asSubMenu, asMenuItemGroup } from './asMenu';
-
-const asTitledItem = <P extends object>(Item: ComponentType<PropsWithChildren<P>>) => {
-  const TitledItem: ComponentType<P> = ({ children, ...rest }) => {
-    // prepare and pass the submenu title as a prop according to rc-menu <SubMenu /> specification
-    // wrap the title with current node,
-    // otherwise the title will read data from incorrect node when it is rendered by <SubMenu />
-    const { node } = useNode();
-    const children$ = <NodeProvider node={node}>{children}</NodeProvider>;
-    return (
-      <Item title={children$} {...rest as any} />
-    );
-  };
-  return TitledItem;
-};
+import asMenu, { asTitledItem, asSubMenu, asMenuItemGroup } from './asMenu';
 
 const asGroup = flow(
-  replaceWith(List),
   asMenuItemGroup,
   asTitledItem,
   withDesign({
@@ -70,7 +50,6 @@ const asGroup = flow(
 
 // Basic SubMemu
 const asBasicSubMenu = flow(
-  replaceWith(List),
   asSubMenu,
   withDesign({
     Title: asMenuLink(withEditorSimple),
@@ -91,7 +70,6 @@ const asToutSubMenu = flow(
 );
 
 const asColumnSubMenu = flow(
-  replaceWith(List),
   asSubMenu,
   withDesign({
     Title: asMenuLink(withEditorSimple),
@@ -128,7 +106,7 @@ const Menu = flow(
     Item: addClasses('inline-block'),
   }),
   asExceptMobile,
-)(List);
+)(Fragment);
 
 // const BasicSubMenu = asBasicSubMenu('ul');
 // const ToutSubMenu = asToutSubMenu('ul');

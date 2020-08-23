@@ -1,16 +1,29 @@
-import {
-  ComponentType,
-} from 'react';
-
+import React, { ComponentType, PropsWithChildren } from 'react';
 import type { MenuProps } from 'rc-menu';
-import { replaceWith, withDesign } from '@bodiless/fclasses';
+import { replaceWith, withDesign, stylable } from '@bodiless/fclasses';
 import { asStylableList } from '@bodiless/organisms';
-import { asEditableList } from '@bodiless/components';
+import { asEditableList, List } from '@bodiless/components';
 import { flow } from 'lodash';
+import { useNode, NodeProvider } from '@bodiless/core';
 import Menu, { ItemGroup, Item as MenuItem, SubMenu } from 'rc-menu';
 // import Menu, { ItemGroup, Item as MenuItem, SubMenu } from './RCMenu';
 
+export const asTitledItem = <P extends object>(Item: ComponentType<PropsWithChildren<P>>) => {
+  const TitledItem: ComponentType<P> = ({ children, ...rest }) => {
+    // prepare and pass the submenu title as a prop according to rc-menu <SubMenu /> specification
+    // wrap the title with current node,
+    // otherwise the title will read data from incorrect node when it is rendered by <SubMenu />
+    const { node } = useNode();
+    const children$ = <NodeProvider node={node}>{children}</NodeProvider>;
+    return (
+      <Item title={children$} {...rest as any} />
+    );
+  };
+  return TitledItem;
+};
+
 const asMenuBase = flow(
+  replaceWith(List),
   withDesign({
     Item: replaceWith(MenuItem),
   }),
@@ -19,25 +32,25 @@ const asMenuBase = flow(
 );
 
 const asMenu = flow(
+  asMenuBase,
   withDesign({
     // The cast is necessary bc of an error in rc-menu types.
-    Wrapper: replaceWith(Menu as ComponentType<MenuProps>),
+    Wrapper: replaceWith(stylable(Menu as ComponentType<MenuProps>)),
   }),
-  asMenuBase,
 );
 
 export default asMenu;
 
 export const asSubMenu = flow(
-  withDesign({
-    Wrapper: replaceWith(SubMenu),
-  }),
   asMenuBase,
+  withDesign({
+    Wrapper: replaceWith(stylable(SubMenu)),
+  }),
 );
 
 export const asMenuItemGroup = flow(
-  withDesign({
-    Wrapper: replaceWith(ItemGroup),
-  }),
   asMenuBase,
+  withDesign({
+    Wrapper: replaceWith(stylable(ItemGroup)),
+  }),
 );
