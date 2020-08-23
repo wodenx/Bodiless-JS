@@ -24,10 +24,10 @@ export const asTitledItem = <P extends object>(Item: ComponentType<PropsWithChil
 
 const asMenuBase = flow(
   replaceWith(List),
+  asEditableList,
   withDesign({
     Item: replaceWith(MenuItem),
   }),
-  asEditableList,
   asStylableList,
 );
 
@@ -46,6 +46,7 @@ export const asSubMenu = flow(
   withDesign({
     Wrapper: replaceWith(stylable(SubMenu)),
   }),
+  asTitledItem,
 );
 
 export const asMenuItemGroup = flow(
@@ -53,4 +54,5 @@ export const asMenuItemGroup = flow(
   withDesign({
     Wrapper: replaceWith(stylable(ItemGroup)),
   }),
+  asTitledItem,
 );

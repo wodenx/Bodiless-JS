@@ -13,45 +13,40 @@
  */
 
 import { Fragment } from 'react';
-import { flow, identity } from 'lodash';
-import {
-  List,
-} from '@bodiless/components';
+import { flow } from 'lodash';
 import {
   asHorizontalMenu,
   asHorizontalSubMenu,
-  withSubmenu,
   asMenuLink,
 } from '@bodiless/organisms';
 
 import {
   withDesign, addClasses, addProps,
 } from '@bodiless/fclasses';
-import { replaceWith } from '@bodiless/fclasses/src/Design';
 import { withTitle } from '@bodiless/layouts';
 import { withEditorSimple } from '../../../components/Editors';
 import { asExceptMobile } from '../../../components/Elements.token';
 
 import { withMenuListStyles, withMenuSublistStyles } from '../../../components/Menus/token';
-import asChamelionTitle from './asChamelionTitle';
 import asBodilessChamelion from './Chamelion';
 import asMenuTout from './MenuTout';
 import asMenu, { asTitledItem, asSubMenu, asMenuItemGroup } from './asMenu';
 
-const asGroup = flow(
+const withMegaMenuStyles = withDesign({
+  Wrapper: addProps({ popupClassName: 'container bl-mega-menu' }),
+  Item: addClasses('w-1/3'),
+});
+
+const asColumn = flow(
   asMenuItemGroup,
-  asTitledItem,
   withDesign({
     Title: asMenuLink(withEditorSimple),
-    Item: addClasses('block'),
   }),
   withMenuSublistStyles,
 );
 
-// Basic SubMemu
 const asBasicSubMenu = flow(
   asSubMenu,
-  asTitledItem,
   withDesign({
     Title: asMenuLink(withEditorSimple),
   }),
@@ -64,25 +59,16 @@ const asToutSubMenu = flow(
   withDesign({
     Title: asMenuTout,
   }),
-  withDesign({
-    Wrapper: addProps({ popupClassName: 'container bl-mega-menu' }),
-    Item: addClasses('w-1/3'),
-  }),
+  withMegaMenuStyles,
 );
 
 const asColumnSubMenu = flow(
-  asSubMenu,
-  asTitledItem,
+  asBasicSubMenu,
   withDesign({
     Title: asMenuLink(withEditorSimple),
-    Item: asGroup,
+    Item: asColumn,
   }),
-  withDesign({
-    Wrapper: addProps({ popupClassName: 'container bl-mega-menu' }),
-    Item: addClasses('w-1/3'),
-  }),
-  asHorizontalSubMenu,
-  withMenuSublistStyles,
+  withMegaMenuStyles,
 );
 
 const asChamelionSubMenu = flow(
@@ -101,34 +87,12 @@ const asChamelionSubMenu = flow(
 const Menu = flow(
   asMenu,
   withDesign({
-    // Title: asChamelionTitle,
     Title: asMenuLink(withEditorSimple),
     Item: asChamelionSubMenu,
   }),
   asHorizontalMenu,
   withMenuListStyles,
-  // The following is just to add classes to the active link to ensure that the
-  // title design is passed through the chamelion.
-  withDesign({
-    Title: withDesign({
-      ActiveLink: addClasses('italic'),
-    }),
-    // Item: addClasses('inline-block'),
-  }),
   asExceptMobile,
 )(Fragment);
 
-// const BasicSubMenu = asBasicSubMenu('ul');
-// const ToutSubMenu = asToutSubMenu('ul');
-//
-// const ChamelionBasicSubMenu = flow(
-//   asBodilessChamelion('cham-sublist'),
-//   withDesign({
-//     Basic: flow(replaceWith(BasicSubMenu), withTitle('Basic sub-menu')),
-//   }),
-// )(BasicSubMenu);
-
-// const WrappedBasicSubMenu = (props: any) => <ToutSubMenu {...props} />;
-
-// export default withSubmenu(ChamelionSubMenu)(Menu);
 export default Menu;
