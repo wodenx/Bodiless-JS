@@ -1,7 +1,8 @@
 import React, { FC, ComponentType } from 'react';
 import { DesignableComponents, extendDesignable } from '@bodiless/fclasses';
 import {
-  useMenuOptionUI, asBodilessComponent, BodilessOptions, WithNodeKeyProps, withSidecarNodes,
+  useMenuOptionUI, asBodilessComponent, BodilessOptions,
+  withSidecarNodes, WithNodeKeyProps,
 } from '@bodiless/core';
 import { flowRight } from 'lodash';
 
@@ -30,6 +31,7 @@ const options: BodilessOptions<ChamelionProps, ChamelionData> = {
   local: true,
   Wrapper: 'div',
   defaultData: { component: '' },
+  // @TODO: Allow use of a true cmponent selector
   renderForm: ({ componentProps }) => {
     const {
       ComponentFormLabel,
@@ -56,10 +58,14 @@ const options: BodilessOptions<ChamelionProps, ChamelionData> = {
   },
 };
 
-const asBodilessChamelion = (nodeKeys?: WithNodeKeyProps, defaultData?: ChamelionData) => flowRight(
+const asBodilessChamelion = (
+  nodeKeys?: WithNodeKeyProps,
+  defaultData?: ChamelionData,
+  overrides?: Partial<BodilessOptions<ChamelionProps, ChamelionData>>,
+) => flowRight(
   extendDesignable()({}),
   withSidecarNodes(
-    asBodilessComponent(options)(nodeKeys, defaultData),
+    asBodilessComponent(options)(nodeKeys, defaultData, overrides),
   ),
   asChamelion,
 );

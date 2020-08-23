@@ -13,7 +13,7 @@
  */
 
 import { Fragment } from 'react';
-import { flow } from 'lodash';
+import { flow, identity } from 'lodash';
 import {
   List,
 } from '@bodiless/components';
@@ -51,6 +51,7 @@ const asGroup = flow(
 // Basic SubMemu
 const asBasicSubMenu = flow(
   asSubMenu,
+  asTitledItem,
   withDesign({
     Title: asMenuLink(withEditorSimple),
   }),
@@ -71,6 +72,7 @@ const asToutSubMenu = flow(
 
 const asColumnSubMenu = flow(
   asSubMenu,
+  asTitledItem,
   withDesign({
     Title: asMenuLink(withEditorSimple),
     Item: asGroup,
@@ -83,27 +85,35 @@ const asColumnSubMenu = flow(
   withMenuSublistStyles,
 );
 
-const ChamelionSubMenu = flow(
-  asBodilessChamelion('cham-sublist', { component: 'Basic' }),
+const asChamelionSubMenu = flow(
+  asBodilessChamelion('cham-sublist', { component: 'None' }, {
+    icon: 'playlist_add',
+    label: 'Sub',
+  }),
   withDesign({
+    None: withTitle('No sub-menu'),
     Basic: flow(asBasicSubMenu, withTitle('Basic sub-menu')),
     Touts: flow(asToutSubMenu, withTitle('Tout sub-menu')),
     Columns: flow(asColumnSubMenu, withTitle('Column sub-menu')),
   }),
-)(Fragment);
+);
 
 const Menu = flow(
   asMenu,
   withDesign({
-    Title: asChamelionTitle,
+    // Title: asChamelionTitle,
+    Title: asMenuLink(withEditorSimple),
+    Item: asChamelionSubMenu,
   }),
   asHorizontalMenu,
   withMenuListStyles,
+  // The following is just to add classes to the active link to ensure that the
+  // title design is passed through the chamelion.
   withDesign({
     Title: withDesign({
       ActiveLink: addClasses('italic'),
     }),
-    Item: addClasses('inline-block'),
+    // Item: addClasses('inline-block'),
   }),
   asExceptMobile,
 )(Fragment);
@@ -120,4 +130,5 @@ const Menu = flow(
 
 // const WrappedBasicSubMenu = (props: any) => <ToutSubMenu {...props} />;
 
-export default withSubmenu(ChamelionSubMenu)(Menu);
+// export default withSubmenu(ChamelionSubMenu)(Menu);
+export default Menu;
