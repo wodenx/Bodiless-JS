@@ -3,11 +3,12 @@ import { startWith, addClasses, withDesign } from '@bodiless/fclasses';
 import { Fragment } from 'react';
 import { flow } from 'lodash';
 import { withTitle } from '@bodiless/layouts';
+import { withOnlyProps } from '@bodiless/core';
 import { withEditorSimple } from '../../../components/Editors';
 import asBodilessChamelion from './Chamelion';
 
 const startWithMenuLink = flow(
-  startWith(Fragment),
+  startWith(withOnlyProps('key', 'children')(Fragment)),
   asMenuLink(withEditorSimple),
 );
 

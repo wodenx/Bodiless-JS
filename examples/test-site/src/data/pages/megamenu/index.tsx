@@ -16,16 +16,19 @@ import React from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  withDesign, addClasses,
+  withDesign, addClasses, replaceWith,
 } from '@bodiless/fclasses';
 import { observer } from 'mobx-react-lite';
 
 import { flow } from 'lodash';
-import { useNode, withNode } from '@bodiless/core';
+import { useNode, withNode, withSidecarNodes, withNodeKey } from '@bodiless/core';
+import { asBodilessLink, asEditable } from '@bodiless/components';
 import Layout from '../../../components/Layout';
 
 import MegaMenu from './MegaMenu';
 import asChamelionTitle from './asChamelionTitle';
+import withBodilessLinkToggle from './LinkToggle';
+import { MenuLink } from '@bodiless/organisms';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -62,10 +65,25 @@ const MenuLinkChamelion = flow(
 //
 // const MainList = withBasicSublist(Sublist)(List)
 
+const asLinkToggle = flow(
+  replaceWith(MenuLink),
+  withSidecarNodes(
+    withBodilessLinkToggle(
+      asBodilessLink('link'),
+    ),
+  ),
+  asEditable('text', 'Link Toggle'),
+  withNode,
+  withNodeKey('link-toggle'),
+);
+const LinkToggle = asLinkToggle(Fragment);
+
 export default (props: any) => (
   <Page {...props}>
     <Layout>
       <h1 className="text-3xl font-bold">Chamelion</h1>
+      <h3>LinkToggle</h3>
+      <LinkToggle>Foo</LinkToggle>
       <h3>Chamelion</h3>
       <div className="bg-black">
         <MenuLinkChamelion />
