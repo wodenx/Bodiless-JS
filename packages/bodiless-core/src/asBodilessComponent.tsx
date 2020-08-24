@@ -38,7 +38,7 @@ type BodilessProps = Partial<WithNodeProps>;
 type AsBodiless<P, D> = (
   nodeKeys?: WithNodeKeyProps,
   defaultData?: D,
-  overrides?: ((props: P) => Partial<EditButtonOptions<P, D>>),
+  useOverrides?: ((props: P) => Partial<EditButtonOptions<P, D>>),
 ) => HOC<P, P & BodilessProps>;
 
 /**
@@ -72,21 +72,27 @@ export const withActivatorWrapper = <P extends object>(event: string, Wrapper: C
 // eslint-disable-next-line max-len
 const asBodilessComponent = <P extends object, D extends object>(options: Options<P, D>): AsBodiless<P, D> => (
   /**
-   * A function which produces an HOC that will make a component "Bodilesss".
+   * Creates an HOC that will make a component "Bodilesss".
+   * 
    * @param nodeKey The nodeKey identifying where the components data will be stored.
    * @param defaultData An object representing the initial/default data. Supercedes any default
    * data provided as an option.
+   * @param useOverrides A hook which returns overrides for edit button options. Will
+   * be invoked in the render context of the wrapped component and passed the
+   * component's props.
+   *
+   * @return An HOC which will make the wrapped component "bodiless".
    */
   (
     nodeKeys?,
     defaultData = {} as D,
-    overrides?: (props: P) => Partial<EditButtonOptions<P, D>>,
+    useOverrides?: (props: P) => Partial<EditButtonOptions<P, D>>,
   ) => {
     const {
       activateEvent = 'onClick', Wrapper, defaultData: defaultDataOption = {}, ...rest
     } = options;
-    const editButtonOptions = overrides
-      ? (props: P) => ({ ...rest, ...overrides(props) })
+    const editButtonOptions = useOverrides
+      ? (props: P) => ({ ...rest, ...useOverrides(props) })
       : rest;
     const finalData = { ...defaultDataOption, ...defaultData };
     return flowRight(

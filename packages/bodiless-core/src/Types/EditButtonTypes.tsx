@@ -14,6 +14,7 @@
 
 import { ReactNode } from 'react';
 import { FormBodyProps as ContextMenuFormBodyProps } from '../contextMenuForm';
+import { TMenuOption } from './ContextMenuTypes';
 
 type EditDataHandler<D> = {
   initialValueHandler?: (values: any) => D;
@@ -33,12 +34,7 @@ export type EditButtonProps<D> = {
   onSubmit?: () => void;
   dataHandler?: EditDataHandler<D>;
 };
-export type EditButtonOptions<P, D> = {
-  icon: string;
-  name: string;
-  global?: boolean;
-  local?: boolean;
-  label?: string,
-  isHidden?: boolean,
-  renderForm: FormBodyRenderer<P, D>;
+
+export type EditButtonOptions<P, D> = Omit<TMenuOption, 'handler'> & {
+  renderForm: FormBodyRenderer<P, D>,
 };

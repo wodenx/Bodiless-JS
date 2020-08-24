@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 import { flowRight } from 'lodash';
 import { withoutProps } from './hoc';
 import useContextMenuForm, {
@@ -61,31 +61,28 @@ export const createMenuOptionHook = <P extends object, D extends object>(
   ) => {
     const options$ = typeof options === 'function' ? options(props) : options;
     const {
-      icon,
-      name,
-      label,
-      global,
-      local,
-      isHidden,
       renderForm,
+      ...rest
     } = options$;
     const { isActive } = props;
     const form = useContextMenuForm(useEditFormProps({ ...props, renderForm }));
-    const menuOptions = useMemo(() => [
-      {
-        icon,
-        name,
-        label,
-        isActive,
-        global,
-        local,
-        isHidden,
-        handler: () => form,
-      },
-    ], [...Object.values(props)]);
+    const handler = useCallback(() => form, [...Object.values(props)]);
+    const menuOptions = [{
+      ...rest,
+      handler,
+      isActive, // Do we need this?
+    }];
     return menuOptions;
   };
 
+/**
+ * Uses the provided options to create an HOC which adds an edit button provider
+ * to the wrapped component.
+ *
+ * @param options The options defining the edit button.
+ *
+ * @return An HOC which will add an edit button for the wrapped component.
+ */
 const withEditButton = <P extends object, D extends object>(
   options: EditButtonOptions<P, D> | ((props: P) => EditButtonOptions<P, D>),
 ) => flowRight(
