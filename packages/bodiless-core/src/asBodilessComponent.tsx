@@ -73,7 +73,7 @@ export const withActivatorWrapper = <P extends object>(event: string, Wrapper: C
 const asBodilessComponent = <P extends object, D extends object>(options: Options<P, D>): AsBodiless<P, D> => (
   /**
    * Creates an HOC that will make a component "Bodilesss".
-   * 
+   *
    * @param nodeKey The nodeKey identifying where the components data will be stored.
    * @param defaultData An object representing the initial/default data. Supercedes any default
    * data provided as an option.
