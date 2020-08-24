@@ -28,9 +28,10 @@ import { withEditorSimple } from '../../../components/Editors';
 import { asExceptMobile } from '../../../components/Elements.token';
 
 import { withMenuListStyles, withMenuSublistStyles } from '../../../components/Menus/token';
-import asBodilessChamelion from './Chamelion';
+import asBodilessChamelion, { ChamelionData } from './Chamelion';
 import asMenuTout from './MenuTout';
 import asMenu, { asSubMenu, asMenuItemGroup } from './asMenu';
+import { EditButtonOptions } from '@bodiless/core';
 
 const withMegaMenuStyles = withDesign({
   Wrapper: addProps({ popupClassName: 'container bl-mega-menu' }),
@@ -71,13 +72,25 @@ const asColumnSubMenu = flow(
   withMegaMenuStyles,
 );
 
-const asChamelionSubMenu = flow(
-  asBodilessChamelion('cham-sublist', { component: 'None' }, {
-    icon: 'playlist_add',
+type NodeDataHandlers<D> = {
+  setComponentData: (data: D) => void,
+  componentData: D,
+};
+
+const useOverrides = (props: NodeDataHandlers<ChamelionData>): Partial<EditButtonOptions<NodeDataHandlers<ChamelionData>, ChamelionData>> => {
+  const { componentData } = props;
+  const { component } = componentData;
+  return {
+    // isHidden: Boolean(component),
+    // icon: 'playlist_add',
+    icon: component ? 'repeat' : 'playlist_add',
     label: 'Sub',
-  }),
+  };
+};
+
+const asChamelionSubMenu = flow(
+  asBodilessChamelion('cham-sublist', {}, useOverrides),
   withDesign({
-    None: withTitle('No sub-menu'),
     Basic: flow(asBasicSubMenu, withTitle('Basic sub-menu')),
     Touts: flow(asToutSubMenu, withTitle('Tout sub-menu')),
     Columns: flow(asColumnSubMenu, withTitle('Column sub-menu')),

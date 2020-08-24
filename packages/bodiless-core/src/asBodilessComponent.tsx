@@ -38,7 +38,7 @@ type BodilessProps = Partial<WithNodeProps>;
 type AsBodiless<P, D> = (
   nodeKeys?: WithNodeKeyProps,
   defaultData?: D,
-  overrides?: Partial<Options<P, D>>
+  overrides?: ((props: P) => Partial<EditButtonOptions<P, D>>),
 ) => HOC<P, P & BodilessProps>;
 
 /**
@@ -77,10 +77,17 @@ const asBodilessComponent = <P extends object, D extends object>(options: Option
    * @param defaultData An object representing the initial/default data. Supercedes any default
    * data provided as an option.
    */
-  (nodeKeys?, defaultData = {} as D, overrides = {}) => {
+  (
+    nodeKeys?,
+    defaultData = {} as D,
+    overrides?: (props: P) => Partial<EditButtonOptions<P, D>>,
+  ) => {
     const {
       activateEvent = 'onClick', Wrapper, defaultData: defaultDataOption = {}, ...rest
-    } = { ...options, ...overrides };
+    } = options;
+    const editButtonOptions = overrides
+      ? (props: P) => ({ ...rest, ...overrides(props) })
+      : rest;
     const finalData = { ...defaultDataOption, ...defaultData };
     return flowRight(
       withNodeKey(nodeKeys),
@@ -90,7 +97,7 @@ const asBodilessComponent = <P extends object, D extends object>(options: Option
         withoutProps(['setComponentData']),
       ),
       ifEditable(
-        withEditButton(rest),
+        withEditButton(editButtonOptions),
         withContextActivator(activateEvent),
         withLocalContextMenu,
         Wrapper ? withActivatorWrapper(activateEvent, Wrapper) : identity,

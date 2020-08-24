@@ -39,5 +39,6 @@ export type EditButtonOptions<P, D> = {
   global?: boolean;
   local?: boolean;
   label?: string,
+  isHidden?: boolean,
   renderForm: FormBodyRenderer<P, D>;
 };
