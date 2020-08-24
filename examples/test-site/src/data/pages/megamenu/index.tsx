@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
@@ -21,14 +21,16 @@ import {
 import { observer } from 'mobx-react-lite';
 
 import { flow } from 'lodash';
-import { useNode, withNode, withSidecarNodes, withNodeKey } from '@bodiless/core';
+import {
+  useNode, withNode, withSidecarNodes, withNodeKey,
+} from '@bodiless/core';
 import { asBodilessLink, asEditable } from '@bodiless/components';
+import { MenuLink } from '@bodiless/organisms';
 import Layout from '../../../components/Layout';
 
 import MegaMenu from './MegaMenu';
 import asChamelionTitle from './asChamelionTitle';
 import withBodilessLinkToggle from './LinkToggle';
-import { MenuLink } from '@bodiless/organisms';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();

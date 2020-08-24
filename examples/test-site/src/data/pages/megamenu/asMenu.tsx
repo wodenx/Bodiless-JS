@@ -4,8 +4,9 @@ import { replaceWith, withDesign, stylable } from '@bodiless/fclasses';
 import { asStylableList } from '@bodiless/organisms';
 import { asEditableList, List } from '@bodiless/components';
 import { flow } from 'lodash';
-import { useNode, NodeProvider } from '@bodiless/core';
+import { useNode, NodeProvider, WithNodeKeyProps } from '@bodiless/core';
 import Menu, { ItemGroup, Item as MenuItem, SubMenu } from 'rc-menu';
+import asBodilessList from './asBodilessList';
 // import Menu, { ItemGroup, Item as MenuItem, SubMenu } from './RCMenu';
 
 export const asTitledItem = <P extends object>(Item: ComponentType<PropsWithChildren<P>>) => {
@@ -22,7 +23,8 @@ export const asTitledItem = <P extends object>(Item: ComponentType<PropsWithChil
   return TitledItem;
 };
 
-const asMenuBase = flow(
+const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
+  asBodilessList(nodeKeys),
   replaceWith(List),
   asEditableList,
   withDesign({
@@ -31,8 +33,8 @@ const asMenuBase = flow(
   asStylableList,
 );
 
-const asMenu = flow(
-  asMenuBase,
+const asMenu = (nodeKeys?: WithNodeKeyProps) => flow(
+  asMenuBase(nodeKeys),
   withDesign({
     // The cast is necessary bc of an error in rc-menu types.
     Wrapper: replaceWith(stylable(Menu as ComponentType<MenuProps>)),
@@ -42,7 +44,7 @@ const asMenu = flow(
 export default asMenu;
 
 export const asSubMenu = flow(
-  asMenuBase,
+  asMenuBase(),
   withDesign({
     Wrapper: replaceWith(stylable(SubMenu)),
   }),
@@ -50,7 +52,7 @@ export const asSubMenu = flow(
 );
 
 export const asMenuItemGroup = flow(
-  asMenuBase,
+  asMenuBase(),
   withDesign({
     Wrapper: replaceWith(stylable(ItemGroup)),
   }),
