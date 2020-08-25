@@ -22,17 +22,20 @@ import { observer } from 'mobx-react-lite';
 
 import { flow } from 'lodash';
 import {
-  useNode, withNode, withSidecarNodes, withNodeKey,
+  useNode, withNode, withSidecarNodes, withNodeKey, asReadOnly,
 } from '@bodiless/core';
 import { asBodilessLink, asEditable } from '@bodiless/components';
 import { MenuLink, asMenuLink, asStylableList } from '@bodiless/organisms';
 import Layout from '../../../components/Layout';
 
-import MegaMenu from './MegaMenu';
+import MegaMenu, { asMenuClean } from './MegaMenu';
 import asChamelionTitle from './asChamelionTitle';
 import withBodilessLinkToggle from './LinkToggle';
 import asBodilessList, { asSubList } from './asBodilessList';
-import { withEditorSimple } from '../../../components/Editors';
+// import { withEditorSimple } from '../../../components/Editors';
+import { asPlainLinks } from './asMenu';
+
+const withEditorSimple = asEditable;
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -61,13 +64,6 @@ const MenuLinkChamelion = flow(
     Link: addClasses('italic'),
   }),
 )(Foo);
-
-// const Sublist = flowRight(
-//   withDesign({ Title: addClasses('py-5') }),
-//   asEditableList,
-// )(List);
-//
-// const MainList = withBasicSublist(Sublist)(List)
 
 const asLinkToggle = flow(
   replaceWith(MenuLink),
@@ -105,6 +101,12 @@ const CompoundList = flow(
   }),
 )('ul');
 
+const MegaMenuList = flow(
+  asMenuClean,
+  asPlainLinks,
+  asReadOnly,
+)('ul');
+
 export default (props: any) => (
   <Page {...props}>
     <Layout>
@@ -117,6 +119,8 @@ export default (props: any) => (
       </div>
       <h3>Main Menu</h3>
       <MegaMenu nodeKey="list1" className="w-full" />
+      <h3>Main menu as list</h3>
+      <MegaMenuList nodeKey="list1" />
       <h3>Compund List</h3>
       <CompoundList />
       <h3>Keys</h3>

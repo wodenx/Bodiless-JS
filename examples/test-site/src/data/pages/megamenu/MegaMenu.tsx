@@ -18,6 +18,7 @@ import {
   asHorizontalMenu,
   asHorizontalSubMenu,
   asMenuLink,
+  asStylableList,
 } from '@bodiless/organisms';
 
 import {
@@ -25,21 +26,39 @@ import {
 } from '@bodiless/fclasses';
 import { withTitle } from '@bodiless/layouts';
 import { EditButtonOptions, ifToggledOff, ifToggledOn } from '@bodiless/core';
-import { withEditorSimple } from '../../../components/Editors';
+// import { withEditorSimple } from '../../../components/Editors';
+import { asEditable } from '@bodiless/components';
 import { asExceptMobile } from '../../../components/Elements.token';
 
 import { withMenuListStyles, withMenuSublistStyles } from '../../../components/Menus/token';
 import asBodilessChamelion, { ChamelionData } from './Chamelion';
 import asMenuTout from './MenuTout';
 import asMenu, { asSubMenu, asMenuItemGroup, usePlainLinks } from './asMenu';
+import asBodilessList, { asSubList } from './asBodilessList';
+
+// Workaround for issue with multiple slate editors pointing to the same node.
+const withEditorSimple = asEditable;
 
 const withMegaMenuStyles = withDesign({
   Wrapper: addProps({ popupClassName: 'container bl-mega-menu' }),
   Item: addClasses('w-1/3'),
 });
 
+const asToggledMenu = (asMenuType: any) => flow(
+  ifToggledOn(usePlainLinks)(
+    withDesign({
+      Item: addClasses('pl-5'),
+    }),
+    asStylableList,
+    asSubList,
+  ),
+  ifToggledOff(usePlainLinks)(
+    asMenuType,
+  ),
+);
+
 const asColumnClean = flow(
-  asMenuItemGroup,
+  asToggledMenu(asMenuItemGroup),
   withDesign({
     Title: asMenuLink(withEditorSimple),
   }),
@@ -50,7 +69,7 @@ const withColumnStyles = flow(
 );
 
 const asBasicSubMenuClean = flow(
-  asSubMenu,
+  asToggledMenu(asSubMenu),
   withDesign({
     Title: asMenuLink(withEditorSimple),
   }),
@@ -125,7 +144,13 @@ const withChamelionSubMenuStyles = withDesign({
 });
 
 const asMenuClean = flow(
-  asMenu(),
+  ifToggledOff(usePlainLinks)(
+    asMenu(),
+  ),
+  ifToggledOn(usePlainLinks)(
+    asBodilessList(),
+    asStylableList,
+  ),
   withDesign({
     Title: asMenuLink(withEditorSimple),
     Item: asChamelionSubMenuClean,
@@ -147,3 +172,4 @@ const Menu = flow(
 )(Fragment);
 
 export default Menu;
+export { asMenuClean, withMenuStyles };
