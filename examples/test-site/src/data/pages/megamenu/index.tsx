@@ -25,12 +25,14 @@ import {
   useNode, withNode, withSidecarNodes, withNodeKey,
 } from '@bodiless/core';
 import { asBodilessLink, asEditable } from '@bodiless/components';
-import { MenuLink } from '@bodiless/organisms';
+import { MenuLink, asMenuLink, asStylableList } from '@bodiless/organisms';
 import Layout from '../../../components/Layout';
 
 import MegaMenu from './MegaMenu';
 import asChamelionTitle from './asChamelionTitle';
 import withBodilessLinkToggle from './LinkToggle';
+import asBodilessList, { asSubList } from './asBodilessList';
+import { withEditorSimple } from '../../../components/Editors';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -80,6 +82,29 @@ const asLinkToggle = flow(
 );
 const LinkToggle = asLinkToggle(Fragment);
 
+const asMenuLinkList = flow(
+  withDesign({
+    Title: asMenuLink(withEditorSimple),
+  }),
+  asStylableList,
+);
+
+const asIndentedSubList = flow(
+  asSubList,
+  asMenuLinkList,
+  withDesign({
+    Item: addClasses('pl-5'),
+  }),
+);
+
+const CompoundList = flow(
+  asBodilessList('clist'),
+  asMenuLinkList,
+  withDesign({
+    Item: asIndentedSubList,
+  }),
+)('ul');
+
 export default (props: any) => (
   <Page {...props}>
     <Layout>
@@ -92,6 +117,8 @@ export default (props: any) => (
       </div>
       <h3>Main Menu</h3>
       <MegaMenu nodeKey="list1" className="w-full" />
+      <h3>Compund List</h3>
+      <CompoundList />
       <h3>Keys</h3>
       <NodeTreePrinter nodeKey="list1" />
     </Layout>

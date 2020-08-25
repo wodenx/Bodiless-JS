@@ -1,16 +1,13 @@
 import React, {
-  ComponentType, PropsWithChildren, createContext, useContext,
+  ComponentType, createContext, useContext,
 } from 'react';
 import type { MenuProps } from 'rc-menu';
 import { replaceWith, withDesign, stylable } from '@bodiless/fclasses';
 import { asStylableList } from '@bodiless/organisms';
-import { asEditableList, List } from '@bodiless/components';
 import { flow } from 'lodash';
-import {
-  useNode, NodeProvider, WithNodeKeyProps, ifToggledOff,
-} from '@bodiless/core';
+import { WithNodeKeyProps } from '@bodiless/core';
 import Menu, { ItemGroup, Item as MenuItem, SubMenu } from 'rc-menu';
-import asBodilessList from './asBodilessList';
+import asBodilessList, { asTitledItem } from './asBodilessList';
 // import Menu, { ItemGroup, Item as MenuItem, SubMenu } from './RCMenu';
 
 type MenuContextType = {
@@ -27,8 +24,6 @@ export const useMenuContext = () => useContext(MenuContext);
 
 export const usePlainLinks = () => useMenuContext().showPlainLinks;
 
-
-
 export const asPlainLinks = <P extends object>(Component: ComponentType<P>) => {
   const AsPlainLinks = (props: P) => {
     const newContext: MenuContextType = {
@@ -42,20 +37,6 @@ export const asPlainLinks = <P extends object>(Component: ComponentType<P>) => {
     );
   };
   return AsPlainLinks;
-};
-
-export const asTitledItem = <P extends object>(Item: ComponentType<PropsWithChildren<P>>) => {
-  const TitledItem: ComponentType<P> = ({ children, ...rest }) => {
-    // prepare and pass the submenu title as a prop according to rc-menu <SubMenu /> specification
-    // wrap the title with current node,
-    // otherwise the title will read data from incorrect node when it is rendered by <SubMenu />
-    const { node } = useNode();
-    const children$ = <NodeProvider node={node}>{children}</NodeProvider>;
-    return (
-      <Item title={children$} {...rest as any} />
-    );
-  };
-  return TitledItem;
 };
 
 const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
