@@ -24,6 +24,7 @@ import {
   withDesign, addClasses, addProps,
 } from '@bodiless/fclasses';
 import { withTitle } from '@bodiless/layouts';
+import { EditButtonOptions, ifToggledOff, ifToggledOn } from '@bodiless/core';
 import { withEditorSimple } from '../../../components/Editors';
 import { asExceptMobile } from '../../../components/Elements.token';
 
@@ -31,32 +32,37 @@ import { withMenuListStyles, withMenuSublistStyles } from '../../../components/M
 import asBodilessChamelion, { ChamelionData } from './Chamelion';
 import asMenuTout from './MenuTout';
 import asMenu, { asSubMenu, asMenuItemGroup, usePlainLinks } from './asMenu';
-import { EditButtonOptions, ifToggledOff, ifToggledOn } from '@bodiless/core';
 
 const withMegaMenuStyles = withDesign({
   Wrapper: addProps({ popupClassName: 'container bl-mega-menu' }),
   Item: addClasses('w-1/3'),
 });
 
-const asColumn = flow(
+const asColumnClean = flow(
   asMenuItemGroup,
   withDesign({
     Title: asMenuLink(withEditorSimple),
   }),
+);
+
+const withColumnStyles = flow(
   withMenuSublistStyles,
 );
 
-const asBasicSubMenu = flow(
+const asBasicSubMenuClean = flow(
   asSubMenu,
   withDesign({
     Title: asMenuLink(withEditorSimple),
   }),
+);
+
+const withBasicSubMenuStyles = flow(
   asHorizontalSubMenu,
   withMenuSublistStyles,
 );
 
-const asToutSubMenu = flow(
-  asBasicSubMenu,
+const asToutSubMenuClean = flow(
+  asBasicSubMenuClean,
   withDesign({
     Title: flow(
       ifToggledOff(usePlainLinks)(
@@ -64,15 +70,26 @@ const asToutSubMenu = flow(
       ),
     ),
   }),
+);
+
+const withToutSubMenuStyles = flow(
+  withBasicSubMenuStyles,
   withMegaMenuStyles,
 );
 
-const asColumnSubMenu = flow(
-  asBasicSubMenu,
+const asColumnSubMenuClean = flow(
+  asBasicSubMenuClean,
   withDesign({
     Title: asMenuLink(withEditorSimple),
-    Item: asColumn,
+    Item: asColumnClean,
   }),
+);
+
+const withColumnSubMenuStyles = flow(
+  withDesign({
+    Item: withColumnStyles,
+  }),
+  withBasicSubMenuStyles,
   withMegaMenuStyles,
 );
 
@@ -92,24 +109,41 @@ const useOverrides = (props: NodeDataHandlers<ChamelionData>): Partial<EditButto
   };
 };
 
-const asChamelionSubMenu = flow(
+const asChamelionSubMenuClean = flow(
   asBodilessChamelion('cham-sublist', {}, useOverrides),
   withDesign({
-    Basic: flow(asBasicSubMenu, withTitle('Basic sub-menu')),
-    Touts: flow(asToutSubMenu, withTitle('Tout sub-menu')),
-    Columns: flow(asColumnSubMenu, withTitle('Column sub-menu')),
+    Basic: flow(asBasicSubMenuClean, withTitle('Basic sub-menu')),
+    Touts: flow(asToutSubMenuClean, withTitle('Tout sub-menu')),
+    Columns: flow(asColumnSubMenuClean, withTitle('Column sub-menu')),
   }),
 );
 
-const Menu = flow(
+const withChamelionSubMenuStyles = withDesign({
+  Basic: withBasicSubMenuStyles,
+  Touts: withToutSubMenuStyles,
+  Columns: withColumnSubMenuStyles,
+});
+
+const asMenuClean = flow(
   asMenu(),
   withDesign({
     Title: asMenuLink(withEditorSimple),
-    Item: asChamelionSubMenu,
+    Item: asChamelionSubMenuClean,
+  }),
+);
+
+const withMenuStyles = flow(
+  withDesign({
+    Item: withChamelionSubMenuStyles,
   }),
   asHorizontalMenu,
   withMenuListStyles,
   asExceptMobile,
+);
+
+const Menu = flow(
+  asMenuClean,
+  withMenuStyles,
 )(Fragment);
 
 export default Menu;
