@@ -21,6 +21,6 @@ const asBodilessList = (
     Wrapper: replaceWith(typeof Component === 'string' ? asComponent(Component) : Component),
   }),
   withNodeKey(nodeKeys),
-);
+)(Component);
 
 export default asBodilessList;

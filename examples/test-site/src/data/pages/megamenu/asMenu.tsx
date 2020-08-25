@@ -60,12 +60,10 @@ export const asTitledItem = <P extends object>(Item: ComponentType<PropsWithChil
 
 const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
-  replaceWith(List),
-  asEditableList,
-  withDesign({
-    Item: replaceWith(MenuItem),
-  }),
   asStylableList,
+  withDesign({
+    Item: replaceWith(stylable(MenuItem)),
+  }),
 );
 
 const asMenu = (nodeKeys?: WithNodeKeyProps) => flow(
