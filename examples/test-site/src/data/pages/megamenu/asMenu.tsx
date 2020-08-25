@@ -1,13 +1,48 @@
-import React, { ComponentType, PropsWithChildren } from 'react';
+import React, {
+  ComponentType, PropsWithChildren, createContext, useContext,
+} from 'react';
 import type { MenuProps } from 'rc-menu';
 import { replaceWith, withDesign, stylable } from '@bodiless/fclasses';
 import { asStylableList } from '@bodiless/organisms';
 import { asEditableList, List } from '@bodiless/components';
 import { flow } from 'lodash';
-import { useNode, NodeProvider, WithNodeKeyProps } from '@bodiless/core';
+import {
+  useNode, NodeProvider, WithNodeKeyProps, ifToggledOff,
+} from '@bodiless/core';
 import Menu, { ItemGroup, Item as MenuItem, SubMenu } from 'rc-menu';
 import asBodilessList from './asBodilessList';
 // import Menu, { ItemGroup, Item as MenuItem, SubMenu } from './RCMenu';
+
+type MenuContextType = {
+  showPlainLinks: boolean,
+  parent?: MenuContextType,
+};
+const defaultMenuContext = {
+  showPlainLinks: false,
+};
+
+const MenuContext = createContext<MenuContextType>(defaultMenuContext);
+
+export const useMenuContext = () => useContext(MenuContext);
+
+export const usePlainLinks = () => useMenuContext().showPlainLinks;
+
+
+
+export const asPlainLinks = <P extends object>(Component: ComponentType<P>) => {
+  const AsPlainLinks = (props: P) => {
+    const newContext: MenuContextType = {
+      showPlainLinks: true,
+      parent: useMenuContext(),
+    };
+    return (
+      <MenuContext.Provider value={newContext}>
+        <Component {...props} />
+      </MenuContext.Provider>
+    );
+  };
+  return AsPlainLinks;
+};
 
 export const asTitledItem = <P extends object>(Item: ComponentType<PropsWithChildren<P>>) => {
   const TitledItem: ComponentType<P> = ({ children, ...rest }) => {

@@ -30,8 +30,8 @@ import { asExceptMobile } from '../../../components/Elements.token';
 import { withMenuListStyles, withMenuSublistStyles } from '../../../components/Menus/token';
 import asBodilessChamelion, { ChamelionData } from './Chamelion';
 import asMenuTout from './MenuTout';
-import asMenu, { asSubMenu, asMenuItemGroup } from './asMenu';
-import { EditButtonOptions } from '@bodiless/core';
+import asMenu, { asSubMenu, asMenuItemGroup, usePlainLinks } from './asMenu';
+import { EditButtonOptions, ifToggledOff, ifToggledOn } from '@bodiless/core';
 
 const withMegaMenuStyles = withDesign({
   Wrapper: addProps({ popupClassName: 'container bl-mega-menu' }),
@@ -58,7 +58,11 @@ const asBasicSubMenu = flow(
 const asToutSubMenu = flow(
   asBasicSubMenu,
   withDesign({
-    Title: asMenuTout,
+    Title: flow(
+      ifToggledOff(usePlainLinks)(
+        asMenuTout(withEditorSimple),
+      ),
+    ),
   }),
   withMegaMenuStyles,
 );
