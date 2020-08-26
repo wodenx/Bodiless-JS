@@ -28,7 +28,7 @@ import { asBodilessLink, asEditable } from '@bodiless/components';
 import { MenuLink, asMenuLink, asStylableList } from '@bodiless/organisms';
 import Layout from '../../../components/Layout';
 
-import MegaMenu, { asMenuClean } from './MegaMenu';
+import MegaMenu, { asMenuClean, withPlainLinkStyles } from './MegaMenu';
 import asChamelionTitle from './asChamelionTitle';
 import withBodilessLinkToggle from './LinkToggle';
 import asBodilessList, { asSubList } from './asBodilessList';
@@ -104,6 +104,7 @@ const CompoundList = flow(
 const MegaMenuList = flow(
   asMenuClean,
   asPlainLinks,
+  withPlainLinkStyles,
   asReadOnly,
 )('ul');
 

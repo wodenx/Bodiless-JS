@@ -44,11 +44,12 @@ const withMegaMenuStyles = withDesign({
   Item: addClasses('w-1/3'),
 });
 
+const withPadding = withDesign({
+  Item: addClasses('pl-5'),
+});
+
 const asToggledMenu = (asMenuType: any) => flow(
   ifToggledOn(usePlainLinks)(
-    withDesign({
-      Item: addClasses('pl-5'),
-    }),
     asStylableList,
     asSubList,
   ),
@@ -166,10 +167,21 @@ const withMenuStyles = flow(
   asExceptMobile,
 );
 
+const withPlainLinkStyles = withDesign({
+  Item: withDesign({
+    Basic: withPadding,
+    Touts: withPadding,
+    Columns: flow(
+      withPadding,
+      withDesign({ Item: withPadding }),
+    ),
+  }),
+});
+
 const Menu = flow(
   asMenuClean,
   withMenuStyles,
 )(Fragment);
 
 export default Menu;
-export { asMenuClean, withMenuStyles };
+export { asMenuClean, withMenuStyles, withPlainLinkStyles };
