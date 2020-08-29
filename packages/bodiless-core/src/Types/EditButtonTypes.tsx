@@ -32,9 +32,8 @@ export type EditButtonProps<D> = {
   componentData: D;
   isActive?: () => boolean;
   onSubmit?: () => void;
-  dataHandler?: EditDataHandler<D>;
 };
 
 export type EditButtonOptions<P, D> = Omit<TMenuOption, 'handler'> & {
   renderForm: FormBodyRenderer<P, D>,
-};
+} & EditDataHandler<D>;

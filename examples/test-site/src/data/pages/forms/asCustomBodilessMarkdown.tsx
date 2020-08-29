@@ -1,4 +1,4 @@
-import React, { useCallback, ComponentType } from 'react';
+import React, { useCallback, ComponentType, FC } from 'react';
 import {
   useMenuOptionUI, useEditFormProps,
   ContextMenuForm, withNodeKey, withNode, withNodeDataHandlers,
@@ -32,36 +32,30 @@ const useMarkdownEditFormProps = (props: EditProps) => {
   };
 };
 
-const useRenderForm = (props: EditProps) => {
-  const editFormProps = useMarkdownEditFormProps(props);
-  return useCallback(
-    (contextMenuFormProps: ContextMenuFormProps) => {
-      const { ComponentFormLabel, ComponentFormTitle } = useMenuOptionUI();
-      return (
-        <ContextMenuForm {...contextMenuFormProps} {...editFormProps}>
-          <ComponentFormTitle>Markdown</ComponentFormTitle>
-          <ComponentFormLabel>Content</ComponentFormLabel>
-          <MarkdownField field="source" />
-        </ContextMenuForm>
-      );
-    },
-    [editFormProps],
+const Form: FC<ContextMenuFormProps> = props => {
+  const { ComponentFormLabel, ComponentFormTitle } = useMenuOptionUI();
+  return (
+    <ContextMenuForm {...props}>
+      <ComponentFormTitle>Markdown</ComponentFormTitle>
+      <ComponentFormLabel>Content</ComponentFormLabel>
+      <MarkdownField field="source" />
+    </ContextMenuForm>
   );
 };
 
-const useGetMenuOptions = (props: EditProps) => {
-  const renderForm = useRenderForm(props);
-  return useCallback(
-    () => [{
-      icon: 'edit',
-      name: 'edit',
-      label: 'Edit',
-      global: false,
-      local: true,
-      handler: () => renderForm,
-    }],
-    [renderForm],
+const useMenuOptions = (props: EditProps) => {
+  const editFormProps = useMarkdownEditFormProps(props);
+  const render = (formProps: ContextMenuFormProps) => (
+    <Form {...formProps} {...editFormProps} />
   );
+  return [{
+    icon: 'edit',
+    name: 'edit',
+    label: 'Edit',
+    global: false,
+    local: true,
+    handler: useCallback(() => render, [...Object.values(editFormProps)]),
+  }];
 };
 const withTimestamp = (Component: ComponentType<Props>) => {
   const WithTimestamp = ({ timestamp, ...rest }: Props) => (
@@ -86,7 +80,7 @@ const asCustomBodilessMarkdown: AsBodiless<Props, Data> = (
     withoutProps(['setComponentData']),
   ),
   ifEditable(
-    withMenuOptions({ useGetMenuOptions }),
+    withMenuOptions({ useMenuOptions }),
     withContextActivator('onClick'),
     withActivatorWrapper('onClick', 'div'),
     withLocalContextMenu,

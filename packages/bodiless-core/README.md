@@ -75,30 +75,34 @@ To provide a new context value (usually to add menu options which should appear
 when a component has focus), you may use the supplied `PageContextProvider`
 
 ```javascript
-const getExampleMenuOptions = () => {
+const getExampleMenuOptions = React.useCallback() => {
   // this should return an array of menu options...
-}
+}, [...listOfVariablesYourMenuOptionsDependOn]);
 
 const Example: React.FC = ({ children }) => (
   <PageContextProvider getMenuOptions={getExampleMenuOptions} name="Example">
     {children}
   </PageContextProvider}
 ```
-Here we provide a menu options callback as a prop to the `ContextProvider` component.
-This will be invoked when this context or any descendant is activated.  It should return any menu
-options this component wishes to provide (see [Context Menu Options](#context-menu-options)
-below for more information).
+Here we provide a menu options callback as a prop to the `ContextProvider`
+component. This will be invoked when this context or any descendant is
+activated. It should return any menu options this component wishes to provide
+(see [Context Menu Options](#context-menu-options) below for more information).
 
-Note that it is unusual to invoke the provider directly in this manner.  Instead, use the
-`withMenuOptions` hoc to attach options to your component. First you define a custom hook
-which will create your `getMenuOptions()` callback. This hook will be invoked when the
-component is rendered, and will receive its props as an argument:
+> Note: It is important to memoize this `getMenuOptions()` callback to prevent
+> unnecessary renders of subscribers to the edit context.
+
+It is actually unusual to invoke the provider directly in this manner. Instead,
+use the `withMenuOptions` hoc to attach options to your component. First you
+define a custom hook which will create your `getMenuOptions()` callback. This
+hook will be invoked when the component is rendered, and will receive its props
+as an argument:
 
 ```
-const useGetMenuOptions = (props) => {
+const useMenuOptions = (props) => {
   const { propUsedInOption } = props;
   const contextValueUsedInOption = React.useContext(SomeContext);
-  return React.useCallback(
+  return React.useMemo(
     () => (
       // This should return an array of menu options. It can use
       // any of the props received by the original component, as well
@@ -109,17 +113,21 @@ const useGetMenuOptions = (props) => {
 };
 ```
 
-Then, pass that along with a unique name to `withMenuOptions` to create an HOC which will
-add the options to your component.
+Then, pass that along with a unique name to `withMenuOptions` to create an HOC
+which will add the options to your component.
 
 ```
 const ComponentWithMyOptions = withMenuOptions({
-  useGetMenuOptions,
+  useMenuOptions,
   name: 'my-component'
 })(AnyComponent);
 ...
 <ComponentWithMyOptions propUsedInOption="foo" />
 ```
+Note here that we memoize the list of menu options.  Strictly speaking, it is
+only necessary to memoize non-primitive values in the option object (ie any
+callbacks). See [Context Menu Options](#context-menu-options) below for more
+information.
 
 Note that the menu options you are defining here will only be available when
 your component (or one of its children) declares itself as "active". To do so,
@@ -210,29 +218,45 @@ component, which provides a mechanism for displaying a set of menu options
 provided in an "options" prop. Each item is an object with the following
 members:
 - name: a unique machine name for this item.
+- group: the machine name of the group to which this button belongs
+- Component: An optional component to use to render this button.
 - icon: the name of a [material design icon](https://material.io/tools/icons/?style=baseline)
   to display for this item.
-- label: A human readable label to display beneath the icon.
-- isActive; a callback to determine if the option or its flyout panel is currently "active" 
-- isDisabled; a callback to determine if the option is currently "disabled" (for toggles)
-- handler: a callback to invoke when the item is selected
+- label: a human readable label to display beneath the icon.
+- isActive; a boolean specifying the option or its flyout panel is currently
+  "active". This is usually used for toggles.
+- isDisabled; a boolean specifying whether the option is currently "disabled".
+  If true, the menu button will be greyed out and bnot clickable.
+- isHidden: a boolean specifying whether the option is currently hidden. If
+  true, the menu button will not be displayed.
+- handler: a callback to invoke when the menu button is clicked.
+
+> Note all of the above properties except `handler`, `name`, `group` and
+> `Component` can be provided either as a primitive value or as a function
+> returning that value - eg `{ isActive: true }` or `{ isActive: () => true; }`
+> The latter is useful if the value depends on some external state which is not
+> used by the component providing the button, to allow the button to udpate
+> without re-rendering the component. If you provide callbacks, it is important
+> to memoize any such callbacks to avoid unnecessary renders of the button
+> itself.
+
 
  A simple context menu implementation with a single option might look like this:
  ```javascript
-const isUp = false;
+const [isUp, setIsUp] = React.useState(false);
 
 const options = [
 {
   name: 'say_yes',
   icon: 'thumb_up',
   label: 'Yes!',
-  isActive: () => isUp,
-  handler: () => {
+  isActive: isUp,
+  handler: React.useCallback(() => {
     if (!isUp) {
-        alert('Yes!');
+      alert('Yes!');
     }
-    isUp = !isUp;
-  },
+    setIsUp(isUp => !isUp);
+  }, [isUp]),
 ];
 
 const MyContextMenu = props => (

@@ -251,6 +251,7 @@ describe('Update menu options', () => {
     const context = new PageEditContext({
       getMenuOptions: () => (options || [{
         name: 'foo',
+        icon: 'foo',
       }]),
       name: 'Foo',
       id: 'Foo',
@@ -264,7 +265,9 @@ describe('Update menu options', () => {
   const optionListener = jest.fn(() => {
     const options = context.contextMenuOptions;
     options.forEach(op => {
-      console.log(op.group, op.name, op.icon);
+      // Access all the properties of the option (which are used by the option button).
+      const ref = [];
+      Object.keys(op).forEach(key => ref.push(op[key as keyof TMenuOption]));
     });
   });
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -273,7 +276,9 @@ describe('Update menu options', () => {
   const listener = jest.fn(() => {
     const options = context.contextMenuOptions;
     options.forEach(op => {
-      console.log(op.group, op.name);
+      // Access only the group and name properties (which are used by the menu itself)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const ref = [op.group, op.name];
     });
   });
   let disposer: Function;
@@ -326,13 +331,41 @@ describe('Update menu options', () => {
     expect(optionListener).toHaveBeenCalledTimes(0);
   });
 
-  it('Does not notify when an option is replaced by one with different properties', () => {
+  it('Notifies only the button listener when an option property is changed', () => {
     clearListeners();
-    const newOptions = [{ name: 'foo', icon: 'foo' }];
-    const newContext = createContext(newOptions);
+    const option = { name: 'foo', icon: 'bar' };
+    const newContext = createContext([option]);
     newContext.updateMenuOptions();
     expect(listener).toHaveBeenCalledTimes(0);
     expect(optionListener).toHaveBeenCalledTimes(1);
+    expect(newContext.getMenuOptions()[0]).toEqual(option);
+  });
+
+  it('Notifies only the button listener when an option property is added', () => {
+    clearListeners();
+    const option = { name: 'foo', icon: 'foo', label: 'foo' };
+    const newContext = createContext([option]);
+    newContext.updateMenuOptions();
+    expect(listener).toHaveBeenCalledTimes(0);
+    expect(optionListener).toHaveBeenCalledTimes(1);
+    expect(newContext.getMenuOptions()[0]).toEqual(option);
+
+    const option$ = { name: 'foo', icon: 'foo', label: 'bar' };
+    const newContext$ = createContext([option$]);
+    newContext$.updateMenuOptions();
+    expect(listener).toHaveBeenCalledTimes(0);
+    expect(optionListener).toHaveBeenCalledTimes(2);
+    expect(newContext$.getMenuOptions()[0]).toEqual(option$);
+  });
+
+  it('Notifies only the button listener when an option property is removed', () => {
+    clearListeners();
+    const option = { name: 'foo' };
+    const newContext = createContext([option]);
+    newContext.updateMenuOptions();
+    expect(listener).toHaveBeenCalledTimes(0);
+    expect(optionListener).toHaveBeenCalledTimes(1);
+    expect(newContext.getMenuOptions()[0]).toEqual(option);
   });
 
   it('Notifies when an option is added', () => {

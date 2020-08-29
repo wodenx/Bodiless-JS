@@ -22,12 +22,13 @@ const withEditFormSnippet = <P extends object, D extends object>(options: Option
       const { renderForm: render, ...rest } = useEditFormProps({
         ...props,
         renderForm,
-        dataHandler: { initialValueHandler, submitValueHandler },
+        initialValueHandler,
+        submitValueHandler,
       });
       const snippet: Snippet<D> = {
         id,
         ...rest,
-        render,
+        render: render || (() => <></>),
       };
       useRegisterSnippet(snippet);
       return <Component {...props} />;

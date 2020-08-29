@@ -12,7 +12,9 @@
  * limitations under the License.
  */
 
-import { action, computed, observable } from 'mobx';
+import {
+  action, computed, observable, extendObservable,
+} from 'mobx';
 import type { ObservableMap } from 'mobx';
 import type {
   PageEditContextInterface,
@@ -109,10 +111,18 @@ export class PageEditStore implements PageEditStoreInterface {
       c.getMenuOptions().forEach(op => {
         keys.add(op.name);
         const existing = map!.get(op.name);
+        const next = op;
         if (existing) {
-          Object.assign(existing, op);
+          Object.keys(existing)
+            .filter(key => next[key as keyof TMenuOption] === undefined)
+            .forEach(key => delete existing[key as keyof TMenuOption]);
+          const newProps = Object.keys(next)
+            .filter(key => existing[key as keyof TMenuOption] === undefined)
+            .reduce((acc, key) => ({ ...acc, key: next[key as keyof TMenuOption] }), {});
+          Object.assign(existing, next);
+          extendObservable(existing, newProps);
         } else {
-          map!.set(op.name, op);
+          map!.set(op.name, next);
         }
       });
     });
@@ -128,10 +138,8 @@ export class PageEditStore implements PageEditStoreInterface {
     const contextIds = Array.from(this.optionMap.keys());
     contextIds.forEach(contextId => {
       const optionMap = this.optionMap.get(contextId);
-      options.push(...Array.from(optionMap!.values()));
-      // Array.from(optionMap!.keys()).forEach(optionName => {
-      //   options.push(createMenuOptionProxy(contextId, optionName, optionMap!));
-      // });
+      const nextOptions = Array.from(optionMap!.values());
+      options.push(...nextOptions);
     });
     return options;
   }

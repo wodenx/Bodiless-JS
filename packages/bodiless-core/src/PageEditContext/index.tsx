@@ -124,7 +124,6 @@ class PageEditContext implements PageEditContextInterface {
 
   // Make this the "current" context.
   activate() {
-    console.log('Activating', this.name, this.id);
     this.store.setActiveContext(this);
   }
 
