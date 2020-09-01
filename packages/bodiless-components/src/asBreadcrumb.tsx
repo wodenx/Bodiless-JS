@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { observable, action } from 'mobx';
 import {
-  useNode, WithNodeKeyProps, withNode, withNodeKey,
+  useNode, WithNodeKeyProps, withNode, withNodeKey, ifToggledOn, ifToggledOff,
 } from '@bodiless/core';
 import { flow } from 'lodash';
 
@@ -94,7 +94,7 @@ const breadcrumbContext = createContext<BreadcrumbContextInterface>(new Breadcru
 export const useBreadcrumbContext = () => useContext(breadcrumbContext);
 export const BreadcrumbContextProvider = breadcrumbContext.Provider;
 
-const withBreadcrumbContext$ = <P extends object>(Component: ComponentType<P>) => {
+const withBreadcrumbContext = <P extends object>(Component: ComponentType<P>) => {
   const WithBreadcrumbContext = (props: P) => {
     const { node } = useNode<LinkData>();
     const current = useBreadcrumbContext();
@@ -115,16 +115,16 @@ const withBreadcrumbContext$ = <P extends object>(Component: ComponentType<P>) =
   return WithBreadcrumbContext;
 };
 
-export const withBreadcrumbContext = (nodeKeys: WithNodeKeyProps) => flow(
-  withBreadcrumbContext$,
+const asBreadcrumb = (nodeKeys?: WithNodeKeyProps) => flow(
+  withBreadcrumbContext,
   withNode,
   withNodeKey(nodeKeys),
 );
 
-export const asBreadcrumb = <P extends object>(Component: ComponentType<P>) => {
-  const AsBreadcrumb = (props: P) => {
-    const { isActive } = useBreadcrumbContext();
-    return isActive ? <Component {...props} /> : <></>;
-  };
-  return AsBreadcrumb;
-};
+const useIsBreadcrumb = () => useBreadcrumbContext().isActive;
+
+export const ifActiveBreadcrumb = ifToggledOn(useIsBreadcrumb);
+
+export const ifNotActiveBreadcrumb = ifToggledOff(useIsBreadcrumb);
+
+export default asBreadcrumb;
