@@ -6,7 +6,6 @@ import {
   useNode, WithNodeKeyProps, withNode, withNodeKey,
 } from '@bodiless/core';
 import { flow } from 'lodash';
-import useCurrentPage from './useCurrentPage';
 
 const DEFAULT_URL_BASE = 'http://host';
 
@@ -101,8 +100,7 @@ const withBreadcrumbContext$ = <P extends object>(Component: ComponentType<P>) =
     const current = useBreadcrumbContext();
     // @TODO: What should we do if link has no href?
     const next = current.spawn(node.data.href || '/');
-    const slug = useCurrentPage();
-    const page = new BreadcrumbContext(slug);
+    const page = new BreadcrumbContext(node.pagePath);
     useEffect(() => {
       if (page.isSubpathOf(next)) {
         next.activate();
