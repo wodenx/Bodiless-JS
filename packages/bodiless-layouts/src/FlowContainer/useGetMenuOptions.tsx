@@ -12,10 +12,10 @@
  * limitations under the License.
  */
 
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 import { omit } from 'lodash';
 import {
-  useEditContext, useActivateOnEffect, useGetMenuOptions, TMenuOptionGetter,
+  useEditContext, useActivateOnEffect, useGetter,
 } from '@bodiless/core';
 import { EditFlowContainerProps, FlowContainerItem } from './types';
 import { useFlowContainerDataHandlers, useItemHandlers } from './model';
@@ -86,7 +86,7 @@ function useDeleteButton(props: EditFlowContainerProps, item: FlowContainerItem)
     label: 'Delete',
     icon: 'delete',
     handler,
-    isHidden: () => !context.isEdit,
+    isHidden: useCallback(() => !context.isEdit, []),
   };
 }
 
@@ -96,8 +96,8 @@ function useAddButton(props: EditFlowContainerProps, item?: FlowContainerItem) {
   const { insertItem } = useComponentSelectorActions(item);
   const { getItems } = useItemHandlers();
   const isHidden = item
-    ? () => !context.isEdit || getItems().length >= maxComponents
-    : () => !context.isEdit || getItems().length > 0;
+    ? useCallback(() => !context.isEdit || getItems().length >= maxComponents, [maxComponents])
+    : useCallback(() => !context.isEdit || getItems().length > 0, []);
   return {
     icon: 'add',
     label: 'Add',
@@ -115,13 +115,13 @@ function useSwapButton(props: EditFlowContainerProps, item: FlowContainerItem) {
     label: 'Swap',
     icon: 'repeat',
     handler: () => componentSelectorForm(props, replaceItem),
-    isHidden: () => !context.isEdit,
+    isHidden: useCallback(() => !context.isEdit, []),
   };
 }
 
 function useMenuOptions(props: EditFlowContainerProps) {
   const addButton = useAddButton(withNoDesign(props));
-  return useMemo(() => [addButton], []);
+  return [addButton];
 }
 
 /**
@@ -153,10 +153,7 @@ function useItemUseGetMenuOptions(props: EditFlowContainerProps, item: FlowConta
     useDeleteButton(props$, item),
   ];
 
-  return () => {
-    const options = useMemo(() => buttons, []);
-    return useGetMenuOptions(options) as TMenuOptionGetter;
-  };
+  return () => useGetter(buttons);
 }
 
 export { useMenuOptions, useItemUseGetMenuOptions };

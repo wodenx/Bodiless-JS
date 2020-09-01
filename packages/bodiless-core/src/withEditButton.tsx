@@ -12,7 +12,6 @@
  * limitations under the License.
  */
 
-import { useCallback } from 'react';
 import { flowRight } from 'lodash';
 import { withoutProps } from './hoc';
 import useContextMenuForm, {
@@ -82,7 +81,7 @@ export const useEditFormProps = <P extends object, D extends object>(
   return { initialValues, submitValues };
 };
 
-export const createMenuOptionHook = <P extends object, D extends object>(
+const createMenuOptionHook = <P extends object, D extends object>(
   options: EditButtonOptions<P, D> | ((props: P) => EditButtonOptions<P, D>),
 ) => (
     props: P & EditButtonProps<D>,
@@ -93,14 +92,13 @@ export const createMenuOptionHook = <P extends object, D extends object>(
       ...rest
     } = options$;
     const { isActive } = props;
-    const form = useContextMenuForm(useEditFormProps({ ...props, renderForm }));
-    const handler = useCallback(() => form, [...Object.values(props)]);
-    const menuOptions = [{
+    const render = useContextMenuForm(useEditFormProps({ ...props, renderForm }));
+    const menuOption = {
       ...rest,
-      handler,
-      isActive, // Do we need this?
-    }];
-    return menuOptions;
+      handler: () => render,
+    };
+    if (isActive) menuOption.isActive = isActive;
+    return [menuOption];
   };
 
 /**

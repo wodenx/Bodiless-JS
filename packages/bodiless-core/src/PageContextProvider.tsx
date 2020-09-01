@@ -13,13 +13,12 @@
  */
 
 import React, {
-  FC, ComponentType, useEffect, useLayoutEffect, useRef, useMemo, useCallback,
+  FC, ComponentType, useEffect, useLayoutEffect, useRef, useMemo,
 } from 'react';
 import PageEditContext from './PageEditContext';
-import { useEditContext, useUUID } from './hooks';
-import { PageContextProviderProps, MenuOptionsDefinition, TMenuOptionGetter } from './Types/PageContextProviderTypes';
+import { useEditContext, useUUID, useGetter } from './hooks';
+import { PageContextProviderProps, MenuOptionsDefinition } from './Types/PageContextProviderTypes';
 import { PageEditContextInterface } from './PageEditContext/types';
-import { TMenuOption } from './Types/ContextMenuTypes';
 
 /**
  * @private
@@ -113,21 +112,6 @@ PageContextProvider.defaultProps = {
 };
 
 /**
- * A memoized getter which will always return the current set of options.
- *
- * @param options An array of menu options.
- */
-export const useGetMenuOptions = (options?: TMenuOption[]): TMenuOptionGetter|undefined => {
-  const optionsRef = useRef<TMenuOption[]>();
-  const getMenuOptions = useCallback(() => optionsRef.current || [], []);
-  if (options) {
-    optionsRef.current = options;
-    return getMenuOptions;
-  }
-  return undefined;
-};
-
-/**
  * Using supplied options, returns an HOC which adds one or more menu options (buttons).
  * This simplly wraps the supplied component with a `PageContextProvider`.
  *
@@ -150,7 +134,8 @@ export const withMenuOptions = <P extends object>(def: MenuOptionsDefinition<P>)
       useMenuOptions, peer, ...rest
     } = def;
     const WithMenuOptions = (props: P) => {
-      const getMenuOptions = useGetMenuOptions(useMenuOptions && useMenuOptions(props));
+      const options = useMenuOptions && useMenuOptions(props);
+      const getMenuOptions = options ? useGetter(options) : undefined;
       if (peer) {
         useRegisterMenuOptions({ getMenuOptions, ...rest });
         return <Component {...props} />;

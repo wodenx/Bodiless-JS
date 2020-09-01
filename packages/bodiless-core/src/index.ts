@@ -13,12 +13,13 @@
  */
 
 import { ComponentType } from 'react';
-import PageContextProvider, { withMenuOptions, useRegisterMenuOptions, useGetMenuOptions } from './PageContextProvider';
+import PageContextProvider, { withMenuOptions, useRegisterMenuOptions } from './PageContextProvider';
 import PageEditContext from './PageEditContext';
 import asStatic from './asStatic';
 import asReadOnly from './asReadOnly';
 import {
   useEditContext, useUUID, useContextActivator, useExtendHandler,
+  useGetter,
 } from './hooks';
 import withNode, { withNodeKey } from './withNode';
 import withSidecarNodes, { startSidecarNodes, endSidecarNodes } from './withSidecarNodes';
@@ -84,7 +85,7 @@ export {
   PageContextProvider,
   withMenuOptions,
   useRegisterMenuOptions,
-  useGetMenuOptions,
+  useGetter,
   PageEditContext,
   useEditContext,
   useContextActivator,

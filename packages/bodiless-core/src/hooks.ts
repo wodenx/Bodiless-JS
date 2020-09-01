@@ -79,3 +79,21 @@ export const useContextActivator = (
     'data-bl-activator': true,
   };
 };
+
+/**
+ * @private
+ *
+ * Utility hook to properly memoize a getter function so that the function itself is invariant,
+ * but the return value can change. Useful when you want to prevent re-render of components
+ * which use the getter every time the return value changes.
+ *
+ * @param value The current value to be returned by the getter.
+ *
+ * @return A memoized getter function which will return the current value
+ */
+export const useGetter = <P extends any>(value: P): () => P => {
+  const ref = useRef<P>();
+  const getter = useCallback(() => ref.current as P, []);
+  ref.current = value;
+  return getter;
+};

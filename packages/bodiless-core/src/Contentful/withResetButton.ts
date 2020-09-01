@@ -12,7 +12,6 @@
  * limitations under the License.
  */
 
-import { useMemo } from 'react';
 import { flowRight } from 'lodash';
 import {
   withContextActivator,
@@ -32,7 +31,7 @@ const useMenuOptions = (menuOptionWithNodeKey?: MenuOptionWithNodeKey) => () => 
   const nodeKeys = Array.isArray(nodeKey) ? nodeKey : [nodeKey];
   const nodeKeysToDelete = nodeKeys.map(key => (key ? node.path.concat(key) : undefined));
   // TODO: we should disable or remove the button when the node is already reverted
-  const menuOptions = useMemo(() => ([
+  const menuOptions = [
     {
       icon: 'undo',
       name: 'Reset',
@@ -42,7 +41,7 @@ const useMenuOptions = (menuOptionWithNodeKey?: MenuOptionWithNodeKey) => () => 
       global: false,
       ...menuOption,
     },
-  ]), [nodeKeysToDelete]);
+  ];
   return menuOptions;
 };
 

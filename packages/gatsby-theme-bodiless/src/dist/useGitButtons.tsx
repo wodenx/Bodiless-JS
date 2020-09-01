@@ -24,6 +24,7 @@ import {
   useNotify,
   useRegisterMenuOptions,
   ContextSubMenu,
+  useGetter,
 } from '@bodiless/core';
 import BackendClient from './BackendClient';
 import CommitsList from './CommitsList';
@@ -213,10 +214,12 @@ const useGitButtons = ({ client = defaultClient } = {}) => {
     }
   }, []);
 
-  const menuOptions = useMemo(() => getMenuOptions(client, context, notifyOfChanges), []);
+  const menuOptions = useMemo(
+    () => getMenuOptions(client, context, notifyOfChanges), [notifyOfChanges],
+  );
 
   useRegisterMenuOptions({
-    getMenuOptions: () => menuOptions,
+    getMenuOptions: useGetter(menuOptions),
     name: 'Git',
   });
 };

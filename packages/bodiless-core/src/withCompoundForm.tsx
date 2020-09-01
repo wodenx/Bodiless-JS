@@ -1,7 +1,6 @@
 import React, {
   createContext, ComponentType as CT, useRef, useContext, MutableRefObject,
   ComponentType,
-  useMemo,
 } from 'react';
 import { useFormState, useFormApi } from 'informed';
 import { pick } from 'lodash';
@@ -121,13 +120,13 @@ const createMenuOptions = <P extends object, D extends object>(def: MenuOptionsD
       throw new Error('Menu option getter for withCompoundForm must return a single item.');
     }
     const snippets = useContext(SnippetContext);
-    const finalOptions = [{
+    const render = (p: ContextMenuFormProps) => (
+      <Form {...p} components={components} snippets={snippets!.current} />
+    );
+    return [{
       ...baseOptions[0],
-      handler: () => (p: ContextMenuFormProps) => (
-        <Form {...p} components={components} snippets={snippets!.current} />
-      ),
+      handler: () => render,
     }];
-    return useMemo(() => finalOptions, [components, baseOptions]);
   };
   return { ...def, useMenuOptions };
 };

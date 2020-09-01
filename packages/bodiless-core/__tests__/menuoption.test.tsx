@@ -1,6 +1,4 @@
-import React, {
-  FC, useMemo,
-} from 'react';
+import React, { FC } from 'react';
 // import { observable, action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { mount } from 'enzyme';
@@ -58,7 +56,7 @@ describe('useMemo for getMenuOptions', () => {
     };
     const withOuterOptions = withMenuOptions({
       id: 'Outer',
-      useMenuOptions: () => useMemo(() => [{ name: 'outer' }], []),
+      useMenuOptions: () => [{ name: 'outer' }],
     });
     const Outer = withOuterOptions(Outer$);
 
@@ -122,7 +120,7 @@ describe('useMemo for getMenuOptions', () => {
     };
     const withOuterOptions = withMenuOptions({
       id: 'Outer',
-      useMenuOptions: () => useMemo(() => [{ name: 'outer' }], []),
+      useMenuOptions: () => [{ name: 'outer' }],
     });
     const Outer = withOuterOptions(Outer$);
 

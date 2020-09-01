@@ -75,9 +75,9 @@ To provide a new context value (usually to add menu options which should appear
 when a component has focus), you may use the supplied `PageContextProvider`
 
 ```javascript
-const getExampleMenuOptions = React.useCallback() => {
-  // this should return an array of menu options...
-}, [...listOfVariablesYourMenuOptionsDependOn]);
+const getExampleMenuOptions = useGetter([{
+  // An array of context menu option objects
+}]);
 
 const Example: React.FC = ({ children }) => (
   <PageContextProvider getMenuOptions={getExampleMenuOptions} name="Example">
@@ -89,8 +89,10 @@ component. This will be invoked when this context or any descendant is
 activated. It should return any menu options this component wishes to provide
 (see [Context Menu Options](#context-menu-options) below for more information).
 
-> Note: It is important to memoize this `getMenuOptions()` callback to prevent
-> unnecessary renders of subscribers to the edit context.
+> Note: It is important to memoize our `getMenuOptions()` callback so as to
+> prevent unnecessary renders of subscribers to the edit context. Here, we do
+> this with the bodilesscore `useGetter()` hook, which creates an invariant
+> callback even if the menu options it returns change.
 
 It is actually unusual to invoke the provider directly in this manner. Instead,
 use the `withMenuOptions` hoc to attach options to your component. First you
@@ -100,16 +102,9 @@ as an argument:
 
 ```
 const useMenuOptions = (props) => {
-  const { propUsedInOption } = props;
-  const contextValueUsedInOption = React.useContext(SomeContext);
-  return React.useMemo(
-    () => (
-      // This should return an array of menu options. It can use
-      // any of the props received by the original component, as well
-      // as any other react hook.
-    ),
-    [propUsedInOption, contextValueUsedInOption],
-  );
+  return [{
+    // An array of context menu option objects
+  }];
 };
 ```
 
@@ -124,10 +119,10 @@ const ComponentWithMyOptions = withMenuOptions({
 ...
 <ComponentWithMyOptions propUsedInOption="foo" />
 ```
-Note here that we memoize the list of menu options.  Strictly speaking, it is
-only necessary to memoize non-primitive values in the option object (ie any
-callbacks). See [Context Menu Options](#context-menu-options) below for more
-information.
+Note here that we don't need to memoize the list of menu options: memoization of
+the callback is handled within `withMenuOptions`. However, certain callbacks
+provided as properties of the menu option object may need to be memoized (see
+[Context Menu Options](#context-menu-options) below for more information).
 
 Note that the menu options you are defining here will only be available when
 your component (or one of its children) declares itself as "active". To do so,
@@ -238,8 +233,7 @@ members:
 > used by the component providing the button, to allow the button to udpate
 > without re-rendering the component. If you provide callbacks, it is important
 > to memoize any such callbacks to avoid unnecessary renders of the button
-> itself.
-
+> itself. The `handler` callback, however, need not be memoized.
 
  A simple context menu implementation with a single option might look like this:
  ```javascript
@@ -248,15 +242,15 @@ const [isUp, setIsUp] = React.useState(false);
 const options = [
 {
   name: 'say_yes',
-  icon: 'thumb_up',
+  icon: isUp ? 'thumb_up' : 'thumb_down',
   label: 'Yes!',
   isActive: isUp,
-  handler: React.useCallback(() => {
+  handler: () => {
     if (!isUp) {
       alert('Yes!');
     }
     setIsUp(isUp => !isUp);
-  }, [isUp]),
+  },
 ];
 
 const MyContextMenu = props => (

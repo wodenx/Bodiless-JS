@@ -118,7 +118,7 @@ export class PageEditStore implements PageEditStoreInterface {
             .forEach(key => delete existing[key as keyof TMenuOption]);
           const newProps = Object.keys(next)
             .filter(key => existing[key as keyof TMenuOption] === undefined)
-            .reduce((acc, key) => ({ ...acc, key: next[key as keyof TMenuOption] }), {});
+            .reduce((acc, key) => ({ ...acc, [key]: next[key as keyof TMenuOption] }), {});
           Object.assign(existing, next);
           extendObservable(existing, newProps);
         } else {

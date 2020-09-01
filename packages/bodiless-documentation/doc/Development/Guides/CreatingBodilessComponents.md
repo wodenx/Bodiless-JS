@@ -298,13 +298,10 @@ const useCustomEditFormProps = componentProps => {
   // Get the default submit handler for an edit form.
   const { submitValues, ...rest } = useEditFormProps(props);
   // 
-  const customSubmitValues = useCallback(
-    values => {
-      const newValues = { ...values, timestamp: new Date().toString() };
-      submitValues(newValues);
-    },
-    [submitValues],
-  );
+  const customSubmitValues = values => {
+    const newValues = { ...values, timestamp: new Date().toString() };
+    submitValues(newValues);
+  };
   return {
     submitValues: customSubmitValues,
     ...rest,
@@ -349,7 +346,7 @@ const useMenuOptions = props => {
     label: 'Edit',
     global: false,
     local: true,
-    handler: useCallback(() => render, [...Object.values(editFormProps]),
+    handler: () => render,
   }];
 };
 ```
@@ -360,8 +357,7 @@ passed through to the Form component along with our custom edit
 form props.
 
 We then define a menu option which whose handler simply returns our custom
-render function.  Note that we memoize this handler in order to avoid unnecessary
-renders of the menu button.
+render function.
 
 The `useMenuOptions` hook will receive the component's own props as an argument,
 and should return an array of *menu options*. Each menu option is an object

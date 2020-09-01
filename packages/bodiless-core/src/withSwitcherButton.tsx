@@ -12,7 +12,6 @@
  * limitations under the License.
  */
 
-import { useMemo } from 'react';
 import { useEditContext } from './hooks';
 import { withMenuOptions } from './PageContextProvider';
 
@@ -24,11 +23,11 @@ import { withMenuOptions } from './PageContextProvider';
  */
 const useMenuOptions = () => {
   const context = useEditContext();
-  return useMemo(() => [{
+  return [{
     name: 'switcher',
     icon: 'compare_arrows',
     handler: () => context.togglePosition(),
-  }], [context.togglePosition]);
+  }];
 };
 
 const withSwitcherButton = withMenuOptions({

@@ -38,7 +38,7 @@ jest.mock('@bodiless/core', () => ({
   useActivateOnEffect: jest.fn(() => activateOnEffect),
   useNode: jest.fn(),
   contextMenuForm: jest.fn(() => contextMenuFormInner),
-  useGetMenuOptions: jest.fn((options: TMenuOption[]) => () => options),
+  useGetter: jest.fn((options: any) => () => options),
 }));
 
 const Foo: FC = Fragment;

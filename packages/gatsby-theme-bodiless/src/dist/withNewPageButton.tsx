@@ -14,7 +14,7 @@
 
 /* eslint-disable no-alert */
 import React, {
-  useCallback, useEffect, useState, useMemo,
+  useCallback, useEffect, useState,
 } from 'react';
 import {
   contextMenuForm,
@@ -202,15 +202,15 @@ const useMenuOptions = () => {
   const context = useEditContext();
   const gatsbyPage = useGatsbyPageContext();
 
-  const menuOptions = useMemo(() => [
+  const menuOptions = [
     {
       name: 'newpage',
       icon: 'note_add',
       label: 'Page',
-      isHidden: () => !context.isEdit,
+      isHidden: useCallback(() => !context.isEdit, []),
       handler: () => formPageAdd(defaultClient, gatsbyPage.subPageTemplate),
     },
-  ], []);
+  ];
   return menuOptions;
 };
 
