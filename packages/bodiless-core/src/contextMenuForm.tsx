@@ -14,6 +14,8 @@
 
 import React, { FC, ReactNode, useCallback } from 'react';
 import { Form, FormApi, FormState } from 'informed';
+import { flow } from 'lodash';
+import { withClickOutside } from './hoc';
 import { useMenuOptionUI } from './components/ContextMenuContext';
 import type { ContextMenuFormProps } from './Types/ContextMenuTypes';
 
@@ -40,7 +42,7 @@ export type FormChromeProps = {
   title?: string;
 } & ContextMenuFormProps;
 
-export const FormChrome: FC<FormChromeProps> = (props) => {
+const FormChromeBase: FC<FormChromeProps> = (props) => {
   const {
     children,
     title,
@@ -64,6 +66,8 @@ export const FormChrome: FC<FormChromeProps> = (props) => {
     </>
   );
 };
+
+export const FormChrome = flow(withClickOutside)(FormChromeBase);
 
 export const ContextMenuForm = <D extends object>(props: ContextMenuPropsType<D>) => {
   const {
@@ -95,6 +99,7 @@ export const ContextMenuForm = <D extends object>(props: ContextMenuPropsType<D>
     >
       {({ formApi, formState }) => (
         <FormChrome
+          onClickOutside={() => callOnClose(formState.values)}
           hasSubmit={hasSubmit && !formState.invalid}
           closeForm={() => callOnClose(formState.values)}
         >

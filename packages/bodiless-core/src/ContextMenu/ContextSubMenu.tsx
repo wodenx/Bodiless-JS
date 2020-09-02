@@ -39,7 +39,13 @@ const ContextSubMenu: FC<IContextMenuItemProps> = props => {
 
   const handler = () => ({ closeForm }: ContextMenuFormProps) => (
     <ContextMenuBase ui={finalUi} renderInTooltip={false}>
-      <FormChrome title={title} hasSubmit={false} closeForm={closeForm} {...rest}>
+      <FormChrome
+        title={title}
+        hasSubmit={false}
+        closeForm={closeForm}
+        onClickOutside={closeForm}
+        {...rest}
+      >
         <SubMenu>
           {children}
         </SubMenu>

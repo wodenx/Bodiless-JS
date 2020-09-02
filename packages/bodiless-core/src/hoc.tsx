@@ -13,7 +13,10 @@
  */
 
 import { observer } from 'mobx-react-lite';
-import React, { ComponentType as CT, EventHandler, FC } from 'react';
+import React, {
+  ComponentType as CT, EventHandler, FC,
+  useRef, useCallback, useEffect,
+} from 'react';
 import { flowRight, omit, pick } from 'lodash';
 import { useContextActivator, useExtendHandler } from './hooks';
 import { useNodeDataHandlers } from './NodeProvider';
@@ -108,20 +111,51 @@ export const withNodeAndHandlers = (defaultData?: any) => flowRight(
   withNodeDataHandlers(defaultData),
 );
 
-// type OnClickElsewhereProps = {
-//   onClickElsewhere: Function,
-// };
+type ClickOutsideProps = {
+  onClickOutside: () => void;
+};
 
-// export const withOnClickElsewhere = <P extends object>(Component: ComponentType<P>|string) => (
-//  const WithOnClickElsewhere = (props: P & OnClickElsewhereProps) => {
-//    const { onClickElsewhere } = props;
-//    const ref = useRef();
-//    const handler = useCallback((e: MouseEvent) => {
-//      const target = e.target;
-//
-//    }
-//    useEffect(() => {
-//      document
-//    }
-//  }
-// )
+export const withClickOutside = <P extends object>(Component: CT<P> | string) => {
+  const WithClickOutside = (props: P & ClickOutsideProps) => {
+    const { onClickOutside } = props;
+    const ref = useRef(null);
+
+    const ensureClickOutside = () => {
+      if (onClickOutside && typeof onClickOutside === 'function') {
+        onClickOutside();
+      }
+    };
+
+    const escapeListener = useCallback((e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        ensureClickOutside();
+      }
+    }, []);
+
+    const clickListener = useCallback(
+      (e: MouseEvent) => {
+        if (!(ref.current! as any).contains(e.target)) {
+          ensureClickOutside();
+        }
+      },
+      [ref.current],
+    );
+
+    useEffect(() => {
+      document.addEventListener('click', clickListener);
+      document.addEventListener('keyup', escapeListener);
+      return () => {
+        document.removeEventListener('click', clickListener);
+        document.removeEventListener('keyup', escapeListener);
+      };
+    }, []);
+
+    return (
+      <div ref={ref}>
+        <Component {...props} />
+      </div>
+    );
+  };
+
+  return WithClickOutside;
+};

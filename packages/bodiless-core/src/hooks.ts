@@ -14,6 +14,7 @@
 
 import {
   useContext, useRef, EventHandler, useCallback,
+  useEffect,
 } from 'react';
 import { v1 } from 'uuid';
 import PageEditContext from './PageEditContext';
@@ -96,4 +97,44 @@ export const useGetter = <P extends any>(value: P): () => P => {
   const getter = useCallback(() => ref.current as P, []);
   ref.current = value;
   return getter;
+};
+
+/**
+ *
+ * Utility hook to detect click outside of the `ref` element and execute the callback.
+ *
+ * Usage:
+ *
+ * ```js
+ * useClickOutside(ref, () => {
+ *   alert('Clicked outside');
+ * });
+ * ```
+ *
+ * @param ref `ref` from React.useRef() or React.createRef
+ * @param callback A callback to execute when click outside is detected
+ *
+ */
+export const useClickOutside = (ref: React.MutableRefObject<any>, callback: () => void) => {
+  const escapeListener = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      callback();
+    }
+  }, []);
+
+  const clickListener = useCallback((e: MouseEvent) => {
+    if (ref.current && !ref.current.contains(e.target)) {
+      callback();
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('click', clickListener);
+    document.addEventListener('keyup', escapeListener);
+
+    return () => {
+      document.removeEventListener('click', clickListener);
+      document.removeEventListener('keyup', escapeListener);
+    };
+  });
 };
