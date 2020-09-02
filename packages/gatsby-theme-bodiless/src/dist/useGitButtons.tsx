@@ -48,6 +48,7 @@ const canAlertOnLoad = process.env.BODILESS_ALERT_ON_PAGE_LOAD_ENABLED || 1;
 const formGetCommitsList = (client: GitClient) => contextMenuForm({
   // @todo: handle what happens when user selects a commit from the loaded list.
   submitValues: () => {},
+  hasSubmit: false,
 })(
   ({ ui }: any) => {
     const { ComponentFormTitle } = getUI(ui);
@@ -84,6 +85,7 @@ const formGitPull = (client: GitClient, notifyOfChanges: ChangeNotifier) => cont
       window.location.reload();
     }
   },
+  hasSubmit: ({ keepOpen }) => keepOpen,
 })(({ ui }: any) => {
   const { ComponentFormTitle, ComponentFormText } = getUI(ui);
   return (
@@ -108,6 +110,7 @@ const formGitReset = (client: GitClient) => contextMenuForm({
       window.location.reload();
     }
   },
+  hasSubmit: ({ keepOpen }) => keepOpen,
 })(
   ({ ui, formState, formApi }: any) => {
     const { ComponentFormText } = getUI(ui);

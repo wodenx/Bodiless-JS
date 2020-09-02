@@ -95,7 +95,9 @@ export const ContextMenuForm = <D extends object>(props: ContextMenuPropsType<D>
     >
       {({ formApi, formState }) => (
         <FormChrome
-          hasSubmit={hasSubmit && !formState.invalid}
+          hasSubmit={typeof hasSubmit === 'function'
+            ? hasSubmit(formState.values) && !formState.invalid
+            : hasSubmit && !formState.invalid}
           closeForm={() => callOnClose(formState.values)}
         >
           {typeof children === 'function'
