@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { HTMLProps } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 
@@ -20,78 +20,40 @@ import { flow } from 'lodash';
 import {
   asReadOnly,
 } from '@bodiless/core';
+import { StylableProps } from '@bodiless/fclasses';
 import Tooltip from 'rc-tooltip';
 import Layout from '../../../components/Layout';
 import { withEditorSimple } from '../../../components/Editors';
 
-const Editor1 = withEditorSimple('shared-editor', 'Editor 1')('div');
+const Editor1 = withEditorSimple('shared-editor', 'Editor 1')<HTMLProps<HTMLDivElement> & StylableProps>('div');
 const Editor2 = flow(
   withEditorSimple('shared-editor', 'Editor 2'),
   asReadOnly,
 )('div');
 
-const Editor3 = withEditorSimple('shared-editor-tooltip', 'Editor 3')('div');
-const Editor4 = flow(
-  withEditorSimple('shared-editor-tooltip', 'Editor 4'),
-  asReadOnly,
-)('div');
-
-const Editor5 = flow(
-  withEditorSimple('shared-editor-tooltip-2', 'Editor 5'),
-  asReadOnly,
-)('div');
-const Editor6 = withEditorSimple('shared-editor-tooltip-2', 'Editor 6')('div');
-
-const Editor7 = withEditorSimple('single-editor-tooltip', 'Editor 7')('div');
-
 export default (props: any) => (
   <Page {...props}>
     <Layout>
       <h1 className="text-3xl font-bold">Slate Editors Sharing Node</h1>
-      <h2 className="text-2xl">Basic</h2>
-      <p>
-        These 2 editors share the same node.  The second is read-only, and
-        they seem to function properly
-      </p>
-      <h3 className="text-xl">Editable</h3>
-      <Editor1 />
-      <h3 className="text-xl">ReadOnly</h3>
-      <Editor2 />
-      <hr />
-      <h2 className="text-2xl">Editor in Tooltip</h2>
       <p>
         The first editor below is in a tooltip and shares a node with the second.
-        The one in the tooltip is editable, the second is read-only. 
+        The one in the tooltip is editable, the second is read-only.
         The editor is completely non-functional
       </p>
-      <h3 className="text-xl">Editable</h3>
-      <Tooltip placement="topLeft" overlay={<Editor4 className="w-24" />}>
-        <div>Hover for Editor 3</div>
-      </Tooltip>
-      <h3 className="text-xl">ReadOnly</h3>
-      <Editor3 />
-      <hr />
-      <h2 className="text-2xl">Read-only Editor in Tooltip</h2>
-      <p>
-        The first editor below is in a tooltip and shares a node with the second.
-        The one in the tooltip is read-only, the second is editable. 
-        Here, everything seems to work as expected.
-      </p>
-      <h3 className="text-xl">ReadOnly</h3>
-      <Tooltip placement="topLeft" overlay={<Editor5 className="w-24" />}>
-        <div>Hover for Editor 5</div>
-      </Tooltip>
-      <h3 className="text-xl">Editable</h3>
-      <Editor6 />
-      <h2 className="text-2xl">Single Editor in Tooltip</h2>
-      <p>
-        The following is an editor in a tooltip which does not share
-        a node. It also seems to function as expected.
-      </p>
-      <h3 className="text-xl">Editable</h3>
-      <Tooltip placement="topLeft" overlay={<Editor7 className="w-24" />}>
-        <div>Hover for Editor 7</div>
-      </Tooltip>
+      <div className="flex flex-col w-full py-5">
+        <div className="p-5 pt-0">
+          <div>Editor 1:</div>
+          <Tooltip placement="topLeft" overlay={<Editor1 className="w-24" />}>
+            <div className="border-solid border-4 border-gray-600 p-5 m-5">
+              Hover to show editor.
+            </div>
+          </Tooltip>
+          <div>Editor 2:</div>
+          <div className="border-solid border-4 border-gray-600 p-5 m-5">
+            <Editor2 />
+          </div>
+        </div>
+      </div>
     </Layout>
   </Page>
 );
