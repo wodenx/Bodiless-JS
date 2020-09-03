@@ -16,7 +16,7 @@ import React, { Fragment } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  withDesign, addClasses, replaceWith, H3,
+  withDesign, addClasses, replaceWith, H3, stylable,
 } from '@bodiless/fclasses';
 import { observer } from 'mobx-react-lite';
 
@@ -93,8 +93,41 @@ const asIndentedSubList = flow(
   }),
 );
 
+const CompoundList = flow(
+  asBodilessList('clist'),
+  asMenuLinkList,
+  withDesign({
+    Item: asIndentedSubList,
+  }),
+)('ul');
+
+const withPadding = withDesign({
+  Item: addClasses('pl-5'),
+});
+
+const withPlainLinkStyles = withDesign({
+  Item: withDesign({
+    Basic: withPadding,
+    Touts: withPadding,
+    Columns: flow(
+      withPadding,
+      withDesign({ Item: withPadding }),
+    ),
+  }),
+});
+
+const MegaMenuList = flow(
+  asMenuClean,
+  asPlainLinks,
+  withPlainLinkStyles,
+  asReadOnly,
+)('ul');
+
 const asInline = withDesign({
-  Wrapper: addClasses('inline'),
+  Wrapper: withDesign({
+    WrapperItem: flow(stylable, addClasses('inline')),
+    List: flow(stylable, addClasses('inline')),
+  }),
   Item: addClasses('inline mr-5'),
 });
 
@@ -112,40 +145,10 @@ const withBreadcrumbStyles = flow(
   }),
 );
 
-const withPadding = withDesign({
-  Item: addClasses('pl-5'),
-});
-
-const withPlainLinkStyles = withDesign({
-  Item: withDesign({
-    Basic: withPadding,
-    Touts: withPadding,
-    Columns: flow(
-      withPadding,
-      withDesign({ Item: withPadding }),
-    ),
-  }),
-});
-
-const CompoundList = flow(
-  asBodilessList('clist'),
-  asMenuLinkList,
-  withDesign({
-    Item: asIndentedSubList,
-  }),
-)('ul');
-
-const MegaMenuList = flow(
-  asMenuClean,
-  asPlainLinks,
-  withPlainLinkStyles,
-  asReadOnly,
-)('ul');
-
 const MegaMenuBreadcrumbs = flow(
   asMenuClean,
   asPlainLinks,
-  // asBreadcrumbs,
+  asBreadcrumbs,
   withBreadcrumbStyles,
   asReadOnly,
 )('ul');

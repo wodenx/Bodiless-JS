@@ -1,10 +1,12 @@
-import { asEditableList, List } from '@bodiless/components';
+import { asEditableList, List as BodilessList } from '@bodiless/components';
 import {
   WithNodeKeyProps, withNodeKey, useNode, NodeProvider,
 } from '@bodiless/core';
 import React, { ComponentType, PropsWithChildren, FC } from 'react';
 import { flow } from 'lodash';
-import { replaceWith, withDesign, asComponent } from '@bodiless/fclasses';
+import {
+  replaceWith, withDesign, asComponent, DesignableComponentsProps, designable,
+} from '@bodiless/fclasses';
 
 type Data = {
   items?: string[],
@@ -30,25 +32,44 @@ export const asTitledItem = <P extends TitledItemProps>(Item: ComponentType<P>) 
   return TitledItem;
 };
 
-const SubList: FC<TitledItemProps> = ({ title, children, ...rest }) => (
-  <li {...rest}>
-    {title}
-    <ul>
-      {children}
-    </ul>
-  </li>
-);
+type SubListComponents = {
+  WrapperItem: ComponentType<any>,
+  List: ComponentType<any>,
+};
+
+const startComponents: SubListComponents = {
+  WrapperItem: asComponent('li'),
+  List: asComponent('ul'),
+};
+
+type SubListProps = TitledItemProps & DesignableComponentsProps<SubListComponents>;
+
+const SubList$: FC<SubListProps> = ({
+  title, children, components, ...rest
+}) => {
+  const { WrapperItem, List } = components;
+  return (
+    <WrapperItem {...rest}>
+      {title}
+      <List>
+        {children}
+      </List>
+    </WrapperItem>
+  );
+};
+
+const SubList = designable(startComponents)(SubList$);
 
 const asBodilessList = (
   nodeKeys?: WithNodeKeyProps,
   // @TODO - Handle default data
   // defaultData?: Data,
 ) => <P extends object>(Component: ComponentOrTag<P>) => flow(
-  replaceWith(List),
+  replaceWith(BodilessList),
   asEditableList,
-  withDesign({
-    Wrapper: replaceWith(typeof Component === 'string' ? asComponent(Component) : Component),
-  }),
+  // withDesign({
+  //   Wrapper: replaceWith(typeof Component === 'string' ? asComponent(Component) : Component),
+  // }),
   withNodeKey(nodeKeys),
 )(Component);
 
