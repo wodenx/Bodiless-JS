@@ -18,7 +18,6 @@ import {
   asHorizontalMenu,
   asHorizontalSubMenu,
   asMenuLink,
-  asStylableList,
 } from '@bodiless/organisms';
 
 import {
@@ -26,7 +25,7 @@ import {
 } from '@bodiless/fclasses';
 import { withTitle } from '@bodiless/layouts';
 import {
-  EditButtonOptions, ifToggledOff, ifToggledOn, withSidecarNodes,
+  EditButtonOptions, ifToggledOff, withSidecarNodes,
 } from '@bodiless/core';
 // import { withEditorSimple } from '../../../components/Editors';
 import { asEditable, asBreadcrumb, useBreadcrumbContext } from '@bodiless/components';
@@ -37,28 +36,19 @@ import { withMenuListStyles, withMenuSublistStyles } from '../../../components/M
 import asBodilessChamelion, { ChamelionData } from './Chamelion';
 import asMenuTout from './MenuTout';
 import asMenu, { asSubMenu, asMenuItemGroup, usePlainLinks } from './asMenu';
-import asBodilessList, { asSubList } from './asBodilessList';
 
 // Workaround for issue with multiple slate editors pointing to the same node.
 const withEditorSimple = asEditable;
 
 const withMegaMenuStyles = withDesign({
+  // @TODO: We add the class here to style rc-menu. Maybe can use design API if we ditch rc-menu.
   Wrapper: addProps({ popupClassName: 'container bl-mega-menu' }),
+  // @TODO: What's the best starting width? They will shrink to fit if there are more.
   Item: addClasses('w-1/3'),
 });
 
-const asToggledMenu = (asMenuType: any) => flow(
-  ifToggledOn(usePlainLinks)(
-    asStylableList,
-    asSubList,
-  ),
-  ifToggledOff(usePlainLinks)(
-    asMenuType,
-  ),
-);
-
 const asColumnClean = flow(
-  asToggledMenu(asMenuItemGroup),
+  asMenuItemGroup,
   withDesign({
     Title: asMenuLink(withEditorSimple),
   }),
@@ -69,7 +59,7 @@ const withColumnStyles = flow(
 );
 
 const asBasicSubMenuClean = flow(
-  asToggledMenu(asSubMenu),
+  asSubMenu,
   withDesign({
     Title: asMenuLink(withEditorSimple),
   }),
@@ -147,13 +137,7 @@ const withChamelionSubMenuStyles = withDesign({
 });
 
 const asMenuClean = flow(
-  ifToggledOff(usePlainLinks)(
-    asMenu(),
-  ),
-  ifToggledOn(usePlainLinks)(
-    asBodilessList(),
-    asStylableList,
-  ),
+  asMenu(),
   withDesign({
     Title: asMenuLink(withEditorSimple),
     Item: asChamelionSubMenuClean,

@@ -5,10 +5,10 @@ import type { MenuProps } from 'rc-menu';
 import { replaceWith, withDesign, stylable } from '@bodiless/fclasses';
 import { asStylableList } from '@bodiless/organisms';
 import { flow } from 'lodash';
-import { WithNodeKeyProps } from '@bodiless/core';
+import { WithNodeKeyProps, ifToggledOn, ifToggledOff } from '@bodiless/core';
 import Menu, { ItemGroup, Item as MenuItem, SubMenu } from 'rc-menu';
 // import Menu, { ItemGroup, Item as MenuItem, SubMenu } from './RCMenu';
-import asBodilessList, { asTitledItem } from './asBodilessList';
+import asBodilessList, { asTitledItem, asSubList } from './asBodilessList';
 
 type MenuContextType = {
   showPlainLinks: boolean,
@@ -24,6 +24,11 @@ export const useMenuContext = () => useContext(MenuContext);
 
 export const usePlainLinks = () => useMenuContext().showPlainLinks;
 
+/**
+ * NOC which can be applied to a menu to display it as a plain list of links.
+ *
+ * @param Component
+ */
 export const asPlainLinks = <P extends object>(Component: ComponentType<P>) => {
   const AsPlainLinks = (props: P) => {
     const newContext: MenuContextType = {
@@ -39,6 +44,22 @@ export const asPlainLinks = <P extends object>(Component: ComponentType<P>) => {
   return AsPlainLinks;
 };
 
+/**
+ * @private
+ *
+ * HOC which renders a menu as a list of plain links when wrapped in
+ * @param asMenuType
+ */
+const asToggledMenu = (asMenuType: any) => flow(
+  ifToggledOn(usePlainLinks)(
+    asStylableList,
+    asSubList,
+  ),
+  ifToggledOff(usePlainLinks)(
+    asMenuType,
+  ),
+);
+
 const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
   asStylableList,
@@ -48,27 +69,33 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
 );
 
 const asMenu = (nodeKeys?: WithNodeKeyProps) => flow(
-  asMenuBase(nodeKeys),
-  withDesign({
-    // The cast is necessary bc of an error in rc-menu types.
-    Wrapper: replaceWith(stylable(Menu as ComponentType<MenuProps>)),
-  }),
+  ifToggledOff(usePlainLinks)(
+    withDesign({
+      // The cast is necessary bc of an error in rc-menu types.
+      Wrapper: replaceWith(stylable(Menu as ComponentType<MenuProps>)),
+    }),
+    asMenuBase(nodeKeys),
+  ),
+  ifToggledOn(usePlainLinks)(
+    asStylableList,
+    asBodilessList(),
+  ),
 );
 
 export default asMenu;
 
-export const asSubMenu = flow(
+export const asSubMenu = asToggledMenu(flow(
   asMenuBase(),
   withDesign({
     Wrapper: replaceWith(stylable(SubMenu)),
   }),
   asTitledItem,
-);
+));
 
-export const asMenuItemGroup = flow(
+export const asMenuItemGroup = asToggledMenu(flow(
   asMenuBase(),
   withDesign({
     Wrapper: replaceWith(stylable(ItemGroup)),
   }),
   asTitledItem,
-);
+));
