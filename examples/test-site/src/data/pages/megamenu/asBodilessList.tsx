@@ -67,9 +67,9 @@ const asBodilessList = (
 ) => <P extends object>(Component: ComponentOrTag<P>) => flow(
   replaceWith(BodilessList),
   asEditableList,
-  // withDesign({
-  //   Wrapper: replaceWith(typeof Component === 'string' ? asComponent(Component) : Component),
-  // }),
+  withDesign({
+    Wrapper: replaceWith(typeof Component === 'string' ? asComponent(Component) : Component),
+  }),
   withNodeKey(nodeKeys),
 )(Component);
 

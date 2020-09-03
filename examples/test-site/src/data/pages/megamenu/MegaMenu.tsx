@@ -30,6 +30,7 @@ import {
 } from '@bodiless/core';
 // import { withEditorSimple } from '../../../components/Editors';
 import { asEditable, asBreadcrumb, useBreadcrumbContext } from '@bodiless/components';
+import { observer } from 'mobx-react-lite';
 import { asExceptMobile } from '../../../components/Elements.token';
 
 import { withMenuListStyles, withMenuSublistStyles } from '../../../components/Menus/token';
@@ -170,7 +171,10 @@ const withMenuStyles = flow(
 
 const asBreadcrumbMenu = withDesign({
   Item: withSidecarNodes(asBreadcrumb('title$component')),
-  Title: addClassesIf(() => !useBreadcrumbContext().isActive)('hidden'),
+  Title: flow(
+    addClassesIf(() => !useBreadcrumbContext().isActive)('hidden'),
+    observer,
+  ),
 });
 
 export const asBreadcrumbs = flow(
