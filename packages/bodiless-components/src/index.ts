@@ -49,6 +49,7 @@ import {
   ifViewportIs,
   ifViewportIsNot,
 } from './withResponsiveToggle';
+import asBreadcrumb, { useBreadcrumbContext } from './asBreadcrumb';
 
 export {
   asBodilessLink,
@@ -94,6 +95,8 @@ export {
   ifViewportIsNot,
   withMetaForm,
   withMetaSnippet,
+  asBreadcrumb,
+  useBreadcrumbContext,
 };
 
 export type {

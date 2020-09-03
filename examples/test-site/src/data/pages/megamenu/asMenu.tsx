@@ -7,8 +7,8 @@ import { asStylableList } from '@bodiless/organisms';
 import { flow } from 'lodash';
 import { WithNodeKeyProps } from '@bodiless/core';
 import Menu, { ItemGroup, Item as MenuItem, SubMenu } from 'rc-menu';
-import asBodilessList, { asTitledItem } from './asBodilessList';
 // import Menu, { ItemGroup, Item as MenuItem, SubMenu } from './RCMenu';
+import asBodilessList, { asTitledItem } from './asBodilessList';
 
 type MenuContextType = {
   showPlainLinks: boolean,

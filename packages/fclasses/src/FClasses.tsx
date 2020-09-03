@@ -13,6 +13,7 @@
  */
 
 import React, { ComponentType, FC } from 'react';
+import { observer } from 'mobx-react-lite';
 import {
   union, difference, capitalize,
 } from 'lodash';
@@ -40,7 +41,7 @@ const alwaysTrueCondition = () => true;
 
 const modifyClassesIf = (operation: 'add' | 'remove') => (condition: Condition) => (classes?: Classes) => {
   const hoc = <P extends StylableProps>(Component: ComponentType<P> | string) => {
-    const ModifyClasses: FC<P> = props => {
+    const ModifyClasses$: FC<P> = props => {
       const { fClasses, ...rest } = props;
       const newFClasses = condition(props) ? {
         parentFClasses: fClasses,
@@ -51,6 +52,7 @@ const modifyClassesIf = (operation: 'add' | 'remove') => (condition: Condition) 
         <Component fClasses={newFClasses} {...rest as P} />
       );
     };
+    const ModifyClasses = observer(ModifyClasses$);
     ModifyClasses.displayName = `${capitalize(operation)}Classes`;
     return ModifyClasses;
   };

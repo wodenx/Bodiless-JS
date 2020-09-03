@@ -22,12 +22,14 @@ import {
 } from '@bodiless/organisms';
 
 import {
-  withDesign, addClasses, addProps,
+  withDesign, addClasses, addProps, addClassesIf,
 } from '@bodiless/fclasses';
 import { withTitle } from '@bodiless/layouts';
-import { EditButtonOptions, ifToggledOff, ifToggledOn } from '@bodiless/core';
+import {
+  EditButtonOptions, ifToggledOff, ifToggledOn, withSidecarNodes,
+} from '@bodiless/core';
 // import { withEditorSimple } from '../../../components/Editors';
-import { asEditable } from '@bodiless/components';
+import { asEditable, asBreadcrumb, useBreadcrumbContext } from '@bodiless/components';
 import { asExceptMobile } from '../../../components/Elements.token';
 
 import { withMenuListStyles, withMenuSublistStyles } from '../../../components/Menus/token';
@@ -42,10 +44,6 @@ const withEditorSimple = asEditable;
 const withMegaMenuStyles = withDesign({
   Wrapper: addProps({ popupClassName: 'container bl-mega-menu' }),
   Item: addClasses('w-1/3'),
-});
-
-const withPadding = withDesign({
-  Item: addClasses('pl-5'),
 });
 
 const asToggledMenu = (asMenuType: any) => flow(
@@ -118,10 +116,13 @@ type NodeDataHandlers<D> = {
   componentData: D,
 };
 
-const useOverrides = (props: NodeDataHandlers<ChamelionData>): Partial<EditButtonOptions<NodeDataHandlers<ChamelionData>, ChamelionData>> => {
+type Overrides = Partial<EditButtonOptions<NodeDataHandlers<ChamelionData>, ChamelionData>>;
+
+const useOverrides = (props: NodeDataHandlers<ChamelionData>): Overrides => {
   const { componentData } = props;
   const { component } = componentData;
   return {
+    // Commented lines hide the button rather than turning it into a swap button.
     // isHidden: Boolean(component),
     // icon: 'playlist_add',
     icon: component ? 'repeat' : 'playlist_add',
@@ -167,16 +168,26 @@ const withMenuStyles = flow(
   asExceptMobile,
 );
 
-const withPlainLinkStyles = withDesign({
-  Item: withDesign({
-    Basic: withPadding,
-    Touts: withPadding,
-    Columns: flow(
-      withPadding,
-      withDesign({ Item: withPadding }),
-    ),
-  }),
+const asBreadcrumbMenu = withDesign({
+  Item: withSidecarNodes(asBreadcrumb('title$component')),
+  Title: addClassesIf(() => !useBreadcrumbContext().isActive)('hidden'),
 });
+
+export const asBreadcrumbs = flow(
+  withDesign({
+    Item: withDesign({
+      Basic: asBreadcrumbMenu,
+      Touts: asBreadcrumbMenu,
+      Columns: flow(
+        withDesign({
+          Item: asBreadcrumbMenu,
+        }),
+        asBreadcrumbMenu,
+      ),
+    }),
+  }),
+  asBreadcrumbMenu,
+);
 
 const Menu = flow(
   asMenuClean,
@@ -184,4 +195,4 @@ const Menu = flow(
 )(Fragment);
 
 export default Menu;
-export { asMenuClean, withMenuStyles, withPlainLinkStyles };
+export { asMenuClean, withMenuStyles };

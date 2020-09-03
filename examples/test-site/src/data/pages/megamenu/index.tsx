@@ -16,7 +16,7 @@ import React, { Fragment } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  withDesign, addClasses, replaceWith,
+  withDesign, addClasses, replaceWith, H3,
 } from '@bodiless/fclasses';
 import { observer } from 'mobx-react-lite';
 
@@ -28,7 +28,7 @@ import { asBodilessLink, asEditable } from '@bodiless/components';
 import { MenuLink, asMenuLink, asStylableList } from '@bodiless/organisms';
 import Layout from '../../../components/Layout';
 
-import MegaMenu, { asMenuClean, withPlainLinkStyles } from './MegaMenu';
+import MegaMenu, { asMenuClean, asBreadcrumbs } from './MegaMenu';
 import asChamelionTitle from './asChamelionTitle';
 import withBodilessLinkToggle from './LinkToggle';
 import asBodilessList, { asSubList } from './asBodilessList';
@@ -93,6 +93,40 @@ const asIndentedSubList = flow(
   }),
 );
 
+const asInline = withDesign({
+  Wrapper: addClasses('inline'),
+  Item: addClasses('inline mr-5'),
+});
+
+const withBreadcrumbStyles = flow(
+  withDesign({
+    Wrapper: addClasses('inline'),
+    Item: withDesign({
+      Basic: asInline,
+      Touts: asInline,
+      Column: flow(
+        asInline,
+        withDesign({ Item: asInline }),
+      ),
+    }),
+  }),
+);
+
+const withPadding = withDesign({
+  Item: addClasses('pl-5'),
+});
+
+const withPlainLinkStyles = withDesign({
+  Item: withDesign({
+    Basic: withPadding,
+    Touts: withPadding,
+    Columns: flow(
+      withPadding,
+      withDesign({ Item: withPadding }),
+    ),
+  }),
+});
+
 const CompoundList = flow(
   asBodilessList('clist'),
   asMenuLinkList,
@@ -108,24 +142,36 @@ const MegaMenuList = flow(
   asReadOnly,
 )('ul');
 
+const MegaMenuBreadcrumbs = flow(
+  asMenuClean,
+  asPlainLinks,
+  // asBreadcrumbs,
+  withBreadcrumbStyles,
+  asReadOnly,
+)('ul');
+
+const H = addClasses('mt-5 text-l')(H3);
+
 export default (props: any) => (
   <Page {...props}>
     <Layout>
       <h1 className="text-3xl font-bold">Chamelion</h1>
-      <h3>LinkToggle</h3>
+      <H>LinkToggle</H>
       <LinkToggle>Foo</LinkToggle>
-      <h3>Chamelion</h3>
+      <H>Chamelion</H>
       <div className="bg-black">
         <MenuLinkChamelion />
       </div>
-      <h3>Main Menu</h3>
+      <H>Main Menu</H>
       <MegaMenu nodeKey="list1" className="w-full" />
-      <h3>Main menu as list</h3>
+      <H>Main menu as list</H>
       <MegaMenuList nodeKey="list1" />
-      <h3>Compund List</h3>
-      <CompoundList />
-      <h3>Keys</h3>
+      <H>Breadcrumbs</H>
+      <MegaMenuBreadcrumbs nodeKey="list1" />
+      <H>Keys</H>
       <NodeTreePrinter nodeKey="list1" />
+      <H>Compund List</H>
+      <CompoundList />
     </Layout>
   </Page>
 );
