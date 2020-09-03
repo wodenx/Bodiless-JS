@@ -35,7 +35,7 @@ type TUseValueParam = {
   key: string;
 };
 type TUseValue = (params: TUseValueParam) => Value;
-type TUseNodeStateHandlersParams = TUseOnChangeParams & TUseValueParam;
+type TUseNodeStateHandlersParams = Omit<TUseOnChangeParams & TUseValueParam, 'key'>;
 type TUseNodeStateHandlers = (
   params: TUseNodeStateHandlersParams,
 ) => {
