@@ -42,7 +42,7 @@ import { GitClient } from './types';
  * DefinePlugin is used by Gatsby to source env vars.
  * https://www.gatsbyjs.org/docs/environment-variables/#example.
  */
-const canCommit = (process.env.BODILESS_BACKEND_COMMIT_ENABLED || '0') === '1';
+const canCommit = true;// (process.env.BODILESS_BACKEND_COMMIT_ENABLED || '0') === '1';
 const canAlertOnLoad = process.env.BODILESS_ALERT_ON_PAGE_LOAD_ENABLED || 1;
 
 const formGetCommitsList = (client: GitClient) => contextMenuForm({
@@ -63,6 +63,7 @@ const formGetCommitsList = (client: GitClient) => contextMenuForm({
 
 const formGitCommit = (client: GitClient) => contextMenuForm({
   submitValues: ({ keepOpen } : any) => keepOpen,
+  hasSubmit: ({ keepOpen } : any) => keepOpen,
 })(({ ui, formApi, formState }: any) => {
   const { ComponentFormText } = getUI(
     ui,
