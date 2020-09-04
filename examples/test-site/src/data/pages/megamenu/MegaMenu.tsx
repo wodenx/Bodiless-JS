@@ -100,20 +100,33 @@ const useOverrides = (props: EditButtonProps<ChamelionData>): Overrides => {
   };
 };
 
-const asChamelionSubMenuClean = flow(
+const asChamelionSubMenuList = flow(
   asBodilessChamelion('cham-sublist', {}, useOverrides),
   withDesign({
-    Basic: flow(asBasicSubMenuClean$, withTitle('Basic sub-menu')),
-    Touts: flow(asToutsSubMenuClean$, withTitle('Tout sub-menu')),
-    Columns: flow(asColumnSubMenuClean$, withTitle('Column sub-menu')),
+    Basic: flow(asSubMenuList, withTitle('Basic sub-menu')),
+    Touts: flow(asSubMenuList, withTitle('Tout sub-menu')),
+    Columns: flow(asColumnSubMenuListClean, withTitle('Column sub-menu')),
   }),
+);
+
+const asChamelionSubMenuClean = withDesign({
+  Basic: asSubMenu,
+  Touts: asToutSubMenuClean,
+  Columns: asColumnSubMenuClean,
+});
+
+const asChamelionSubMenuClean$ = flow(
+  asChamelionSubMenuList,
+  ifToggledOff(usePlainLinks)(
+    asChamelionSubMenuClean,
+  ),
 );
 
 const asMenuClean = flow(
   asMenu(),
   withDesign({
     Title: asMenuLink(withEditorSimple),
-    Item: asChamelionSubMenuClean,
+    Item: asChamelionSubMenuClean$,
   }),
 );
 
