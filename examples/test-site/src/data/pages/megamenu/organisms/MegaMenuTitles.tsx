@@ -22,7 +22,7 @@ export const asMenuLink = (asEditable: any) => flow(
     ),
   ),
   asSubMenuTitle,
-  asEditable('text', 'Link Toggle'),
+  asEditable('text', 'Menu Item'),
   withNode,
   withNodeKey('title'),
 ) as HOC;

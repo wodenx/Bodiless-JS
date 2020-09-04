@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { flow } from 'lodash';
+import { flow, identity } from 'lodash';
 import {
   asMenuLink, asStylableList,
 } from '@bodiless/organisms';
@@ -24,8 +24,7 @@ import { withTitle } from '@bodiless/layouts';
 import {
   EditButtonOptions, withSidecarNodes, EditButtonProps, WithNodeKeyProps,
 } from '@bodiless/core';
-// import { withEditorSimple } from '../../../components/Editors';
-import { asEditable, asBreadcrumb, useBreadcrumbContext } from '@bodiless/components';
+import { asBreadcrumb, useBreadcrumbContext } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
 import asBodilessChamelion, { ChamelionData } from './components/Chamelion';
@@ -35,14 +34,11 @@ import {
 } from './asMenu';
 import asBodilessList, { asSubList as asBodilessSubList } from './components/asBodilessList';
 
-// Workaround for issue with multiple slate editors pointing to the same node.
-const withEditorSimple = asEditable;
-
 const asSubList = flow(
   asBodilessSubList,
   asStylableList,
   withDesign({
-    Title: asMenuLink(withEditorSimple),
+    Title: asMenuLink(() => identity),
   }),
 );
 
@@ -117,7 +113,7 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
   asStylableList,
   withDesign({
-    Title: asMenuLink(withEditorSimple),
+    Title: asMenuLink(() => identity),
     Item: asChamelionSubList,
   }),
 );
