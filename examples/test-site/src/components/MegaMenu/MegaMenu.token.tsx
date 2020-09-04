@@ -1,8 +1,8 @@
 import { flow } from 'lodash';
 import { asHorizontalSubMenu, asHorizontalMenu } from '@bodiless/organisms';
 import { withDesign, addProps, addClasses } from '@bodiless/fclasses';
-import { withMenuSublistStyles, withMenuListStyles } from '../../../components/Menus/token';
-import { asExceptMobile } from '../../../components/Elements.token';
+import { withMenuSublistStyles, withMenuListStyles } from '../Menus/token';
+import { asExceptMobile } from '../Elements.token';
 
 const withMegaMenuStyles = withDesign({
   // @TODO: We add the class here to style rc-menu. Maybe can use design API if we ditch rc-menu.

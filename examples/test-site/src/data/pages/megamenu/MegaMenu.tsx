@@ -55,7 +55,7 @@ const asToutSubMenu = flow(
   withMenuItem,
   asSubMenu,
   withDesign({
-    Title: asMenuTout(withEditorSimple),
+    Title: asMenuTout,
   }),
 );
 
@@ -106,9 +106,12 @@ const asChamelionSubMenu = withDesign({
  * Bodiless HOC generator which creates the basic structure of the Mega Menu. The component
  * to which the HOC applies is irrelevant (it will be replaced by the Menu wrapper).
  *
+ * The base mega menu serves as a base for various views on the Menu data, including
+ * a site's main menu, a burger menu and breadcrumbs.
+ *
  * @param nodeKeys The optional nodekeys specifying where the data should be stored.
  *
- * @return
+ * @return HOC which creates a basic mega menu list.
  */
 const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
@@ -119,7 +122,33 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   }),
 );
 
-const asMenuClean = flow(
+const withMenuDesign = (design: any) => {
+  const withDesign$ = typeof design === 'function' ? design : withDesign(design);
+  return flow(
+    withDesign({
+      Item: withDesign({
+        Basic: withDesign$,
+        Touts: withDesign$,
+        Columns: flow(
+          withDesign({
+            Item: withDesign$,
+          }),
+          withDesign$,
+        ),
+      }),
+    }),
+    withDesign$,
+  );
+};
+
+/**
+ * HOC which can be applied to a base menu to make it into a sites main menu.
+ *
+ * @param A base menu component created via asMenuBase()
+ *
+ * @return A clean (unstyled) site main menu.
+ */
+const asMainMenuClean = flow(
   asMenu,
   withDesign({
     Item: asChamelionSubMenu,
@@ -134,7 +163,14 @@ const asBreadcrumbMenu = withDesign({
   ),
 });
 
-const asBreadcrumbs = flow(
+/**
+ * HOC which can be applied to a base menu to make it into a site's breadcrumbs
+ *
+ * @param A base menu component created via asMenuBase()
+ *
+ * @return A clean (unstyled) site breadcrumb component.
+ */
+const asBreadcrumbsClean = flow(
   withDesign({
     Item: withDesign({
       Basic: asBreadcrumbMenu,
@@ -150,4 +186,6 @@ const asBreadcrumbs = flow(
   asBreadcrumbMenu,
 );
 
-export { asMenuBase, asMenuClean, asBreadcrumbs };
+export {
+  asMenuBase, asMainMenuClean, withMenuDesign, asBreadcrumbsClean,
+};

@@ -16,32 +16,28 @@ import React, { Fragment } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  withDesign, addClasses, replaceWith, H3, stylable,
+  withDesign, addClasses, replaceWith, H3, stylable, HOC,
 } from '@bodiless/fclasses';
 import { observer } from 'mobx-react-lite';
 
 import { flow } from 'lodash';
 import {
-  useNode, withNode, withSidecarNodes, withNodeKey, asReadOnly,
+  useNode, withNode, withSidecarNodes, withNodeKey, asReadOnly, withExtendHandler,
 } from '@bodiless/core';
-import { asBodilessLink, asEditable } from '@bodiless/components';
-import { MenuLink, asMenuLink, asStylableList } from '@bodiless/organisms';
-import Layout from '../../../components/Layout';
+import { MenuLink, asStylableList } from '@bodiless/organisms';
 
-import { asMenuClean, asBreadcrumbs, asMenuBase } from './MegaMenu';
-import withMenuStyles from './MegaMenu.token';
+// Workaround for multiple slate editor issue.
+import { asBodilessLink, asEditable as withEditorSimple } from '@bodiless/components';
+// import { withEditorSimple } from '../../../components/Editors';
+
+import Layout from '../../../components/Layout';
+import {
+  asMainMenuClean, asBreadcrumbsClean, asMenuBase, withMenuDesign,
+} from './MegaMenu';
+import withMenuStyles from '../../../components/MegaMenu/MegaMenu.token';
 import asChamelionTitle from './asChamelionTitle';
 import withBodilessLinkToggle from './LinkToggle';
 import asBodilessList, { asSubList } from './asBodilessList';
-// import { withEditorSimple } from '../../../components/Editors';
-
-const withEditorSimple = asEditable;
-
-const MegaMenu = flow(
-  asMenuBase(),
-  asMenuClean,
-  withMenuStyles,
-)(Fragment);
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -71,18 +67,24 @@ const MenuLinkChamelion = flow(
   }),
 )(Foo);
 
-const asLinkToggle = flow(
+function stopPropagation(e: MouseEvent) {
+  e.stopPropagation();
+}
+
+const asMenuLink = (asEditable: any) => flow(
   replaceWith(MenuLink),
   withSidecarNodes(
     withBodilessLinkToggle(
       asBodilessLink('link'),
     ),
   ),
+  withExtendHandler('onClick', () => stopPropagation),
   asEditable('text', 'Link Toggle'),
   withNode,
-  withNodeKey('link-toggle'),
-);
-const LinkToggle = asLinkToggle(Fragment);
+  withNodeKey('title'),
+) as HOC;
+
+const LinkToggle = asMenuLink(withEditorSimple)(Fragment);
 
 const asMenuLinkList = flow(
   withDesign({
@@ -107,54 +109,41 @@ const CompoundList = flow(
   }),
 )('ul');
 
-const withPadding = withDesign({
-  Item: addClasses('pl-5'),
-});
-
-const withPlainLinkStyles = withDesign({
-  Item: withDesign({
-    Basic: withPadding,
-    Touts: withPadding,
-    Columns: flow(
-      withPadding,
-      withDesign({ Item: withPadding }),
-    ),
+const MegaMenu = flow(
+  asMenuBase(),
+  withMenuDesign({
+    Title: asMenuLink(withEditorSimple),
   }),
-});
+  asMainMenuClean,
+  withMenuStyles,
+)(Fragment);
 
 const MegaMenuList = flow(
   asMenuBase(),
-  withPlainLinkStyles,
+  withMenuDesign({
+    Title: asMenuLink(withEditorSimple),
+  }),
+  withMenuDesign({
+    Item: addClasses('pl-5'),
+  }),
   asReadOnly,
 )('ul');
 
 const asInline = withDesign({
   Wrapper: withDesign({
-    WrapperItem: flow(stylable, addClasses('inline pr-5')),
-    List: flow(stylable, addClasses('inline pr-5')),
+    WrapperItem: flow(stylable, addClasses('inline pl-5')),
+    List: flow(stylable, addClasses('inline')),
   }),
-  Item: addClasses('inline pr-5'),
-  Title: addClasses('pr-5'),
+  Item: addClasses('inline pl-5'),
 });
-
-const withBreadcrumbStyles = flow(
-  withDesign({
-    Wrapper: addClasses('inline'),
-    Item: withDesign({
-      Basic: asInline,
-      Touts: asInline,
-      Column: flow(
-        asInline,
-        withDesign({ Item: asInline }),
-      ),
-    }),
-  }),
-);
 
 const MegaMenuBreadcrumbs = flow(
   asMenuBase(),
-  asBreadcrumbs,
-  withBreadcrumbStyles,
+  withMenuDesign({
+    Title: asMenuLink(withEditorSimple),
+  }),
+  asBreadcrumbsClean,
+  withMenuDesign(asInline),
   asReadOnly,
 )('ul');
 

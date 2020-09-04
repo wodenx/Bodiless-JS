@@ -3,34 +3,26 @@ import { asToutHorizontal, ToutClean } from '@bodiless/organisms';
 import {
   withExtendHandler, withNode, withNodeKey,
 } from '@bodiless/core';
-import { replaceWith, withDesign } from '@bodiless/fclasses';
-import AsEditable from '@bodiless/organisms/lib/components/MainMenu/types/AsEditable';
+import { replaceWith, withDesign, H2 } from '@bodiless/fclasses';
+import { asEditable } from '@bodiless/components';
 import { asToutWithPaddings, asToutDefaultStyle } from '../../../components/Tout/token';
 import './megamenu.css';
-import { asEditableImage, asEditableLink } from '../../../components/Elements.token';
-import { withEditorSimple, withEditorBasic } from '../../../components/Editors';
+import { withToutEditors } from '../../../components/Tout';
 
 function stopPropagation(e: MouseEvent) {
   e.stopPropagation();
 }
 
-export const withToutEditors = (asEditable: AsEditable) => flow(
-  withDesign({
-    Image: asEditableImage('image'),
-    ImageLink: asEditableLink('component'),
-    Title: asEditable('component$text', 'Menu Item Text'),
-    Link: flow(
-      withEditorSimple('button-text', 'CTA'),
-      asEditableLink('component'),
-      // ifEditable(asNonDraggable),
-    ),
-    Body: withEditorBasic('body', 'Tout Body Text'),
-  }),
-);
-
-const asMenuTout = (asEditable: AsEditable) => flow(
+const asMenuTout = flow(
   replaceWith(ToutClean),
-  withToutEditors(asEditable),
+  withToutEditors,
+  withDesign({
+    Title: flow(
+      replaceWith(H2),
+      // We set the editor to match the one in asMenuLink
+      asEditable('text', 'Title'),
+    ),
+  }),
   asToutWithPaddings,
   asToutDefaultStyle,
   asToutHorizontal,
