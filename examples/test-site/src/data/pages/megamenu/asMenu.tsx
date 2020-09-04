@@ -82,6 +82,10 @@ const asMenu = (nodeKeys?: WithNodeKeyProps) => flow(
   ),
 );
 
+export const asMenu$ = withDesign({
+  Wrapper: replaceWith(stylable(Menu as ComponentType<MenuProps>)),
+});
+
 export default asMenu;
 
 export const asSubMenuList = flow(

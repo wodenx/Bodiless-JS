@@ -30,8 +30,8 @@ import { observer } from 'mobx-react-lite';
 
 import asBodilessChamelion, { ChamelionData } from './Chamelion';
 import asMenuTout from './MenuTout';
-import asMenu, { asSubMenu, usePlainLinks, asMenuItemGroup } from './asMenu';
-import { asSubList } from './asBodilessList';
+import asMenu, { asSubMenu, usePlainLinks, asMenuItemGroup, asMenu$ } from './asMenu';
+import asBodilessList, { asSubList } from './asBodilessList';
 
 // Workaround for issue with multiple slate editors pointing to the same node.
 const withEditorSimple = asEditable;
@@ -115,19 +115,27 @@ const asChamelionSubMenuClean = withDesign({
   Columns: asColumnSubMenuClean,
 });
 
-const asChamelionSubMenuClean$ = flow(
-  asChamelionSubMenuList,
-  ifToggledOff(usePlainLinks)(
-    asChamelionSubMenuClean,
-  ),
-);
-
-const asMenuClean = flow(
-  asMenu(),
+const asMenuListClean = flow(
+  asBodilessList(),
+  asStylableList,
   withDesign({
     Title: asMenuLink(withEditorSimple),
-    Item: asChamelionSubMenuClean$,
+    Item: asChamelionSubMenuList,
   }),
+);
+
+const asMenuClean = flow( 
+  asMenu$,
+  withDesign({
+    Item: asChamelionSubMenuClean,
+  }),
+);
+
+const asMenuClean$ = flow(
+  asMenuListClean,
+  ifToggledOff(usePlainLinks)(
+    asMenuClean,
+  ),
 );
 
 const asBreadcrumbMenu = withDesign({
@@ -154,4 +162,4 @@ const asBreadcrumbs = flow(
   asBreadcrumbMenu,
 );
 
-export { asMenuClean, asBreadcrumbs };
+export { asMenuClean$ as asMenuClean, asBreadcrumbs };
