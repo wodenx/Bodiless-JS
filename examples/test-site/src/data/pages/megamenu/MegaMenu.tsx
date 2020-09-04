@@ -90,11 +90,11 @@ const asColumnSubMenuListClean = flow(
 const asColumnSubMenuClean = flow(
   asColumnSubMenuListClean,
   ifToggledOff(usePlainLinks)(
+    withDesign({
+      Item: flow(asColumnListClean, asColumnClean),
+    }),
     asBasicSubMenuClean,
   ),
-  withDesign({
-    Item: asColumnClean$,
-  }),
 );
 
 type Overrides = Partial<EditButtonOptions<any, ChamelionData>>;
