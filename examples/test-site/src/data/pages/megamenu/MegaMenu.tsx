@@ -80,8 +80,15 @@ const asColumnClean$ = flow(
   ),
 );
 
-const asColumnSubMenuClean = flow(
+const asColumnSubMenuListClean = flow(
   asBasicSubMenuListClean,
+  withDesign({
+    Item: asColumnListClean,
+  }),
+);
+
+const asColumnSubMenuClean = flow(
+  asColumnSubMenuListClean,
   ifToggledOff(usePlainLinks)(
     asBasicSubMenuClean,
   ),
