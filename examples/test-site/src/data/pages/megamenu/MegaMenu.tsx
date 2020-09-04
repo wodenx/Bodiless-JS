@@ -36,7 +36,7 @@ import { asSubList } from './asBodilessList';
 // Workaround for issue with multiple slate editors pointing to the same node.
 const withEditorSimple = asEditable;
 
-const asBasicSubMenuListClean = flow(
+const asSubMenuList = flow(
   asSubList,
   asStylableList,
   withDesign({
@@ -44,16 +44,12 @@ const asBasicSubMenuListClean = flow(
   }),
 );
 
-const asBasicSubMenuClean = asSubMenu;
-
 const asBasicSubMenuClean$ = flow(
-  asBasicSubMenuListClean,
+  asSubMenuList,
   ifToggledOff(usePlainLinks)(
-    asBasicSubMenuClean,
+    asSubMenu,
   ),
 );
-
-const asToutSubMenuListClean = asBasicSubMenuListClean;
 
 const asToutSubMenuClean = flow(
   asSubMenu,
@@ -63,27 +59,23 @@ const asToutSubMenuClean = flow(
 );
 
 const asToutsSubMenuClean$ = flow(
-  asToutSubMenuListClean,
+  asSubMenuList,
   ifToggledOff(usePlainLinks)(
     asToutSubMenuClean,
   ),
 );
 
-const asColumnListClean = asBasicSubMenuListClean;
-
-const asColumnClean = asMenuItemGroup;
-
 const asColumnSubMenuListClean = flow(
-  asBasicSubMenuListClean,
+  asSubMenuList,
   withDesign({
-    Item: asColumnListClean,
+    Item: asSubMenuList,
   }),
 );
 
 const asColumnSubMenuClean = flow(
-  asBasicSubMenuClean,
+  asSubMenu,
   withDesign({
-    Item: flow(asColumnListClean, asColumnClean),
+    Item: flow(asSubMenuList, asMenuItemGroup),
   }),
 );
 
