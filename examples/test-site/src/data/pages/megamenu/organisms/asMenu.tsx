@@ -4,8 +4,8 @@ import { replaceWith, withDesign, stylable } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import Menu, { ItemGroup, Item as MenuItem, SubMenu } from 'rc-menu';
 // import Menu, { ItemGroup, Item as MenuItem, SubMenu } from './RCMenu';
-import { asTitledItem } from './asBodilessList';
 import { ifEditable, withExtendHandler } from '@bodiless/core';
+import { asTitledItem } from './components/asBodilessList';
 
 export const asMenu = withDesign({
   Wrapper: replaceWith(stylable(Menu as ComponentType<MenuProps>)),
@@ -30,11 +30,11 @@ export const asMenuItemGroup = flow(
   asTitledItem,
 );
 
-const stopPropagation = (e: MouseEvent)  => {
+const stopPropagation = (e: MouseEvent) => {
   e.stopPropagation();
 };
 
 export const asSubMenuTitle = ifEditable(
-  // Prevent clicks on the tout from closing the submenu
+  // Prevent clicks on the submenu from closing the submenu
   withExtendHandler('onClick', () => stopPropagation),
 );

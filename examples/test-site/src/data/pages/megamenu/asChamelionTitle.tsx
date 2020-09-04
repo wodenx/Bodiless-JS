@@ -5,7 +5,7 @@ import { flow } from 'lodash';
 import { withTitle } from '@bodiless/layouts';
 import { withOnlyProps } from '@bodiless/core';
 import { withEditorSimple } from '../../../components/Editors';
-import asBodilessChamelion from './Chamelion';
+import asBodilessChamelion from './organisms/components/Chamelion';
 
 const startWithMenuLink = flow(
   startWith(withOnlyProps('key', 'children')(Fragment)),

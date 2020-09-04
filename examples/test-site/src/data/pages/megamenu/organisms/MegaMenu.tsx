@@ -28,12 +28,12 @@ import {
 import { asEditable, asBreadcrumb, useBreadcrumbContext } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
-import asBodilessChamelion, { ChamelionData } from './Chamelion';
-import { asDefaultMenuTout } from './MenuTout';
+import asBodilessChamelion, { ChamelionData } from './components/Chamelion';
+import { asDefaultMenuTout } from './MegaMenuTitles';
 import {
   asSubMenu, asMenuItemGroup, asMenu, withMenuItem,
 } from './asMenu';
-import asBodilessList, { asSubList as asBodilessSubList } from './asBodilessList';
+import asBodilessList, { asSubList as asBodilessSubList } from './components/asBodilessList';
 
 // Workaround for issue with multiple slate editors pointing to the same node.
 const withEditorSimple = asEditable;

@@ -16,31 +16,29 @@ import React, { Fragment } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  withDesign, addClasses, replaceWith, H3, stylable, HOC, H2,
+  withDesign, addClasses, replaceWith, H3, stylable, H2,
 } from '@bodiless/fclasses';
 import { observer } from 'mobx-react-lite';
 
 import { flow } from 'lodash';
 import {
-  useNode, withNode, withSidecarNodes, withNodeKey, asReadOnly, withExtendHandler,
+  useNode, withNode, asReadOnly,
 } from '@bodiless/core';
-import { MenuLink, asStylableList } from '@bodiless/organisms';
+import { asStylableList } from '@bodiless/organisms';
 
 // Workaround for multiple slate editor issue.
-import { asBodilessLink, asEditable as withEditorSimple } from '@bodiless/components';
+import { asEditable as withEditorSimple } from '@bodiless/components';
 // import { withEditorSimple } from '../../../components/Editors';
 
 import Layout from '../../../components/Layout';
 import {
   asMainMenuClean, asBreadcrumbsClean, asMenuBase, withMenuDesign,
-} from './MegaMenu';
+} from './organisms/MegaMenu';
 import withMenuStyles, { withMenuToutStyles } from '../../../components/MegaMenu/MegaMenu.token';
 import asChamelionTitle from './asChamelionTitle';
-import withBodilessLinkToggle from './LinkToggle';
-import asBodilessList, { asSubList } from './asBodilessList';
-import { asSubMenuTitle } from './asMenu';
+import asBodilessList, { asSubList } from './organisms/components/asBodilessList';
 import { withToutEditors } from '../../../components/Tout';
-import asMenuTout from './MenuTout';
+import { asMenuTout, asMenuLink } from './organisms/MegaMenuTitles';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -69,19 +67,6 @@ const MenuLinkChamelion = flow(
     Link: addClasses('italic'),
   }),
 )(Foo);
-
-const asMenuLink = (asEditable: any) => flow(
-  replaceWith(MenuLink),
-  withSidecarNodes(
-    withBodilessLinkToggle(
-      asBodilessLink('link'),
-    ),
-  ),
-  asSubMenuTitle,
-  asEditable('text', 'Link Toggle'),
-  withNode,
-  withNodeKey('title'),
-) as HOC;
 
 const LinkToggle = asMenuLink(withEditorSimple)(Fragment);
 
@@ -134,8 +119,8 @@ const MegaMenu = flow(
     Item: withDesign({
       Touts: withDesign({
         Title: asMenuTout$,
-      })
-    })
+      }),
+    }),
   }),
   withMenuStyles,
 )(Fragment);
