@@ -12,40 +12,28 @@
  * limitations under the License.
  */
 
-import { Fragment } from 'react';
 import { flow } from 'lodash';
 import {
-  asHorizontalMenu,
-  asHorizontalSubMenu,
   asMenuLink,
 } from '@bodiless/organisms';
 
 import {
-  withDesign, addClasses, addProps, addClassesIf,
+  withDesign, addClassesIf,
 } from '@bodiless/fclasses';
 import { withTitle } from '@bodiless/layouts';
 import {
-  EditButtonOptions, ifToggledOff, withSidecarNodes,
+  EditButtonOptions, ifToggledOff, withSidecarNodes, EditButtonProps,
 } from '@bodiless/core';
 // import { withEditorSimple } from '../../../components/Editors';
 import { asEditable, asBreadcrumb, useBreadcrumbContext } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
-import { asExceptMobile } from '../../../components/Elements.token';
 
-import { withMenuListStyles, withMenuSublistStyles } from '../../../components/Menus/token';
 import asBodilessChamelion, { ChamelionData } from './Chamelion';
 import asMenuTout from './MenuTout';
 import asMenu, { asSubMenu, asMenuItemGroup, usePlainLinks } from './asMenu';
 
 // Workaround for issue with multiple slate editors pointing to the same node.
 const withEditorSimple = asEditable;
-
-const withMegaMenuStyles = withDesign({
-  // @TODO: We add the class here to style rc-menu. Maybe can use design API if we ditch rc-menu.
-  Wrapper: addProps({ popupClassName: 'container bl-mega-menu' }),
-  // @TODO: What's the best starting width? They will shrink to fit if there are more.
-  Item: addClasses('w-1/3'),
-});
 
 const asColumnClean = flow(
   asMenuItemGroup,
@@ -54,20 +42,11 @@ const asColumnClean = flow(
   }),
 );
 
-const withColumnStyles = flow(
-  withMenuSublistStyles,
-);
-
 const asBasicSubMenuClean = flow(
   asSubMenu,
   withDesign({
     Title: asMenuLink(withEditorSimple),
   }),
-);
-
-const withBasicSubMenuStyles = flow(
-  asHorizontalSubMenu,
-  withMenuSublistStyles,
 );
 
 const asToutSubMenuClean = flow(
@@ -81,11 +60,6 @@ const asToutSubMenuClean = flow(
   }),
 );
 
-const withToutSubMenuStyles = flow(
-  withBasicSubMenuStyles,
-  withMegaMenuStyles,
-);
-
 const asColumnSubMenuClean = flow(
   asBasicSubMenuClean,
   withDesign({
@@ -94,22 +68,9 @@ const asColumnSubMenuClean = flow(
   }),
 );
 
-const withColumnSubMenuStyles = flow(
-  withDesign({
-    Item: withColumnStyles,
-  }),
-  withBasicSubMenuStyles,
-  withMegaMenuStyles,
-);
+type Overrides = Partial<EditButtonOptions<any, ChamelionData>>;
 
-type NodeDataHandlers<D> = {
-  setComponentData: (data: D) => void,
-  componentData: D,
-};
-
-type Overrides = Partial<EditButtonOptions<NodeDataHandlers<ChamelionData>, ChamelionData>>;
-
-const useOverrides = (props: NodeDataHandlers<ChamelionData>): Overrides => {
+const useOverrides = (props: EditButtonProps<ChamelionData>): Overrides => {
   const { componentData } = props;
   const { component } = componentData;
   return {
@@ -130,27 +91,12 @@ const asChamelionSubMenuClean = flow(
   }),
 );
 
-const withChamelionSubMenuStyles = withDesign({
-  Basic: withBasicSubMenuStyles,
-  Touts: withToutSubMenuStyles,
-  Columns: withColumnSubMenuStyles,
-});
-
 const asMenuClean = flow(
   asMenu(),
   withDesign({
     Title: asMenuLink(withEditorSimple),
     Item: asChamelionSubMenuClean,
   }),
-);
-
-const withMenuStyles = flow(
-  withDesign({
-    Item: withChamelionSubMenuStyles,
-  }),
-  asHorizontalMenu,
-  withMenuListStyles,
-  asExceptMobile,
 );
 
 const asBreadcrumbMenu = withDesign({
@@ -161,7 +107,7 @@ const asBreadcrumbMenu = withDesign({
   ),
 });
 
-export const asBreadcrumbs = flow(
+const asBreadcrumbs = flow(
   withDesign({
     Item: withDesign({
       Basic: asBreadcrumbMenu,
@@ -177,10 +123,4 @@ export const asBreadcrumbs = flow(
   asBreadcrumbMenu,
 );
 
-const Menu = flow(
-  asMenuClean,
-  withMenuStyles,
-)(Fragment);
-
-export default Menu;
-export { asMenuClean, withMenuStyles };
+export { asMenuClean, asBreadcrumbs };

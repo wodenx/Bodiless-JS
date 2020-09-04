@@ -28,7 +28,8 @@ import { asBodilessLink, asEditable } from '@bodiless/components';
 import { MenuLink, asMenuLink, asStylableList } from '@bodiless/organisms';
 import Layout from '../../../components/Layout';
 
-import MegaMenu, { asMenuClean, asBreadcrumbs } from './MegaMenu';
+import { asMenuClean, asBreadcrumbs } from './MegaMenu';
+import withMenuStyles from './MegaMenu.token';
 import asChamelionTitle from './asChamelionTitle';
 import withBodilessLinkToggle from './LinkToggle';
 import asBodilessList, { asSubList } from './asBodilessList';
@@ -36,6 +37,11 @@ import asBodilessList, { asSubList } from './asBodilessList';
 import { asPlainLinks } from './asMenu';
 
 const withEditorSimple = asEditable;
+
+const MegaMenu = flow(
+  asMenuClean,
+  withMenuStyles,
+)(Fragment);
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
