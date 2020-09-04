@@ -81,9 +81,11 @@ const asColumnClean$ = flow(
 );
 
 const asColumnSubMenuClean = flow(
-  asBasicSubMenuClean$,
+  asBasicSubMenuListClean,
+  ifToggledOff(usePlainLinks)(
+    asBasicSubMenuClean,
+  ),
   withDesign({
-    Title: asMenuLink(withEditorSimple),
     Item: asColumnClean$,
   }),
 );
