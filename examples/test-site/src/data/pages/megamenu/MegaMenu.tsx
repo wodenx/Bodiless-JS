@@ -22,7 +22,7 @@ import {
 } from '@bodiless/fclasses';
 import { withTitle } from '@bodiless/layouts';
 import {
-  EditButtonOptions, withSidecarNodes, EditButtonProps,
+  EditButtonOptions, withSidecarNodes, EditButtonProps, WithNodeKeyProps,
 } from '@bodiless/core';
 // import { withEditorSimple } from '../../../components/Editors';
 import { asEditable, asBreadcrumb, useBreadcrumbContext } from '@bodiless/components';
@@ -33,25 +33,25 @@ import asMenuTout from './MenuTout';
 import {
   asSubMenu, asMenuItemGroup, asMenu, withMenuItem,
 } from './asMenu';
-import asBodilessList, { asSubList } from './asBodilessList';
+import asBodilessList, { asSubList as asBodilessSubList } from './asBodilessList';
 
 // Workaround for issue with multiple slate editors pointing to the same node.
 const withEditorSimple = asEditable;
 
-const asSubMenuList = flow(
-  asSubList,
+const asSubList = flow(
+  asBodilessSubList,
   asStylableList,
   withDesign({
     Title: asMenuLink(withEditorSimple),
   }),
 );
 
-const asBasicSubMenuClean = flow(
+const asBasicSubMenu = flow(
   withMenuItem,
   asSubMenu,
 );
 
-const asToutSubMenuClean = flow(
+const asToutSubMenu = flow(
   withMenuItem,
   asSubMenu,
   withDesign({
@@ -59,14 +59,14 @@ const asToutSubMenuClean = flow(
   }),
 );
 
-const asColumnSubMenuListClean = flow(
-  asSubMenuList,
+const asColumnSubList = flow(
+  asSubList,
   withDesign({
-    Item: asSubMenuList,
+    Item: asSubList,
   }),
 );
 
-const asColumnSubMenuClean = flow(
+const asColumnSubMenu = flow(
   asSubMenu,
   withDesign({
     Item: asMenuItemGroup,
@@ -87,34 +87,42 @@ const useOverrides = (props: EditButtonProps<ChamelionData>): Overrides => {
   };
 };
 
-const asChamelionSubMenuList = flow(
+const asChamelionSubList = flow(
   asBodilessChamelion('cham-sublist', {}, useOverrides),
   withDesign({
-    Basic: flow(asSubMenuList, withTitle('Basic sub-menu')),
-    Touts: flow(asSubMenuList, withTitle('Tout sub-menu')),
-    Columns: flow(asColumnSubMenuListClean, withTitle('Column sub-menu')),
+    Basic: flow(asSubList, withTitle('Basic sub-menu')),
+    Touts: flow(asSubList, withTitle('Tout sub-menu')),
+    Columns: flow(asColumnSubList, withTitle('Column sub-menu')),
   }),
 );
 
-const asChamelionSubMenuClean = withDesign({
-  Basic: asBasicSubMenuClean,
-  Touts: asToutSubMenuClean,
-  Columns: asColumnSubMenuClean,
+const asChamelionSubMenu = withDesign({
+  Basic: asBasicSubMenu,
+  Touts: asToutSubMenu,
+  Columns: asColumnSubMenu,
 });
 
-const asMenuBase = flow(
-  asBodilessList(),
+/**
+ * Bodiless HOC generator which creates the basic structure of the Mega Menu. The component
+ * to which the HOC applies is irrelevant (it will be replaced by the Menu wrapper).
+ *
+ * @param nodeKeys The optional nodekeys specifying where the data should be stored.
+ *
+ * @return
+ */
+const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
+  asBodilessList(nodeKeys),
   asStylableList,
   withDesign({
     Title: asMenuLink(withEditorSimple),
-    Item: asChamelionSubMenuList,
+    Item: asChamelionSubList,
   }),
 );
 
 const asMenuClean = flow(
   asMenu,
   withDesign({
-    Item: asChamelionSubMenuClean,
+    Item: asChamelionSubMenu,
   }),
 );
 

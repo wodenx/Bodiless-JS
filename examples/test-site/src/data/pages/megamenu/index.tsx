@@ -38,7 +38,7 @@ import asBodilessList, { asSubList } from './asBodilessList';
 const withEditorSimple = asEditable;
 
 const MegaMenu = flow(
-  asMenuBase,
+  asMenuBase(),
   asMenuClean,
   withMenuStyles,
 )(Fragment);
@@ -123,7 +123,7 @@ const withPlainLinkStyles = withDesign({
 });
 
 const MegaMenuList = flow(
-  asMenuBase,
+  asMenuBase(),
   withPlainLinkStyles,
   asReadOnly,
 )('ul');
@@ -152,7 +152,7 @@ const withBreadcrumbStyles = flow(
 );
 
 const MegaMenuBreadcrumbs = flow(
-  asMenuBase,
+  asMenuBase(),
   asBreadcrumbs,
   withBreadcrumbStyles,
   asReadOnly,
