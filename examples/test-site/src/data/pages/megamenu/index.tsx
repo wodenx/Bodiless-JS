@@ -16,7 +16,7 @@ import React, { Fragment } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  withDesign, addClasses, replaceWith, H3, stylable, HOC,
+  withDesign, addClasses, replaceWith, H3, stylable, HOC, H2,
 } from '@bodiless/fclasses';
 import { observer } from 'mobx-react-lite';
 
@@ -34,11 +34,13 @@ import Layout from '../../../components/Layout';
 import {
   asMainMenuClean, asBreadcrumbsClean, asMenuBase, withMenuDesign,
 } from './MegaMenu';
-import withMenuStyles from '../../../components/MegaMenu/MegaMenu.token';
+import withMenuStyles, { withMenuToutStyles } from '../../../components/MegaMenu/MegaMenu.token';
 import asChamelionTitle from './asChamelionTitle';
 import withBodilessLinkToggle from './LinkToggle';
 import asBodilessList, { asSubList } from './asBodilessList';
 import { asSubMenuTitle } from './asMenu';
+import { withToutEditors } from '../../../components/Tout';
+import asMenuTout from './MenuTout';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -106,12 +108,35 @@ const CompoundList = flow(
   }),
 )('ul');
 
+const withMenuToutEditors = flow(
+  withToutEditors,
+  withDesign({
+    Title: flow(
+      replaceWith(H2),
+      // We set the title editor to match the one in asMenuLink
+      withEditorSimple('text', 'Title'),
+    ),
+  }),
+);
+
+const asMenuTout$ = flow(
+  asMenuTout(withMenuToutEditors),
+  withMenuToutStyles,
+);
+
 const MegaMenu = flow(
   asMenuBase(),
   withMenuDesign({
     Title: asMenuLink(withEditorSimple),
   }),
   asMainMenuClean,
+  withDesign({
+    Item: withDesign({
+      Touts: withDesign({
+        Title: asMenuTout$,
+      })
+    })
+  }),
   withMenuStyles,
 )(Fragment);
 

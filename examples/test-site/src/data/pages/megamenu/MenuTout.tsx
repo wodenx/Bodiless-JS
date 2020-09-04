@@ -1,31 +1,17 @@
-import { flow } from 'lodash';
-import { asToutHorizontal, ToutClean } from '@bodiless/organisms';
-import {
-  withExtendHandler, withNode, withNodeKey,
-} from '@bodiless/core';
-import { replaceWith, withDesign, H2 } from '@bodiless/fclasses';
-import { asEditable } from '@bodiless/components';
-import { asToutWithPaddings, asToutDefaultStyle } from '../../../components/Tout/token';
-import './megamenu.css';
-import { withToutEditors } from '../../../components/Tout';
+import { flow, identity } from 'lodash';
+import { ToutClean } from '@bodiless/organisms';
+import { withNode, withNodeKey } from '@bodiless/core';
+import { replaceWith } from '@bodiless/fclasses';
 import { asSubMenuTitle } from './asMenu';
 
-const asMenuTout = flow(
+const asMenuTout = (withToutEditors: any) => flow(
   replaceWith(ToutClean),
   withToutEditors,
-  withDesign({
-    Title: flow(
-      replaceWith(H2),
-      // We set the editor to match the one in asMenuLink
-      asEditable('text', 'Title'),
-    ),
-  }),
-  asToutWithPaddings,
-  asToutDefaultStyle,
-  asToutHorizontal,
   withNode,
   withNodeKey('title'),
   asSubMenuTitle,
 );
+
+export const asDefaultMenuTout = asMenuTout(identity);
 
 export default asMenuTout;

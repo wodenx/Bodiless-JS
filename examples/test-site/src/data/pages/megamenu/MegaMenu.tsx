@@ -29,7 +29,7 @@ import { asEditable, asBreadcrumb, useBreadcrumbContext } from '@bodiless/compon
 import { observer } from 'mobx-react-lite';
 
 import asBodilessChamelion, { ChamelionData } from './Chamelion';
-import asMenuTout from './MenuTout';
+import { asDefaultMenuTout } from './MenuTout';
 import {
   asSubMenu, asMenuItemGroup, asMenu, withMenuItem,
 } from './asMenu';
@@ -55,7 +55,7 @@ const asToutSubMenu = flow(
   withMenuItem,
   asSubMenu,
   withDesign({
-    Title: asMenuTout,
+    Title: asDefaultMenuTout,
   }),
 );
 
