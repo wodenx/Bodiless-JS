@@ -28,17 +28,17 @@ import { asBodilessLink, asEditable } from '@bodiless/components';
 import { MenuLink, asMenuLink, asStylableList } from '@bodiless/organisms';
 import Layout from '../../../components/Layout';
 
-import { asMenuClean, asBreadcrumbs } from './MegaMenu';
+import { asMenuClean, asBreadcrumbs, asMenuBase } from './MegaMenu';
 import withMenuStyles from './MegaMenu.token';
 import asChamelionTitle from './asChamelionTitle';
 import withBodilessLinkToggle from './LinkToggle';
 import asBodilessList, { asSubList } from './asBodilessList';
 // import { withEditorSimple } from '../../../components/Editors';
-import { asPlainLinks } from './asMenu';
 
 const withEditorSimple = asEditable;
 
 const MegaMenu = flow(
+  asMenuBase,
   asMenuClean,
   withMenuStyles,
 )(Fragment);
@@ -123,18 +123,18 @@ const withPlainLinkStyles = withDesign({
 });
 
 const MegaMenuList = flow(
-  asMenuClean,
-  asPlainLinks,
+  asMenuBase,
   withPlainLinkStyles,
   asReadOnly,
 )('ul');
 
 const asInline = withDesign({
   Wrapper: withDesign({
-    WrapperItem: flow(stylable, addClasses('inline')),
-    List: flow(stylable, addClasses('inline')),
+    WrapperItem: flow(stylable, addClasses('inline pr-5')),
+    List: flow(stylable, addClasses('inline pr-5')),
   }),
-  Item: addClasses('inline mr-5'),
+  Item: addClasses('inline pr-5'),
+  Title: addClasses('pr-5'),
 });
 
 const withBreadcrumbStyles = flow(
@@ -152,8 +152,7 @@ const withBreadcrumbStyles = flow(
 );
 
 const MegaMenuBreadcrumbs = flow(
-  asMenuClean,
-  asPlainLinks,
+  asMenuBase,
   asBreadcrumbs,
   withBreadcrumbStyles,
   asReadOnly,
