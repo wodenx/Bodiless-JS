@@ -38,6 +38,7 @@ import withMenuStyles from '../../../components/MegaMenu/MegaMenu.token';
 import asChamelionTitle from './asChamelionTitle';
 import withBodilessLinkToggle from './LinkToggle';
 import asBodilessList, { asSubList } from './asBodilessList';
+import { asSubMenuTitle } from './asMenu';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -67,10 +68,6 @@ const MenuLinkChamelion = flow(
   }),
 )(Foo);
 
-function stopPropagation(e: MouseEvent) {
-  e.stopPropagation();
-}
-
 const asMenuLink = (asEditable: any) => flow(
   replaceWith(MenuLink),
   withSidecarNodes(
@@ -78,7 +75,7 @@ const asMenuLink = (asEditable: any) => flow(
       asBodilessLink('link'),
     ),
   ),
-  withExtendHandler('onClick', () => stopPropagation),
+  asSubMenuTitle,
   asEditable('text', 'Link Toggle'),
   withNode,
   withNodeKey('title'),

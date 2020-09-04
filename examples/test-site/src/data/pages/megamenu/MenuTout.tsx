@@ -8,10 +8,7 @@ import { asEditable } from '@bodiless/components';
 import { asToutWithPaddings, asToutDefaultStyle } from '../../../components/Tout/token';
 import './megamenu.css';
 import { withToutEditors } from '../../../components/Tout';
-
-function stopPropagation(e: MouseEvent) {
-  e.stopPropagation();
-}
+import { asSubMenuTitle } from './asMenu';
 
 const asMenuTout = flow(
   replaceWith(ToutClean),
@@ -28,8 +25,7 @@ const asMenuTout = flow(
   asToutHorizontal,
   withNode,
   withNodeKey('title'),
-  // Prevent clicks on the tout from closing the submenu
-  withExtendHandler('onClick', () => stopPropagation),
+  asSubMenuTitle,
 );
 
 export default asMenuTout;
