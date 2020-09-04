@@ -93,9 +93,12 @@ export const asSubMenuList = flow(
   asStylableList,
 );
 
+export const withMenuItem = withDesign({
+  Item: replaceWith(stylable(MenuItem)),
+});
+
 export const asSubMenu = flow(
   withDesign({
-    Item: replaceWith(stylable(MenuItem)),
     Wrapper: replaceWith(stylable(SubMenu)),
   }),
   asTitledItem,

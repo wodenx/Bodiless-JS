@@ -30,7 +30,7 @@ import { observer } from 'mobx-react-lite';
 
 import asBodilessChamelion, { ChamelionData } from './Chamelion';
 import asMenuTout from './MenuTout';
-import asMenu, { asSubMenu, usePlainLinks, asMenuItemGroup, asMenu$ } from './asMenu';
+import asMenu, { asSubMenu, usePlainLinks, asMenuItemGroup, asMenu$, withMenuItem } from './asMenu';
 import asBodilessList, { asSubList } from './asBodilessList';
 
 // Workaround for issue with multiple slate editors pointing to the same node.
@@ -44,25 +44,17 @@ const asSubMenuList = flow(
   }),
 );
 
-const asBasicSubMenuClean$ = flow(
-  asSubMenuList,
-  ifToggledOff(usePlainLinks)(
-    asSubMenu,
-  ),
+const asBasicSubMenuClean = flow(
+  withMenuItem,
+  asSubMenu,
 );
 
 const asToutSubMenuClean = flow(
+  withMenuItem,
   asSubMenu,
   withDesign({
     Title: asMenuTout(withEditorSimple),
   }),
-);
-
-const asToutsSubMenuClean$ = flow(
-  asSubMenuList,
-  ifToggledOff(usePlainLinks)(
-    asToutSubMenuClean,
-  ),
 );
 
 const asColumnSubMenuListClean = flow(
@@ -75,15 +67,8 @@ const asColumnSubMenuListClean = flow(
 const asColumnSubMenuClean = flow(
   asSubMenu,
   withDesign({
-    Item: flow(asSubMenuList, asMenuItemGroup),
+    Item: asMenuItemGroup,
   }),
-);
-
-const asColumnSubMenuClean$ = flow(
-  asColumnSubMenuListClean,
-  ifToggledOff(usePlainLinks)(
-    asColumnSubMenuClean,
-  ),
 );
 
 type Overrides = Partial<EditButtonOptions<any, ChamelionData>>;
@@ -110,7 +95,7 @@ const asChamelionSubMenuList = flow(
 );
 
 const asChamelionSubMenuClean = withDesign({
-  Basic: asSubMenu,
+  Basic: asBasicSubMenuClean,
   Touts: asToutSubMenuClean,
   Columns: asColumnSubMenuClean,
 });
