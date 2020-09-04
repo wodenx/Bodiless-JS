@@ -44,7 +44,6 @@ export const asPlainLinks = <P extends object>(Component: ComponentType<P>) => {
   return AsPlainLinks;
 };
 
-
 /**
  * @private
  *
@@ -85,20 +84,12 @@ const asMenu = (nodeKeys?: WithNodeKeyProps) => flow(
 
 export default asMenu;
 
-export const asSubMenu = asToggledMenu(flow(
-  asMenuBase(),
-  withDesign({
-    Wrapper: replaceWith(stylable(SubMenu)),
-  }),
-  asTitledItem,
-));
-
 export const asSubMenuList = flow(
   asSubList,
   asStylableList,
 );
 
-export const asSubMenu$ = flow(
+export const asSubMenu = flow(
   withDesign({
     Item: replaceWith(stylable(MenuItem)),
     Wrapper: replaceWith(stylable(SubMenu)),
@@ -106,15 +97,7 @@ export const asSubMenu$ = flow(
   asTitledItem,
 );
 
-export const asMenuItemGroup = asToggledMenu(flow(
-  asMenuBase(),
-  withDesign({
-    Wrapper: replaceWith(stylable(ItemGroup)),
-  }),
-  asTitledItem,
-));
-
-export const asMenuItemGroup$ = flow(
+export const asMenuItemGroup = flow(
   withDesign({
     Item: replaceWith(stylable(MenuItem)),
     Wrapper: replaceWith(stylable(ItemGroup)),

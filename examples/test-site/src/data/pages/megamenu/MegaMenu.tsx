@@ -30,7 +30,7 @@ import { observer } from 'mobx-react-lite';
 
 import asBodilessChamelion, { ChamelionData } from './Chamelion';
 import asMenuTout from './MenuTout';
-import asMenu, { asSubMenu, asSubMenu$, asMenuItemGroup, usePlainLinks, asSubMenuList, asMenuItemGroup$ } from './asMenu';
+import asMenu, { asSubMenu, usePlainLinks, asMenuItemGroup } from './asMenu';
 import { asSubList } from './asBodilessList';
 
 // Workaround for issue with multiple slate editors pointing to the same node.
@@ -44,7 +44,7 @@ const asBasicSubMenuListClean = flow(
   }),
 );
 
-const asBasicSubMenuClean = asSubMenu$;
+const asBasicSubMenuClean = asSubMenu;
 
 const asBasicSubMenuClean$ = flow(
   asBasicSubMenuListClean,
@@ -56,7 +56,7 @@ const asBasicSubMenuClean$ = flow(
 const asToutSubMenuListClean = asBasicSubMenuListClean;
 
 const asToutSubMenuClean = flow(
-  asSubMenu$,
+  asSubMenu,
   withDesign({
     Title: asMenuTout(withEditorSimple),
   }),
@@ -71,14 +71,7 @@ const asToutsSubMenuClean$ = flow(
 
 const asColumnListClean = asBasicSubMenuListClean;
 
-const asColumnClean = asMenuItemGroup$;
-
-const asColumnClean$ = flow(
-  asColumnListClean,
-  ifToggledOff(usePlainLinks)(
-    asColumnClean,
-  ),
-);
+const asColumnClean = asMenuItemGroup;
 
 const asColumnSubMenuListClean = flow(
   asBasicSubMenuListClean,
