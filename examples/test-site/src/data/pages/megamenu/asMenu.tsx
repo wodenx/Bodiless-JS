@@ -44,6 +44,7 @@ export const asPlainLinks = <P extends object>(Component: ComponentType<P>) => {
   return AsPlainLinks;
 };
 
+
 /**
  * @private
  *
@@ -87,6 +88,19 @@ export default asMenu;
 export const asSubMenu = asToggledMenu(flow(
   asMenuBase(),
   withDesign({
+    Wrapper: replaceWith(stylable(SubMenu)),
+  }),
+  asTitledItem,
+));
+
+export const asSubMenuList = flow(
+  asSubList,
+  asStylableList,
+);
+
+export const asSubMenu$ = asToggledMenu(flow(
+  withDesign({
+    Item: replaceWith(stylable(MenuItem)),
     Wrapper: replaceWith(stylable(SubMenu)),
   }),
   asTitledItem,
