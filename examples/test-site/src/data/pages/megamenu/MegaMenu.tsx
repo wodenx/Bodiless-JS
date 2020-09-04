@@ -88,12 +88,16 @@ const asColumnSubMenuListClean = flow(
 );
 
 const asColumnSubMenuClean = flow(
+  asBasicSubMenuClean,
+  withDesign({
+    Item: flow(asColumnListClean, asColumnClean),
+  }),
+);
+
+const asColumnSubMenuClean$ = flow(
   asColumnSubMenuListClean,
   ifToggledOff(usePlainLinks)(
-    withDesign({
-      Item: flow(asColumnListClean, asColumnClean),
-    }),
-    asBasicSubMenuClean,
+    asColumnSubMenuClean,
   ),
 );
 
@@ -116,7 +120,7 @@ const asChamelionSubMenuClean = flow(
   withDesign({
     Basic: flow(asBasicSubMenuClean$, withTitle('Basic sub-menu')),
     Touts: flow(asToutsSubMenuClean$, withTitle('Tout sub-menu')),
-    Columns: flow(asColumnSubMenuClean, withTitle('Column sub-menu')),
+    Columns: flow(asColumnSubMenuClean$, withTitle('Column sub-menu')),
   }),
 );
 
