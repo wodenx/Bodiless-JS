@@ -44,13 +44,16 @@ const asBasicSubMenuListClean = flow(
   }),
 );
 
+const asBasicSubMenuClean = asSubMenu$;
+
 const asBasicSubMenuClean$ = flow(
   asBasicSubMenuListClean,
   ifToggledOff(usePlainLinks)(
-    asSubMenu$,
+    asBasicSubMenuClean,
   ),
 );
 
+const asToutSubMenuListClean = asBasicSubMenuListClean;
 
 const asToutSubMenuClean = flow(
   asSubMenu$,
@@ -60,7 +63,7 @@ const asToutSubMenuClean = flow(
 );
 
 const asToutsSubMenuClean$ = flow(
-  asBasicSubMenuListClean,
+  asToutSubMenuListClean,
   ifToggledOff(usePlainLinks)(
     asToutSubMenuClean,
   ),
@@ -68,9 +71,7 @@ const asToutsSubMenuClean$ = flow(
 
 const asColumnListClean = asBasicSubMenuListClean;
 
-const asColumnClean = flow(
-  asMenuItemGroup$,
-);
+const asColumnClean = asMenuItemGroup$;
 
 const asColumnClean$ = flow(
   asColumnListClean,
