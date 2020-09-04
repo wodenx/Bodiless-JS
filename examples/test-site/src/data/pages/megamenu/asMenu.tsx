@@ -98,13 +98,13 @@ export const asSubMenuList = flow(
   asStylableList,
 );
 
-export const asSubMenu$ = asToggledMenu(flow(
+export const asSubMenu$ = flow(
   withDesign({
     Item: replaceWith(stylable(MenuItem)),
     Wrapper: replaceWith(stylable(SubMenu)),
   }),
   asTitledItem,
-));
+);
 
 export const asMenuItemGroup = asToggledMenu(flow(
   asMenuBase(),
@@ -113,3 +113,11 @@ export const asMenuItemGroup = asToggledMenu(flow(
   }),
   asTitledItem,
 ));
+
+export const asMenuItemGroup$ = flow(
+  withDesign({
+    Item: replaceWith(stylable(MenuItem)),
+    Wrapper: replaceWith(stylable(ItemGroup)),
+  }),
+  asTitledItem,
+);
