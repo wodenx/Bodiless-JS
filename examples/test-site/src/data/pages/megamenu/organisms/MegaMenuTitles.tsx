@@ -17,7 +17,7 @@ export const asMenuLink = (asEditable: HOC) => flow(
   replaceWith(MenuLink),
   withSidecarNodes(
     withBodilessLinkToggle(
-      asBodilessLink('link'),
+      asBodilessLink('link') as HOC,
     ),
   ),
   asSubMenuTitle,
