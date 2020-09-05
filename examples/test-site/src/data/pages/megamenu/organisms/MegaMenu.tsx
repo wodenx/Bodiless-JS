@@ -34,7 +34,8 @@ import {
 } from './asMenu';
 import asBodilessList, { asSubList as asBodilessSubList } from './components/asBodilessList';
 
-const asSubList = flow(
+// Defines the basic sublist for all mubmenu types.
+const asMenuSubList = flow(
   asBodilessSubList,
   asStylableList,
   withDesign({
@@ -42,35 +43,8 @@ const asSubList = flow(
   }),
 );
 
-const asBasicSubMenu = flow(
-  withMenuItem,
-  asSubMenu,
-);
-
-const asToutSubMenu = flow(
-  withMenuItem,
-  asSubMenu,
-  withDesign({
-    Title: asDefaultMenuTout,
-  }),
-);
-
-const asColumnSubList = flow(
-  asSubList,
-  withDesign({
-    Item: asSubList,
-  }),
-);
-
-const asColumnSubMenu = flow(
-  asSubMenu,
-  withDesign({
-    Item: asMenuItemGroup,
-  }),
-);
-
+// Provides overrides for the chamelion button
 type Overrides = Partial<EditButtonOptions<any, ChamelionData>>;
-
 const useOverrides = (props: EditButtonProps<ChamelionData>): Overrides => {
   const { componentData } = props;
   const { component } = componentData;
@@ -83,20 +57,27 @@ const useOverrides = (props: EditButtonProps<ChamelionData>): Overrides => {
   };
 };
 
+// Defines the sublist type for the top level menu items.
 const asChamelionSubList = flow(
   asBodilessChamelion('cham-sublist', {}, useOverrides),
   withDesign({
-    Basic: flow(asSubList, withTitle('Basic sub-menu')),
-    Touts: flow(asSubList, withTitle('Tout sub-menu')),
-    Columns: flow(asColumnSubList, withTitle('Column sub-menu')),
+    Basic: flow(
+      withTitle('Basic sub-menu'),
+      asMenuSubList,
+    ),
+    Touts: flow(
+      withTitle('Tout sub-menu'),
+      asMenuSubList,
+    ),
+    Columns: flow(
+      withTitle('Column sub-menu'),
+      asMenuSubList,
+      withDesign({
+        Item: asMenuSubList,
+      }),
+    ),
   }),
 );
-
-const asChamelionSubMenu = withDesign({
-  Basic: asBasicSubMenu,
-  Touts: asToutSubMenu,
-  Columns: asColumnSubMenu,
-});
 
 /**
  * Bodiless HOC generator which creates the basic structure of the Mega Menu. The component
@@ -118,6 +99,55 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   }),
 );
 
+// Defines basic sub menu when displayed as main menu
+const asBasicSubMenu = flow(
+  asSubMenu,
+  withMenuItem,
+);
+
+// Defines tout sub menu when displayed as main menu
+const asToutSubMenu = flow(
+  asBasicSubMenu,
+  withDesign({
+    Title: asDefaultMenuTout,
+  }),
+);
+
+// Defines column sub menu when displayed as main menu
+const asColumnSubMenu = flow(
+  // We need to omit `withMenuItem` here bc it replaces the item and thus removes the sublist.
+  asSubMenu,
+  withDesign({
+    Item: asMenuItemGroup,
+  }),
+);
+
+// Applies above designs to the chameilion sublist
+const asChamelionSubMenu = withDesign({
+  Basic: asBasicSubMenu,
+  Touts: asToutSubMenu,
+  Columns: asColumnSubMenu,
+});
+
+/**
+ * HOC which can be applied to a base menu to make it into a sites main menu.
+ *
+ * @param A base menu component created via asMenuBase()
+ *
+ * @return A clean (unstyled) site main menu.
+ */
+const asMainMenuClean = flow(
+  asMenu,
+  withDesign({
+    Item: asChamelionSubMenu,
+  }),
+);
+
+/**
+ * Applies a list design (or other HOC) to the main menu and all submenus.
+ *
+ * @param design The design object or HOC to be applied.
+*/
 const withMenuDesign = (design: any) => {
   const withDesign$ = typeof design === 'function' ? design : withDesign(design);
   return flow(
@@ -138,20 +168,6 @@ const withMenuDesign = (design: any) => {
 };
 
 /**
- * HOC which can be applied to a base menu to make it into a sites main menu.
- *
- * @param A base menu component created via asMenuBase()
- *
- * @return A clean (unstyled) site main menu.
- */
-const asMainMenuClean = flow(
-  asMenu,
-  withDesign({
-    Item: asChamelionSubMenu,
-  }),
-);
-
-/**
  * HOC which can be applied to a base menu to make it into a site's breadcrumbs
  *
  * @param A base menu component created via asMenuBase()
@@ -165,6 +181,12 @@ const asBreadcrumbsClean = withMenuDesign({
     observer,
   ),
 });
+
+// @TODO Add a similar HOC for BurgerMenu, something like:
+// const asMegaMenuClean = withMenuDesign({
+//   WrapperItem: asAccodionTitle,
+//   List: asAccordionBody,
+// });
 
 export {
   asMenuBase, asMainMenuClean, withMenuDesign, asBreadcrumbsClean,
