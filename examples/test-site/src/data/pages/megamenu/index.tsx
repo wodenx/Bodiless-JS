@@ -68,11 +68,13 @@ const MenuLinkChamelion = flow(
   }),
 )(Foo);
 
-const LinkToggle = asMenuLink(withEditorSimple)(Fragment);
+const withTitleEditor = withEditorSimple('text', 'Menu Item');
+
+const LinkToggle = asMenuLink(withTitleEditor)(Fragment);
 
 const asMenuLinkList = flow(
   withDesign({
-    Title: asMenuLink(withEditorSimple),
+    Title: asMenuLink(withTitleEditor),
   }),
   asStylableList,
 );
@@ -112,7 +114,7 @@ const asMenuTout$ = flow(
 const MegaMenu = flow(
   asMenuBase(),
   withMenuDesign({
-    Title: asMenuLink(withEditorSimple),
+    Title: asMenuLink(withTitleEditor),
   }),
   asMainMenuClean,
   withDesign({
@@ -128,7 +130,7 @@ const MegaMenu = flow(
 const MegaMenuList = flow(
   asMenuBase(),
   withMenuDesign({
-    Title: asMenuLink(withEditorSimple),
+    Title: asMenuLink(withTitleEditor),
   }),
   withMenuDesign({
     Item: addClasses('pl-5'),
@@ -147,7 +149,7 @@ const asInline = withDesign({
 const MegaMenuBreadcrumbs = flow(
   asMenuBase(),
   withMenuDesign({
-    Title: asMenuLink(withEditorSimple),
+    Title: asMenuLink(withTitleEditor),
   }),
   asBreadcrumbsClean,
   withMenuDesign(asInline),

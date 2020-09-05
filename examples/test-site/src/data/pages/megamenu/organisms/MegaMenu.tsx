@@ -28,7 +28,7 @@ import { asBreadcrumb, useBreadcrumbContext } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
 import asBodilessChamelion, { ChamelionData } from './components/Chamelion';
-import { asDefaultMenuTout } from './MegaMenuTitles';
+import { asDefaultMenuTout, asDefaultMenuLink } from './MegaMenuTitles';
 import {
   asSubMenu, asMenuItemGroup, asMenu, withMenuItem,
 } from './asMenu';
@@ -38,7 +38,7 @@ const asSubList = flow(
   asBodilessSubList,
   asStylableList,
   withDesign({
-    Title: asMenuLink(() => identity),
+    Title: asDefaultMenuLink,
   }),
 );
 

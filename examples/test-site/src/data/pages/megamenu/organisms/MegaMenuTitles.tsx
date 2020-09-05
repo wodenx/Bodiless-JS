@@ -14,7 +14,7 @@ export const asMenuTout = (withToutEditors: any) => flow(
   asSubMenuTitle,
 );
 
-export const asMenuLink = (asEditable: any) => flow(
+export const asMenuLink = (asEditable: HOC) => flow(
   replaceWith(MenuLink),
   withSidecarNodes(
     withBodilessLinkToggle(
@@ -22,9 +22,11 @@ export const asMenuLink = (asEditable: any) => flow(
     ),
   ),
   asSubMenuTitle,
-  asEditable('text', 'Menu Item'),
+  asEditable,
   withNode,
   withNodeKey('title'),
 ) as HOC;
+
+export const asDefaultMenuLink = asMenuLink(identity);
 
 export const asDefaultMenuTout = asMenuTout(identity);
