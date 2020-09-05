@@ -65,7 +65,7 @@ import {
 } from './NotificationProvider';
 import withNotificationButton from './withNotificationButton';
 import withChild from './withChild';
-import asBodilessComponent, { withActivatorWrapper } from './asBodilessComponent';
+import asBodilessComponent, { withActivatorWrapper, withBodilessData } from './asBodilessComponent';
 import type { Options as BodilessOptions, AsBodiless } from './asBodilessComponent';
 import { useMenuOptionUI } from './components/ContextMenuContext';
 import ContextSubMenu from './ContextMenu/ContextSubMenu';
@@ -75,6 +75,7 @@ import OnNodeErrorNotification from './OnNodeErrorNotification';
 export * from './components';
 export {
   asBodilessComponent,
+  withBodilessData,
   asStatic,
   asReadOnly,
   withContextActivator,

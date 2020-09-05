@@ -62,6 +62,22 @@ export const withActivatorWrapper = <P extends object>(event: string, Wrapper: C
 );
 
 /**
+ * Convenience HOC to plug a component into the bodiless data model.
+ *
+ * @param nodeKeys The nodekeys which will be used to locate the component's data.
+ *
+ * @param defaultData Default data to be provided for this component.
+ */
+const withBodilessData = <P extends object, D extends object>(
+  nodeKey?: WithNodeKeyProps,
+  defaultData?: D,
+) => flowRight(
+    withNodeKey(nodeKey),
+    withNode,
+    withNodeDataHandlers(defaultData),
+  );
+
+/**
  * Makes a component "Bodiless" by connecting it to the Bodiless-jS data flow and giving it
  * a form which can be used to edit its props. Returns a standard `asBodiless...` function,
  * which takes `nodeKey` and `defaultData` parameters, and returns an HOC which yields an editable
@@ -96,9 +112,7 @@ const asBodilessComponent = <P extends object, D extends object>(options: Option
       : rest;
     const finalData = { ...defaultDataOption, ...defaultData };
     return flowRight(
-      withNodeKey(nodeKeys),
-      withNode,
-      withNodeDataHandlers(finalData),
+      withBodilessData(nodeKeys, finalData),
       ifReadOnly(
         withoutProps(['setComponentData']),
       ),
@@ -114,4 +128,5 @@ const asBodilessComponent = <P extends object, D extends object>(options: Option
 );
 
 export default asBodilessComponent;
+export { withBodilessData };
 export type { AsBodiless };
