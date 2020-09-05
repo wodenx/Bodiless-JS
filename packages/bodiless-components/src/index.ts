@@ -50,8 +50,20 @@ import {
   ifViewportIsNot,
 } from './withResponsiveToggle';
 import asBreadcrumb, { useBreadcrumbContext } from './asBreadcrumb';
+import withBodilessLinkToggle from './withBodilessLinkToggle';
+import {
+  ifBodilessToggle,
+  ifBodilessToggleOff,
+  ifBodilessTogggleOn,
+  withBodilessComponentFormToggle,
+} from './BodilessToggle';
 
 export {
+  withBodilessLinkToggle,
+  ifBodilessToggle,
+  ifBodilessToggleOff,
+  ifBodilessTogggleOn,
+  withBodilessComponentFormToggle,
   asBodilessLink,
   Image,
   asBodilessImage,

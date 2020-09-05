@@ -1,8 +1,7 @@
 import React, { ComponentType } from 'react';
 import {
   ifToggledOff, ifToggledOn, withBodilessData, withSidecarNodes,
-  WithNodeKeyProps, AsBodiless,
-  startSidecarNodes, endSidecarNodes, EditButtonProps,
+  WithNodeKeyProps, startSidecarNodes, endSidecarNodes, EditButtonProps,
 } from '@bodiless/core';
 import { flowRight } from 'lodash';
 import { withoutProps, HOC } from '@bodiless/fclasses';
@@ -15,8 +14,6 @@ type ToggleProps = {
 type ToggleData = {
   on: boolean,
 };
-
-type AsBodilessToggle = AsBodiless<any, ToggleData>;
 
 const useDataToggle = <P extends object>(props: P & EditButtonProps<ToggleData>) => {
   const { componentData } = props;
@@ -77,7 +74,7 @@ const ifBodilessToggle$ = <P extends object>(toggleFunc: ToggleFunc<P>) => (
 ) => flowRight(
   startSidecarNodes,
   withBodilessData(nodeKeys, defaultData),
-  toggleFunc(useDataToggle),
+  toggleFunc(useDataToggle as ToggleHook<P>),
 );
 
 /**
@@ -90,7 +87,7 @@ const ifBodilessToggleFlowRight = <P extends object>(toggle: HOCToggle<P>) => (
   defaultData?: ToggleData,
 ) => (...hocs: HOC[]) => {
   const toggleFunc = (hook: ToggleHook<P>) => toggle(hook)(
-    endSidecarNodes,
+    endSidecarNodes as HOC,
     ...hocs,
   );
   return ifBodilessToggle$(toggleFunc)(nodeKeys, defaultData);
@@ -119,7 +116,7 @@ const ifBodilessToggle = <P extends object>(toggle: ToggleFunc<P>) => (
  *
  * @return A conditional HOC wrapper, which accepts a list of HOC's to apply if the toggle is on.
  */
-const ifBodilessTogggleOn = ifBodilessToggleFlowRight(ifToggledOn);
+const ifBodilessTogggleOn = ifBodilessToggleFlowRight(ifToggledOn as HOCToggle<any>);
 
 /**
  * Generates an HOC which Applies a set of other HOC's conditionally based on the current state
@@ -139,7 +136,7 @@ const ifBodilessTogggleOn = ifBodilessToggleFlowRight(ifToggledOn);
  *   addClasses()
  *   )
  */
-const ifBodilessToggleOff = ifBodilessToggleFlowRight(ifToggledOff);
+const ifBodilessToggleOff = ifBodilessToggleFlowRight(ifToggledOff as HOCToggle<any>);
 
 export {
   ifBodilessToggle,
