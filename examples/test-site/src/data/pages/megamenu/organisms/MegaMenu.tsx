@@ -151,14 +151,6 @@ const asMainMenuClean = flow(
   }),
 );
 
-const asBreadcrumbMenu = withDesign({
-  Item: withSidecarNodes(asBreadcrumb('title$component')),
-  Title: flow(
-    addClassesIf(() => !useBreadcrumbContext().isActive)('hidden'),
-    observer,
-  ),
-});
-
 /**
  * HOC which can be applied to a base menu to make it into a site's breadcrumbs
  *
@@ -166,21 +158,13 @@ const asBreadcrumbMenu = withDesign({
  *
  * @return A clean (unstyled) site breadcrumb component.
  */
-const asBreadcrumbsClean = flow(
-  withDesign({
-    Item: withDesign({
-      Basic: asBreadcrumbMenu,
-      Touts: asBreadcrumbMenu,
-      Columns: flow(
-        withDesign({
-          Item: asBreadcrumbMenu,
-        }),
-        asBreadcrumbMenu,
-      ),
-    }),
-  }),
-  asBreadcrumbMenu,
-);
+const asBreadcrumbsClean = withMenuDesign({
+  Item: withSidecarNodes(asBreadcrumb('title$component')),
+  Title: flow(
+    addClassesIf(() => !useBreadcrumbContext().isActive)('hidden'),
+    observer,
+  ),
+});
 
 export {
   asMenuBase, asMainMenuClean, withMenuDesign, asBreadcrumbsClean,
