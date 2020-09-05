@@ -66,25 +66,45 @@ const withBodilessComponentFormToggle = (
   withoutProps(['componentData', 'setComponentDtaa']),
 );
 
+type ToggleHook<P> = (props: P) => boolean;
+type ToggleFunc<P> = (hook: ToggleHook<P>) => HOC;
+type Flow = (...hocs: HOC[]) => HOC;
+type HOCToggle<P> = (hook: ToggleHook<P>) => Flow;
+
+const ifBodilessToggle$ = <P extends object>(toggleFunc: ToggleFunc<P>) => (
+  nodeKeys: WithNodeKeyProps,
+  defaultData?: ToggleData,
+) => flowRight(
+  startSidecarNodes,
+  withBodilessData(nodeKeys, defaultData),
+  toggleFunc(useDataToggle),
+);
+
 /**
  * @private
  *
  * Core for ifBodilessToggleOn and ifBodilessToggleOff
  */
-const ifBodilessToggle = (on: boolean) => (
+const ifBodilessToggleFlowRight = <P extends object>(toggle: HOCToggle<P>) => (
   nodeKeys: WithNodeKeyProps,
   defaultData?: ToggleData,
 ) => (...hocs: HOC[]) => {
-  const toggleFunc = on ? ifToggledOn : ifToggledOff;
-  return flowRight(
-    startSidecarNodes,
-    withBodilessData(nodeKeys, defaultData),
-    toggleFunc(useDataToggle)(
-      endSidecarNodes,
-      ...hocs,
-    ),
-
+  const toggleFunc = (hook: ToggleHook<P>) => toggle(hook)(
+    endSidecarNodes,
+    ...hocs,
   );
+  return ifBodilessToggle$(toggleFunc)(nodeKeys, defaultData);
+};
+
+const ifBodilessToggle = <P extends object>(toggle: ToggleFunc<P>) => (
+  nodeKeys: WithNodeKeyProps,
+  defaultData?: ToggleData,
+) => {
+  const toggleFunc = (hook: ToggleHook<P>) => flowRight(
+    endSidecarNodes,
+    toggle(hook),
+  );
+  return ifBodilessToggle$(toggleFunc)(nodeKeys, defaultData);
 };
 
 /**
@@ -99,7 +119,7 @@ const ifBodilessToggle = (on: boolean) => (
  *
  * @return A conditional HOC wrapper, which accepts a list of HOC's to apply if the toggle is on.
  */
-const ifBodilessTogggleOn = ifBodilessToggle(true);
+const ifBodilessTogggleOn = ifBodilessToggleFlowRight(ifToggledOn);
 
 /**
  * Generates an HOC which Applies a set of other HOC's conditionally based on the current state
@@ -119,9 +139,10 @@ const ifBodilessTogggleOn = ifBodilessToggle(true);
  *   addClasses()
  *   )
  */
-const ifBodilessToggleOff = ifBodilessToggle(false);
+const ifBodilessToggleOff = ifBodilessToggleFlowRight(ifToggledOff);
 
 export {
+  ifBodilessToggle,
   ifBodilessToggleOff,
   ifBodilessTogggleOn,
   withBodilessComponentFormToggle,
