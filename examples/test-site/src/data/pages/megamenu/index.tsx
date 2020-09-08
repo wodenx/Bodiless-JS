@@ -39,6 +39,10 @@ import asChamelionTitle from './asChamelionTitle';
 import asBodilessList, { asSubList } from './organisms/components/asBodilessList';
 import { withToutEditors } from '../../../components/Tout';
 import { asMenuTout, asMenuLink } from './organisms/MegaMenuTitles';
+import {
+  asMenuBase as asSimpleMenuBase,
+  withMenuDesign as withSimpleMenuDesign,
+} from './organisms/SimpleMenu';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -156,12 +160,27 @@ const MegaMenuBreadcrumbs = flow(
   asReadOnly,
 )('ul');
 
+const SimpleMenuList = flow(
+  asSimpleMenuBase(),
+  withSimpleMenuDesign({
+    Title: asMenuLink(withTitleEditor),
+  }),
+  // withSimpleMenuDesign({
+  //   Item: addClasses('pl-5'),
+  // }),
+  // asReadOnly,
+)('ul');
+
 const H = addClasses('mt-5 text-l')(H3);
 
 export default (props: any) => (
   <Page {...props}>
     <Layout>
-      <h1 className="text-3xl font-bold">Chamelion</h1>
+      <h1 className="text-3xl font-bold">Menu V2</h1>
+      <SimpleMenuList nodeKey="list2" />
+      <H>Keys</H>
+      <NodeTreePrinter nodeKey="list2" />
+      {/*
       <H>LinkToggle</H>
       <LinkToggle>Foo</LinkToggle>
       <H>Chamelion</H>
@@ -173,11 +192,12 @@ export default (props: any) => (
       <H>Main menu as list</H>
       <MegaMenuList nodeKey="list1" />
       <H>Breadcrumbs</H>
-      <MegaMenuBreadcrumbs nodeKey="list1" />
       <H>Keys</H>
       <NodeTreePrinter nodeKey="list1" />
+      <MegaMenuBreadcrumbs nodeKey="list1" />
       <H>Compund List</H>
       <CompoundList />
+      */}
     </Layout>
   </Page>
 );
