@@ -34,6 +34,7 @@ import withEditFormSnippet from './withEditFormSnippet';
 import withData from './withData';
 import NodeProvider, { useNode, useNodeDataHandlers } from './NodeProvider';
 import { DefaultContentNode } from './ContentNode';
+import type { ContentNode } from './ContentNode';
 import {
   withNodeAndHandlers,
   withNodeDataHandlers,
@@ -137,6 +138,7 @@ export {
 };
 
 export type {
+  ContentNode,
   BodilessOptions,
   PageEditContextInterface,
   TMenuOption,

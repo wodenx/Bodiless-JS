@@ -6,7 +6,7 @@ import {
 import { flowRight } from 'lodash';
 import { replaceWith, asComponent } from '@bodiless/fclasses';
 import type { HOC } from '@bodiless/fclasses';
-import { withBodilessComponentFormToggle, ifBodilessToggleOff } from './BodilessToggle';
+import { withBodilessComponentFormToggle, ifBodilessToggleOff } from './asBodilessToggle';
 
 const SafeFragment = withOnlyProps('key', 'children')(Fragment);
 const Span = asComponent('span');

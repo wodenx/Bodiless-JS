@@ -51,19 +51,22 @@ import {
 } from './withResponsiveToggle';
 import asBreadcrumb, { useBreadcrumbContext } from './asBreadcrumb';
 import withBodilessLinkToggle from './withBodilessLinkToggle';
-import {
-  ifBodilessToggle,
+import asBodilessToggle, {
+  useBodilessToggle,
   ifBodilessToggleOff,
   ifBodilessTogggleOn,
   withBodilessComponentFormToggle,
-} from './BodilessToggle';
+  withBodilessToggleButton,
+} from './asBodilessToggle';
 
 export {
   withBodilessLinkToggle,
-  ifBodilessToggle,
+  asBodilessToggle,
+  useBodilessToggle,
   ifBodilessToggleOff,
   ifBodilessTogggleOn,
   withBodilessComponentFormToggle,
+  withBodilessToggleButton,
   asBodilessLink,
   Image,
   asBodilessImage,
