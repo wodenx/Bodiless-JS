@@ -15,9 +15,8 @@
 import { flow, identity } from 'lodash';
 import { asStylableList } from '@bodiless/organisms';
 
-
 import {
-  withDesign, addClassesIf,
+  withDesign, addClassesIf, withoutProps,
 } from '@bodiless/fclasses';
 import {
   withSidecarNodes, WithNodeKeyProps,
@@ -30,19 +29,19 @@ import { observer } from 'mobx-react-lite';
 
 import { asSubMenu, asMenu, withMenuItem } from './asMenu';
 import asBodilessList, { asSubList } from './components/asBodilessList';
-import { asMenuLInk } from './MegaMenuTitles';
+import { asMenuLink, asDefaultMenuLink } from './MegaMenuTitles';
 
 const TOGGLE_NODE_KEY = 'toggle-sublist';
 const ifSublist = ifBodilessTogggleOn(TOGGLE_NODE_KEY);
 
 // Defines the basic sublist for all mubmenu types.
-// const asMenuSubList = flow(
-//   asSubList,
-//   asStylableList,
-//   withDesign({
-//     Title: asDefaultMenuLink,
-//   }),
-// );
+const asMenuSubList = flow(
+  asSubList,
+  asStylableList,
+  withDesign({
+    Title: asDefaultMenuLink,
+  }),
+);
 
 // Provides overrides for the chamelion button
 const useOverrides = (props: any): any => {
@@ -56,10 +55,11 @@ const useOverrides = (props: any): any => {
 
 // Defines the sublist type for the top level menu items.
 const asToggledSubList = flow(
+  withoutProps(['wrap']),
   withBodilessToggleButton(TOGGLE_NODE_KEY, undefined, useOverrides),
-  // ifSublist(
-  //   asMenuSubList,
-  // ),
+  ifSublist(
+    asMenuSubList,
+  ),
 );
 
 /**
@@ -77,7 +77,7 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
   asStylableList,
   withDesign({
-    Title: asMenuLink(() => identity),
+    Title: asMenuLink(identity),
     Item: asToggledSubList,
   }),
 );

@@ -180,7 +180,6 @@ export default (props: any) => (
       <SimpleMenuList nodeKey="list2" />
       <H>Keys</H>
       <NodeTreePrinter nodeKey="list2" />
-      {/*
       <H>LinkToggle</H>
       <LinkToggle>Foo</LinkToggle>
       <H>Chamelion</H>
@@ -197,7 +196,6 @@ export default (props: any) => (
       <MegaMenuBreadcrumbs nodeKey="list1" />
       <H>Compund List</H>
       <CompoundList />
-      */}
     </Layout>
   </Page>
 );

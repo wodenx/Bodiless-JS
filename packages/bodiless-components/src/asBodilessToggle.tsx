@@ -123,34 +123,16 @@ const withBodilessComponentFormToggle = (
 
 type ToggleHook<P> = (props: P) => boolean;
 type ConditionalHOC<P> = (hook: ToggleHook<P>) => HOC;
-type Flow = (...hocs: HOC[]) => HOC;
-type HOCToggle<P> = (hook: ToggleHook<P>) => Flow;
 
-const asBodilessToggle$ = <P extends object>(toggleFunc: ConditionalHOC<P>) => (
+const asBodilessToggle$ = (
   nodeKeys: WithNodeKeyProps,
   defaultData?: ToggleData,
-): HOC => flowRight(
+) => (...hocs: HOC[]) => flowRight(
   startSidecarNodes,
   withBodilessData(nodeKeys, defaultData),
-  toggleFunc(useBodilessToggle as ToggleHook<P>),
+  ...hocs,
   withoutProps(['componentData', 'setComponentData']),
 );
-
-/**
- * @private
- *
- * Core for ifBodilessToggleOn and ifBodilessToggleOff
- */
-const asBodilessToggleFlowRight = <P extends object>(toggle: HOCToggle<P>) => (
-  nodeKeys: WithNodeKeyProps,
-  defaultData?: ToggleData,
-) => (...hocs: HOC[]) => {
-  const toggleFunc = (hook: ToggleHook<P>) => toggle(hook)(
-    endSidecarNodes as HOC,
-    ...hocs,
-  );
-  return asBodilessToggle$(toggleFunc)(nodeKeys, defaultData);
-};
 
 /**
  * Apply this to a conditional HOC to supply a condition based on the value of a bodiless toggle.
@@ -162,13 +144,11 @@ const asBodilessToggleFlowRight = <P extends object>(toggle: HOCToggle<P>) => (
 const asBodilessToggle = <P extends object>(conditionalHoc: ConditionalHOC<P>) => (
   nodeKeys: WithNodeKeyProps,
   defaultData?: ToggleData,
-): HOC => {
-  const toggleFunc$ = (hook: ToggleHook<P>) => flowRight(
-    endSidecarNodes,
-    conditionalHoc(hook),
-  );
-  return asBodilessToggle$(toggleFunc$)(nodeKeys, defaultData);
-};
+): HOC => asBodilessToggle$(nodeKeys, defaultData)(
+  // @TODO Figure out how to get rid of these casts.
+  conditionalHoc(useBodilessToggle as ToggleHook<P>),
+  endSidecarNodes as HOC,
+);
 
 /**
  * Generates an HOC which Applies a set of other HOC's conditionally based on the current state
@@ -182,7 +162,18 @@ const asBodilessToggle = <P extends object>(conditionalHoc: ConditionalHOC<P>) =
  *
  * @return A conditional HOC wrapper, which accepts a list of HOC's to apply if the toggle is on.
  */
-const ifBodilessTogggleOn = asBodilessToggleFlowRight(ifToggledOn as HOCToggle<any>);
+const ifBodilessTogggleOn = (
+  nodeKeys: WithNodeKeyProps,
+  defaultData?: ToggleData,
+) => (...hocs: HOC[]) => asBodilessToggle$(nodeKeys, defaultData)(
+  ifToggledOn(useBodilessToggle)(
+    endSidecarNodes,
+    ...hocs,
+  ),
+  ifToggledOff(useBodilessToggle)(
+    endSidecarNodes,
+  ),
+);
 
 /**
  * Generates an HOC which Applies a set of other HOC's conditionally based on the current state
@@ -202,7 +193,18 @@ const ifBodilessTogggleOn = asBodilessToggleFlowRight(ifToggledOn as HOCToggle<a
  *   addClasses()
  *   )
  */
-const ifBodilessToggleOff = asBodilessToggleFlowRight(ifToggledOff as HOCToggle<any>);
+const ifBodilessToggleOff = (
+  nodeKeys: WithNodeKeyProps,
+  defaultData?: ToggleData,
+) => (...hocs: HOC[]) => asBodilessToggle$(nodeKeys, defaultData)(
+  ifToggledOff(useBodilessToggle)(
+    endSidecarNodes,
+    ...hocs,
+  ),
+  ifToggledOn(useBodilessToggle)(
+    endSidecarNodes,
+  ),
+);
 
 export default asBodilessToggle;
 export {

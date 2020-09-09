@@ -80,6 +80,14 @@ describe('asBodilessToggle', () => {
     expect(wrapper.find('span#test').prop('data-node-value')).toBe('bar');
   });
 
+  it('Preserves the node path of the wrapped component when toggled off', () => {
+    const data = {
+      root$component: { foo: 'bar' },
+    };
+    const wrapper = mount(<Test data={data} dataKey="foo" />);
+    expect(wrapper.find('span#test').prop('data-node-value')).toBe('bar');
+  });
+
   // This fails bc, even with sidecar nodes, the outermost component receives
   // the top level nodeKey. We could fix this for sidecar nodes by storing and
   // restoring the nodeKey...
@@ -150,6 +158,40 @@ describe('ifBodilessToggleOn and ifBodilessToggleOff', () => {
     ),
   );
 
+  it('ifBodilessToggleOn preserves the node path of the wrapped component', () => {
+    const Test1 = createTest(
+      ifBodilessTogggleOn('toggle')(
+        withProps({ 'data-hoc-foo': true }),
+      ),
+    );
+    const data = {
+      root$toggle: { on: true },
+      root$component: { foo: 'bar' },
+    };
+    let wrapper = mount(<Test1 data={data} dataKey="foo" />);
+    expect(wrapper.find('span#test').prop('data-node-value')).toBe('bar');
+    delete data.root$toggle;
+    wrapper = mount(<Test1 data={data} dataKey="foo" />);
+    expect(wrapper.find('span#test').prop('data-node-value')).toBe('bar');
+  });
+
+  it('ifBodilessToggleOff preserves the node path of the wrapped component', () => {
+    const Test1 = createTest(
+      ifBodilessToggleOff('toggle')(
+        withProps({ 'data-hoc-foo': true }),
+      ),
+    );
+    const data = {
+      root$toggle: { on: true },
+      root$component: { foo: 'bar' },
+    };
+    let wrapper = mount(<Test1 data={data} dataKey="foo" />);
+    expect(wrapper.find('span#test').prop('data-node-value')).toBe('bar');
+    delete data.root$toggle;
+    wrapper = mount(<Test1 data={data} dataKey="foo" />);
+    expect(wrapper.find('span#test').prop('data-node-value')).toBe('bar');
+  });
+
   it('applies hocs correctly when toggled on', () => {
     const data = {
       root$toggle: { on: true },
@@ -193,6 +235,14 @@ describe('withBodilessToggleButton', () => {
   it('Preserves the node path of the wrapped component', () => {
     const data = {
       root$toggle: { on: true },
+      root$component: { foo: 'bar' },
+    };
+    const wrapper = mount(<Test data={data} dataKey="foo" />);
+    expect(wrapper.find('span#test').prop('data-node-value')).toBe('bar');
+  });
+
+  it('Preserves the node path of the wrapped component when toggled off', () => {
+    const data = {
       root$component: { foo: 'bar' },
     };
     const wrapper = mount(<Test data={data} dataKey="foo" />);
