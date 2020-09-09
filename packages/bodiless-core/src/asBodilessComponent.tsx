@@ -10,7 +10,7 @@ import { ifReadOnly, ifEditable } from './withEditToggle';
 import withEditButton from './withEditButton';
 import withData from './withData';
 import type { WithNodeProps, WithNodeKeyProps } from './Types/NodeTypes';
-import type { EditButtonOptions } from './Types/EditButtonTypes';
+import type { EditButtonOptions, EditButtonProps } from './Types/EditButtonTypes';
 import { useContextActivator } from './hooks';
 
 /**
@@ -38,7 +38,7 @@ type BodilessProps = Partial<WithNodeProps>;
 type AsBodiless<P, D> = (
   nodeKeys?: WithNodeKeyProps,
   defaultData?: D,
-  useOverrides?: ((props: P) => Partial<EditButtonOptions<P, D>>),
+  useOverrides?: ((props: P & EditButtonProps<D>) => Partial<EditButtonOptions<P, D>>),
 ) => HOC<P, P & BodilessProps>;
 
 /**
@@ -102,13 +102,13 @@ const asBodilessComponent = <P extends object, D extends object>(options: Option
   (
     nodeKeys?,
     defaultData = {} as D,
-    useOverrides?: (props: P) => Partial<EditButtonOptions<P, D>>,
+    useOverrides?: (props: P & EditButtonProps<D>) => Partial<EditButtonOptions<P, D>>,
   ) => {
     const {
       activateEvent = 'onClick', Wrapper, defaultData: defaultDataOption = {}, ...rest
     } = options;
     const editButtonOptions = useOverrides
-      ? (props: P) => ({ ...rest, ...useOverrides(props) })
+      ? (props: P & EditButtonProps<D>) => ({ ...rest, ...useOverrides(props) })
       : rest;
     const finalData = { ...defaultDataOption, ...defaultData };
     return flowRight(

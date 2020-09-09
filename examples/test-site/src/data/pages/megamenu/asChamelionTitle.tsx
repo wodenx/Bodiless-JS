@@ -4,12 +4,12 @@ import { Fragment } from 'react';
 import { flow } from 'lodash';
 import { withTitle } from '@bodiless/layouts';
 import { withOnlyProps } from '@bodiless/core';
+import { asBodilessChamelion } from '@bodiless/components';
 import { withEditorSimple } from '../../../components/Editors';
-import asBodilessChamelion from './organisms/components/Chamelion';
 
 const startWithMenuLink = flow(
   startWith(withOnlyProps('key', 'children')(Fragment)),
-  asMenuLink(withEditorSimple),
+  asMenuLink(withEditorSimple('text', 'Menu Link')),
 );
 
 const asRed = flow(

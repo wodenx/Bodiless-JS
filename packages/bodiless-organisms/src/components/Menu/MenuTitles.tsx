@@ -1,9 +1,10 @@
 import { flow, identity } from 'lodash';
-import { ToutClean, MenuLink } from '@bodiless/organisms';
 import { withNode, withNodeKey, withSidecarNodes } from '@bodiless/core';
 import { replaceWith, HOC } from '@bodiless/fclasses';
 import { asBodilessLink, withBodilessLinkToggle } from '@bodiless/components';
 import { asSubMenuTitle } from './asMenu';
+import { ToutClean } from '../Touts';
+import MenuLink from '../MainMenu/MenuLink';
 
 export const asMenuTout = (withToutEditors: any) => flow(
   replaceWith(ToutClean),

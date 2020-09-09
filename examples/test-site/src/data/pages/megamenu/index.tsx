@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import React, { Fragment } from 'react';
+import React, { Fragment, ComponentType } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
@@ -24,25 +24,24 @@ import { flow } from 'lodash';
 import {
   useNode, withNode, asReadOnly,
 } from '@bodiless/core';
-import { asStylableList } from '@bodiless/organisms';
 
 // Workaround for multiple slate editor issue.
-import { asEditable as withEditorSimple } from '@bodiless/components';
+import {
+  asEditable as withEditorSimple,
+  asBodilessList,
+  asSubList,
+} from '@bodiless/components';
+import {
+  asMegaMenuMain, asMegaMenuBreadcrumbs, asMegaMenuBase, withMegaMenuDesign,
+  asStylableList, asMenuTout, asMenuLink, asSimpleMenuBase, withSimpleMenuDesign,
+} from '@bodiless/organisms';
+
 // import { withEditorSimple } from '../../../components/Editors';
 
 import Layout from '../../../components/Layout';
-import {
-  asMainMenuClean, asBreadcrumbsClean, asMenuBase, withMenuDesign,
-} from './organisms/MegaMenu';
 import withMenuStyles, { withMenuToutStyles } from '../../../components/MegaMenu/MegaMenu.token';
 import asChamelionTitle from './asChamelionTitle';
-import asBodilessList, { asSubList } from './organisms/components/asBodilessList';
 import { withToutEditors } from '../../../components/Tout';
-import { asMenuTout, asMenuLink } from './organisms/MegaMenuTitles';
-import {
-  asMenuBase as asSimpleMenuBase,
-  withMenuDesign as withSimpleMenuDesign,
-} from './organisms/SimpleMenu';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -116,11 +115,11 @@ const asMenuTout$ = flow(
 );
 
 const MegaMenu = flow(
-  asMenuBase(),
-  withMenuDesign({
+  asMegaMenuBase(),
+  withMegaMenuDesign({
     Title: asMenuLink(withTitleEditor),
   }),
-  asMainMenuClean,
+  asMegaMenuMain,
   withDesign({
     Item: withDesign({
       Touts: withDesign({
@@ -132,11 +131,11 @@ const MegaMenu = flow(
 )(Fragment);
 
 const MegaMenuList = flow(
-  asMenuBase(),
-  withMenuDesign({
+  asMegaMenuBase(),
+  withMegaMenuDesign({
     Title: asMenuLink(withTitleEditor),
   }),
-  withMenuDesign({
+  withMegaMenuDesign({
     Item: addClasses('pl-5'),
   }),
   asReadOnly,
@@ -151,12 +150,12 @@ const asInline = withDesign({
 });
 
 const MegaMenuBreadcrumbs = flow(
-  asMenuBase(),
-  withMenuDesign({
+  asMegaMenuBase(),
+  withMegaMenuDesign({
     Title: asMenuLink(withTitleEditor),
   }),
-  asBreadcrumbsClean,
-  withMenuDesign(asInline),
+  asMegaMenuBreadcrumbs,
+  withMegaMenuDesign(asInline),
   asReadOnly,
 )('ul');
 
@@ -165,11 +164,11 @@ const SimpleMenuList = flow(
   withSimpleMenuDesign({
     Title: asMenuLink(withTitleEditor),
   }),
-  // withSimpleMenuDesign({
-  //   Item: addClasses('pl-5'),
-  // }),
+  withSimpleMenuDesign({
+    Item: addClasses('pl-5'),
+  }),
   // asReadOnly,
-)('ul');
+)('ul') as ComponentType<any>;
 
 const H = addClasses('mt-5 text-l')(H3);
 

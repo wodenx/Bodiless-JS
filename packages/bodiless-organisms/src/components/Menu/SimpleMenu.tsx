@@ -13,7 +13,6 @@
  */
 
 import { flow, identity } from 'lodash';
-import { asStylableList } from '@bodiless/organisms';
 
 import {
   withDesign, addClassesIf, withoutProps,
@@ -24,12 +23,13 @@ import {
 import {
   asBreadcrumb, useBreadcrumbContext,
   useBodilessToggle, withBodilessToggleButton, ifBodilessTogggleOn,
+  asBodilessList, asSubList,
 } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
 import { asSubMenu, asMenu, withMenuItem } from './asMenu';
-import asBodilessList, { asSubList } from './components/asBodilessList';
-import { asMenuLink, asDefaultMenuLink } from './MegaMenuTitles';
+import { asMenuLink, asDefaultMenuLink } from './MenuTitles';
+import asStylableList from '../MainMenu/asStylableList';
 
 const TOGGLE_NODE_KEY = 'toggle-sublist';
 const ifSublist = ifBodilessTogggleOn(TOGGLE_NODE_KEY);

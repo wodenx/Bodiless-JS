@@ -13,9 +13,6 @@
  */
 
 import { flow, identity } from 'lodash';
-import {
-  asMenuLink, asStylableList,
-} from '@bodiless/organisms';
 
 import {
   withDesign, addClassesIf,
@@ -24,19 +21,21 @@ import { withTitle } from '@bodiless/layouts';
 import {
   EditButtonOptions, withSidecarNodes, EditButtonProps, WithNodeKeyProps,
 } from '@bodiless/core';
-import { asBreadcrumb, useBreadcrumbContext } from '@bodiless/components';
+import {
+  asBreadcrumb, useBreadcrumbContext, asBodilessChamelion, asBodilessList, asSubList,
+} from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
-import asBodilessChamelion, { ChamelionData } from './components/Chamelion';
-import { asDefaultMenuTout, asDefaultMenuLink } from './MegaMenuTitles';
+import { asMenuLink, asDefaultMenuTout, asDefaultMenuLink } from './MenuTitles';
+import asStylableList from '../MainMenu/asStylableList';
+
 import {
   asSubMenu, asMenuItemGroup, asMenu, withMenuItem,
 } from './asMenu';
-import asBodilessList, { asSubList as asBodilessSubList } from './components/asBodilessList';
 
 // Defines the basic sublist for all mubmenu types.
 const asMenuSubList = flow(
-  asBodilessSubList,
+  asSubList,
   asStylableList,
   withDesign({
     Title: asDefaultMenuLink,
@@ -44,8 +43,8 @@ const asMenuSubList = flow(
 );
 
 // Provides overrides for the chamelion button
-type Overrides = Partial<EditButtonOptions<any, ChamelionData>>;
-const useOverrides = (props: EditButtonProps<ChamelionData>): Overrides => {
+type Overrides = Partial<EditButtonOptions<any, any>>;
+const useOverrides = (props: EditButtonProps<any>): Overrides => {
   const { componentData } = props;
   const { component } = componentData;
   return {

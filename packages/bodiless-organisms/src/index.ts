@@ -37,7 +37,6 @@ export {
   MenuLink,
   withSubmenu,
   withMenuLinkTitle,
-  asMenuLink,
 } from './components/MainMenu/index';
 
 export {
@@ -91,3 +90,5 @@ export {
   BCarouselClean,
   asEditableCarousel,
 } from './components/Carousel';
+
+export * from './components/Menu';

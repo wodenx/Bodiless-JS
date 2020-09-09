@@ -1,4 +1,3 @@
-import { asEditableList, List as BodilessList } from '@bodiless/components';
 import {
   WithNodeKeyProps, withNodeKey, useNode, NodeProvider,
 } from '@bodiless/core';
@@ -8,9 +7,8 @@ import {
   replaceWith, withDesign, asComponent, DesignableComponentsProps, designable,
 } from '@bodiless/fclasses';
 
-type Data = {
-  items?: string[],
-};
+import asEditableList from './asEditableList';
+import BodilessList from '.';
 
 type ComponentOrTag<P> = ComponentType<P>|keyof JSX.IntrinsicElements;
 
@@ -18,7 +16,7 @@ export type TitledItemProps = PropsWithChildren<{
   title: JSX.Element,
 }>;
 
-export const asTitledItem = <P extends TitledItemProps>(Item: ComponentType<P>) => {
+const asTitledItem = <P extends TitledItemProps>(Item: ComponentType<P>) => {
   const TitledItem: ComponentType<P> = ({ children, ...rest }) => {
     // prepare and pass the submenu title as a prop according to rc-menu <SubMenu /> specification
     // wrap the title with current node,
@@ -73,7 +71,7 @@ const asBodilessList = (
   withNodeKey(nodeKeys),
 )(Component);
 
-export const asSubList = flow(
+const asSubList = flow(
   asBodilessList(),
   withDesign({
     Wrapper: replaceWith(SubList),
@@ -82,3 +80,4 @@ export const asSubList = flow(
 );
 
 export default asBodilessList;
+export { asSubList, asTitledItem };

@@ -17,6 +17,7 @@ import {
   intersection, flowRight, flow, mergeWith, identity,
 } from 'lodash';
 import React, { ComponentType, Fragment, useContext } from 'react';
+import { HOC } from './FClasses';
 
 export type DesignElement<P> = (c: ComponentType<P> | string) => ComponentType<P>;
 
@@ -157,7 +158,9 @@ export const withDesign = <C extends DesignableComponents>(design: Design<C>) =>
   }
 );
 
-export const replaceWith = <P extends object>(Component: ComponentType<P>) => () => Component;
+export const replaceWith = <P extends object>(Component: ComponentType<P>) => (
+  (() => Component) as HOC
+);
 export const remove = <P extends React.HTMLAttributes<HTMLBaseElement>> () => (props:P) => {
   const { children } = props;
   return <>{children}</>;

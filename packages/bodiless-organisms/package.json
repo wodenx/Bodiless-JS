@@ -32,6 +32,7 @@
     "@bodiless/components-ui": "^0.0.55",
     "@bodiless/core": "^0.0.55",
     "@bodiless/fclasses": "^0.0.55",
+    "@bodiless/layouts": "^0.0.55",
     "@bodiless/richtext": "^0.0.55",
     "@bodiless/richtext-ui": "^0.0.55",
     "@types/react-burger-menu": "^2.6.0",

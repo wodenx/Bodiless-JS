@@ -2,14 +2,9 @@ import React, { FC, ComponentType } from 'react';
 import { DesignableComponents, extendDesignable } from '@bodiless/fclasses';
 import {
   useMenuOptionUI, asBodilessComponent, BodilessOptions,
-  withSidecarNodes, WithNodeKeyProps, EditButtonOptions, useNode,
+  withSidecarNodes, WithNodeKeyProps, EditButtonOptions, useNode, EditButtonProps, AsBodiless,
 } from '@bodiless/core';
 import { flowRight } from 'lodash';
-
-type NodeDataHandlers<D> = {
-  setComponentData: (data: D) => void,
-  componentData: D,
-};
 
 export type ChamelionData = {
   component?: string,
@@ -65,16 +60,18 @@ const options: BodilessOptions<ChamelionProps, ChamelionData> = {
   },
 };
 
-type EditProps = ChamelionProps & NodeDataHandlers<ChamelionData>;
+type EditProps = ChamelionProps & EditButtonProps<ChamelionData>;
 
-const asBodilessChamelion = (
+const asBodilessChamelion: AsBodiless<ChamelionProps, ChamelionData> = (
   nodeKeys?: WithNodeKeyProps,
   defaultData?: ChamelionData,
-  overrides?: (props: EditProps) => Partial<EditButtonOptions<EditProps, ChamelionData>>,
+  useOverrides?: (props: EditProps) => Partial<EditButtonOptions<ChamelionProps, ChamelionData>>,
 ) => flowRight(
   extendDesignable()({}),
   withSidecarNodes(
-    asBodilessComponent(options)(nodeKeys, defaultData, overrides),
+    asBodilessComponent<ChamelionProps, ChamelionData>(options)(
+      nodeKeys, defaultData, useOverrides,
+    ),
   ),
   asChamelion,
 );

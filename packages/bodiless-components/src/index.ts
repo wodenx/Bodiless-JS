@@ -26,6 +26,7 @@ import asTaggableItem from './Taggable/asTaggableItem';
 import withListTitle from './List/withListTitle';
 import asEditableList from './List/asEditableList';
 import asBasicSublist from './List/asBasicSublist';
+import asBodilessList, { asSubList, asTitledItem } from './List/asBodilessList';
 import withSublist, { withBasicSublist } from './List/withSublist';
 import withDeleteSublistOnUnwrap from './List/withDeleteSublistOnUnwrap';
 import {
@@ -58,8 +59,10 @@ import asBodilessToggle, {
   withBodilessComponentFormToggle,
   withBodilessToggleButton,
 } from './asBodilessToggle';
+import asBodilessChamelion from './asBodilessChamelion';
 
 export {
+  asBodilessChamelion,
   withBodilessLinkToggle,
   asBodilessToggle,
   useBodilessToggle,
@@ -76,6 +79,9 @@ export {
   NodeViewer,
   withLinkToggle,
   List,
+  asBodilessList,
+  asTitledItem,
+  asSubList,
   asEditableList,
   asBasicSublist,
   asTestableList,

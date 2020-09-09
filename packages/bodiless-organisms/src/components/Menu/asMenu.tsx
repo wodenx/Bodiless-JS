@@ -5,7 +5,7 @@ import { flow } from 'lodash';
 import Menu, { ItemGroup, Item as MenuItem, SubMenu } from 'rc-menu';
 // import Menu, { ItemGroup, Item as MenuItem, SubMenu } from './RCMenu';
 import { ifEditable, withExtendHandler } from '@bodiless/core';
-import { asTitledItem } from './components/asBodilessList';
+import { asTitledItem } from '@bodiless/components';
 
 export const asMenu = withDesign({
   Wrapper: replaceWith(stylable(Menu as ComponentType<MenuProps>)),
