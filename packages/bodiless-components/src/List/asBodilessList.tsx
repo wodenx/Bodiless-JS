@@ -66,13 +66,13 @@ const asBodilessList = (
   replaceWith(BodilessList),
   asEditableList,
   withDesign({
-    Wrapper: replaceWith(typeof Component === 'string' ? asComponent(Component) : Component),
+    Wrapper: replaceWith(asComponent(Component)),
   }),
   withNodeKey(nodeKeys),
 )(Component);
 
 const asSubList = flow(
-  asBodilessList(),
+  asBodilessList('sublist'),
   withDesign({
     Wrapper: replaceWith(SubList),
   }),

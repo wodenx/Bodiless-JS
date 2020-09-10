@@ -68,9 +68,13 @@ export type FluidDesign = Design<DesignableComponents>;
  * ```
  * @param Tag A valid HTML element.
  */
-export const asComponent = <P extends object>(Tag: keyof JSX.IntrinsicElements) => (
-  (props: P) => <Tag {...props} />
-);
+export const asComponent = <P extends object>(
+  Tag: ComponentType<P> | (keyof JSX.IntrinsicElements),
+) => {
+  if (typeof Tag !== 'string') return Tag;
+  const AsComponent = (props: P) => <Tag {...props} />;
+  return AsComponent;
+};
 
 /**
  * is an HOC that will attach a displayName to an object

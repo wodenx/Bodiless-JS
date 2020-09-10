@@ -47,12 +47,9 @@ const withToggleProps = (wrap = 'wrap', unwrap = 'unwrap') => (
   <P extends object>(Component: ComponentType<P & ToggleProps>) => {
     const WithToggleProps = (props: P & EditButtonProps<ToggleData>) => {
       const { setComponentData } = props;
-      const { node } = useNode();
-      console.log('bt node path', node.path.join('$'));
       const newProps = useBodilessToggle(props)
         ? { [unwrap]: () => setComponentData({ on: false }) }
         : { [wrap]: () => setComponentData({ on: true }) };
-      console.log('bt', newProps);
       return <Component {...props} {...newProps} />;
     };
     return WithToggleProps;
@@ -78,6 +75,20 @@ const withBodilessToggleButton$ = <P extends ToggleButtonProps>(
     return [{ ...baseDefinition, ...useOverrides(props) }];
   };
   return withMenuOptions({ useMenuOptions, name: 'Toggle' });
+};
+
+const withDeleteNodeOnUnwrap = <P extends object>(Component: ComponentType<P>|string) => {
+  const WithDeleteOnUnwrap = (props: P) => {
+    const { node } = useNode();
+    const { unwrap, ...rest } = props as { unwrap?: () => void };
+    if (!unwrap) return <Component {...props} />;
+    const unwrap$ = () => {
+      node.delete();
+      if (unwrap) unwrap();
+    };
+    return <Component {...rest as P} unwrap={unwrap$} />;
+  };
+  return WithDeleteOnUnwrap;
 };
 
 /**
@@ -134,7 +145,6 @@ const asBodilessToggle$ = (
   startSidecarNodes,
   withBodilessData(nodeKeys, defaultData),
   ...hocs,
-  withoutProps(['componentData', 'setComponentData']),
 );
 
 /**
@@ -150,6 +160,7 @@ const asBodilessToggle = <P extends object>(conditionalHoc: ConditionalHOC<P>) =
 ): HOC => asBodilessToggle$(nodeKeys, defaultData)(
   // @TODO Figure out how to get rid of these casts.
   conditionalHoc(useBodilessToggle as ToggleHook<P>),
+  withoutProps('componentData', 'setComponentData'),
   endSidecarNodes as HOC,
 );
 
@@ -170,10 +181,12 @@ const ifBodilessTogggleOn = (
   defaultData?: ToggleData,
 ) => (...hocs: HOC[]) => asBodilessToggle$(nodeKeys, defaultData)(
   ifToggledOn(useBodilessToggle)(
+    withoutProps('componentData', 'setComponentData'),
     endSidecarNodes,
     ...hocs,
   ),
   ifToggledOff(useBodilessToggle)(
+    withoutProps('componentData', 'setComponentData'),
     endSidecarNodes,
   ),
 );
@@ -201,10 +214,12 @@ const ifBodilessToggleOff = (
   defaultData?: ToggleData,
 ) => (...hocs: HOC[]) => asBodilessToggle$(nodeKeys, defaultData)(
   ifToggledOff(useBodilessToggle)(
+    withoutProps('componentData', 'setComponentData'),
     endSidecarNodes,
     ...hocs,
   ),
   ifToggledOn(useBodilessToggle)(
+    withoutProps('componentData', 'setComponentData'),
     endSidecarNodes,
   ),
 );
@@ -216,4 +231,5 @@ export {
   withBodilessComponentFormToggle,
   withBodilessToggleButton,
   useBodilessToggle,
+  withDeleteNodeOnUnwrap,
 };

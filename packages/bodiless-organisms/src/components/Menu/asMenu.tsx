@@ -11,8 +11,10 @@ export const asMenu = withDesign({
   Wrapper: replaceWith(stylable(Menu as ComponentType<MenuProps>)),
 });
 
+export const asMenuItem = replaceWith(stylable(MenuItem));
+
 export const withMenuItem = withDesign({
-  Item: replaceWith(stylable(MenuItem)),
+  Item: asMenuItem,
 });
 
 export const asSubMenu = flow(

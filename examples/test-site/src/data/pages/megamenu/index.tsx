@@ -66,6 +66,7 @@ const Foo = (props: any) => <div id="foo" {...props} />;
 
 const MenuLinkChamelion = flow(
   asChamelionTitle,
+  stylable,
   withDesign({
     Link: addClasses('italic'),
   }),
@@ -119,15 +120,16 @@ const MegaMenu = flow(
   withMegaMenuDesign({
     Title: asMenuLink(withTitleEditor),
   }),
-  asMegaMenuMain,
-  withDesign({
-    Item: withDesign({
-      Touts: withDesign({
-        Title: asMenuTout$,
+  asMegaMenuMain(
+    withMenuStyles,
+    withDesign({
+      Item: withDesign({
+        Touts: withDesign({
+          Title: asMenuTout$,
+        }),
       }),
     }),
-  }),
-  withMenuStyles,
+  ),
 )(Fragment);
 
 const MegaMenuList = flow(
@@ -174,6 +176,8 @@ const H = addClasses('mt-5 text-l')(H3);
 
 export default (props: any) => (
   <Page {...props}>
+    {/*
+      */}
     <Layout>
       <h1 className="text-3xl font-bold">Menu V2</h1>
       <SimpleMenuList nodeKey="list2" />
@@ -190,12 +194,14 @@ export default (props: any) => (
       <H>Main menu as list</H>
       <MegaMenuList nodeKey="list1" />
       <H>Breadcrumbs</H>
+      <MegaMenuBreadcrumbs nodeKey="list1" />
       <H>Keys</H>
       <NodeTreePrinter nodeKey="list1" />
-      <MegaMenuBreadcrumbs nodeKey="list1" />
       <H>Compund List</H>
       <CompoundList />
     </Layout>
+    {/*
+      */}
   </Page>
 );
 

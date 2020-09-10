@@ -4,12 +4,12 @@ import {
   ifReadOnly, ifEditable, withOnlyProps,
 } from '@bodiless/core';
 import { flowRight } from 'lodash';
-import { replaceWith, asComponent } from '@bodiless/fclasses';
+import { replaceWith, withoutProps } from '@bodiless/fclasses';
 import type { HOC } from '@bodiless/fclasses';
 import { withBodilessComponentFormToggle, ifBodilessToggleOff } from './asBodilessToggle';
 
 const SafeFragment = withOnlyProps('key', 'children')(Fragment);
-const Span = asComponent('span');
+const Span = withoutProps('')('span');
 
 // type HOC<P = any, Q = any> = (Component: ComponentType<P>|string) => ComponentType<Q>;
 

@@ -23,7 +23,7 @@ import {
 import {
   asBreadcrumb, useBreadcrumbContext,
   useBodilessToggle, withBodilessToggleButton, ifBodilessTogggleOn,
-  asBodilessList, asSubList,
+  asBodilessList, asSubList, withDeleteNodeOnUnwrap,
 } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
@@ -57,6 +57,7 @@ const useOverrides = (props: any): any => {
 const asToggledSubList = flow(
   withoutProps(['wrap']),
   ifSublist(
+    withDeleteNodeOnUnwrap,
     asMenuSubList,
   ),
   withBodilessToggleButton(TOGGLE_NODE_KEY, undefined, useOverrides),

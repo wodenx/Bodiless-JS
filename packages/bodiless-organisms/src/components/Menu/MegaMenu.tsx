@@ -12,10 +12,10 @@
  * limitations under the License.
  */
 
-import { flow, identity } from 'lodash';
+import { flow, identity, flowRight } from 'lodash';
 
 import {
-  withDesign, addClassesIf,
+  withDesign, addClassesIf, HOC,
 } from '@bodiless/fclasses';
 import { withTitle } from '@bodiless/layouts';
 import {
@@ -23,6 +23,7 @@ import {
 } from '@bodiless/core';
 import {
   asBreadcrumb, useBreadcrumbContext, asBodilessChamelion, asBodilessList, asSubList,
+  withDeleteNodeOnUnwrap,
 } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
@@ -30,12 +31,13 @@ import { asMenuLink, asDefaultMenuTout, asDefaultMenuLink } from './MenuTitles';
 import asStylableList from '../MainMenu/asStylableList';
 
 import {
-  asSubMenu, asMenuItemGroup, asMenu, withMenuItem,
+  asSubMenu, asMenuItemGroup, asMenu, withMenuItem, asMenuItem,
 } from './asMenu';
 
 // Defines the basic sublist for all mubmenu types.
 const asMenuSubList = flow(
   asSubList,
+  withDeleteNodeOnUnwrap,
   asStylableList,
   withDesign({
     Title: asDefaultMenuLink,
@@ -126,6 +128,7 @@ const asChamelionSubMenu = withDesign({
   Basic: asBasicSubMenu,
   Touts: asToutSubMenu,
   Columns: asColumnSubMenu,
+  _default: asMenuItem,
 });
 
 /**
@@ -135,7 +138,15 @@ const asChamelionSubMenu = withDesign({
  *
  * @return A clean (unstyled) site main menu.
  */
-const asMainMenuClean = flow(
+const asMainMenuClean = (...hocs: HOC[]) => flowRight(
+  withDesign({
+    Item: withDesign({
+      Basic: withTitle('List'),
+      Touts: withTitle('Touts'),
+      Columns: withTitle('Columns'),
+    }),
+  }),
+  ...hocs,
   asMenu,
   withDesign({
     Item: asChamelionSubMenu,
