@@ -2,7 +2,7 @@ import { flow, identity } from 'lodash';
 import {
   withNode, withNodeKey, withSidecarNodes,
 } from '@bodiless/core';
-import { replaceWith, HOC } from '@bodiless/fclasses';
+import { replaceWith, HOC, stylable } from '@bodiless/fclasses';
 import {
   asBodilessLink, withBodilessLinkToggle,
 } from '@bodiless/components';
@@ -25,6 +25,7 @@ export const asMenuLink = (asEditable: HOC) => flow(
       asBodilessLink('link') as HOC,
     ),
   ),
+  stylable,
   asSubMenuTitle,
   asEditable,
   withNode,

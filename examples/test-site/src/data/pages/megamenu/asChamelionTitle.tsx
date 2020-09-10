@@ -1,9 +1,7 @@
 import { asMenuLink } from '@bodiless/organisms';
-import { startWith, addClasses, withDesign, stylable } from '@bodiless/fclasses';
-import { Fragment } from 'react';
+import { addClasses, withDesign, stylable } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import { withTitle } from '@bodiless/layouts';
-import { withOnlyProps } from '@bodiless/core';
 import { asBodilessChamelion } from '@bodiless/components';
 import { withEditorSimple } from '../../../components/Editors';
 
@@ -13,7 +11,7 @@ const startWithMenuLink = flow(
   stylable,
 );
 
-const asRed = flow( 
+const asRed = flow(
   startWithMenuLink,
   addClasses('text-red-500'),
   withTitle('Red Text'),
