@@ -34,12 +34,15 @@ import {
 import {
   asMegaMenuMain, asMegaMenuBreadcrumbs, asMegaMenuBase, withMegaMenuDesign,
   asStylableList, asMenuTout, asMenuLink, asSimpleMenuBase, withSimpleMenuDesign,
+  asMainSimpleMenuClean,
 } from '@bodiless/organisms';
 
 // import { withEditorSimple } from '../../../components/Editors';
 
 import Layout from '../../../components/Layout';
-import withMenuStyles, { withMenuToutStyles } from '../../../components/MegaMenu/MegaMenu.token';
+import withMenuStyles, {
+  withMenuToutStyles, withSimpleMenuStyles,
+} from '../../../components/MegaMenu/MegaMenu.token';
 import asChamelionTitle from './asChamelionTitle';
 import { withToutEditors } from '../../../components/Tout';
 
@@ -172,6 +175,15 @@ const SimpleMenuList = flow(
   // asReadOnly,
 )('ul') as ComponentType<any>;
 
+const SimpleMenuMain = flow(
+  asSimpleMenuBase(),
+  withSimpleMenuDesign({
+    Title: asMenuLink(withTitleEditor),
+  }),
+  asMainSimpleMenuClean,
+  withSimpleMenuStyles,
+)('ul');
+
 const H = addClasses('mt-5 text-l')(H3);
 
 export default (props: any) => (
@@ -180,6 +192,7 @@ export default (props: any) => (
       */}
     <Layout>
       <h1 className="text-3xl font-bold">Menu V2</h1>
+      <SimpleMenuMain nodeKey="list2" />
       <SimpleMenuList nodeKey="list2" />
       <H>Keys</H>
       <NodeTreePrinter nodeKey="list2" />

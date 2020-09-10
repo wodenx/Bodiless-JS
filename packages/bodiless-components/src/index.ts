@@ -59,6 +59,7 @@ import asBodilessToggle, {
   withBodilessComponentFormToggle,
   withBodilessToggleButton,
   withDeleteNodeOnUnwrap,
+  withBodilessToggle,
 } from './asBodilessToggle';
 import asBodilessChamelion from './asBodilessChamelion';
 
@@ -67,6 +68,7 @@ export {
   withBodilessLinkToggle,
   asBodilessToggle,
   useBodilessToggle,
+  withBodilessToggle,
   ifBodilessToggleOff,
   ifBodilessTogggleOn,
   withDeleteNodeOnUnwrap,

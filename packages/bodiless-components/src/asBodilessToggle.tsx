@@ -1,12 +1,13 @@
-import React, { ComponentType } from 'react';
+import React, { ComponentType, FC } from 'react';
 import {
   ifToggledOff, ifToggledOn, withBodilessData, withSidecarNodes,
   startSidecarNodes, endSidecarNodes, withMenuOptions, useNode,
 } from '@bodiless/core';
 import type { WithNodeKeyProps, EditButtonProps, TMenuOption } from '@bodiless/core';
 import { flowRight } from 'lodash';
-import type { HOC } from '@bodiless/fclasses';
-import { withoutProps } from '@bodiless/fclasses';
+import {
+  HOC, extendDesignable, withoutProps, applyDesign, Design, DesignableComponentsProps,
+} from '@bodiless/fclasses';
 import { MenuOptionsDefinition } from '@bodiless/core/lib/Types/PageContextProviderTypes';
 
 type ToggleProps = {
@@ -224,6 +225,45 @@ const ifBodilessToggleOff = (
   ),
 );
 
+type BodilessToggleComponents = {
+  On: ComponentType<any>,
+  Off: ComponentType<any>,
+};
+
+type WithBodilessToggleProps = DesignableComponentsProps<BodilessToggleComponents> & EditButtonProps<ToggleData>;
+
+const withBodilessToggle$ = <P extends object>(Component: ComponentType<P>) => {
+  const startComponents: BodilessToggleComponents = {
+    On: Component,
+    Off: Component,
+  };
+  const start = (design: Design<BodilessToggleComponents>) => {
+    const components$ = applyDesign<BodilessToggleComponents>(startComponents)(design);
+    return {
+      // @ts-ignore
+      On: endSidecarNodes(components$.On),
+      // @ts-ignore
+      Off: endSidecarNodes(components$.Off),
+    };
+  };
+  const BodilessToggle: FC<WithBodilessToggleProps> = props => {
+    const { components, ...rest } = props;
+    const on = useBodilessToggle(props);
+    const { On, Off } = components;
+    return on ? <On {...rest} /> : <Off {...rest} />;
+  };
+  return extendDesignable()(start)(BodilessToggle);
+};
+
+const withBodilessToggle = (
+  nodeKeys: WithNodeKeyProps,
+  defaultData?: ToggleData,
+) => asBodilessToggle$(nodeKeys, defaultData)(
+  withBodilessToggle$ as HOC,
+  withoutProps('componentData', 'setComponentData'),
+  endSidecarNodes,
+);
+
 export default asBodilessToggle;
 export {
   ifBodilessToggleOff,
@@ -232,4 +272,5 @@ export {
   withBodilessToggleButton,
   useBodilessToggle,
   withDeleteNodeOnUnwrap,
+  withBodilessToggle,
 };

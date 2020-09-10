@@ -56,4 +56,15 @@ export const withMenuToutStyles = flow(
   asToutHorizontal,
 );
 
+export const withSimpleMenuStyles = flow(
+  withDesign({
+    Item: withDesign({
+      On: withBasicSubMenuStyles,
+    }),
+  }),
+  asHorizontalMenu,
+  withMenuListStyles,
+  asExceptMobile,
+);
+
 export default withMenuStyles;

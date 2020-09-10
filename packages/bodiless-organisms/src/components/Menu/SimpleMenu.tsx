@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { flow, identity } from 'lodash';
+import { flow, identity, flowRight } from 'lodash';
 
 import {
   withDesign, addClassesIf, withoutProps,
@@ -22,17 +22,18 @@ import {
 } from '@bodiless/core';
 import {
   asBreadcrumb, useBreadcrumbContext,
-  useBodilessToggle, withBodilessToggleButton, ifBodilessTogggleOn,
-  asBodilessList, asSubList, withDeleteNodeOnUnwrap,
+  useBodilessToggle, withBodilessToggleButton, asBodilessList, asSubList, withDeleteNodeOnUnwrap,
+  withBodilessToggle,
 } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
-import { asSubMenu, asMenu, withMenuItem } from './asMenu';
+import {
+  asSubMenu, asMenu, withMenuItem, asMenuItem,
+} from './asMenu';
 import { asMenuLink, asDefaultMenuLink } from './MenuTitles';
 import asStylableList from '../MainMenu/asStylableList';
 
 const TOGGLE_NODE_KEY = 'toggle-sublist';
-const ifSublist = ifBodilessTogggleOn(TOGGLE_NODE_KEY);
 
 // Defines the basic sublist for all mubmenu types.
 const asMenuSubList = flow(
@@ -54,13 +55,13 @@ const useOverrides = (props: any): any => {
 };
 
 // Defines the sublist type for the top level menu items.
-const asToggledSubList = flow(
-  withoutProps(['wrap']),
-  ifSublist(
-    withDeleteNodeOnUnwrap,
-    asMenuSubList,
-  ),
+const asToggledSubList = flowRight(
+  withDesign({
+    On: flow(asMenuSubList, withDeleteNodeOnUnwrap),
+  }),
   withBodilessToggleButton(TOGGLE_NODE_KEY, undefined, useOverrides),
+  withBodilessToggle(TOGGLE_NODE_KEY),
+  withoutProps(['wrap']),
 );
 
 /**
@@ -93,10 +94,10 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
 const asMainMenuClean = flow(
   asMenu,
   withDesign({
-    Item: flow(
-      ifSublist(asSubMenu),
-      withMenuItem,
-    ),
+    Item: withDesign({
+      On: flow(asSubMenu, withMenuItem),
+      Off: asMenuItem,
+    }),
   }),
 );
 
@@ -109,7 +110,7 @@ const withMenuDesign = (design: any) => {
   const withDesign$ = typeof design === 'function' ? design : withDesign(design);
   return flow(
     withDesign({
-      Item: ifSublist(withDesign$),
+      Item: withDesign$,
     }),
     withDesign$,
   );
