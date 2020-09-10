@@ -56,10 +56,10 @@ const useOverrides = (props: any): any => {
 // Defines the sublist type for the top level menu items.
 const asToggledSubList = flow(
   withoutProps(['wrap']),
-  withBodilessToggleButton(TOGGLE_NODE_KEY, undefined, useOverrides),
   ifSublist(
     asMenuSubList,
   ),
+  withBodilessToggleButton(TOGGLE_NODE_KEY, undefined, useOverrides),
 );
 
 /**

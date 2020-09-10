@@ -6,12 +6,12 @@ import {
   useNode, DefaultContentNode, NodeProvider, PageContextProvider, asReadOnly,
 } from '@bodiless/core';
 import { flow } from 'lodash';
-import { addClasses } from '@bodiless/fclasses';
+import { addClasses, withDesign, addProps } from '@bodiless/fclasses';
 import {
-  asMenuBase as asSimpleMenuBase,
-  withMenuDesign as withSimpleMenuDesign,
-} from './organisms/SimpleMenu';
-import { asMenuLink } from './organisms/MegaMenuTitles';
+  asSimpleMenuBase,
+  withSimpleMenuDesign,
+  asMenuLink,
+} from '../src/components/Menu';
 
 const mockSetNode = jest.fn();
 
@@ -52,10 +52,13 @@ describe('SimpleMenu', () => {
     withSimpleMenuDesign({
       Item: addClasses('pl-5'),
     }),
+    withDesign({
+      Item: addProps({ 'data-bl-id': 'top-level-item' }),
+    }),
     asReadOnly,
   )('ul');
 
-  it('wtf??', () => {
+  it('Saves sublist toggle to the correct nodeKey', () => {
     const wrapper = mount((
       <MockNodeProvider data={{}}>
         <SimpleMenuList />
@@ -68,5 +71,23 @@ describe('SimpleMenu', () => {
     option.handler();
     expect(mockSetNode).toHaveBeenCalledTimes(1);
     expect(mockSetNode.mock.calls[0][0].join('$')).toBe('root$default$toggle-sublist');
+  });
+
+  it.only('Passes the unwrap prop to a sublist', () => {
+    const data = {
+      'root$default$toggle-sublist': { on: true }
+    };
+    const wrapper = mount((
+      <MockNodeProvider data={data}>
+        <SimpleMenuList />
+      </MockNodeProvider>
+    ));
+    const list = wrapper.findWhere(
+      n => n.name() === 'List' && n.prop('data-bl-id') === 'top-level-item'
+    );
+    const unwrap = list.prop('unwrap');
+    mockSetNode.mockClear();
+    unwrap();
+    expect(mockSetNode).toBeCalledWith(['root', 'default', 'toggle-sublist'], { on: false });
   });
 });

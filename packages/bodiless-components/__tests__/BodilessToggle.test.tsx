@@ -232,6 +232,27 @@ describe('withBodilessToggleButton', () => {
     return getMenuOptions!()[0];
   };
 
+  it('Passes the unwrap prop when toggled on', () => {
+    const data = {
+      root$toggle: { on: true },
+    };
+    const wrapper = mount(<Test data={data} />);
+    const unwrap = wrapper.find(TestComponent$).prop('unwrap');
+    mockSetNode.mockClear();
+    // @ts-ignore
+    unwrap();
+    expect(mockSetNode).toBeCalledWith(['root', 'toggle'], { on: false });
+  });
+
+  it('Passes the wrap prop when toggled off', () => {
+    const wrapper = mount(<Test data={{}} />);
+    const wrap = wrapper.find(TestComponent$).prop('wrap');
+    mockSetNode.mockClear();
+    // @ts-ignore
+    wrap();
+    expect(mockSetNode).toBeCalledWith(['root', 'toggle'], { on: true });
+  });
+
   it('Preserves the node path of the wrapped component', () => {
     const data = {
       root$toggle: { on: true },

@@ -1,7 +1,7 @@
 import React, { ComponentType } from 'react';
 import {
   ifToggledOff, ifToggledOn, withBodilessData, withSidecarNodes,
-  startSidecarNodes, endSidecarNodes, withMenuOptions,
+  startSidecarNodes, endSidecarNodes, withMenuOptions, useNode,
 } from '@bodiless/core';
 import type { WithNodeKeyProps, EditButtonProps, TMenuOption } from '@bodiless/core';
 import { flowRight } from 'lodash';
@@ -47,9 +47,12 @@ const withToggleProps = (wrap = 'wrap', unwrap = 'unwrap') => (
   <P extends object>(Component: ComponentType<P & ToggleProps>) => {
     const WithToggleProps = (props: P & EditButtonProps<ToggleData>) => {
       const { setComponentData } = props;
+      const { node } = useNode();
+      console.log('bt node path', node.path.join('$'));
       const newProps = useBodilessToggle(props)
         ? { [unwrap]: () => setComponentData({ on: false }) }
         : { [wrap]: () => setComponentData({ on: true }) };
+      console.log('bt', newProps);
       return <Component {...props} {...newProps} />;
     };
     return WithToggleProps;
