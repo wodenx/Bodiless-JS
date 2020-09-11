@@ -71,7 +71,7 @@ describe('asBodilessChamelion', () => {
     mockGetNode.mockClear();
   });
 
-  describe('Chamelion Button', () => {
+  describe('Chamelion  Button', () => {
     let mockIsEdit: jest.SpyInstance<any, []>;
 
     beforeAll(() => {
@@ -83,72 +83,111 @@ describe('asBodilessChamelion', () => {
       mockIsEdit.mockRestore();
     });
 
-    const getForm = (wrapper: ReactWrapper<any, any>) => {
-      const { getMenuOptions } = wrapper.find(PageContextProvider).props();
-      const options = getMenuOptions!();
-      expect(options).toHaveLength(1);
-      // @ts-ignore no need to simulate the event argument
-      const render = options[0].handler();
-      const Form = () => <>{render()}</>;
-      return Form;
-    };
+    describe('Toggle Button', () => {
+      const callHandler = (wrapper: ReactWrapper<any, any>) => {
+        const { getMenuOptions } = wrapper.find(PageContextProvider).props();
+        const options = getMenuOptions!();
+        expect(options).toHaveLength(1);
+        // @ts-ignore no need to simulate the event argument
+        return options[0].handler();
+      };
 
-    it('Provides the correct initial values', () => {
-      const wrapper = mount((
-        <MockNodeProvider data={{ root$chamelion: { component: 'A' } }}>
-          <TestChamelion />
-        </MockNodeProvider>
-      ));
-      const Form = getForm(wrapper);
-      const form = shallow(<Form />);
-      const { initialValues } = form.childAt(0).props();
-      expect(initialValues).toEqual({ component: 'A' });
+      it('Provides a toggle on button when toggled off', () => {
+        const wrapper = mount((
+          <MockNodeProvider data={{}}>
+            <TestChamelion />
+          </MockNodeProvider>
+        ));
+        callHandler(wrapper);
+        expect(mockSetNode).toBeCalledWith(['root', 'chamelion'], { component: 'A' });
+      });
+
+      it('Provides a toggle off button when toggled on', () => {
+        const wrapper = mount((
+          <MockNodeProvider data={{ root$chamelion: { component: 'A' } }}>
+            <TestChamelion />
+          </MockNodeProvider>
+        ));
+        callHandler(wrapper);
+        expect(mockSetNode).toBeCalledWith(['root', 'chamelion'], { component: null });
+      });
     });
 
-    it('Provides the correct submit handlers', () => {
-      const wrapper = mount((
-        <MockNodeProvider data={{}}>
-          <TestChamelion />
-        </MockNodeProvider>
-      ));
-      const Form = getForm(wrapper);
-      const form = shallow(<Form />);
-      const { initialValues, submitValues } = form.childAt(0).props();
-      expect(initialValues).toEqual({});
-      const values = { component: 'A' };
-      submitValues(values);
-      expect(mockSetNode).toBeCalledWith(['root', 'chamelion'], values);
-    });
+    describe('Swap Button', () => {
+      const getForm = (wrapper: ReactWrapper<any, any>) => {
+        const { getMenuOptions } = wrapper.find(PageContextProvider).props();
+        const options = getMenuOptions!();
+        expect(options).toHaveLength(1);
+        // @ts-ignore no need to simulate the event argument
+        const render = options[0].handler();
+        const Form = () => <>{render()}</>;
+        return Form;
+      };
 
-    it('Provides the correct form components', () => {
-      const wrapper = mount((
-        <MockNodeProvider data={{}}>
-          <TestChamelion />
-        </MockNodeProvider>
-      ));
-      const Form = getForm(wrapper);
-      const form = mount(<Form />);
-      expect(form.find('input[value="A"]').prop('checked')).toBeFalsy();
-      expect(form.find('label').text()).toBe('A');
-    });
-
-    it('Uses component titles to control what is on the form', () => {
       const TestChamelionExt = withDesign({
-        B: withProps({ foo: 'bar' }),
-        _default: withTitle('Default'),
+        B: flow(withProps({ 'data-test-b': true }), withTitle('B')),
       })(TestChamelion);
-      const wrapper = mount((
-        <MockNodeProvider data={{}}>
-          <TestChamelionExt />
-        </MockNodeProvider>
-      ));
-      const Form = getForm(wrapper);
-      const form = mount(<Form />);
-      expect(form.find('input[value="A"]').prop('checked')).toBeFalsy();
-      expect(form.find('input[value="B"]')).toHaveLength(0);
-      expect(form.find('input[value="_default"]')).toHaveLength(1);
-      // @TODO: Fix this case.
-      // expect(form.find('input[value="_default"]').prop('checked')).toBeTruthy();
+
+      it('Provides the correct initial values', () => {
+        const wrapper = mount((
+          <MockNodeProvider data={{ root$chamelion: { component: 'A' } }}>
+            <TestChamelionExt />
+          </MockNodeProvider>
+        ));
+        const Form = getForm(wrapper);
+        const form = shallow(<Form />);
+        const { initialValues } = form.childAt(0).props();
+        expect(initialValues).toEqual({ component: 'A' });
+      });
+
+      it('Provides the correct submit handlers', () => {
+        const wrapper = mount((
+          <MockNodeProvider data={{}}>
+            <TestChamelionExt />
+          </MockNodeProvider>
+        ));
+        const Form = getForm(wrapper);
+        const form = shallow(<Form />);
+        const { initialValues, submitValues } = form.childAt(0).props();
+        expect(initialValues).toEqual({});
+        const values = { component: 'A' };
+        submitValues(values);
+        expect(mockSetNode).toBeCalledWith(['root', 'chamelion'], values);
+      });
+
+      it('Provides the correct form components', () => {
+        const wrapper = mount((
+          <MockNodeProvider data={{}}>
+            <TestChamelionExt />
+          </MockNodeProvider>
+        ));
+        const Form = getForm(wrapper);
+        const form = mount(<Form />);
+        expect(form.find('input[value="A"]').prop('checked')).toBeFalsy();
+        expect(form.find('input[value="B"]').prop('checked')).toBeFalsy();
+        expect(form.find('label[htmlFor="bl-component-form-chamelion-radio-A"]').text()).toBe('A');
+        expect(form.find('label[htmlFor="bl-component-form-chamelion-radio-B"]').text()).toBe('B');
+      });
+
+      it('Uses component titles to control what is on the form', () => {
+        const TestChamelionExt2 = withDesign({
+          // This removes the title from B.
+          B: withProps({ foo: 'bar' }),
+          _default: withTitle('Default'),
+        })(TestChamelion);
+        const wrapper = mount((
+          <MockNodeProvider data={{}}>
+            <TestChamelionExt2 />
+          </MockNodeProvider>
+        ));
+        const Form = getForm(wrapper);
+        const form = mount(<Form />);
+        expect(form.find('input[value="A"]').prop('checked')).toBeFalsy();
+        expect(form.find('input[value="B"]')).toHaveLength(0);
+        expect(form.find('input[value="_default"]')).toHaveLength(1);
+        // @TODO: Fix this case.
+        // expect(form.find('input[value="_default"]').prop('checked')).toBeTruthy();
+      });
     });
   });
 

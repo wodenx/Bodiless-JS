@@ -50,6 +50,19 @@ const useActiveComponent = (props: ChamelionButtonProps) => {
 
 const useIsOn = (props: ChamelionButtonProps) => useActiveKey(props) !== DEFAULT_KEY;
 
+const useToggleButtonMenuOption = (props: ChamelionButtonProps) => {
+  const { setComponentData } = props;
+  const components = useSelectableComponents(props);
+  const activeKey = useActiveKey(props);
+  const keys = Object.keys(components);
+  const newKey = keys.find(key => key !== activeKey) || null;
+  return {
+    label: 'Toggle',
+    icon: useIsOn(props) ? 'toggle-on' : 'toggle-off',
+    handler: () => setComponentData({ component: newKey }),
+  };
+};
+
 const useSwapButtonMenuOption = (props: ChamelionButtonProps) => {
   const components = useSelectableComponents(props);
   const renderForm = () => {
@@ -60,10 +73,10 @@ const useSwapButtonMenuOption = (props: ChamelionButtonProps) => {
       ComponentFormTitle,
     } = useMenuOptionUI();
     const radios = Object.getOwnPropertyNames(components).map(name => (
-      <ComponentFormLabel key={name}>
-        <ComponentFormRadio value={name} />
+      <ComponentFormLabel key={name} htmlFor={`bl-component-form-chamelion-radio-${name}`}>
+        <ComponentFormRadio value={name} id={`bl-comonent-form-chamelion-radio-${name}`} />
         {/* @ts-ignore @TODO Fix this, components need to have attributes */}
-        {components[name].title || name}
+        {components[name].title}
       </ComponentFormLabel>
     ));
     return (
@@ -87,14 +100,18 @@ const withChamelionButton$ = <P extends ChamelionButtonProps>(
   useOverrides?: UseChamelionOverrides,
 ) => {
   const useMenuOptions = (props: P) => {
+    const extMenuOptions = Object.keys(useSelectableComponents(props)).length > 1
+      ? useSwapButtonMenuOption
+      : useToggleButtonMenuOption;
     const baseDefinition = {
       name: 'chamelion-toggle',
       global: false,
       local: true,
-      ...useSwapButtonMenuOption(props),
+      ...extMenuOptions(props),
     };
-    const overrides = useOverrides && useOverrides(props);
-    return overrides ? [{ ...baseDefinition, ...overrides }] : [];
+    const overrides = useOverrides ? useOverrides(props) : {};
+    // if useOverrides returns undefined, it means not to provide the button.
+    return typeof overrides !== 'undefined' ? [{ ...baseDefinition, ...overrides }] : [];
   };
   return withMenuOptions({ useMenuOptions, name: 'Chamelion' });
 };
