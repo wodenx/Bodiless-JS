@@ -115,16 +115,19 @@ export const useGetter = <P extends any>(value: P): () => P => {
  * @param callback A callback to execute when click outside is detected
  *
  */
-export const useClickOutside = (ref: React.MutableRefObject<any>, callback: () => void) => {
+export const useClickOutside = (
+  ref: React.MutableRefObject<any>,
+  callback: (e: KeyboardEvent | MouseEvent) => void,
+) => {
   const escapeListener = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') {
-      callback();
+      callback(e);
     }
   }, []);
 
   const clickListener = useCallback((e: MouseEvent) => {
     if (ref.current && !ref.current.contains(e.target)) {
-      callback();
+      callback(e);
     }
   }, []);
 

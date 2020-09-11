@@ -111,39 +111,44 @@ export const withNodeAndHandlers = (defaultData?: any) => flowRight(
   withNodeDataHandlers(defaultData),
 );
 
-type ClickOutsideProps = {
-  onClickOutside: () => void;
+export type ClickOutsideProps = {
+  onClickOutside?: (e: KeyboardEvent | MouseEvent) => void;
 };
 
+/**
+ * Utility hoc to add onClickOutside handler to the original component.
+ *
+ * @return An HOC which will add the handler.
+ */
 export const withClickOutside = <P extends object>(Component: CT<P> | string) => {
   const WithClickOutside = (props: P & ClickOutsideProps) => {
     const { onClickOutside } = props;
     const ref = useRef(null);
 
-    const ensureClickOutside = () => {
-      if (onClickOutside && typeof onClickOutside === 'function') {
-        onClickOutside();
+    const ensureClickOutside = (e: KeyboardEvent | MouseEvent) => {
+      if (typeof onClickOutside === 'function') {
+        onClickOutside(e);
       }
     };
 
     const escapeListener = useCallback((e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        ensureClickOutside();
+        ensureClickOutside(e);
       }
     }, []);
 
-    const clickListener = useCallback(
-      (e: MouseEvent) => {
-        if (!(ref.current! as any).contains(e.target)) {
-          ensureClickOutside();
-        }
-      },
-      [ref.current],
-    );
+    const clickListener = useCallback((e: MouseEvent) => {
+      if (!(ref.current! as any).contains(e.target)) {
+        ensureClickOutside(e);
+      }
+    }, [ref.current]);
 
     useEffect(() => {
-      document.addEventListener('click', clickListener);
-      document.addEventListener('keyup', escapeListener);
+      // Only add listners if onClickOutside handler is defined
+      if (typeof onClickOutside === 'function') {
+        document.addEventListener('click', clickListener);
+        document.addEventListener('keyup', escapeListener);
+      }
       return () => {
         document.removeEventListener('click', clickListener);
         document.removeEventListener('keyup', escapeListener);
