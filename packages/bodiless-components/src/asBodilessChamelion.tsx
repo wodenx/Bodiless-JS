@@ -1,4 +1,4 @@
-import React, { ComponentType, FC } from 'react';
+import React, { ComponentType, FC, Fragment } from 'react';
 import {
   withBodilessData, withSidecarNodes,
   withMenuOptions, useContextMenuForm, useEditFormProps,
@@ -10,7 +10,7 @@ import type { WithNodeKeyProps, EditButtonProps } from '@bodiless/core';
 import { flowRight, pick, omit } from 'lodash';
 import {
   extendDesignable, DesignableComponentsProps,
-  asComponent, DesignableComponents, applyDesign, Design,
+  asComponent, DesignableComponents, applyDesign, Design, withoutProps,
 } from '@bodiless/fclasses';
 
 const DEFAULT_KEY = '_default';
@@ -126,13 +126,7 @@ const withUnwrapChamelion = <P extends object>(Component: ComponentType<P>) => {
   return WithUnwrapChamelion;
 };
 
-const asBodilessChamelion = (
-  nodeKeys?: WithNodeKeyProps,
-  defaultData?: ChamelionData,
-  useOverrides?: UseChamelionOverrides,
-) => <P extends object>(
-  Component: ComponentType<P>|string,
-) => {
+const applyChamelionDesign = <P extends object>(Component: ComponentType<P>|string) => {
   const apply = (design: Design<any>) => {
     const Component$ = asComponent(Component as ComponentType<P>);
     const start = Object.keys(design).reduce((acc, key) => ({
@@ -141,21 +135,52 @@ const asBodilessChamelion = (
     }), { [DEFAULT_KEY]: Component$ });
     return applyDesign(start)(design);
   };
+  return extendDesignable()(apply);
+};
+
+const applyBodilessChamelion = (
+  nodeKeys?: WithNodeKeyProps,
+  defaultData?: ChamelionData,
+) => <P extends object>(
+  Component: ComponentType<P>|string,
+) => {
   const Chamelion: FC<P & ChamelionButtonProps> = props => {
     const ActiveComponent = useActiveComponent(props);
     const rest = omit(props, 'componentData', 'setComponentData', 'components');
     return <ActiveComponent {...rest as P} />;
   };
   return flowRight(
-    extendDesignable()(apply),
+    applyChamelionDesign(Component),
     withSidecarNodes(
       withBodilessData(nodeKeys, defaultData),
-      ifEditable(
-        withChamelionButton$(useOverrides),
-      ),
       withUnwrapChamelion,
     ),
   )(Chamelion);
 };
+
+const withBodilessChamelionButton = (
+  nodeKeys?: WithNodeKeyProps,
+  defaultData?: ChamelionData,
+  useOverrides?: UseChamelionOverrides,
+) => flowRight(
+  applyChamelionDesign(Fragment),
+  withSidecarNodes(
+    withBodilessData(nodeKeys, defaultData),
+    ifEditable(
+      withChamelionButton$(useOverrides),
+    ),
+    withUnwrapChamelion,
+  ),
+  withoutProps('components'),
+);
+
+const asBodilessChamelion = (
+  nodeKeys?: WithNodeKeyProps,
+  defaultData?: ChamelionData,
+  useOverrides?: UseChamelionOverrides,
+) => flowRight(
+  withBodilessChamelionButton(nodeKeys, defaultData, useOverrides),
+  applyBodilessChamelion(nodeKeys, defaultData),
+);
 
 export default asBodilessChamelion;
