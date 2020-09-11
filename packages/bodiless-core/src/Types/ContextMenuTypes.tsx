@@ -96,11 +96,11 @@ export type IContextMenuProps = {
   ui?: UI;
   isPositionToggled?: boolean;
   renderInTooltip?: boolean;
-  closeForm?: () => void;
+  closeForm?: (e: any) => void;
 } & HTMLProps<HTMLElement>;
 
 export type ContextMenuFormProps = {
-  closeForm: () => void;
+  closeForm: (e: any) => void;
   ui?: UI;
   'aria-label'?: string;
 };

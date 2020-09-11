@@ -48,11 +48,18 @@ const ContextMenuBase: FC<IContextMenuProps> = (props) => {
   } = props;
   const { Toolbar } = getUI(ui);
 
+  const closeMenuForm = (e: KeyboardEvent | MouseEvent) => {
+    if (typeof closeForm === 'function') {
+      closeForm(e);
+    }
+  };
+
   if (renderForm) {
     const formProps: ContextMenuFormProps = {
-      closeForm: closeForm
-        ? () => closeForm()
-        : () => setRenderForm(undefined),
+      // eslint-disable-next-line no-confusing-arrow
+      closeForm: (e) => e.target.hasAttribute('data-close-button')
+        ? setRenderForm(undefined)
+        : closeMenuForm(e),
       ui,
       'aria-label': 'Context Submenu Form',
     };

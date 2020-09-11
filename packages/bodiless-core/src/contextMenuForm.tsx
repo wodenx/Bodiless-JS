@@ -58,7 +58,7 @@ const FormChromeBase: FC<FormChromeProps> = (props) => {
       <ComponentFormCloseButton
         type="button"
         aria-label="Cancel"
-        onClick={() => closeForm()}
+        onClick={(e: any) => closeForm(e)}
       />
       <ComponentFormTitle>{title}</ComponentFormTitle>
       {children}
@@ -81,17 +81,17 @@ export const ContextMenuForm = <D extends object>(props: ContextMenuPropsType<D>
     ...rest
   } = props;
 
-  const callOnClose = (values: D) => {
+  const callOnClose = (e: KeyboardEvent | MouseEvent | null, values: D) => {
     if (typeof onClose === 'function') {
       onClose(values);
     }
-    closeForm();
+    closeForm(e);
   };
   return (
     <Form
       onSubmit={(values: D) => {
         if (!submitValues(values)) {
-          callOnClose(values);
+          callOnClose(null, values);
         }
       }}
       initialValues={initialValues}
@@ -99,9 +99,9 @@ export const ContextMenuForm = <D extends object>(props: ContextMenuPropsType<D>
     >
       {({ formApi, formState }) => (
         <FormChrome
-          onClickOutside={() => callOnClose(formState.values)}
+          onClickOutside={(e: KeyboardEvent | MouseEvent) => callOnClose(e, formState.values)}
           hasSubmit={hasSubmit && !formState.invalid}
-          closeForm={() => callOnClose(formState.values)}
+          closeForm={(e: KeyboardEvent | MouseEvent) => callOnClose(e, formState.values)}
         >
           {typeof children === 'function'
             ? children({
