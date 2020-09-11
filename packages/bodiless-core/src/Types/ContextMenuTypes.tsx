@@ -96,6 +96,7 @@ export type IContextMenuProps = {
   ui?: UI;
   isPositionToggled?: boolean;
   renderInTooltip?: boolean;
+  closeForm?: () => void;
 } & HTMLProps<HTMLElement>;
 
 export type ContextMenuFormProps = {

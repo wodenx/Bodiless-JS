@@ -38,7 +38,7 @@ const ContextSubMenu: FC<IContextMenuItemProps> = props => {
   const title = option.label ? (typeof option.label === 'function' ? option.label() : option.label) : '';
 
   const handler = () => ({ closeForm }: ContextMenuFormProps) => (
-    <ContextMenuBase ui={finalUi} renderInTooltip={false}>
+    <ContextMenuBase ui={finalUi} renderInTooltip={false} closeForm={closeForm}>
       <FormChrome
         title={title}
         hasSubmit={false}

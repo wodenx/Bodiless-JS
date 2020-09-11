@@ -43,13 +43,16 @@ const ContextMenuBase: FC<IContextMenuProps> = (props) => {
   const {
     ui,
     renderInTooltip = true,
+    closeForm,
     children,
   } = props;
   const { Toolbar } = getUI(ui);
 
   if (renderForm) {
     const formProps: ContextMenuFormProps = {
-      closeForm: () => setRenderForm(undefined),
+      closeForm: closeForm
+        ? () => closeForm()
+        : () => setRenderForm(undefined),
       ui,
       'aria-label': 'Context Submenu Form',
     };
