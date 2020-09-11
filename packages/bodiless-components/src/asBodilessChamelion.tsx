@@ -1,6 +1,7 @@
 import React, { FC, ComponentType } from 'react';
 import {
   DesignableComponents, extendDesignable, asComponent, DesignableComponentsProps,
+  Design, applyDesign,
 } from '@bodiless/fclasses';
 import {
   useMenuOptionUI, asBodilessComponent, BodilessOptions,
@@ -78,16 +79,20 @@ const asBodilessChamelion: AsBodiless<ChamelionProps, ChamelionData> = (
 ) => <P extends object>(
   Component: ComponentType<P>|string,
 ) => {
-  const startComponents = {
-    _default: asComponent(Component as ComponentType<P>),
-  };
   const Chamelion: FC<P & ChamelionProps> = props => {
     const { component, components, ...rest } = props;
     const NewComponent = components[component || '_default'] || Component;
     return <NewComponent {...rest} />;
   };
+  const apply = (design: Design<any>) => {
+    const start = Object.keys(design).reduce((acc, key) => ({
+      ...acc,
+      [key]: asComponent(Component as ComponentType<P>),
+    }), {});
+    return applyDesign(start)(design);
+  };
   return flowRight(
-    extendDesignable()(startComponents),
+    extendDesignable()(apply),
     withSidecarNodes(
       asBodilessComponent<ChamelionProps, ChamelionData>(options)(
         nodeKeys, defaultData, useOverrides,
