@@ -1,52 +1,71 @@
-import React, { FC, ComponentType } from 'react';
+import React, { ComponentType, FC } from 'react';
 import {
-  DesignableComponents, extendDesignable, asComponent, DesignableComponentsProps,
-  Design, applyDesign,
-} from '@bodiless/fclasses';
-import {
-  useMenuOptionUI, asBodilessComponent, BodilessOptions,
-  withSidecarNodes, WithNodeKeyProps, EditButtonOptions, EditButtonProps, AsBodiless, useNode,
+  withBodilessData, withSidecarNodes,
+  withMenuOptions, useContextMenuForm, useEditFormProps,
+  useMenuOptionUI,
+  TMenuOption,
+  ifEditable,
 } from '@bodiless/core';
-import { flowRight } from 'lodash';
+import type { WithNodeKeyProps, EditButtonProps } from '@bodiless/core';
+import { flowRight, pick, omit } from 'lodash';
+import {
+  extendDesignable, DesignableComponentsProps,
+  asComponent, DesignableComponents, applyDesign, Design,
+} from '@bodiless/fclasses';
+
+const DEFAULT_KEY = '_default';
 
 export type ChamelionData = {
   component?: string|null,
 };
 
 type ChamelionComponents = DesignableComponents & {
-  _default: ComponentType<any>,
+  DEFAULT_KEY: ComponentType<any>,
 };
 
-export type ChamelionProps = ChamelionData & DesignableComponentsProps<ChamelionComponents>;
+export type ChamelionProps =
+  EditButtonProps<ChamelionData> & DesignableComponentsProps<ChamelionComponents>;
 
-const options: BodilessOptions<ChamelionProps, ChamelionData> = {
-  name: 'chamelion-swap',
-  label: 'Swap',
-  icon: 'repeat',
-  global: false,
-  local: true,
-  Wrapper: 'div',
-  defaultData: { component: '' },
-  // @TODO: Allow use of a true cmponent selector
-  renderForm: ({ componentProps }) => {
+type ChamelionButtonProps = ChamelionProps & EditButtonProps<ChamelionData>;
+
+type UseOverrides<P> = (props: P) => Partial<TMenuOption>;
+type UseChamelionOverrides = UseOverrides<ChamelionButtonProps>;
+
+const useSelectableComponents = (props: ChamelionButtonProps) => {
+  const { components } = props;
+  // @ts-ignore @TODO need to add metadata to component type
+  const keys = Object.keys(components).filter(key => Boolean(components[key].title));
+  return pick(components, keys);
+};
+
+const useActiveKey = (props: ChamelionButtonProps) => {
+  const { componentData: { component }, components } = props;
+  return (component && components[component]) ? component : DEFAULT_KEY;
+};
+
+const useActiveComponent = (props: ChamelionButtonProps) => {
+  const { components } = props;
+  return components[useActiveKey(props)];
+};
+
+const useIsOn = (props: ChamelionButtonProps) => useActiveKey(props) !== DEFAULT_KEY;
+
+const useSwapButtonMenuOption = (props: ChamelionButtonProps) => {
+  const components = useSelectableComponents(props);
+  const renderForm = () => {
     const {
       ComponentFormLabel,
       ComponentFormRadioGroup,
       ComponentFormRadio,
       ComponentFormTitle,
     } = useMenuOptionUI();
-    const { components } = componentProps;
     const radios = Object.getOwnPropertyNames(components).map(name => (
-      // We only display options for components with titles.
-      // @ts-ignore @TODO Fix this, components need to have attributes
-      components[name].title && (
-        <ComponentFormLabel key={name}>
-          <ComponentFormRadio value={name} />
-          {/* @ts-ignore @TODO Fix this, components need to have attributes */}
-          {components[name].title || name}
-        </ComponentFormLabel>
-      )
-    )).filter(Boolean);
+      <ComponentFormLabel key={name}>
+        <ComponentFormRadio value={name} />
+        {/* @ts-ignore @TODO Fix this, components need to have attributes */}
+        {components[name].title || name}
+      </ComponentFormLabel>
+    ));
     return (
       <div>
         <ComponentFormTitle>Choose a component</ComponentFormTitle>
@@ -55,51 +74,71 @@ const options: BodilessOptions<ChamelionProps, ChamelionData> = {
         </ComponentFormRadioGroup>
       </div>
     );
-  },
+  };
+  const render = useContextMenuForm(useEditFormProps({ ...props, renderForm }));
+  return {
+    icon: 'Swap',
+    label: 'Swap',
+    handler: () => render,
+  };
 };
 
-type EditProps = ChamelionProps & EditButtonProps<ChamelionData>;
+const withChamelionButton$ = <P extends ChamelionButtonProps>(
+  useOverrides?: UseChamelionOverrides,
+) => {
+  const useMenuOptions = (props: P) => {
+    const baseDefinition = {
+      name: 'chamelion-toggle',
+      global: false,
+      local: true,
+      ...useSwapButtonMenuOption(props),
+    };
+    const overrides = useOverrides && useOverrides(props);
+    return overrides ? [{ ...baseDefinition, ...overrides }] : [];
+  };
+  return withMenuOptions({ useMenuOptions, name: 'Chamelion' });
+};
 
 const withUnwrapChamelion = <P extends object>(Component: ComponentType<P>) => {
-  const WithUnwrapChamelion = (props: P) => {
-    // @TODO: Find a way to have this receive componentData and setComponentData
-    const { node } = useNode<ChamelionData>();
-    const { component } = node.data;
-    if (!component) return <Component {...props} />;
-    const unwrap = () => node.setData({ component: null });
+  const WithUnwrapChamelion = (props: P & ChamelionButtonProps) => {
+    const { setComponentData } = props;
+    if (!useIsOn(props)) return <Component {...props} />;
+    const unwrap = () => setComponentData({ component: null });
     return <Component {...props} unwrap={unwrap} />;
   };
   return WithUnwrapChamelion;
 };
 
-const asBodilessChamelion: AsBodiless<ChamelionProps, ChamelionData> = (
+const asBodilessChamelion = (
   nodeKeys?: WithNodeKeyProps,
   defaultData?: ChamelionData,
-  useOverrides?: (props: EditProps) => Partial<EditButtonOptions<ChamelionProps, ChamelionData>>,
+  useOverrides?: UseChamelionOverrides,
 ) => <P extends object>(
   Component: ComponentType<P>|string,
 ) => {
-  const Chamelion: FC<P & ChamelionProps> = props => {
-    const { component, components, ...rest } = props;
-    const NewComponent = components[component || '_default'] || Component;
-    return <NewComponent {...rest} />;
-  };
   const apply = (design: Design<any>) => {
+    const Component$ = asComponent(Component as ComponentType<P>);
     const start = Object.keys(design).reduce((acc, key) => ({
       ...acc,
-      [key]: asComponent(Component as ComponentType<P>),
-    }), {});
+      [key]: Component$,
+    }), { [DEFAULT_KEY]: Component$ });
     return applyDesign(start)(design);
+  };
+  const Chamelion: FC<P & ChamelionButtonProps> = props => {
+    const ActiveComponent = useActiveComponent(props);
+    const rest = omit(props, 'componentData', 'setComponentData', 'components');
+    return <ActiveComponent {...rest as P} />;
   };
   return flowRight(
     extendDesignable()(apply),
     withSidecarNodes(
-      asBodilessComponent<ChamelionProps, ChamelionData>(options)(
-        nodeKeys, defaultData, useOverrides,
+      withBodilessData(nodeKeys, defaultData),
+      ifEditable(
+        withChamelionButton$(useOverrides),
       ),
       withUnwrapChamelion,
     ),
-  )(Chamelion as any);
+  )(Chamelion);
 };
 
 export default asBodilessChamelion;
