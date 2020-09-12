@@ -185,7 +185,6 @@ const SimpleMenuMain = flow(
   ),
 )(Fragment);
 
-
 const H = addClasses('mt-5 text-l')(H3);
 
 export default (props: any) => (
