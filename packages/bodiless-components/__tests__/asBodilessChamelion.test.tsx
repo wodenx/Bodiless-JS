@@ -9,7 +9,7 @@ import {
 import { flowRight, flow, identity } from 'lodash';
 import { withDesign, withoutProps } from '@bodiless/fclasses';
 
-import asBodilessChamelion, { withChamelionComponentFormControls } from '../src/asBodilessChamelion';
+import { asBodilessChamelion, withChamelionComponentFormControls } from '../src/Chamelion';
 
 const mockSetNode = jest.fn();
 // @ts-ignore Unused

@@ -6,7 +6,7 @@ import {
 import { flowRight, identity } from 'lodash';
 import { replaceWith, withoutProps, withDesign } from '@bodiless/fclasses';
 import type { HOC } from '@bodiless/fclasses';
-import { applyChamelion, withChamelionComponentFormControls } from './asBodilessChamelion';
+import { withChamelionComponentFormControls, applyChamelion } from './Chamelion';
 
 const SafeFragment = withOnlyProps('key', 'children')(Fragment);
 const Span = withoutProps('')('span');

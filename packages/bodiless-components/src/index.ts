@@ -52,11 +52,8 @@ import {
 } from './withResponsiveToggle';
 import asBreadcrumb, { useBreadcrumbContext } from './asBreadcrumb';
 import withBodilessLinkToggle from './withBodilessLinkToggle';
-import asBodilessChamelion, { withDeleteNodeOnUnwrap } from './asBodilessChamelion';
 
 export {
-  asBodilessChamelion,
-  withDeleteNodeOnUnwrap,
   withBodilessLinkToggle,
   asBodilessLink,
   Image,
@@ -107,6 +104,8 @@ export {
   asBreadcrumb,
   useBreadcrumbContext,
 };
+
+export * from './Chamelion/index';
 
 export type {
   FinalProps as ListProps,
