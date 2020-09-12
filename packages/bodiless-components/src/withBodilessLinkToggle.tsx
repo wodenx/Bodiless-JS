@@ -3,7 +3,7 @@ import {
   withSidecarNodes,
   ifReadOnly, ifEditable, withOnlyProps,
 } from '@bodiless/core';
-import { flowRight } from 'lodash';
+import { flowRight, identity } from 'lodash';
 import { replaceWith, withoutProps, withDesign } from '@bodiless/fclasses';
 import type { HOC } from '@bodiless/fclasses';
 import { applyChamelion, withChamelionComponentFormControls } from './asBodilessChamelion';
@@ -13,16 +13,17 @@ const Span = withoutProps('')('span');
 
 // type HOC<P = any, Q = any> = (Component: ComponentType<P>|string) => ComponentType<Q>;
 
-const withBodilessLinkToggle = (asLink: HOC) => flowRight(
+const withBodilessLinkToggle = (asEditableLink: HOC) => flowRight(
   withDesign({
-    Off: flowRight(
+    _default: flowRight(
       ifEditable(replaceWith(Span)),
       ifReadOnly(replaceWith(SafeFragment)),
-    )
+    ),
+    On: identity,
   }),
   withChamelionComponentFormControls('toggle'),
   withSidecarNodes(
-    asLink,
+    asEditableLink,
   ),
   applyChamelion('toggle'),
 );
