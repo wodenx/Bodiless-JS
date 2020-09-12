@@ -51,11 +51,11 @@ const useActiveComponent = (props: ChamelionButtonProps) => {
 const useIsOn = (props: ChamelionButtonProps) => useActiveKey(props) !== DEFAULT_KEY;
 
 const useToggleButtonMenuOption = (props: ChamelionButtonProps) => {
-  const { setComponentData } = props;
-  const components = useSelectableComponents(props);
+  const { setComponentData, components } = props;
   const activeKey = useActiveKey(props);
-  const keys = Object.keys(components);
-  const newKey = keys.find(key => key !== activeKey) || null;
+  const newKey = activeKey === DEFAULT_KEY
+    ? Object.keys(components).find(key => key !== DEFAULT_KEY) || null
+    : null;
   return {
     label: 'Toggle',
     icon: useIsOn(props) ? 'toggle-on' : 'toggle-off',
@@ -116,7 +116,7 @@ const withChamelionButton$ = <P extends ChamelionButtonProps>(
   return withMenuOptions({ useMenuOptions, name: 'Chamelion' });
 };
 
-const withUnwrapChamelion = <P extends object>(Component: ComponentType<P>) => {
+const withUnwrap = <P extends object>(Component: ComponentType<P>) => {
   const WithUnwrapChamelion = (props: P & ChamelionButtonProps) => {
     const { setComponentData } = props;
     if (!useIsOn(props)) return <Component {...props} />;
@@ -125,9 +125,26 @@ const withUnwrapChamelion = <P extends object>(Component: ComponentType<P>) => {
   };
   return WithUnwrapChamelion;
 };
+const withWrapOnSubmit = <P extends object>(Component: ComponentType<P>) => {
+  const WithWrapOnSubmit: FC<P & ChamelionButtonProps> = props => {
+    if (useIsOn(props)) return <Component {...props} />;
+    const { components, setComponentData } = props;
+    const newKey = Object.keys(components).find(key => key !== DEFAULT_KEY) || null;
+    return <Component {...props} onSubmit={() => setComponentData({ component: newKey })} />;
+  };
+  return WithWrapOnSubmit;
+};
 
+/**
+ * @private
+ *
+ * HOC makes the wrapped component designable, ensuring that there is a component
+ * for every key in the design.
+ *
+ * @param Component
+ */
 const applyChamelionDesign = <P extends object>(Component: ComponentType<P>|string) => {
-  const apply = (design: Design<any>) => {
+  const apply = (design: Design<any> = {}) => {
     const Component$ = asComponent(Component as ComponentType<P>);
     const start = Object.keys(design).reduce((acc, key) => ({
       ...acc,
@@ -138,7 +155,32 @@ const applyChamelionDesign = <P extends object>(Component: ComponentType<P>|stri
   return extendDesignable()(apply);
 };
 
-const applyBodilessChamelion = (
+/**
+ * Applies the appropriate design to the wrapped component depending on the
+ * chamelion state.
+ *
+ * Use this function when you want to separate the form controlling the chamelion
+ * state from the component on which the chamelion acts (for example, if you want
+ * to add controls to a component edit form, but actually act on the component
+ * to which the edit form was added, eg:
+ *
+ * ```
+ * flow(
+ *   applyChamelion('link-chamelion'),
+ *   asBodilessLink('link')
+ *   withChamelionComponenFormConrols('link-chamelion')
+ *   withDesign({
+ *     Disabled: flow(replaceWith('span'), withoutProps('href'))
+ *   }),
+ * )('a');
+ * ```
+ *
+ * @param nodeKeys Location of the chamelion state data.
+ * @param defaultData Default chamelion state.
+ *
+ * @return HOC which applies the appropriate HOC's
+ */
+const applyChamelion = (
   nodeKeys?: WithNodeKeyProps,
   defaultData?: ChamelionData,
 ) => <P extends object>(
@@ -153,25 +195,50 @@ const applyBodilessChamelion = (
     applyChamelionDesign(Component),
     withSidecarNodes(
       withBodilessData(nodeKeys, defaultData),
-      withUnwrapChamelion,
     ),
   )(Chamelion);
 };
 
-const withBodilessChamelionButton = (
+/**
+ * Adds a menu button which controls the state of the chamelion.
+ *
+ * If the chamelion has more than one element in it's design, this will show a form allowing
+ * the user to choose which to apply.  Otherwise, this will be a toggle button.
+ *
+ * @param nodeKeys Location of the chamelion state data
+ * @param defaultData Default chamelion state data.
+ * @param useOverrides Menu option overrides.
+ *
+ * @return HOC which adds the menu button.
+ */
+const withChamelionButton = (
   nodeKeys?: WithNodeKeyProps,
   defaultData?: ChamelionData,
   useOverrides?: UseChamelionOverrides,
 ) => flowRight(
+  // We apply the design to a fragment bc at this point we just need the keys.
   applyChamelionDesign(Fragment),
   withSidecarNodes(
     withBodilessData(nodeKeys, defaultData),
-    ifEditable(
-      withChamelionButton$(useOverrides),
-    ),
-    withUnwrapChamelion,
+    withChamelionButton$(useOverrides),
+    withUnwrap,
   ),
+  // We remove the 'components' prop so as not to interfere with other designs.
   withoutProps('components'),
+);
+
+const withChamelionComponentFormControls = (
+  nodeKeys?: WithNodeKeyProps,
+  defaultData?: ChamelionData,
+) => flowRight(
+  // We apply the design to a fragment bc at this point we just need the keys.
+  applyChamelionDesign(Fragment),
+  withSidecarNodes(
+    withBodilessData(nodeKeys, defaultData),
+    withWrapOnSubmit,
+    withUnwrap,
+  ),
+  withoutProps('components', 'componentData', 'setComponentData'),
 );
 
 const asBodilessChamelion = (
@@ -179,8 +246,15 @@ const asBodilessChamelion = (
   defaultData?: ChamelionData,
   useOverrides?: UseChamelionOverrides,
 ) => flowRight(
-  withBodilessChamelionButton(nodeKeys, defaultData, useOverrides),
-  applyBodilessChamelion(nodeKeys, defaultData),
+  ifEditable(
+    withChamelionButton(nodeKeys, defaultData, useOverrides),
+  ),
+  applyChamelion(nodeKeys, defaultData),
 );
 
 export default asBodilessChamelion;
+export {
+  applyChamelion,
+  withChamelionButton,
+  withChamelionComponentFormControls,
+};

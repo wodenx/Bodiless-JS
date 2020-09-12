@@ -4,9 +4,9 @@ import {
   ifReadOnly, ifEditable, withOnlyProps,
 } from '@bodiless/core';
 import { flowRight } from 'lodash';
-import { replaceWith, withoutProps } from '@bodiless/fclasses';
+import { replaceWith, withoutProps, withDesign } from '@bodiless/fclasses';
 import type { HOC } from '@bodiless/fclasses';
-import { withBodilessComponentFormToggle, ifBodilessToggleOff } from './asBodilessToggle';
+import { applyChamelion, withChamelionComponentFormControls } from './asBodilessChamelion';
 
 const SafeFragment = withOnlyProps('key', 'children')(Fragment);
 const Span = withoutProps('')('span');
@@ -14,14 +14,17 @@ const Span = withoutProps('')('span');
 // type HOC<P = any, Q = any> = (Component: ComponentType<P>|string) => ComponentType<Q>;
 
 const withBodilessLinkToggle = (asLink: HOC) => flowRight(
-  withBodilessComponentFormToggle('toggle'),
+  withDesign({
+    Off: flowRight(
+      ifEditable(replaceWith(Span)),
+      ifReadOnly(replaceWith(SafeFragment)),
+    )
+  }),
+  withChamelionComponentFormControls('toggle'),
   withSidecarNodes(
     asLink,
   ),
-  ifBodilessToggleOff('toggle')(
-    ifEditable(replaceWith(Span)),
-    ifReadOnly(replaceWith(SafeFragment)),
-  ),
+  applyChamelion('toggle'),
 );
 
 export default withBodilessLinkToggle;
