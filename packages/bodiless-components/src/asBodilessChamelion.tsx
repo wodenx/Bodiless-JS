@@ -5,6 +5,7 @@ import {
   useMenuOptionUI,
   TMenuOption,
   ifEditable,
+  useNode,
 } from '@bodiless/core';
 import type { WithNodeKeyProps, EditButtonProps } from '@bodiless/core';
 import { flowRight, pick, omit } from 'lodash';
@@ -36,6 +37,19 @@ const useSelectableComponents = (props: ChamelionButtonProps) => {
   // @ts-ignore @TODO need to add metadata to component type
   const keys = Object.keys(components).filter(key => Boolean(components[key].title));
   return pick(components, keys);
+};
+const withDeleteNodeOnUnwrap = <P extends object>(Component: ComponentType<P>|string) => {
+  const WithDeleteOnUnwrap = (props: P) => {
+    const { node } = useNode();
+    const { unwrap, ...rest } = props as { unwrap?: () => void };
+    if (!unwrap) return <Component {...props} />;
+    const unwrap$ = () => {
+      node.delete();
+      if (unwrap) unwrap();
+    };
+    return <Component {...rest as P} unwrap={unwrap$} />;
+  };
+  return WithDeleteOnUnwrap;
 };
 
 const useActiveKey = (props: ChamelionButtonProps) => {
@@ -257,4 +271,5 @@ export {
   applyChamelion,
   withChamelionButton,
   withChamelionComponentFormControls,
+  withDeleteNodeOnUnwrap,
 };

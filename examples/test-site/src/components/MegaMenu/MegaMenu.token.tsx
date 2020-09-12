@@ -50,21 +50,35 @@ const withMenuStyles = flow(
   asExceptMobile,
 );
 
+const withSimpleSubMenuStyles = withDesign({
+  Basic: withBasicSubMenuStyles,
+});
+
+export const withSimpleMenuStyles = flow(
+  withDesign({
+    Item: withSimpleSubMenuStyles,
+  }),
+  asHorizontalMenu,
+  withMenuListStyles,
+  asExceptMobile,
+);
+
+
 export const withMenuToutStyles = flow(
   asToutWithPaddings,
   asToutDefaultStyle,
   asToutHorizontal,
 );
 
-export const withSimpleMenuStyles = flow(
-  withDesign({
-    Item: withDesign({
-      On: withBasicSubMenuStyles,
-    }),
-  }),
-  asHorizontalMenu,
-  withMenuListStyles,
-  asExceptMobile,
-);
+// export const withSimpleMenuStyles = flow(
+//   withDesign({
+//     Item: withDesign({
+//       On: withBasicSubMenuStyles,
+//     }),
+//   }),
+//   asHorizontalMenu,
+//   withMenuListStyles,
+//   asExceptMobile,
+// );
 
 export default withMenuStyles;

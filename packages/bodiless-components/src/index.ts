@@ -52,28 +52,12 @@ import {
 } from './withResponsiveToggle';
 import asBreadcrumb, { useBreadcrumbContext } from './asBreadcrumb';
 import withBodilessLinkToggle from './withBodilessLinkToggle';
-import asBodilessToggle, {
-  useBodilessToggle,
-  ifBodilessToggleOff,
-  ifBodilessTogggleOn,
-  withBodilessComponentFormToggle,
-  withBodilessToggleButton,
-  withDeleteNodeOnUnwrap,
-  withBodilessToggle,
-} from './asBodilessToggle';
-import asBodilessChamelion from './asBodilessChamelion';
+import asBodilessChamelion, { withDeleteNodeOnUnwrap } from './asBodilessChamelion';
 
 export {
   asBodilessChamelion,
-  withBodilessLinkToggle,
-  asBodilessToggle,
-  useBodilessToggle,
-  withBodilessToggle,
-  ifBodilessToggleOff,
-  ifBodilessTogggleOn,
   withDeleteNodeOnUnwrap,
-  withBodilessComponentFormToggle,
-  withBodilessToggleButton,
+  withBodilessLinkToggle,
   asBodilessLink,
   Image,
   asBodilessImage,

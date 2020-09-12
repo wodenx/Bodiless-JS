@@ -32,9 +32,9 @@ import {
   asSubList,
 } from '@bodiless/components';
 import {
-  asMegaMenuMain, asMegaMenuBreadcrumbs, asMegaMenuBase, withMegaMenuDesign,
+  asMegaMenu, asMegaMenuBreadcrumbs, asMegaMenuBase, withMegaMenuDesign,
   asStylableList, asMenuTout, asMenuLink, asSimpleMenuBase, withSimpleMenuDesign,
-  asMainSimpleMenuClean,
+  asSimpleMenu,
 } from '@bodiless/organisms';
 
 // import { withEditorSimple } from '../../../components/Editors';
@@ -123,7 +123,7 @@ const MegaMenu = flow(
   withMegaMenuDesign({
     Title: asMenuLink(withTitleEditor),
   }),
-  asMegaMenuMain(
+  asMegaMenu(
     withMenuStyles,
     withDesign({
       Item: withDesign({
@@ -180,9 +180,11 @@ const SimpleMenuMain = flow(
   withSimpleMenuDesign({
     Title: asMenuLink(withTitleEditor),
   }),
-  asMainSimpleMenuClean,
-  withSimpleMenuStyles,
-)('ul');
+  asSimpleMenu(
+    withSimpleMenuStyles,
+  ),
+)(Fragment);
+
 
 const H = addClasses('mt-5 text-l')(H3);
 

@@ -15,29 +15,29 @@
 import { flow, identity, flowRight } from 'lodash';
 
 import {
-  withDesign, addClassesIf, withoutProps,
+  withDesign, addClassesIf, HOC,
 } from '@bodiless/fclasses';
+import { withTitle } from '@bodiless/layouts';
 import {
-  withSidecarNodes, WithNodeKeyProps,
+  EditButtonOptions, withSidecarNodes, EditButtonProps, WithNodeKeyProps,
 } from '@bodiless/core';
 import {
-  asBreadcrumb, useBreadcrumbContext,
-  useBodilessToggle, withBodilessToggleButton, asBodilessList, asSubList, withDeleteNodeOnUnwrap,
-  withBodilessToggle,
+  asBreadcrumb, useBreadcrumbContext, asBodilessChamelion, asBodilessList, asSubList,
+  withDeleteNodeOnUnwrap,
 } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
+
+import { asMenuLink, asDefaultMenuLink } from './MenuTitles';
+import asStylableList from '../MainMenu/asStylableList';
 
 import {
   asSubMenu, asMenu, withMenuItem, asMenuItem,
 } from './asMenu';
-import { asMenuLink, asDefaultMenuLink } from './MenuTitles';
-import asStylableList from '../MainMenu/asStylableList';
-
-const TOGGLE_NODE_KEY = 'toggle-sublist';
 
 // Defines the basic sublist for all mubmenu types.
 const asMenuSubList = flow(
   asSubList,
+  withDeleteNodeOnUnwrap,
   asStylableList,
   withDesign({
     Title: asDefaultMenuLink,
@@ -45,27 +45,32 @@ const asMenuSubList = flow(
 );
 
 // Provides overrides for the chamelion button
-const useOverrides = (props: any): any => {
-  const on = useBodilessToggle(props);
+type Overrides = Partial<EditButtonOptions<any, any>>;
+const useOverrides = (props: EditButtonProps<any>): Overrides => {
+  const { componentData } = props;
+  const { component } = componentData;
   return {
-    icon: 'playlist_add',
-    isHidden: on,
+    // Commented lines hide the button rather than turning it into a swap button.
+    // isHidden: Boolean(component),
+    // icon: 'playlist_add',
+    icon: component ? 'repeat' : 'playlist_add',
     label: 'Sub',
   };
 };
 
 // Defines the sublist type for the top level menu items.
-const asToggledSubList = flowRight(
+const asChamelionSubList = flow(
+  asBodilessChamelion('cham-sublist', {}, useOverrides),
   withDesign({
-    On: flow(asMenuSubList, withDeleteNodeOnUnwrap),
+    Basic: flow(
+      withTitle('Basic sub-menu'),
+      asMenuSubList,
+    ),
   }),
-  withBodilessToggleButton(TOGGLE_NODE_KEY, undefined, useOverrides),
-  withBodilessToggle(TOGGLE_NODE_KEY),
-  withoutProps(['wrap']),
 );
 
 /**
- * Bodiless HOC generator which creates the basic structure of the Menu. The component
+ * Bodiless HOC generator which creates the basic structure of the Mega Menu. The component
  * to which the HOC applies is irrelevant (it will be replaced by the Menu wrapper).
  *
  * The base mega menu serves as a base for various views on the Menu data, including
@@ -79,10 +84,22 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
   asStylableList,
   withDesign({
-    Title: asMenuLink(identity),
-    Item: asToggledSubList,
+    Title: asMenuLink(() => identity),
+    Item: asChamelionSubList,
   }),
 );
+
+// Defines basic sub menu when displayed as main menu
+const asBasicSubMenu = flow(
+  asSubMenu,
+  withMenuItem,
+);
+
+// Applies above designs to the chameilion sublist
+const asChamelionSubMenu = withDesign({
+  Basic: asBasicSubMenu,
+  _default: asMenuItem,
+});
 
 /**
  * HOC which can be applied to a base menu to make it into a sites main menu.
@@ -91,13 +108,16 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
  *
  * @return A clean (unstyled) site main menu.
  */
-const asMainMenuClean = flow(
-  asMenu,
+const asMainMenuClean = (...hocs: HOC[]) => flowRight(
   withDesign({
     Item: withDesign({
-      On: flow(asSubMenu, withMenuItem),
-      Off: asMenuItem,
+      Basic: withTitle('List'),
     }),
+  }),
+  ...hocs,
+  asMenu,
+  withDesign({
+    Item: asChamelionSubMenu,
   }),
 );
 
@@ -110,7 +130,9 @@ const withMenuDesign = (design: any) => {
   const withDesign$ = typeof design === 'function' ? design : withDesign(design);
   return flow(
     withDesign({
-      Item: withDesign$,
+      Item: withDesign({
+        Basic: withDesign$,
+      }),
     }),
     withDesign$,
   );
