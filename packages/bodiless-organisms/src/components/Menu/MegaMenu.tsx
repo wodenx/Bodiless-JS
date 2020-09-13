@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { flow, identity, flowRight } from 'lodash';
+import { flow, flowRight } from 'lodash';
 
 import {
   withDesign, addClassesIf, HOC,
@@ -27,18 +27,21 @@ import {
 } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
-import { asMenuLink, asDefaultMenuTout, asDefaultMenuLink } from './MenuTitles';
+import { asDefaultMenuTout, asDefaultMenuLink } from './MenuTitles';
 import asStylableList from '../MainMenu/asStylableList';
 
 import {
   asSubMenu, asMenuItemGroup, asMenu, withMenuItem, asMenuItem,
 } from './asMenu';
 
+// First we build a basic list with the correct data structure.
+
 // Defines the basic sublist for all mubmenu types.
 const asMenuSubList = flow(
   asSubList,
   withDeleteNodeOnUnwrap,
   asStylableList,
+  // @TODO: Should we be providing titles at all? It will almost always be overridden at site level.
   withDesign({
     Title: asDefaultMenuLink,
   }),
@@ -49,34 +52,24 @@ type Overrides = Partial<EditButtonOptions<any, any>>;
 const useOverrides = (): Overrides => {
   const { isOn } = useChamelionContext();
   return {
-    // Commented lines hide the button rather than turning it into a swap button.
-    // isHidden: Boolean(component),
-    // icon: 'playlist_add',
     icon: isOn ? 'repeat' : 'playlist_add',
     label: 'Sub',
   };
 };
 
 // Defines the sublist type for the top level menu items.
-const asChamelionSubList = flow(
-  asBodilessChamelion('cham-sublist', {}, useOverrides),
+const asChamelionSubList = flowRight(
   withDesign({
-    Basic: flow(
-      withTitle('Basic sub-menu'),
-      asMenuSubList,
-    ),
-    Touts: flow(
-      withTitle('Tout sub-menu'),
-      asMenuSubList,
-    ),
+    Basic: asMenuSubList,
+    Touts: asMenuSubList,
     Columns: flow(
-      withTitle('Column sub-menu'),
       asMenuSubList,
       withDesign({
         Item: asMenuSubList,
       }),
     ),
   }),
+  asBodilessChamelion('cham-sublist', {}, useOverrides),
 );
 
 /**
@@ -94,39 +87,32 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
   asStylableList,
   withDesign({
-    Title: asMenuLink(() => identity),
+    Title: asDefaultMenuLink,
     Item: asChamelionSubList,
   }),
 );
 
-// Defines basic sub menu when displayed as main menu
-const asBasicSubMenu = flow(
-  asSubMenu,
-  withMenuItem,
-);
-
-// Defines tout sub menu when displayed as main menu
-const asToutSubMenu = flow(
-  asBasicSubMenu,
-  withDesign({
-    Title: asDefaultMenuTout,
-  }),
-);
-
-// Defines column sub menu when displayed as main menu
-const asColumnSubMenu = flow(
-  // We need to omit `withMenuItem` here bc it replaces the item and thus removes the sublist.
-  asSubMenu,
-  withDesign({
-    Item: asMenuItemGroup,
-  }),
-);
+// Next we replace basic list elements with rc-menu elements to create a menu.
 
 // Applies above designs to the chameilion sublist
 const asChamelionSubMenu = withDesign({
-  Basic: asBasicSubMenu,
-  Touts: asToutSubMenu,
-  Columns: asColumnSubMenu,
+  Basic: flowRight(
+    withMenuItem,
+    asSubMenu,
+  ),
+  Touts: flowRight(
+    withDesign({
+      Title: asDefaultMenuTout,
+    }),
+    withMenuItem,
+    asSubMenu,
+  ),
+  Columns: flowRight(
+    withDesign({
+      Item: asMenuItemGroup,
+    }),
+    asSubMenu,
+  ),
   _default: asMenuItem,
 });
 
@@ -151,6 +137,8 @@ const asMainMenuClean = (...hocs: HOC[]) => flowRight(
     Item: asChamelionSubMenu,
   }),
 );
+
+// Now we create breaccrumbs
 
 /**
  * Applies a list design (or other HOC) to the main menu and all submenus.
@@ -198,5 +186,5 @@ const asBreadcrumbsClean = withMenuDesign({
 // });
 
 export {
-  asMenuBase, asMainMenuClean, withMenuDesign, asBreadcrumbsClean,
+  asMenuSubList, asMenuBase, asMainMenuClean, withMenuDesign, asBreadcrumbsClean,
 };

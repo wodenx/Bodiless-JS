@@ -19,54 +19,37 @@ import {
 } from '@bodiless/fclasses';
 import { withTitle } from '@bodiless/layouts';
 import {
-  EditButtonOptions, withSidecarNodes, EditButtonProps, WithNodeKeyProps,
+  withSidecarNodes, WithNodeKeyProps,
 } from '@bodiless/core';
 import {
-  asBreadcrumb, useBreadcrumbContext, asBodilessChamelion, asBodilessList, asSubList,
-  withDeleteNodeOnUnwrap,
-  useChamelionContext,
+  asBreadcrumb, useBreadcrumbContext, asBodilessChamelion, asBodilessList, useChamelionContext,
 } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
-import { asMenuLink, asDefaultMenuLink } from './MenuTitles';
+import { asMenuLink } from './MenuTitles';
 import asStylableList from '../MainMenu/asStylableList';
+import { asMenuSubList } from './MegaMenu';
 
 import {
   asSubMenu, asMenu, withMenuItem, asMenuItem,
 } from './asMenu';
 
-// Defines the basic sublist for all mubmenu types.
-const asMenuSubList = flow(
-  asSubList,
-  withDeleteNodeOnUnwrap,
-  asStylableList,
-  withDesign({
-    Title: asDefaultMenuLink,
-  }),
-);
-
 // Provides overrides for the chamelion button
-type Overrides = Partial<EditButtonOptions<any, any>>;
-const useOverrides = (): Overrides => {
+const useOverrides = () => {
   const { isOn } = useChamelionContext();
   return {
-    // Commented lines hide the button rather than turning it into a swap button.
-    // isHidden: Boolean(component),
-    // icon: 'playlist_add',
-    icon: isOn ? 'repeat' : 'playlist_add',
+    isHidden: isOn,
+    icon: 'playlist_add',
     label: 'Sub',
   };
 };
 
 // Defines the sublist type for the top level menu items.
-const asChamelionSubList = flow(
-  asBodilessChamelion('cham-sublist', {}, useOverrides),
+const asChamelionSubList = flowRight(
   withDesign({
-    Basic: flow(
-      withTitle('Basic sub-menu'),
-      asMenuSubList,
-    ),
+    Basic: asMenuSubList,
   }),
+  asBodilessChamelion('cham-sublist', {}, useOverrides),
 );
 
 /**
@@ -80,13 +63,13 @@ const asChamelionSubList = flow(
  *
  * @return HOC which creates a basic mega menu list.
  */
-const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
-  asBodilessList(nodeKeys),
-  asStylableList,
+const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flowRight(
   withDesign({
     Title: asMenuLink(() => identity),
     Item: asChamelionSubList,
   }),
+  asStylableList,
+  asBodilessList(nodeKeys),
 );
 
 // Defines basic sub menu when displayed as main menu
