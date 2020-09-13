@@ -24,6 +24,7 @@ import {
 import {
   asBreadcrumb, useBreadcrumbContext, asBodilessChamelion, asBodilessList, asSubList,
   withDeleteNodeOnUnwrap,
+  useChamelionContext,
 } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
@@ -46,14 +47,13 @@ const asMenuSubList = flow(
 
 // Provides overrides for the chamelion button
 type Overrides = Partial<EditButtonOptions<any, any>>;
-const useOverrides = (props: EditButtonProps<any>): Overrides => {
-  const { componentData } = props;
-  const { component } = componentData;
+const useOverrides = (): Overrides => {
+  const { isOn } = useChamelionContext();
   return {
     // Commented lines hide the button rather than turning it into a swap button.
     // isHidden: Boolean(component),
     // icon: 'playlist_add',
-    icon: component ? 'repeat' : 'playlist_add',
+    icon: isOn ? 'repeat' : 'playlist_add',
     label: 'Sub',
   };
 };

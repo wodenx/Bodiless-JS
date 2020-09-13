@@ -77,8 +77,6 @@ const MenuLinkChamelion = flow(
 
 const withTitleEditor = withEditorSimple('text', 'Menu Item');
 
-const LinkToggle = asMenuLink(withTitleEditor)(Fragment);
-
 const asMenuLinkList = flow(
   withDesign({
     Title: asMenuLink(withTitleEditor),
@@ -197,8 +195,6 @@ export default (props: any) => (
       <SimpleMenuList nodeKey="list2" />
       <H>Keys</H>
       <NodeTreePrinter nodeKey="list2" />
-      <H>LinkToggle</H>
-      <LinkToggle>Foo</LinkToggle>
       <H>Chamelion</H>
       <div className="bg-black">
         <MenuLinkChamelion />

@@ -2,6 +2,7 @@ import asBodilessChamelion, { withDeleteNodeOnUnwrap } from './asBodilessChameli
 import applyChamelion from './applyChamelion';
 import withChamelionComponentFormControls from './withChamelionComponentFormControls';
 import withChamelionButton from './withChamelionButton';
+import withChamelionContext, { useChamelionContext } from './withChamelionContext';
 
 export {
   asBodilessChamelion,
@@ -9,4 +10,6 @@ export {
   applyChamelion,
   withChamelionButton,
   withChamelionComponentFormControls,
+  withChamelionContext,
+  useChamelionContext,
 };

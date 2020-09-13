@@ -9,7 +9,11 @@ import {
 import { flowRight, flow, identity } from 'lodash';
 import { withDesign, withoutProps } from '@bodiless/fclasses';
 
-import { asBodilessChamelion, withChamelionComponentFormControls } from '../src/Chamelion';
+import {
+  asBodilessChamelion, withChamelionComponentFormControls,
+  withChamelionContext, useChamelionContext,
+} from '../src/Chamelion';
+import { DEFAULT_KEY } from '../src/Chamelion/withChamelionContext';
 
 const mockSetNode = jest.fn();
 // @ts-ignore Unused
@@ -148,7 +152,7 @@ describe('asBodilessChamelion', () => {
         const Form = getForm(wrapper);
         const form = shallow(<Form />);
         const { initialValues, submitValues } = form.childAt(0).props();
-        expect(initialValues).toEqual({});
+        expect(initialValues.component).toBeFalsy();
         const values = { component: 'A' };
         submitValues(values);
         expect(mockSetNode).toBeCalledWith(['root', 'chamelion'], values);
@@ -252,9 +256,10 @@ describe('asBodilessChamelion', () => {
     const PropsCatcher: FC<any> = () => <></>;
     const PropsCatcherTest = flowRight(
       withDesign({
-        On: identity,
+        On: withTitle('On'),
       }),
-      withChamelionComponentFormControls('chamelion'),
+      withChamelionContext('chamelion'),
+      withChamelionComponentFormControls,
     )(PropsCatcher);
     it('Adds correct onSubmit when toggled off', () => {
       const wrapper = mount((
@@ -283,13 +288,57 @@ describe('asBodilessChamelion', () => {
         root$chamelion: { component: 'A' },
         root$component: { foo: 'bar' },
       };
-      const Test = withChamelionComponentFormControls('chamelion')(TestComponent) as any;
+      const Test = flowRight(
+        withChamelionContext('chamelion'),
+        withChamelionComponentFormControls,
+      )(TestComponent) as any;
       const wrapper = mount((
         <MockNodeProvider data={data}>
           <Test nodeKey="component" dataKey="foo" />
         </MockNodeProvider>
       ));
       expect(wrapper.find('span#test').prop('data-node-value')).toBe('bar');
+    });
+  });
+
+  describe('withChamelionContext', () => {
+    it('Preserves the node path of the wrapped component', () => {
+      const data = {
+        root$chamelion: { component: 'A' },
+        root$component: { foo: 'bar' },
+      };
+      const Test: FC<any> = () => (
+        <MockNodeProvider data={data}>
+          <TestChamelion nodeKey="cokponent" dataKey="foo" />
+        </MockNodeProvider>
+      );
+      const wrapper = mount(<Test />);
+      expect(wrapper.find('span#test').prop('data-node-value')).toBe('bar');
+    });
+
+    const withTestDesign = withDesign({
+      Foo: withTitle('FooTitle'),
+      Baz: identity,
+      [DEFAULT_KEY]: withTitle('DefaultTitle'),
+    });
+
+    it('Applies a design correctly', () => {
+      const PropCatcher:any = () => null;
+      const Test$ = () => {
+        const { selectableComponents } = useChamelionContext();
+        const map = Object.keys(selectableComponents).reduce((acc, key) => (
+          // @ts-ignore
+          { ...acc, [key]: selectableComponents[key].title }
+        ), {});
+        return <PropCatcher map={map} />;
+      };
+      const Test = flowRight(
+        withTestDesign,
+        withChamelionContext('chamelion'),
+      )(Test$);
+      const wrapper = mount(<Test />);
+      expect(wrapper.find(PropCatcher).prop('map'))
+        .toEqual({ Foo: 'FooTitle', _default: 'DefaultTitle' });
     });
   });
 });

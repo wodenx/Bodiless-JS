@@ -1,33 +1,29 @@
-import React, { ComponentType, Fragment } from 'react';
+import React, { ComponentType } from 'react';
 import {
-  withBodilessData, withSidecarNodes,
-  withMenuOptions, useContextMenuForm, useEditFormProps,
-  useMenuOptionUI,
-  WithNodeKeyProps,
+  withMenuOptions, useContextMenuForm, useMenuOptionUI,
 } from '@bodiless/core';
 
 import { flowRight } from 'lodash';
-import { withoutProps } from '@bodiless/fclasses';
-import { ChamelionButtonProps, UseChamelionOverrides, ChamelionData } from './types';
 import {
-  useActiveKey, DEFAULT_KEY, useIsOn, useSelectableComponents,
-} from './hooks';
-import { applyChamelionDesign } from './applyChamelion';
+  ChamelionButtonProps, ChamelionData, UseOverrides,
+} from './types';
+import { useChamelionContext, DEFAULT_KEY } from './withChamelionContext';
 
-const useToggleButtonMenuOption = (props: ChamelionButtonProps) => {
-  const { setComponentData, components } = props;
-  const activeKey = useActiveKey(props);
-  const newKey = activeKey === DEFAULT_KEY
-    ? Object.keys(components).find(key => key !== DEFAULT_KEY) || null
-    : null;
+const useToggleButtonMenuOption = () => {
+  const {
+    isOn, selectableComponents, setActiveComponent,
+  } = useChamelionContext();
+  const newKey = isOn ? null
+    : Object.keys(selectableComponents).find(key => key !== DEFAULT_KEY) || null;
   return {
     label: 'Toggle',
-    icon: useIsOn(props) ? 'toggle-on' : 'toggle-off',
-    handler: () => setComponentData({ component: newKey }),
+    icon: isOn ? 'toggle-on' : 'toggle-off',
+    handler: () => setActiveComponent(newKey),
   };
 };
-const useSwapButtonMenuOption = (props: ChamelionButtonProps) => {
-  const components = useSelectableComponents(props);
+
+const useSwapButtonMenuOption = () => {
+  const { selectableComponents, activeComponent, setActiveComponent } = useChamelionContext();
   const renderForm = () => {
     const {
       ComponentFormLabel,
@@ -35,23 +31,27 @@ const useSwapButtonMenuOption = (props: ChamelionButtonProps) => {
       ComponentFormRadio,
       ComponentFormTitle,
     } = useMenuOptionUI();
-    const radios = Object.getOwnPropertyNames(components).map(name => (
+    const radios = Object.getOwnPropertyNames(selectableComponents).map(name => (
       <ComponentFormLabel key={name} htmlFor={`bl-component-form-chamelion-radio-${name}`}>
         <ComponentFormRadio value={name} id={`bl-comonent-form-chamelion-radio-${name}`} />
         {/* @ts-ignore */}
-        {components[name].title}
+        {selectableComponents[name].title}
       </ComponentFormLabel>
     ));
     return (
-      <div>
+      <>
         <ComponentFormTitle>Choose a component</ComponentFormTitle>
         <ComponentFormRadioGroup field="component">
           {radios}
         </ComponentFormRadioGroup>
-      </div>
+      </>
     );
   };
-  const render = useContextMenuForm(useEditFormProps({ ...props, renderForm }));
+  const render = useContextMenuForm({
+    initialValues: { component: activeComponent === DEFAULT_KEY ? null : activeComponent },
+    submitValues: (d: ChamelionData) => setActiveComponent(d.component || null),
+    renderForm,
+  });
   return {
     icon: 'Swap',
     label: 'Swap',
@@ -61,31 +61,12 @@ const useSwapButtonMenuOption = (props: ChamelionButtonProps) => {
 
 export const withUnwrap = <P extends object>(Component: ComponentType<P>) => {
   const WithUnwrapChamelion = (props: P & ChamelionButtonProps) => {
-    const { setComponentData } = props;
-    if (!useIsOn(props)) return <Component {...props} />;
-    const unwrap = () => setComponentData({ component: null });
+    const { isOn, setActiveComponent } = useChamelionContext();
+    if (!isOn) return <Component {...props} />;
+    const unwrap = () => setActiveComponent(null);
     return <Component {...props} unwrap={unwrap} />;
   };
   return WithUnwrapChamelion;
-};
-
-const withChamelionButton$ = <P extends ChamelionButtonProps>(
-  useOverrides?: UseChamelionOverrides) => {
-  const useMenuOptions = (props: P) => {
-    const extMenuOptions = Object.keys(useSelectableComponents(props)).length > 1
-      ? useSwapButtonMenuOption
-      : useToggleButtonMenuOption;
-    const baseDefinition = {
-      name: 'chamelion-toggle',
-      global: false,
-      local: true,
-      ...extMenuOptions(props),
-    };
-    const overrides = useOverrides ? useOverrides(props) : {};
-    // if useOverrides returns undefined, it means not to provide the button.
-    return typeof overrides !== 'undefined' ? [{ ...baseDefinition, ...overrides }] : [];
-  };
-  return withMenuOptions({ useMenuOptions, name: 'Chamelion' });
 };
 
 /**
@@ -100,20 +81,26 @@ const withChamelionButton$ = <P extends ChamelionButtonProps>(
  *
  * @return HOC which adds the menu button.
  */
-const withChamelionButton = (
-  nodeKeys?: WithNodeKeyProps,
-  defaultData?: ChamelionData,
-  useOverrides?: UseChamelionOverrides,
-) => flowRight(
-  // We apply the design to a fragment bc at this point we just need the keys.
-  applyChamelionDesign(Fragment),
-  withSidecarNodes(
-    withBodilessData(nodeKeys, defaultData),
-    withChamelionButton$(useOverrides),
+const withChamelionButton = <P extends object>(useOverrides?: UseOverrides<P>) => {
+  const useMenuOptions = (props: P) => {
+    const { selectableComponents } = useChamelionContext();
+    const extMenuOptions = Object.keys(selectableComponents).length > 1
+      ? useSwapButtonMenuOption
+      : useToggleButtonMenuOption;
+    const baseDefinition = {
+      name: 'chamelion-toggle',
+      global: false,
+      local: true,
+      ...extMenuOptions(),
+    };
+    const overrides = useOverrides ? useOverrides(props) : {};
+    // if useOverrides returns undefined, it means not to provide the button.
+    return typeof overrides !== 'undefined' ? [{ ...baseDefinition, ...overrides }] : [];
+  };
+  return flowRight(
+    withMenuOptions({ useMenuOptions, name: 'Chamelion' }),
     withUnwrap,
-  ),
-  // We remove the 'components' prop so as not to interfere with other designs.
-  withoutProps('components'),
-);
+  );
+};
 
 export default withChamelionButton;
