@@ -63,22 +63,10 @@ export const withSimpleMenuStyles = flow(
   asExceptMobile,
 );
 
-
 export const withMenuToutStyles = flow(
   asToutWithPaddings,
   asToutDefaultStyle,
   asToutHorizontal,
 );
-
-// export const withSimpleMenuStyles = flow(
-//   withDesign({
-//     Item: withDesign({
-//       On: withBasicSubMenuStyles,
-//     }),
-//   }),
-//   asHorizontalMenu,
-//   withMenuListStyles,
-//   asExceptMobile,
-// );
 
 export default withMenuStyles;

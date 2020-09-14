@@ -1,6 +1,5 @@
 import React, { ComponentType, FC } from 'react';
-import { applyChamelionDesign } from './withChamelionContext';
-import { useChamelionContext } from '.';
+import { applyChamelionDesign, useChamelionContext } from './withChamelionContext';
 import { ChamelionProps } from './types';
 
 /**

@@ -2,9 +2,8 @@ import React, { ComponentType, FC } from 'react';
 
 import { flowRight } from 'lodash';
 import { ChamelionButtonProps } from './types';
-import { DEFAULT_KEY } from './withChamelionContext';
+import { DEFAULT_KEY, useChamelionContext } from './withChamelionContext';
 import { withUnwrap } from './withChamelionButton';
-import { useChamelionContext } from '.';
 
 const withWrapOnSubmit = <P extends object>(Component: ComponentType<P>) => {
   const WithWrapOnSubmit: FC<P & ChamelionButtonProps> = props => {

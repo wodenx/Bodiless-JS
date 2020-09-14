@@ -13,7 +13,9 @@
  */
 
 import React, { FC, createContext, useContext } from 'react';
-import { Text, TextArea, Radio, RadioGroup, Checkbox, Option, Select } from 'informed';
+import {
+  Text, TextArea, Radio, RadioGroup, Checkbox, Option, Select,
+} from 'informed';
 import ReactTooltip from 'rc-tooltip';
 import { omit } from 'lodash';
 import ReactTagsField from './ReactTagsField';
@@ -31,7 +33,6 @@ type ContextUIType = {
 const DefaultToolbarButton = (props: any) => (
   <div {...omit(props, 'isActive', 'isDisabled', 'isFirst')} />
 );
-
 
 const defaultUI: Required<UI> = {
   Icon: (props: any) => <i {...omit(props, 'isActive')} />,

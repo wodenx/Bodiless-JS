@@ -1,4 +1,5 @@
 import React from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { mount } from 'enzyme';
 import { asEditable } from '@bodiless/components';
 
@@ -73,9 +74,9 @@ describe('SimpleMenu', () => {
     expect(mockSetNode.mock.calls[0][0].join('$')).toBe('root$default$toggle-sublist');
   });
 
-  it.only('Passes the unwrap prop to a sublist', () => {
+  it('Passes the unwrap prop to a sublist', () => {
     const data = {
-      'root$default$toggle-sublist': { on: true }
+      'root$default$toggle-sublist': { on: true },
     };
     const wrapper = mount((
       <MockNodeProvider data={data}>
@@ -83,7 +84,7 @@ describe('SimpleMenu', () => {
       </MockNodeProvider>
     ));
     const list = wrapper.findWhere(
-      n => n.name() === 'List' && n.prop('data-bl-id') === 'top-level-item'
+      n => n.name() === 'List' && n.prop('data-bl-id') === 'top-level-item',
     );
     const unwrap = list.prop('unwrap');
     mockSetNode.mockClear();

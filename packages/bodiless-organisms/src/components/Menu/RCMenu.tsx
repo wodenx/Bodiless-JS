@@ -1,3 +1,4 @@
+/*
 import React, { ReactNode, FC } from 'react';
 import Tooltip from 'rc-tooltip';
 
@@ -31,3 +32,4 @@ export const SubMenu: FC<TitledItemProps> = props => {
 const Menu: FC<any> = props => <ul {...props} />;
 
 export default Menu;
+*/
