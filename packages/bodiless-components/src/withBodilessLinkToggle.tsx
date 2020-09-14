@@ -1,9 +1,9 @@
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import {
   withSidecarNodes,
   ifReadOnly, ifEditable, withOnlyProps,
 } from '@bodiless/core';
-import { flowRight, identity } from 'lodash';
+import { flowRight } from 'lodash';
 import { replaceWith, withoutProps, withDesign } from '@bodiless/fclasses';
 import type { HOC } from '@bodiless/fclasses';
 import { withChamelionComponentFormControls, applyChamelion, withChamelionContext } from './Chamelion';
@@ -19,7 +19,13 @@ const withBodilessLinkToggle = (asEditableLink: HOC) => flowRight(
       ifEditable(replaceWith(Span)),
       ifReadOnly(replaceWith(SafeFragment)),
     ),
-    On: identity,
+    // @TODO: Make withTitle available in bodiless-components, or move this somewhere?
+    // On: withTitle('Link'),
+    On: (C: any) => {
+      const C$ = (props: any) => <C {...props} />;
+      C$.title = 'Link';
+      return C$;
+    },
   }),
   withChamelionContext('toggle'),
   withChamelionComponentFormControls,
