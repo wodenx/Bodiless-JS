@@ -12,7 +12,9 @@
  * limitations under the License.
  */
 
-declare module '*.png' {
-  const value: any;
-  export = value;
-}
+import Image from './contentful1.png';
+
+export default {
+  src: Image,
+  alt: 'contentful 1',
+};
