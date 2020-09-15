@@ -128,7 +128,7 @@ export const ComponentFormUnwrapButton = addClasses(
 export const ComponentFormCloseButton = flow(
   addClasses('hover:bl-text-red bl-float-right'),
   removeClasses('hover:bl-text-green'),
-  withChild(() => <Icon data-close-button>cancel</Icon>),
+  withChild(() => <Icon>cancel</Icon>),
 )(ComponentFormButton);
 
 export const ComponentFormSubmitButton = (props: HTMLProps<HTMLButtonElement>) => (

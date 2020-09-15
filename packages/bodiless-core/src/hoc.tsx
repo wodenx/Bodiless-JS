@@ -15,10 +15,10 @@
 import { observer } from 'mobx-react-lite';
 import React, {
   ComponentType as CT, EventHandler, FC,
-  useRef, useCallback, useEffect,
+  useRef,
 } from 'react';
 import { flowRight, omit, pick } from 'lodash';
-import { useContextActivator, useExtendHandler } from './hooks';
+import { useContextActivator, useExtendHandler, useClickOutside } from './hooks';
 import { useNodeDataHandlers } from './NodeProvider';
 import withNode from './withNode';
 import LocalContextMenu from './components/LocalContextMenu';
@@ -117,6 +117,7 @@ export type ClickOutsideProps = {
 
 /**
  * Utility hoc to add onClickOutside handler to the original component.
+ * A callback will be executed on both click outside as well as on the `esc` keypress.
  *
  * @return An HOC which will add the handler.
  */
@@ -125,35 +126,10 @@ export const withClickOutside = <P extends object>(Component: CT<P> | string) =>
     const { onClickOutside } = props;
     const ref = useRef(null);
 
-    const ensureClickOutside = (e: KeyboardEvent | MouseEvent) => {
-      if (typeof onClickOutside === 'function') {
-        onClickOutside(e);
-      }
-    };
-
-    const escapeListener = useCallback((e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        ensureClickOutside(e);
-      }
-    }, []);
-
-    const clickListener = useCallback((e: MouseEvent) => {
-      if (!(ref.current! as any).contains(e.target)) {
-        ensureClickOutside(e);
-      }
-    }, [ref.current]);
-
-    useEffect(() => {
-      // Only add listners if onClickOutside handler is defined
-      if (typeof onClickOutside === 'function') {
-        document.addEventListener('click', clickListener);
-        document.addEventListener('keyup', escapeListener);
-      }
-      return () => {
-        document.removeEventListener('click', clickListener);
-        document.removeEventListener('keyup', escapeListener);
-      };
-    }, []);
+    // Only add listners if onClickOutside handler is defined
+    if (typeof onClickOutside === 'function') {
+      useClickOutside(ref, onClickOutside);
+    }
 
     return (
       <div ref={ref}>

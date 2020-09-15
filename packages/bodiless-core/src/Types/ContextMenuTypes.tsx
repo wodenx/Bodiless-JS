@@ -96,6 +96,10 @@ export type IContextMenuProps = {
   ui?: UI;
   isPositionToggled?: boolean;
   renderInTooltip?: boolean;
+  /**
+   * `closeForm` prop used to override the default `closeForm` behaviour if provided.
+   * Currently it will only be triggered by clicking outside of `ComponentFormCloseButton`.
+   */
   closeForm?: (e: any) => void;
 } & HTMLProps<HTMLElement>;
 

@@ -101,7 +101,8 @@ export const useGetter = <P extends any>(value: P): () => P => {
 
 /**
  *
- * Utility hook to detect click outside of the `ref` element and execute the callback.
+ * Utility hook to detect click outside of the `ref` element and execute a callback.
+ * This HOC also adds an Escape button listner and will execute a callback on the `esc` keypress.
  *
  * Usage:
  *
@@ -111,8 +112,8 @@ export const useGetter = <P extends any>(value: P): () => P => {
  * });
  * ```
  *
- * @param ref `ref` from React.useRef() or React.createRef
- * @param callback A callback to execute when click outside is detected
+ * @param ref Is a ref to the object we are clicking outside created via useRef() or createRef().
+ * @param callback A callback to execute when click outside is detected.
  *
  */
 export const useClickOutside = (

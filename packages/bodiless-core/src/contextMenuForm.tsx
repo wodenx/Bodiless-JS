@@ -59,6 +59,7 @@ const FormChromeBase: FC<FormChromeProps> = (props) => {
         type="button"
         aria-label="Cancel"
         onClick={(e: any) => closeForm(e)}
+        id="data-bl-component-form-close-button"
       />
       <ComponentFormTitle>{title}</ComponentFormTitle>
       {children}

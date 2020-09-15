@@ -51,13 +51,23 @@ const ContextMenuBase: FC<IContextMenuProps> = (props) => {
   const closeMenuForm = (e: KeyboardEvent | MouseEvent) => {
     if (typeof closeForm === 'function') {
       closeForm(e);
+    } else {
+      setRenderForm(undefined);
     }
   };
 
   if (renderForm) {
     const formProps: ContextMenuFormProps = {
+      /**
+       * Here we use `closeForm` handler from component props to close the form if
+       * `e.target` is NOT a close button with `id="data-bl-component-form-close-button"`.
+       *
+       * For example, if we try to close the form by clicking outside of it,
+       * it will try to execute `closeForm` from the component props first
+       * and if it is not defined, it will just close the form using standard setRenderForm.
+       */
       // eslint-disable-next-line no-confusing-arrow
-      closeForm: (e) => e.target.hasAttribute('data-close-button')
+      closeForm: (e) => e.target.closest('#data-bl-component-form-close-button')
         ? setRenderForm(undefined)
         : closeMenuForm(e),
       ui,
