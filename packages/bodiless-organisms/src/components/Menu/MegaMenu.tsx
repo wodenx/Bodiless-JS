@@ -46,6 +46,40 @@ const asMenuSubList = flow(
 );
 
 /**
+ * Applies a list design (or other HOC) recursively to all submenus.
+ *
+ * @param design The design object or HOC to be applied.
+*/
+const withSubMenuDesign = (design: any) => {
+  const withDesign$ = typeof design === 'function' ? design : withDesign(design);
+  return withDesign({
+    Item: withDesign({
+      Basic: withDesign$,
+      Touts: withDesign$,
+      Columns: flow(
+        withDesign$,
+        withDesign({
+          Item: withDesign$,
+        }),
+      ),
+    }),
+  });
+};
+
+/**
+ * Applies a list design (or other HOC) to the main menu and all submenus.
+ *
+ * @param design The design object or HOC to be applied.
+*/
+const withMenuDesign = (design: any) => {
+  const withDesign$ = typeof design === 'function' ? design : withDesign(design);
+  return flow(
+    withSubMenuDesign(withDesign$),
+    withDesign$,
+  );
+};
+
+/**
  * Bodiless HOC generator which creates the basic structure of the Mega Menu. The component
  * to which the HOC applies is irrelevant (it will be replaced by the Menu wrapper).
  *
@@ -61,20 +95,9 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asStylableList,
   withDesign({
     Title: asDefaultMenuLink,
-    Item: flowRight(
-      withDesign({
-        Basic: asMenuSubList,
-        Touts: asMenuSubList,
-        Columns: flow(
-          asMenuSubList,
-          withDesign({
-            Item: asMenuSubList,
-          }),
-        ),
-      }),
-      asChamelionSubList,
-    ),
+    Item: asChamelionSubList,
   }),
+  withSubMenuDesign(asMenuSubList),
 );
 
 // Next we replace basic list elements with rc-menu elements to create a menu.
@@ -123,36 +146,7 @@ const asMainMenuClean = (...hocs: HOC[]) => flowRight(
   }),
 );
 
-const withSubMenuDesign = (design: any) => {
-  const withDesign$ = typeof design === 'function' ? design : withDesign(design);
-  return withDesign({
-    Item: withDesign({
-      Basic: withDesign$,
-      Touts: withDesign$,
-      Columns: flow(
-        withDesign({
-          Item: withDesign$,
-        }),
-        withDesign$,
-      ),
-    }),
-  });
-};
-
 // Now we create breaccrumbs
-
-/**
- * Applies a list design (or other HOC) to the main menu and all submenus.
- *
- * @param design The design object or HOC to be applied.
-*/
-const withMenuDesign = (design: any) => {
-  const withDesign$ = typeof design === 'function' ? design : withDesign(design);
-  return flow(
-    withSubMenuDesign(withDesign$),
-    withDesign$,
-  );
-};
 
 /**
  * HOC which can be applied to a base menu to make it into a site's breadcrumbs
