@@ -24,9 +24,9 @@ import { Fragment } from 'react';
 import { asReadOnly } from '@bodiless/core';
 import { asEditable as withEditorSimple } from '@bodiless/components';
 // import { withEditorSimple } from '../Editors';
+import { withTitle } from '@bodiless/layouts';
 import withMenuStyles, { withMenuToutStyles } from './MegaMenu.token';
 import { withToutEditors } from '../Tout';
-import { withTitle } from '@bodiless/layouts';
 
 export const withTitleEditor = withEditorSimple('text', 'Menu Item');
 
