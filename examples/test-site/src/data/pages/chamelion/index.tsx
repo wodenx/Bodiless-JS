@@ -38,8 +38,8 @@ const asBox = addClasses('border-8 py-5 w-1/6 text-center');
 
 const A = asBodilessLink('link')('a');
 
-const addPropsIf = (condition: (p: any) => boolean) => (newProps: any) => (C: ComponentType<any>) => (props: any) => (
-  condition(props) ? <C {...props} {...newProps} /> : <C {...props} />
+const addPropsIf = (condition: () => boolean) => (newProps: any) => (C: ComponentType<any>) => (
+  (props: any) => (condition() ? <C {...props} {...newProps} /> : <C {...props} />)
 );
 
 const withBoxTitles = withDesign({
