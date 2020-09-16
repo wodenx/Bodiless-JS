@@ -29,7 +29,11 @@ import asBasicSublist from './List/asBasicSublist';
 import asBodilessList, { asSubList, asTitledItem } from './List/asBodilessList';
 import withSublist, { withBasicSublist } from './List/withSublist';
 import withDeleteSublistOnUnwrap from './List/withDeleteSublistOnUnwrap';
-import asChamelionSubList, { asToggledSubList } from './List/asChamelionSubList';
+import asChamelionSubList, {
+  asToggledSubList,
+  withSubLists,
+  withSubListDesign,
+} from './List/asChamelionSubList';
 import {
   withMeta, withMetaStatic, withMetaHtml, withTitle,
 } from './Meta/Meta';
@@ -67,6 +71,8 @@ export {
   List,
   asBodilessList,
   asChamelionSubList,
+  withSubLists,
+  withSubListDesign,
   asToggledSubList,
   asTitledItem,
   asSubList,
