@@ -17,7 +17,7 @@ const useToggleButtonMenuOption = () => {
     : Object.keys(selectableComponents).find(key => key !== DEFAULT_KEY) || null;
   return {
     label: 'Toggle',
-    icon: isOn ? 'toggle-on' : 'toggle-off',
+    icon: isOn ? 'toggle_off' : 'toggle_on',
     handler: () => setActiveComponent(newKey),
   };
 };
@@ -53,7 +53,7 @@ const useSwapButtonMenuOption = () => {
     renderForm,
   });
   return {
-    icon: 'Swap',
+    icon: 'repeat',
     label: 'Swap',
     handler: () => render,
   };
