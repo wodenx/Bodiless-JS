@@ -50,24 +50,29 @@ const withSubListDesign = (design: any) => {
   });
 };
 
-const withSubLists = withDesign({
+const withSubLists$ = withDesign({
   Item: flow(
     asToggledSubList,
     withDesign({
       On: flow(
         asDemoSubList,
-        withDesign({
-          Item: flow(
-            asToggledSubList,
-            withDesign({
-              On: asDemoSubList,
-            }),
-          ),
-        }),
       ),
     }),
   ),
 });
+
+const withSubLists$$ = withDesign({
+  Item: flow(
+    withDesign({
+      On: withSubLists$,
+    }),
+  ),
+});
+
+const withSubLists = flow(
+  withSubLists$,
+  withSubLists$$,
+);
 
 /**
  * Applies a list design (or other HOC) to the main menu and all submenus.
@@ -97,6 +102,7 @@ const asListDemo = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
   asStylableList,
   withSubLists,
+  // withSubListDesign(asDemoSubList),
   withSubListDesign({
     Item: addClasses('pl-5'),
   }),
