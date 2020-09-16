@@ -26,6 +26,7 @@ import { asEditable as withEditorSimple } from '@bodiless/components';
 // import { withEditorSimple } from '../Editors';
 import withMenuStyles, { withMenuToutStyles } from './MegaMenu.token';
 import { withToutEditors } from '../Tout';
+import { withTitle } from '@bodiless/layouts';
 
 export const withTitleEditor = withEditorSimple('text', 'Menu Item');
 
@@ -71,6 +72,13 @@ const MegaMenuList = flow(
   asMegaMenuBase$,
   withMegaMenuDesign({
     Item: addClasses('pl-5'),
+  }),
+  withDesign({
+    Item: withDesign({
+      Basic: withTitle('List'),
+      Touts: withTitle('Touts'),
+      Columns: withTitle('Columns'),
+    }),
   }),
   asReadOnly,
 )('ul');
