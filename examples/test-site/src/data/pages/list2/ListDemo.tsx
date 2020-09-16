@@ -6,7 +6,7 @@ import {
   addClasses, withDesign, replaceWith, A,
 } from '@bodiless/fclasses';
 import {
-  asEditable, asSubList, withDeleteNodeOnUnwrap, asBodilessList, asChamelionSubList,
+  asEditable, asSubList, withDeleteNodeOnUnwrap, asBodilessList, asChamelionSubList, asToggledSubList,
 } from '@bodiless/components';
 import { WithNodeKeyProps } from '@bodiless/core';
 import { ComponentType } from 'react';
@@ -38,9 +38,7 @@ const withSubListDesign = (design: any) => {
   const withDesign$ = typeof design === 'function' ? design : withDesign(design);
   return withDesign({
     Item: withDesign({
-      Basic: withDesign$,
-      Touts: withDesign$,
-      Columns: flow(
+      On: flow(
         withDesign$,
         withDesign({
           Item: withDesign$,
@@ -78,8 +76,7 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
   asStylableList,
   withDesign({
-    // Title: asDefaultMenuLink,
-    Item: asChamelionSubList,
+    Item: asToggledSubList,
   }),
   withSubListDesign(asDemoSubList),
 );
