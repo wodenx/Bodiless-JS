@@ -1,14 +1,26 @@
 import { flow } from 'lodash';
 import {
-  asMenuLink, asStylableList,
+  asStylableList,
 } from '@bodiless/organisms';
-import { addClasses, withDesign } from '@bodiless/fclasses';
+import {
+  addClasses, withDesign, replaceWith, A,
+} from '@bodiless/fclasses';
 import {
   asEditable, asSubList, withDeleteNodeOnUnwrap, asBodilessList, asChamelionSubList,
 } from '@bodiless/components';
 import { WithNodeKeyProps } from '@bodiless/core';
 import { ComponentType } from 'react';
+import { asLink, asEditableLink } from '../../../components/Elements.token';
 // First we build a basic list with the correct data structure.
+
+const withLinkTitle = withDesign({
+  Title: flow(
+    replaceWith(A),
+    asLink,
+    asEditableLink('link'),
+    asEditable('text', 'List Item'),
+  ),
+});
 
 // Defines the basic sublist for all mubmenu types.
 const asDemoSubList = flow(
@@ -87,9 +99,7 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
  */
 const asMegaMenuBase$ = flow(
   asMenuBase(),
-  withListDesign({
-    Title: asMenuLink(asEditable('text', 'List Item')),
-  }),
+  withListDesign(withLinkTitle),
 );
 
 const MegaMenuList = flow(
