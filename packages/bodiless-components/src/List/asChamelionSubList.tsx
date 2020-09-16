@@ -1,3 +1,4 @@
+import { v1 } from 'uuid';
 import { useChamelionContext, asBodilessChamelion } from '../Chamelion';
 
 const useChamelionOverrides = () => {
@@ -5,6 +6,7 @@ const useChamelionOverrides = () => {
   return {
     icon: isOn ? 'repeat' : 'playlist_add',
     label: 'Sub',
+    name: `chamelion-sublist-${v1()}`,
   };
 };
 // Defines the sublist type for the top level menu items.
@@ -17,6 +19,7 @@ const useToggleOverrides = () => {
     isHidden: isOn,
     icon: 'playlist_add',
     label: 'Sub',
+    name: `chamelion-sublist-${v1()}`,
   };
 };
 
