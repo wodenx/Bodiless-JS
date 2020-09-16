@@ -18,12 +18,10 @@ import {
   withDesign, addClassesIf, HOC,
 } from '@bodiless/fclasses';
 import { withTitle } from '@bodiless/layouts';
+import { withSidecarNodes, WithNodeKeyProps } from '@bodiless/core';
 import {
-  EditButtonOptions, withSidecarNodes, WithNodeKeyProps,
-} from '@bodiless/core';
-import {
-  asBreadcrumb, useBreadcrumbContext, asBodilessChamelion, asBodilessList, asSubList,
-  withDeleteNodeOnUnwrap, useChamelionContext,
+  asBreadcrumb, useBreadcrumbContext, asBodilessList, asSubList,
+  withDeleteNodeOnUnwrap, asChamelionSubList,
 } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
@@ -47,31 +45,6 @@ const asMenuSubList = flow(
   }),
 );
 
-// Provides overrides for the chamelion button
-type Overrides = Partial<EditButtonOptions<any, any>>;
-const useOverrides = (): Overrides => {
-  const { isOn } = useChamelionContext();
-  return {
-    icon: isOn ? 'repeat' : 'playlist_add',
-    label: 'Sub',
-  };
-};
-
-// Defines the sublist type for the top level menu items.
-const asChamelionSubList = flowRight(
-  withDesign({
-    Basic: asMenuSubList,
-    Touts: asMenuSubList,
-    Columns: flow(
-      asMenuSubList,
-      withDesign({
-        Item: asMenuSubList,
-      }),
-    ),
-  }),
-  asBodilessChamelion('cham-sublist', {}, useOverrides),
-);
-
 /**
  * Bodiless HOC generator which creates the basic structure of the Mega Menu. The component
  * to which the HOC applies is irrelevant (it will be replaced by the Menu wrapper).
@@ -88,7 +61,19 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asStylableList,
   withDesign({
     Title: asDefaultMenuLink,
-    Item: asChamelionSubList,
+    Item: flowRight(
+      withDesign({
+        Basic: asMenuSubList,
+        Touts: asMenuSubList,
+        Columns: flow(
+          asMenuSubList,
+          withDesign({
+            Item: asMenuSubList,
+          }),
+        ),
+      }),
+      asChamelionSubList,
+    ),
   }),
 );
 
