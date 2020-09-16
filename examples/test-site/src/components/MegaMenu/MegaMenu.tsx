@@ -24,7 +24,6 @@ import { Fragment } from 'react';
 import { asReadOnly } from '@bodiless/core';
 import { asEditable as withEditorSimple } from '@bodiless/components';
 // import { withEditorSimple } from '../Editors';
-import { withTitle } from '@bodiless/layouts';
 import withMenuStyles, { withMenuToutStyles } from './MegaMenu.token';
 import { withToutEditors } from '../Tout';
 
@@ -56,29 +55,21 @@ const asMegaMenuBase$ = flow(
 
 const MegaMenu = flow(
   asMegaMenuBase$,
-  asMegaMenu(
-    withMenuStyles,
-    withDesign({
-      Item: withDesign({
-        Touts: withDesign({
-          Title: asMenuTout$,
-        }),
+  asMegaMenu,
+  withDesign({
+    Item: withDesign({
+      Touts: withDesign({
+        Title: asMenuTout$,
       }),
     }),
-  ),
+  }),
+  withMenuStyles,
 )(Fragment);
 
 const MegaMenuList = flow(
   asMegaMenuBase$,
   withMegaMenuDesign({
     Item: addClasses('pl-5'),
-  }),
-  withDesign({
-    Item: withDesign({
-      Basic: withTitle('List'),
-      Touts: withTitle('Touts'),
-      Columns: withTitle('Columns'),
-    }),
   }),
   asReadOnly,
 )('ul');

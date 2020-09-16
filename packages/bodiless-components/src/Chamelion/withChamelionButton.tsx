@@ -49,7 +49,7 @@ const useSwapButtonMenuOption = () => {
       <ComponentFormLabel key={name} htmlFor={`bl-component-form-chamelion-radio-${name}`}>
         <ComponentFormRadio value={name} id={`bl-comonent-form-chamelion-radio-${name}`} />
         {/* @ts-ignore */}
-        {selectableComponents[name].title}
+        {selectableComponents[name].title || name}
       </ComponentFormLabel>
     ));
     return (

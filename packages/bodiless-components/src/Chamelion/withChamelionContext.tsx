@@ -19,7 +19,7 @@ import { WithNodeKeyProps, withSidecarNodes, withBodilessData } from '@bodiless/
 import {
   HOC, applyDesign, asComponent, Design, extendDesignable,
 } from '@bodiless/fclasses';
-import { omit, pick } from 'lodash';
+import { omit } from 'lodash';
 import type {
   ChamelionState, ChamelionData, ChamelionButtonProps, ChamelionComponents,
 } from './types';
@@ -31,8 +31,8 @@ export const DEFAULT_KEY = '_default';
 const getSelectableComponents = (props: ChamelionButtonProps) => {
   const { components } = props;
   // @ts-ignore @TODO need to add metadata to component type
-  const keys = Object.keys(components).filter(key => Boolean(components[key].title));
-  return pick(components, keys);
+  if (components[DEFAULT_KEY].title) return components;
+  return omit(components, DEFAULT_KEY);
 };
 
 const getActiveComponent = (props: ChamelionButtonProps) => {

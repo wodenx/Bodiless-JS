@@ -13,13 +13,12 @@
  */
 
 import { Fragment, ComponentType } from 'react';
-import { addClasses, withDesign } from '@bodiless/fclasses';
+import { addClasses } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import {
   asMenuLink, asSimpleMenuBase, withSimpleMenuDesign,
   asSimpleMenu,
 } from '@bodiless/organisms';
-import { withTitle } from '@bodiless/layouts';
 import { withSimpleMenuStyles } from './MegaMenu.token';
 import { withTitleEditor } from './MegaMenu';
 
@@ -28,9 +27,8 @@ export const SimpleMenu = flow(
   withSimpleMenuDesign({
     Title: asMenuLink(withTitleEditor),
   }),
-  asSimpleMenu(
-    withSimpleMenuStyles,
-  ),
+  asSimpleMenu,
+  withSimpleMenuStyles,
 )(Fragment);
 
 export const SimpleMenuList = flow(
@@ -40,10 +38,5 @@ export const SimpleMenuList = flow(
   }),
   withSimpleMenuDesign({
     Item: addClasses('pl-5'),
-  }),
-  withDesign({
-    Item: withDesign({
-      Basic: withTitle('List'),
-    }),
   }),
 )('ul') as ComponentType<any>;

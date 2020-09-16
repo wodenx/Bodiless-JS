@@ -15,9 +15,8 @@
 import { flow, flowRight } from 'lodash';
 
 import {
-  withDesign, addClassesIf, HOC,
+  withDesign, addClassesIf,
 } from '@bodiless/fclasses';
-import { withTitle } from '@bodiless/layouts';
 import { withSidecarNodes, WithNodeKeyProps } from '@bodiless/core';
 import {
   asBreadcrumb, useBreadcrumbContext, asBodilessList, asSubList,
@@ -131,15 +130,7 @@ const asChamelionSubMenu = withDesign({
  *
  * @return A clean (unstyled) site main menu.
  */
-const asMainMenuClean = (...hocs: HOC[]) => flowRight(
-  withDesign({
-    Item: withDesign({
-      Basic: withTitle('List'),
-      Touts: withTitle('Touts'),
-      Columns: withTitle('Columns'),
-    }),
-  }),
-  ...hocs,
+const asMainMenuClean = flowRight(
   asMenu,
   withDesign({
     Item: asChamelionSubMenu,
