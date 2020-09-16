@@ -22,7 +22,7 @@ import {
   withSidecarNodes, WithNodeKeyProps,
 } from '@bodiless/core';
 import {
-  asBreadcrumb, useBreadcrumbContext, asBodilessChamelion, asBodilessList, useChamelionContext,
+  asBreadcrumb, useBreadcrumbContext, asBodilessList, asToggledSubList,
 } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
@@ -34,23 +34,32 @@ import {
   asSubMenu, asMenu, withMenuItem, asMenuItem,
 } from './asMenu';
 
-// Provides overrides for the chamelion button
-const useOverrides = () => {
-  const { isOn } = useChamelionContext();
-  return {
-    isHidden: isOn,
-    icon: 'playlist_add',
-    label: 'Sub',
-  };
+/**
+ * Applies a list design (or other HOC) recursively to all submenus.
+ *
+ * @param design The design object or HOC to be applied.
+*/
+const withSubMenuDesign = (design: any) => {
+  const withDesign$ = typeof design === 'function' ? design : withDesign(design);
+  return withDesign({
+    Item: withDesign({
+      Basic: withDesign$,
+    }),
+  });
 };
 
-// Defines the sublist type for the top level menu items.
-const asChamelionSubList = flowRight(
-  withDesign({
-    Basic: asMenuSubList,
-  }),
-  asBodilessChamelion('cham-sublist', {}, useOverrides),
-);
+/**
+ * Applies a list design (or other HOC) to the main menu and all submenus.
+ *
+ * @param design The design object or HOC to be applied.
+*/
+const withMenuDesign = (design: any) => {
+  const withDesign$ = typeof design === 'function' ? design : withDesign(design);
+  return flow(
+    withSubMenuDesign(withDesign$),
+    withDesign$,
+  );
+};
 
 /**
  * Bodiless HOC generator which creates the basic structure of the Mega Menu. The component
@@ -64,9 +73,10 @@ const asChamelionSubList = flowRight(
  * @return HOC which creates a basic mega menu list.
  */
 const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flowRight(
+  withSubMenuDesign(asMenuSubList),
   withDesign({
     Title: asMenuLink(() => identity),
-    Item: asChamelionSubList,
+    Item: asToggledSubList,
   }),
   asStylableList,
   asBodilessList(nodeKeys),
@@ -103,23 +113,6 @@ const asMainMenuClean = (...hocs: HOC[]) => flowRight(
     Item: asChamelionSubMenu,
   }),
 );
-
-/**
- * Applies a list design (or other HOC) to the main menu and all submenus.
- *
- * @param design The design object or HOC to be applied.
-*/
-const withMenuDesign = (design: any) => {
-  const withDesign$ = typeof design === 'function' ? design : withDesign(design);
-  return flow(
-    withDesign({
-      Item: withDesign({
-        Basic: withDesign$,
-      }),
-    }),
-    withDesign$,
-  );
-};
 
 /**
  * HOC which can be applied to a base menu to make it into a site's breadcrumbs

@@ -123,6 +123,22 @@ const asMainMenuClean = (...hocs: HOC[]) => flowRight(
   }),
 );
 
+const withSubMenuDesign = (design: any) => {
+  const withDesign$ = typeof design === 'function' ? design : withDesign(design);
+  return withDesign({
+    Item: withDesign({
+      Basic: withDesign$,
+      Touts: withDesign$,
+      Columns: flow(
+        withDesign({
+          Item: withDesign$,
+        }),
+        withDesign$,
+      ),
+    }),
+  });
+};
+
 // Now we create breaccrumbs
 
 /**
@@ -133,18 +149,7 @@ const asMainMenuClean = (...hocs: HOC[]) => flowRight(
 const withMenuDesign = (design: any) => {
   const withDesign$ = typeof design === 'function' ? design : withDesign(design);
   return flow(
-    withDesign({
-      Item: withDesign({
-        Basic: withDesign$,
-        Touts: withDesign$,
-        Columns: flow(
-          withDesign({
-            Item: withDesign$,
-          }),
-          withDesign$,
-        ),
-      }),
-    }),
+    withSubMenuDesign(withDesign$),
     withDesign$,
   );
 };
