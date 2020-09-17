@@ -26,7 +26,9 @@ import asTaggableItem from './Taggable/asTaggableItem';
 import withListTitle from './List/withListTitle';
 import asEditableList from './List/asEditableList';
 import asBasicSublist from './List/asBasicSublist';
-import asBodilessList, { asSubList, asTitledItem } from './List/asBodilessList';
+import asBodilessList, {
+  asSubList, asTitledItem, withSubListDesign as withSimpleSubListDesign,
+} from './List/asBodilessList';
 import withSublist, { withBasicSublist } from './List/withSublist';
 import withDeleteSublistOnUnwrap from './List/withDeleteSublistOnUnwrap';
 import asChamelionSubList, {
@@ -69,6 +71,7 @@ export {
   withLinkToggle,
   List,
   asBodilessList,
+  withSimpleSubListDesign,
   asChamelionSubList,
   withSubLists,
   withSubListDesign,

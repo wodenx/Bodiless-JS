@@ -21,7 +21,7 @@ import {
   withSidecarNodes, WithNodeKeyProps,
 } from '@bodiless/core';
 import {
-  asBreadcrumb, useBreadcrumbContext, asBodilessList, asToggledSubList,
+  asBreadcrumb, useBreadcrumbContext, asBodilessList, asChamelionSubList,
 } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
@@ -75,7 +75,7 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flowRight(
   withSubMenuDesign(asMenuSubList),
   withDesign({
     Title: asMenuLink(() => identity),
-    Item: asToggledSubList,
+    Item: asChamelionSubList,
   }),
   asStylableList,
   asBodilessList(nodeKeys),

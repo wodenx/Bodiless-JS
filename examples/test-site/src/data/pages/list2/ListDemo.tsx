@@ -7,7 +7,7 @@ import {
 } from '@bodiless/fclasses';
 import {
   asEditable, asSubList, withDeleteNodeOnUnwrap, asBodilessList,
-  withSubListDesign, withSubLists,
+  withSubListDesign, withSubLists, asBodilessChamelion, asChamelionSubList,
 } from '@bodiless/components';
 import { WithNodeKeyProps } from '@bodiless/core';
 import { ComponentType } from 'react';
@@ -34,9 +34,8 @@ const asDemoSubList = flow(
   asStylableList,
 );
 
-const DEPTH = 3;
-const withDemoSubLists = withSubLists(DEPTH)(asDemoSubList);
-const withDemoSubListDesign = withSubListDesign(DEPTH);
+const withDemoSubListDesign = withSubListDesign(3);
+const withDemoSubLists = withDemoSubListDesign(asDemoSubList, asChamelionSubList);
 
 const asListDemo = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),

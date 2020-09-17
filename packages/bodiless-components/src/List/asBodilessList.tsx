@@ -16,9 +16,9 @@ import {
   WithNodeKeyProps, withNodeKey, useNode, NodeProvider,
 } from '@bodiless/core';
 import React, { ComponentType, PropsWithChildren, FC } from 'react';
-import { flow } from 'lodash';
+import { flow, identity } from 'lodash';
 import {
-  replaceWith, withDesign, asComponent, DesignableComponentsProps, designable,
+  replaceWith, withDesign, asComponent, DesignableComponentsProps, designable, HOC,
 } from '@bodiless/fclasses';
 
 import asEditableList from './asEditableList';
@@ -93,5 +93,15 @@ const asSubList = flow(
   asTitledItem,
 );
 
+const withSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
+  depth === 0 ? identity
+    : withDesign({
+      Item: flow(
+        withDesign$,
+        withSubListDesign(depth - 1)(withDesign$),
+      ),
+    }) as HOC
+);
+
 export default asBodilessList;
-export { asSubList, asTitledItem };
+export { asSubList, asTitledItem, withSubListDesign };
