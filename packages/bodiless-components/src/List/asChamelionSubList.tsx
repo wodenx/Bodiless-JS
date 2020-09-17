@@ -31,15 +31,15 @@ const useOverrides = () => {
 
 const asChamelionSubList = asBodilessChamelion('cham-sublist', {}, useOverrides);
 
-const withSubLists$ = (depth: number) => (design: Design<any>): HOC => (
+const withSubListDesign$ = (depth: number) => (design: Design<any>, hoc: HOC = identity): HOC => (
   depth === 0 ? identity
     : withDesign({
       Item: flow(
-        asChamelionSubList,
+        hoc,
         withDesign(design),
         withDesign(
           Object.keys(design).reduce(
-            (acc, key) => ({ ...acc, [key]: withSubLists$(depth - 1)(design) }),
+            (acc, key) => ({ ...acc, [key]: withSubListDesign$(depth - 1)(design, hoc) }),
             {},
           ),
         ),
@@ -47,19 +47,13 @@ const withSubLists$ = (depth: number) => (design: Design<any>): HOC => (
     }) as HOC
 );
 
-const withSubListDesign$ = (depth: number) => (design: Design<any>): HOC => (
-  depth === 0 ? identity
-    : withDesign({
-      Item: flow(
-        withDesign(design),
-        withDesign(
-          Object.keys(design).reduce(
-            (acc, key) => ({ ...acc, [key]: withSubListDesign$(depth - 1)(design) }),
-            {},
-          ),
-        ),
-      ),
-    }) as HOC
+const withSubListDesign = (depth: number) => (
+  withDesign$: HOC|Design<any>,
+  hoc: HOC = identity,
+): HOC => ( 
+  typeof withDesign$ === 'function'
+    ? withSubListDesign$(depth)({ On: withDesign$ }, hoc)
+    : withSubListDesign$(depth)(withDesign$, hoc)
 );
 
 /**
@@ -73,17 +67,8 @@ const withSubListDesign$ = (depth: number) => (design: Design<any>): HOC => (
  * @param Depth The number of nested sublists to attach.
  * @return An function accepting a sublist definition and returning an HOC which adds the sublists.
  */
-const withSubLists = (depth: number) => (withSubList$: HOC|Design<any>): HOC => (
-  typeof withSubList$ === 'function'
-    ? withSubLists$(depth)({ On: withSubList$ })
-    : withSubLists$(depth)(withSubList$)
+const withSubLists = (depth: number) => (asSubList$: HOC|Design<any>): HOC => (
+  withSubListDesign(depth)(asSubList$, asChamelionSubList)
 );
-
-const withSubListDesign = (depth: number) => (withDesign$: HOC|Design<any>): HOC => (
-  typeof withDesign$ === 'function'
-    ? withSubListDesign$(depth)({ On: withDesign$ })
-    : withSubListDesign$(depth)(withDesign$)
-);
-
 export default asChamelionSubList;
 export { withSubLists, withSubListDesign };

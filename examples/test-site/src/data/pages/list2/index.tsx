@@ -17,7 +17,7 @@ import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import Layout from '../../../components/Layout';
 // import { OuterList, OuterLinkList } from './OldListDemo';
-import DemoList from './ChamelionListDemo';
+import DemoList from './ListDemo';
 
 export default (props: any) => (
   <Page {...props}>
