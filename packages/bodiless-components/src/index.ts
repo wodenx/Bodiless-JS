@@ -30,7 +30,6 @@ import asBodilessList, { asSubList, asTitledItem } from './List/asBodilessList';
 import withSublist, { withBasicSublist } from './List/withSublist';
 import withDeleteSublistOnUnwrap from './List/withDeleteSublistOnUnwrap';
 import asChamelionSubList, {
-  asToggledSubList,
   withSubLists,
   withSubListDesign,
 } from './List/asChamelionSubList';
@@ -73,7 +72,6 @@ export {
   asChamelionSubList,
   withSubLists,
   withSubListDesign,
-  asToggledSubList,
   asTitledItem,
   asSubList,
   asEditableList,

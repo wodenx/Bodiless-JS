@@ -11,10 +11,7 @@ const useChamelionOverrides = () => {
     name: `chamelion-sublist-${v1()}`,
   };
 };
-// Defines the sublist type for the top level menu items.
-const asChamelionSubList = asBodilessChamelion('cham-sublist', {}, useChamelionOverrides);
 
-// Provides overrides for the chamelion button
 const useToggleOverrides = () => {
   const { isOn } = useChamelionContext();
   return {
@@ -25,14 +22,20 @@ const useToggleOverrides = () => {
   };
 };
 
-// Defines the sublist type for the top level menu items.
-const asToggledSubList = asBodilessChamelion('cham-sublist', {}, useToggleOverrides);
+const useOverrides = () => {
+  const { selectableComponents } = useChamelionContext();
+  return Object.keys(selectableComponents).length > 1
+    ? useChamelionOverrides()
+    : useToggleOverrides();
+};
+
+const asChamelionSubList = asBodilessChamelion('cham-sublist', {}, useOverrides);
 
 const withSubLists = (depth: number) => (asSubList$: HOC): HOC => (
   depth === 0 ? identity
     : withDesign({
       Item: flow(
-        asToggledSubList,
+        asChamelionSubList,
         withDesign({
           On: flow(
             asSubList$,
@@ -56,4 +59,4 @@ const withSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
 );
 
 export default asChamelionSubList;
-export { asToggledSubList, withSubLists, withSubListDesign };
+export { withSubLists, withSubListDesign };
