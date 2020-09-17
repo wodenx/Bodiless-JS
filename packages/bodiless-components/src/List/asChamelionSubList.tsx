@@ -36,15 +36,15 @@ const withSubLists = (depth: number) => (asSubList$: HOC): HOC => (
     : withDesign({
       Item: flow(
         asChamelionSubList,
-        withDesign({
-          On: flow(
-            asSubList$,
-            withSubLists(depth - 1)(asSubList$),
-          ),
-        }),
+        withDesign({ On: asSubList$ }),
+        withDesign({ On: withSubLists(depth - 1)(asSubList$) }),
       ),
     }) as HOC
 );
+
+// const withSubLists$$ = (depth: number) => (withSubList$: HOC): HOC => (
+//   withSubLists$(depth)({ On: withSubList$ })
+// );
 
 const withSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
   depth === 0 ? identity
