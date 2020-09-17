@@ -47,6 +47,21 @@ const withSubLists$ = (depth: number) => (design: Design<any>): HOC => (
     }) as HOC
 );
 
+const withSubListDesign$ = (depth: number) => (design: Design<any>): HOC => (
+  depth === 0 ? identity
+    : withDesign({
+      Item: flow(
+        withDesign(design),
+        withDesign(
+          Object.keys(design).reduce(
+            (acc, key) => ({ ...acc, [key]: withSubListDesign$(depth - 1)(design) }),
+            {},
+          ),
+        ),
+      ),
+    }) as HOC
+);
+
 /**
  * Attaches nested chamelion sublists of arbitrary depth to a list.
  *
@@ -64,16 +79,10 @@ const withSubLists = (depth: number) => (withSubList$: HOC|Design<any>): HOC => 
     : withSubLists$(depth)(withSubList$)
 );
 
-const withSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
-  depth === 0 ? identity
-    : withDesign({
-      Item: withDesign({
-        On: flow(
-          withDesign$,
-          withSubListDesign(depth - 1)(withDesign$),
-        ),
-      }),
-    }) as HOC
+const withSubListDesign = (depth: number) => (withDesign$: HOC|Design<any>): HOC => (
+  typeof withDesign$ === 'function'
+    ? withSubListDesign$(depth)({ On: withDesign$ })
+    : withSubListDesign$(depth)(withDesign$)
 );
 
 export default asChamelionSubList;

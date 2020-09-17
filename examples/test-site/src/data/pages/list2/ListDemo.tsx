@@ -16,7 +16,7 @@ import { asLink, asEditableLink } from '../../../components/Elements.token';
 /**
  * Defines the title for all list items.
  */
-const withLinkTitle = withDesign({
+export const withLinkTitle = withDesign({
   Title: flow(
     replaceWith(A),
     asLink,
