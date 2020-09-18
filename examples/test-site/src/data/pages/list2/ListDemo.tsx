@@ -7,12 +7,11 @@ import {
 } from '@bodiless/fclasses';
 import {
   asEditable, asSubList, withDeleteNodeOnUnwrap, asBodilessList,
-  withSubListDesign, withSubLists, asBodilessChamelion, asChamelionSubList,
+  withSubListDesign, asChamelionSubList,
 } from '@bodiless/components';
 import { WithNodeKeyProps } from '@bodiless/core';
 import { ComponentType } from 'react';
 import { asLink, asEditableLink } from '../../../components/Elements.token';
-import { replaceable } from '@bodiless/fclasses/lib/Design';
 
 /**
  * Defines the title for all list items.
@@ -30,7 +29,6 @@ export const withLinkTitle = withDesign({
  * Defines the all sublists
  */
 const asDemoSubList = flow(
-  replaceable,
   asSubList,
   withDeleteNodeOnUnwrap,
   asStylableList,

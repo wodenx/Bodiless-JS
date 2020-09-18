@@ -3,10 +3,8 @@ import { asSubList, asBodilessList, withSimpleSubListDesign } from '@bodiless/co
 import { withDesign, addClasses, HOC } from '@bodiless/fclasses';
 import { asStylableList } from '@bodiless/organisms';
 import { withLinkTitle } from './ListDemo';
-import { replaceable } from '@bodiless/fclasses/lib/Design';
 
 const asSimpleSubList = flow(
-  replaceable,
   asSubList,
   asStylableList,
 );
