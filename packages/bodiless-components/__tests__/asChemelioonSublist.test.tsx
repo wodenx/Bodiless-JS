@@ -1,10 +1,7 @@
-import React, { ComponentType } from 'react';
-import { asSubList } from '../src/List/asBodilessList';
-import { flow } from 'lodash';
-import asChamelionSubList from '../src/List/asChamelionSubList';
+import React from 'react';
 
-import TestList from './TestChamelionList';
 import { render, mount } from 'enzyme';
+import TestList from './TestChamelionList';
 
 describe('asChamelionSubList', () => {
   it('works', () => {
@@ -12,6 +9,5 @@ describe('asChamelionSubList', () => {
     console.log($.html());
     const wrapper = mount(<TestList />);
     console.log(wrapper.debug());
-
   });
 });
