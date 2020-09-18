@@ -72,6 +72,13 @@ const SubList$: FC<SubListProps> = ({
 
 const SubList = designable(startComponents)(SubList$);
 
+/**
+ * Converts a component or tag to a "bodiless" list. The component itself (usually
+ * a variant of 'ul' or 'ol') will be used as the wrapper for the list, and the data
+ * will be taken from bodiless data.
+ *
+ * @param nodeKeys
+ */
 const asBodilessList = (
   nodeKeys?: WithNodeKeyProps,
   // @TODO - Handle default data
@@ -85,10 +92,18 @@ const asBodilessList = (
   withNodeKey(nodeKeys),
 )(Component);
 
+// This ensures that the original item is used as the sublist wrapper item.
+const asSubListWrapper = (Component: any) => withDesign({
+  WrapperItem: replaceWith(Component),
+})(SubList);
+
+/**
+ * HOC which can be applied to a list item to convert it to a sublist.
+ */
 const asSubList = flow(
   asBodilessList('sublist'),
   withDesign({
-    Wrapper: replaceWith(SubList),
+    Wrapper: asSubListWrapper,
   }),
   asTitledItem,
 );
