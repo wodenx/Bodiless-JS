@@ -1,0 +1,830 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`withSublist Works correctly 1`] = `
+<WithDesign>
+  <WithDesign
+    design={
+      Object {
+        "Item": [Function],
+      }
+    }
+  >
+    <WithDesign
+      design={
+        Object {
+          "Item": [Function],
+          "Title": [Function],
+        }
+      }
+    >
+      <WithNodeKey
+        design={
+          Object {
+            "Item": [Function],
+            "Title": [Function],
+          }
+        }
+      >
+        <WithDesign
+          design={
+            Object {
+              "Item": [Function],
+              "Title": [Function],
+            }
+          }
+        >
+          <Component
+            design={
+              Object {
+                "Item": [Function],
+                "Title": [Function],
+                "Wrapper": [Function],
+              }
+            }
+          >
+            <List
+              design={
+                Object {
+                  "Item": [Function],
+                  "Title": [Function],
+                  "Wrapper": [Function],
+                }
+              }
+            >
+              <Component
+                design={
+                  Object {
+                    "Item": [Function],
+                    "Title": [Function],
+                    "Wrapper": [Function],
+                  }
+                }
+              >
+                <Transformer
+                  Component={
+                    Object {
+                      "$$typeof": Symbol(react.memo),
+                      "compare": null,
+                      "displayName": "BasicList",
+                      "type": [Function],
+                    }
+                  }
+                  passedProps={
+                    Object {
+                      "design": Object {
+                        "Item": [Function],
+                        "Title": [Function],
+                        "Wrapper": [Function],
+                      },
+                    }
+                  }
+                  transformFixed={[Function]}
+                  transformPassthrough={[Function]}
+                >
+                  <BasicList
+                    components={
+                      Object {
+                        "Item": [Function],
+                        "ItemMenuOptionsProvider": [Function],
+                        "Title": [Function],
+                        "Wrapper": [Function],
+                      }
+                    }
+                  >
+                    <Wrapper>
+                      <AsComponent>
+                        <ul>
+                          <ItemWithNode
+                            component={[Function]}
+                            key="default"
+                            nodeKey="default"
+                          >
+                            <WithNode
+                              nodeKey="default"
+                            >
+                              <NodeProvider
+                                node={
+                                  DefaultContentNode {
+                                    "actions": Object {
+                                      "deleteNode": [Function],
+                                      "setNode": [Function],
+                                    },
+                                    "getters": Object {
+                                      "getBaseResourcePath": [Function],
+                                      "getKeys": [Function],
+                                      "getNode": [Function],
+                                      "getPagePath": [Function],
+                                      "hasError": [Function],
+                                    },
+                                    "path": Array [
+                                      "root",
+                                      "default",
+                                    ],
+                                  }
+                                }
+                              >
+                                <Item>
+                                  <WithDesign>
+                                    <TitledItem
+                                      design={
+                                        Object {
+                                          "Title": [Function],
+                                        }
+                                      }
+                                    >
+                                      <WithDesign
+                                        design={
+                                          Object {
+                                            "Title": [Function],
+                                          }
+                                        }
+                                        title={
+                                          <NodeProvider
+                                            node={
+                                              DefaultContentNode {
+                                                "actions": Object {
+                                                  "deleteNode": [Function],
+                                                  "setNode": [Function],
+                                                },
+                                                "getters": Object {
+                                                  "getBaseResourcePath": [Function],
+                                                  "getKeys": [Function],
+                                                  "getNode": [Function],
+                                                  "getPagePath": [Function],
+                                                  "hasError": [Function],
+                                                },
+                                                "path": Array [
+                                                  "root",
+                                                  "default",
+                                                ],
+                                              }
+                                            }
+                                          >
+                                            <Title
+                                              canDelete={[Function]}
+                                              onAdd={[Function]}
+                                              onDelete={[Function]}
+                                            />
+                                          </NodeProvider>
+                                        }
+                                      >
+                                        <WithNodeKey
+                                          design={
+                                            Object {
+                                              "Title": [Function],
+                                              "Wrapper": [Function],
+                                            }
+                                          }
+                                          title={
+                                            <NodeProvider
+                                              node={
+                                                DefaultContentNode {
+                                                  "actions": Object {
+                                                    "deleteNode": [Function],
+                                                    "setNode": [Function],
+                                                  },
+                                                  "getters": Object {
+                                                    "getBaseResourcePath": [Function],
+                                                    "getKeys": [Function],
+                                                    "getNode": [Function],
+                                                    "getPagePath": [Function],
+                                                    "hasError": [Function],
+                                                  },
+                                                  "path": Array [
+                                                    "root",
+                                                    "default",
+                                                  ],
+                                                }
+                                              }
+                                            >
+                                              <Title
+                                                canDelete={[Function]}
+                                                onAdd={[Function]}
+                                                onDelete={[Function]}
+                                              />
+                                            </NodeProvider>
+                                          }
+                                        >
+                                          <WithDesign
+                                            design={
+                                              Object {
+                                                "Title": [Function],
+                                                "Wrapper": [Function],
+                                              }
+                                            }
+                                            nodeKey="sublist"
+                                            title={
+                                              <NodeProvider
+                                                node={
+                                                  DefaultContentNode {
+                                                    "actions": Object {
+                                                      "deleteNode": [Function],
+                                                      "setNode": [Function],
+                                                    },
+                                                    "getters": Object {
+                                                      "getBaseResourcePath": [Function],
+                                                      "getKeys": [Function],
+                                                      "getNode": [Function],
+                                                      "getPagePath": [Function],
+                                                      "hasError": [Function],
+                                                    },
+                                                    "path": Array [
+                                                      "root",
+                                                      "default",
+                                                    ],
+                                                  }
+                                                }
+                                              >
+                                                <Title
+                                                  canDelete={[Function]}
+                                                  onAdd={[Function]}
+                                                  onDelete={[Function]}
+                                                />
+                                              </NodeProvider>
+                                            }
+                                          >
+                                            <Component
+                                              design={
+                                                Object {
+                                                  "Title": [Function],
+                                                  "Wrapper": [Function],
+                                                }
+                                              }
+                                              nodeKey="sublist"
+                                              title={
+                                                <NodeProvider
+                                                  node={
+                                                    DefaultContentNode {
+                                                      "actions": Object {
+                                                        "deleteNode": [Function],
+                                                        "setNode": [Function],
+                                                      },
+                                                      "getters": Object {
+                                                        "getBaseResourcePath": [Function],
+                                                        "getKeys": [Function],
+                                                        "getNode": [Function],
+                                                        "getPagePath": [Function],
+                                                        "hasError": [Function],
+                                                      },
+                                                      "path": Array [
+                                                        "root",
+                                                        "default",
+                                                      ],
+                                                    }
+                                                  }
+                                                >
+                                                  <Title
+                                                    canDelete={[Function]}
+                                                    onAdd={[Function]}
+                                                    onDelete={[Function]}
+                                                  />
+                                                </NodeProvider>
+                                              }
+                                            >
+                                              <List
+                                                design={
+                                                  Object {
+                                                    "Title": [Function],
+                                                    "Wrapper": [Function],
+                                                  }
+                                                }
+                                                nodeKey="sublist"
+                                                title={
+                                                  <NodeProvider
+                                                    node={
+                                                      DefaultContentNode {
+                                                        "actions": Object {
+                                                          "deleteNode": [Function],
+                                                          "setNode": [Function],
+                                                        },
+                                                        "getters": Object {
+                                                          "getBaseResourcePath": [Function],
+                                                          "getKeys": [Function],
+                                                          "getNode": [Function],
+                                                          "getPagePath": [Function],
+                                                          "hasError": [Function],
+                                                        },
+                                                        "path": Array [
+                                                          "root",
+                                                          "default",
+                                                        ],
+                                                      }
+                                                    }
+                                                  >
+                                                    <Title
+                                                      canDelete={[Function]}
+                                                      onAdd={[Function]}
+                                                      onDelete={[Function]}
+                                                    />
+                                                  </NodeProvider>
+                                                }
+                                              >
+                                                <NodeProvider
+                                                  node={
+                                                    DefaultContentNode {
+                                                      "actions": Object {
+                                                        "deleteNode": [Function],
+                                                        "setNode": [Function],
+                                                      },
+                                                      "getters": Object {
+                                                        "getBaseResourcePath": [Function],
+                                                        "getKeys": [Function],
+                                                        "getNode": [Function],
+                                                        "getPagePath": [Function],
+                                                        "hasError": [Function],
+                                                      },
+                                                      "path": Array [
+                                                        "root",
+                                                        "default",
+                                                        "sublist",
+                                                      ],
+                                                    }
+                                                  }
+                                                >
+                                                  <Component
+                                                    design={
+                                                      Object {
+                                                        "Title": [Function],
+                                                        "Wrapper": [Function],
+                                                      }
+                                                    }
+                                                    title={
+                                                      <NodeProvider
+                                                        node={
+                                                          DefaultContentNode {
+                                                            "actions": Object {
+                                                              "deleteNode": [Function],
+                                                              "setNode": [Function],
+                                                            },
+                                                            "getters": Object {
+                                                              "getBaseResourcePath": [Function],
+                                                              "getKeys": [Function],
+                                                              "getNode": [Function],
+                                                              "getPagePath": [Function],
+                                                              "hasError": [Function],
+                                                            },
+                                                            "path": Array [
+                                                              "root",
+                                                              "default",
+                                                            ],
+                                                          }
+                                                        }
+                                                      >
+                                                        <Title
+                                                          canDelete={[Function]}
+                                                          onAdd={[Function]}
+                                                          onDelete={[Function]}
+                                                        />
+                                                      </NodeProvider>
+                                                    }
+                                                  >
+                                                    <Transformer
+                                                      Component={
+                                                        Object {
+                                                          "$$typeof": Symbol(react.memo),
+                                                          "compare": null,
+                                                          "displayName": "BasicList",
+                                                          "type": [Function],
+                                                        }
+                                                      }
+                                                      passedProps={
+                                                        Object {
+                                                          "design": Object {
+                                                            "Title": [Function],
+                                                            "Wrapper": [Function],
+                                                          },
+                                                          "title": <NodeProvider
+                                                            node={
+                                                              DefaultContentNode {
+                                                                "actions": Object {
+                                                                  "deleteNode": [Function],
+                                                                  "setNode": [Function],
+                                                                },
+                                                                "getters": Object {
+                                                                  "getBaseResourcePath": [Function],
+                                                                  "getKeys": [Function],
+                                                                  "getNode": [Function],
+                                                                  "getPagePath": [Function],
+                                                                  "hasError": [Function],
+                                                                },
+                                                                "path": Array [
+                                                                  "root",
+                                                                  "default",
+                                                                ],
+                                                              }
+                                                            }
+                                                          >
+                                                            <Title
+                                                              canDelete={[Function]}
+                                                              onAdd={[Function]}
+                                                              onDelete={[Function]}
+                                                            />
+                                                          </NodeProvider>,
+                                                        }
+                                                      }
+                                                      transformFixed={[Function]}
+                                                      transformPassthrough={[Function]}
+                                                    >
+                                                      <BasicList
+                                                        components={
+                                                          Object {
+                                                            "Item": [Function],
+                                                            "ItemMenuOptionsProvider": [Function],
+                                                            "Title": [Function],
+                                                            "Wrapper": [Function],
+                                                          }
+                                                        }
+                                                        title={
+                                                          <NodeProvider
+                                                            node={
+                                                              DefaultContentNode {
+                                                                "actions": Object {
+                                                                  "deleteNode": [Function],
+                                                                  "setNode": [Function],
+                                                                },
+                                                                "getters": Object {
+                                                                  "getBaseResourcePath": [Function],
+                                                                  "getKeys": [Function],
+                                                                  "getNode": [Function],
+                                                                  "getPagePath": [Function],
+                                                                  "hasError": [Function],
+                                                                },
+                                                                "path": Array [
+                                                                  "root",
+                                                                  "default",
+                                                                ],
+                                                              }
+                                                            }
+                                                          >
+                                                            <Title
+                                                              canDelete={[Function]}
+                                                              onAdd={[Function]}
+                                                              onDelete={[Function]}
+                                                            />
+                                                          </NodeProvider>
+                                                        }
+                                                      >
+                                                        <Wrapper
+                                                          title={
+                                                            <NodeProvider
+                                                              node={
+                                                                DefaultContentNode {
+                                                                  "actions": Object {
+                                                                    "deleteNode": [Function],
+                                                                    "setNode": [Function],
+                                                                  },
+                                                                  "getters": Object {
+                                                                    "getBaseResourcePath": [Function],
+                                                                    "getKeys": [Function],
+                                                                    "getNode": [Function],
+                                                                    "getPagePath": [Function],
+                                                                    "hasError": [Function],
+                                                                  },
+                                                                  "path": Array [
+                                                                    "root",
+                                                                    "default",
+                                                                  ],
+                                                                }
+                                                              }
+                                                            >
+                                                              <Title
+                                                                canDelete={[Function]}
+                                                                onAdd={[Function]}
+                                                                onDelete={[Function]}
+                                                              />
+                                                            </NodeProvider>
+                                                          }
+                                                        >
+                                                          <Component
+                                                            title={
+                                                              <NodeProvider
+                                                                node={
+                                                                  DefaultContentNode {
+                                                                    "actions": Object {
+                                                                      "deleteNode": [Function],
+                                                                      "setNode": [Function],
+                                                                    },
+                                                                    "getters": Object {
+                                                                      "getBaseResourcePath": [Function],
+                                                                      "getKeys": [Function],
+                                                                      "getNode": [Function],
+                                                                      "getPagePath": [Function],
+                                                                      "hasError": [Function],
+                                                                    },
+                                                                    "path": Array [
+                                                                      "root",
+                                                                      "default",
+                                                                    ],
+                                                                  }
+                                                                }
+                                                              >
+                                                                <Title
+                                                                  canDelete={[Function]}
+                                                                  onAdd={[Function]}
+                                                                  onDelete={[Function]}
+                                                                />
+                                                              </NodeProvider>
+                                                            }
+                                                          >
+                                                            <Replaceable
+                                                              title={
+                                                                <NodeProvider
+                                                                  node={
+                                                                    DefaultContentNode {
+                                                                      "actions": Object {
+                                                                        "deleteNode": [Function],
+                                                                        "setNode": [Function],
+                                                                      },
+                                                                      "getters": Object {
+                                                                        "getBaseResourcePath": [Function],
+                                                                        "getKeys": [Function],
+                                                                        "getNode": [Function],
+                                                                        "getPagePath": [Function],
+                                                                        "hasError": [Function],
+                                                                      },
+                                                                      "path": Array [
+                                                                        "root",
+                                                                        "default",
+                                                                      ],
+                                                                    }
+                                                                  }
+                                                                >
+                                                                  <Title
+                                                                    canDelete={[Function]}
+                                                                    onAdd={[Function]}
+                                                                    onDelete={[Function]}
+                                                                  />
+                                                                </NodeProvider>
+                                                              }
+                                                            >
+                                                              <Component
+                                                                title={
+                                                                  <NodeProvider
+                                                                    node={
+                                                                      DefaultContentNode {
+                                                                        "actions": Object {
+                                                                          "deleteNode": [Function],
+                                                                          "setNode": [Function],
+                                                                        },
+                                                                        "getters": Object {
+                                                                          "getBaseResourcePath": [Function],
+                                                                          "getKeys": [Function],
+                                                                          "getNode": [Function],
+                                                                          "getPagePath": [Function],
+                                                                          "hasError": [Function],
+                                                                        },
+                                                                        "path": Array [
+                                                                          "root",
+                                                                          "default",
+                                                                        ],
+                                                                      }
+                                                                    }
+                                                                  >
+                                                                    <Title
+                                                                      canDelete={[Function]}
+                                                                      onAdd={[Function]}
+                                                                      onDelete={[Function]}
+                                                                    />
+                                                                  </NodeProvider>
+                                                                }
+                                                              >
+                                                                <Transformer
+                                                                  Component={[Function]}
+                                                                  passedProps={
+                                                                    Object {
+                                                                      "children": Array [
+                                                                        <ItemWithNode
+                                                                          component={[Function]}
+                                                                          nodeKey="default"
+                                                                        >
+                                                                          <Title
+                                                                            canDelete={[Function]}
+                                                                            onAdd={[Function]}
+                                                                            onDelete={[Function]}
+                                                                          />
+                                                                        </ItemWithNode>,
+                                                                      ],
+                                                                      "title": <NodeProvider
+                                                                        node={
+                                                                          DefaultContentNode {
+                                                                            "actions": Object {
+                                                                              "deleteNode": [Function],
+                                                                              "setNode": [Function],
+                                                                            },
+                                                                            "getters": Object {
+                                                                              "getBaseResourcePath": [Function],
+                                                                              "getKeys": [Function],
+                                                                              "getNode": [Function],
+                                                                              "getPagePath": [Function],
+                                                                              "hasError": [Function],
+                                                                            },
+                                                                            "path": Array [
+                                                                              "root",
+                                                                              "default",
+                                                                            ],
+                                                                          }
+                                                                        }
+                                                                      >
+                                                                        <Title
+                                                                          canDelete={[Function]}
+                                                                          onAdd={[Function]}
+                                                                          onDelete={[Function]}
+                                                                        />
+                                                                      </NodeProvider>,
+                                                                    }
+                                                                  }
+                                                                  transformFixed={[Function]}
+                                                                  transformPassthrough={[Function]}
+                                                                >
+                                                                  <SubList$
+                                                                    components={
+                                                                      Object {
+                                                                        "List": [Function],
+                                                                        "WrapperItem": [Function],
+                                                                      }
+                                                                    }
+                                                                    title={
+                                                                      <NodeProvider
+                                                                        node={
+                                                                          DefaultContentNode {
+                                                                            "actions": Object {
+                                                                              "deleteNode": [Function],
+                                                                              "setNode": [Function],
+                                                                            },
+                                                                            "getters": Object {
+                                                                              "getBaseResourcePath": [Function],
+                                                                              "getKeys": [Function],
+                                                                              "getNode": [Function],
+                                                                              "getPagePath": [Function],
+                                                                              "hasError": [Function],
+                                                                            },
+                                                                            "path": Array [
+                                                                              "root",
+                                                                              "default",
+                                                                            ],
+                                                                          }
+                                                                        }
+                                                                      >
+                                                                        <Title
+                                                                          canDelete={[Function]}
+                                                                          onAdd={[Function]}
+                                                                          onDelete={[Function]}
+                                                                        />
+                                                                      </NodeProvider>
+                                                                    }
+                                                                  >
+                                                                    <AsComponent>
+                                                                      <li>
+                                                                        <NodeProvider
+                                                                          node={
+                                                                            DefaultContentNode {
+                                                                              "actions": Object {
+                                                                                "deleteNode": [Function],
+                                                                                "setNode": [Function],
+                                                                              },
+                                                                              "getters": Object {
+                                                                                "getBaseResourcePath": [Function],
+                                                                                "getKeys": [Function],
+                                                                                "getNode": [Function],
+                                                                                "getPagePath": [Function],
+                                                                                "hasError": [Function],
+                                                                              },
+                                                                              "path": Array [
+                                                                                "root",
+                                                                                "default",
+                                                                              ],
+                                                                            }
+                                                                          }
+                                                                        >
+                                                                          <Title
+                                                                            canDelete={[Function]}
+                                                                            onAdd={[Function]}
+                                                                            onDelete={[Function]}
+                                                                          >
+                                                                            <Memo(wrappedComponent)
+                                                                              canDelete={[Function]}
+                                                                              onAdd={[Function]}
+                                                                              onDelete={[Function]}
+                                                                            >
+                                                                              <WithoutProps
+                                                                                canDelete={[Function]}
+                                                                                onAdd={[Function]}
+                                                                                onDelete={[Function]}
+                                                                              >
+                                                                                <Memo(wrappedComponent)>
+                                                                                  <Component>
+                                                                                    <span>
+                                                                                      Title
+                                                                                    </span>
+                                                                                  </Component>
+                                                                                </Memo(wrappedComponent)>
+                                                                              </WithoutProps>
+                                                                            </Memo(wrappedComponent)>
+                                                                          </Title>
+                                                                        </NodeProvider>
+                                                                        <AsComponent>
+                                                                          <ul>
+                                                                            <ItemWithNode
+                                                                              component={[Function]}
+                                                                              key="default"
+                                                                              nodeKey="default"
+                                                                            >
+                                                                              <WithNode
+                                                                                nodeKey="default"
+                                                                              >
+                                                                                <NodeProvider
+                                                                                  node={
+                                                                                    DefaultContentNode {
+                                                                                      "actions": Object {
+                                                                                        "deleteNode": [Function],
+                                                                                        "setNode": [Function],
+                                                                                      },
+                                                                                      "getters": Object {
+                                                                                        "getBaseResourcePath": [Function],
+                                                                                        "getKeys": [Function],
+                                                                                        "getNode": [Function],
+                                                                                        "getPagePath": [Function],
+                                                                                        "hasError": [Function],
+                                                                                      },
+                                                                                      "path": Array [
+                                                                                        "root",
+                                                                                        "default",
+                                                                                        "sublist",
+                                                                                        "default",
+                                                                                      ],
+                                                                                    }
+                                                                                  }
+                                                                                >
+                                                                                  <Item>
+                                                                                    <AsComponent>
+                                                                                      <li>
+                                                                                        <Title
+                                                                                          canDelete={[Function]}
+                                                                                          onAdd={[Function]}
+                                                                                          onDelete={[Function]}
+                                                                                        >
+                                                                                          <Memo(wrappedComponent)
+                                                                                            canDelete={[Function]}
+                                                                                            onAdd={[Function]}
+                                                                                            onDelete={[Function]}
+                                                                                          >
+                                                                                            <WithoutProps
+                                                                                              canDelete={[Function]}
+                                                                                              onAdd={[Function]}
+                                                                                              onDelete={[Function]}
+                                                                                            >
+                                                                                              <Memo(wrappedComponent)>
+                                                                                                <Component>
+                                                                                                  <span>
+                                                                                                    Title
+                                                                                                  </span>
+                                                                                                </Component>
+                                                                                              </Memo(wrappedComponent)>
+                                                                                            </WithoutProps>
+                                                                                          </Memo(wrappedComponent)>
+                                                                                        </Title>
+                                                                                      </li>
+                                                                                    </AsComponent>
+                                                                                  </Item>
+                                                                                </NodeProvider>
+                                                                              </WithNode>
+                                                                            </ItemWithNode>
+                                                                          </ul>
+                                                                        </AsComponent>
+                                                                      </li>
+                                                                    </AsComponent>
+                                                                  </SubList$>
+                                                                </Transformer>
+                                                              </Component>
+                                                            </Replaceable>
+                                                          </Component>
+                                                        </Wrapper>
+                                                      </BasicList>
+                                                    </Transformer>
+                                                  </Component>
+                                                </NodeProvider>
+                                              </List>
+                                            </Component>
+                                          </WithDesign>
+                                        </WithNodeKey>
+                                      </WithDesign>
+                                    </TitledItem>
+                                  </WithDesign>
+                                </Item>
+                              </NodeProvider>
+                            </WithNode>
+                          </ItemWithNode>
+                        </ul>
+                      </AsComponent>
+                    </Wrapper>
+                  </BasicList>
+                </Transformer>
+              </Component>
+            </List>
+          </Component>
+        </WithDesign>
+      </WithNodeKey>
+    </WithDesign>
+  </WithDesign>
+</WithDesign>
+`;

@@ -12,11 +12,13 @@ import {
 import { WithNodeKeyProps } from '@bodiless/core';
 import { ComponentType } from 'react';
 import { withLinkTitle } from './ListDemo';
+import { replaceable } from '@bodiless/fclasses/lib/Design';
 
 /**
  * Defines the all sublists
  */
 const asDemoSubList = flow(
+  replaceable,
   asSubList,
   withDeleteNodeOnUnwrap,
   asStylableList,

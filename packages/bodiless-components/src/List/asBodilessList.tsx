@@ -18,7 +18,7 @@ import {
 import React, { ComponentType, PropsWithChildren, FC } from 'react';
 import { flow, identity } from 'lodash';
 import {
-  replaceWith, withDesign, asComponent, DesignableComponentsProps, designable, HOC,
+  replaceWith, withDesign, asComponent, DesignableComponentsProps, designable, HOC, startWith,
 } from '@bodiless/fclasses';
 
 import asEditableList from './asEditableList';
@@ -88,7 +88,7 @@ const asBodilessList = (
 const asSubList = flow(
   asBodilessList('sublist'),
   withDesign({
-    Wrapper: replaceWith(SubList),
+    Wrapper: startWith(SubList),
   }),
   asTitledItem,
 );
