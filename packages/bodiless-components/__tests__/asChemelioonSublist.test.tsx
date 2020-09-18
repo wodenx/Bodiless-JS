@@ -3,7 +3,7 @@ import { asSubList } from '../src/List/asBodilessList';
 import { flow } from 'lodash';
 import asChamelionSubList from '../src/List/asChamelionSubList';
 
-import TestList from './ChamelionListDemo';
+import TestList from './TestChamelionList';
 import { render, mount } from 'enzyme';
 
 describe('asChamelionSubList', () => {
