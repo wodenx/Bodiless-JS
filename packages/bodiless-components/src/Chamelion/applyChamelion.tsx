@@ -13,6 +13,8 @@
  */
 
 import React, { ComponentType, FC } from 'react';
+import { withoutProps } from '@bodiless/fclasses';
+import { flow } from 'lodash';
 import { applyChamelionDesign, useChamelionContext } from './withChamelionContext';
 import { ChamelionProps } from './types';
 
@@ -49,7 +51,10 @@ const applyChamelion = <P extends object>(Component: ComponentType<P>|string) =>
     const ActiveComponent = components[activeComponent];
     return <ActiveComponent {...rest as P} />;
   };
-  return applyChamelionDesign(Component)(Chamelion);
+  return flow(
+    withoutProps('design'),
+    applyChamelionDesign(Component),
+  )(Chamelion);
 };
 
 export default applyChamelion;
