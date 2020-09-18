@@ -14,7 +14,7 @@
 
 import React, { ComponentType } from 'react';
 import {
-  withMenuOptions, useContextMenuForm, useMenuOptionUI,
+  withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator, withLocalContextMenu,
 } from '@bodiless/core';
 
 import { flowRight } from 'lodash';
@@ -113,6 +113,8 @@ const withChamelionButton = <P extends object>(useOverrides?: UseOverrides<P>) =
   };
   return flowRight(
     withMenuOptions({ useMenuOptions, name: 'Chamelion' }),
+    withContextActivator('onClick'),
+    withLocalContextMenu,
     withUnwrap,
   );
 };

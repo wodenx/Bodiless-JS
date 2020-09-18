@@ -65,8 +65,6 @@ const Box = flowRight(
   withBoxTitles,
   withDesign(boxDesign),
   asBodilessChamelion('basic-chamelion'), // , {}, useOverrides),
-  withLocalContextMenu,
-  withContextActivator('onClick'),
   asBox,
   stylable,
 )(Box$);
