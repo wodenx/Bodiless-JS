@@ -107,6 +107,7 @@ describe('asBreadcrumb', () => {
         hasError: jest.fn(),
         getKeys: jest.fn(),
         getPagePath: jest.fn(() => pagePath),
+        getBaseResourcePath: jest.fn(),
       };
       const actions = {
         setNode: jest.fn(),

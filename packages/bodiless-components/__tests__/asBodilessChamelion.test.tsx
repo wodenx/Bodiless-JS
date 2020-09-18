@@ -186,10 +186,8 @@ describe('asBodilessChamelion', () => {
         expect(form.find('label[htmlFor="bl-component-form-chamelion-radio-B"]').text()).toBe('B');
       });
 
-      it('Uses component titles to control what is on the form', () => {
+      it('Shows the default option when it has a title', () => {
         const TestChamelionExt2 = withDesign({
-          // This removes the title from B.
-          B: withProps({ foo: 'bar' }),
           _default: withTitle('Default'),
         })(TestChamelion);
         const wrapper = mount((
@@ -200,7 +198,6 @@ describe('asBodilessChamelion', () => {
         const Form = getForm(wrapper);
         const form = mount(<Form />);
         expect(form.find('input[value="A"]').prop('checked')).toBeFalsy();
-        expect(form.find('input[value="B"]')).toHaveLength(0);
         expect(form.find('input[value="_default"]')).toHaveLength(1);
         // @TODO: Fix this case.
         // expect(form.find('input[value="_default"]').prop('checked')).toBeTruthy();
