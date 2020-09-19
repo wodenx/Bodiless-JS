@@ -122,7 +122,7 @@ export class PageEditStore implements PageEditStoreInterface {
           Object.assign(existing, next);
           extendObservable(existing, newProps);
         } else {
-          map!.set(op.name, next);
+          map!.set(op.name, { ...next, context: c });
         }
       });
     });

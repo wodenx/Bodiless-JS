@@ -21,6 +21,7 @@ import {
 import Tooltip from 'rc-tooltip';
 import type { StylableProps } from '@bodiless/fclasses';
 import { ReactTagsFieldProps } from '../components/ReactTagsField';
+import { PageEditContextInterface } from 'src';
 
 export type TMenuOption = {
   name: string;
@@ -34,7 +35,7 @@ export type TMenuOption = {
   global?: boolean;
   group?: string;
   Component?: ComponentType<IContextMenuItemProps>;
-  context?: string;
+  context?: PageEditContextInterface;
 };
 
 export type ButtonVariantProps = HTMLProps<HTMLDivElement> & {

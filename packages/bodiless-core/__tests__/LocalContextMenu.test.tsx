@@ -15,15 +15,16 @@
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["isInnermost"] }] */
 
 import React, { FC, useEffect } from 'react';
-import { mount } from 'enzyme';
+import { mount, shallow, ShallowWrapper } from 'enzyme';
 import PageEditContext from '../src/PageEditContext';
 import LocalContextMenu from '../src/components/LocalContextMenu';
 import ContextMenu from '../src/components/ContextMenu';
 import { TMenuOptionGetter } from '../src/PageEditContext/types';
 import { useUUID, useEditContext } from '../src/hooks';
 import PageEditor from '../src/components/PageEditor';
+import { TMenuOption } from '../src/Types/ContextMenuTypes';
 
-const options = () => [
+const testOptions = () => [
   {
     icon: 'add',
     name: 'add',
@@ -82,7 +83,7 @@ describe('LocalContextMenu', () => {
   it('renders Tooltip with overlay of default ContextMenu ui element.', () => {
     const wrapper = mount(
       <PageEditor>
-        <MockContextProvider active getMenuOptions={options} id="t1" name="defaultUI">
+        <MockContextProvider active getMenuOptions={testOptions} id="t1" name="defaultUI">
           <LocalContextMenu><Foo /></LocalContextMenu>
         </MockContextProvider>
       </PageEditor>,
@@ -100,7 +101,7 @@ describe('LocalContextMenu', () => {
     };
     const wrapper = mount(
       <PageEditor ui={ui}>
-        <MockContextProvider active getMenuOptions={options} id="t2" name="customUI">
+        <MockContextProvider active getMenuOptions={testOptions} id="t2" name="customUI">
           <LocalContextMenu><Foo /></LocalContextMenu>
         </MockContextProvider>
       </PageEditor>,
@@ -112,7 +113,7 @@ describe('LocalContextMenu', () => {
 
   it('renders child component correctly.', () => {
     const wrapper = mount(
-      <MockContextProvider getMenuOptions={options} id="t3" name="childRendering">
+      <MockContextProvider getMenuOptions={testOptions} id="t3" name="childRendering">
         <LocalContextMenu><Foo /></LocalContextMenu>
       </MockContextProvider>,
     );
@@ -153,7 +154,7 @@ describe('LocalContextMenu', () => {
 
   it('renders invisible Tooltip when ContextProvider is not inner most.', () => {
     const wrapper = mount(
-      <MockContextProvider active={false} getMenuOptions={options} id="t6" name="contextInActive">
+      <MockContextProvider active={false} getMenuOptions={testOptions} id="t6" name="contextInActive">
         <LocalContextMenu><Foo /></LocalContextMenu>
       </MockContextProvider>,
     );
@@ -163,7 +164,7 @@ describe('LocalContextMenu', () => {
 
   it('renders visible Tooltip when ContextProvider is inner most.', () => {
     const wrapper = mount(
-      <MockContextProvider active getMenuOptions={options} id="t7" name="contextActive">
+      <MockContextProvider active getMenuOptions={testOptions} id="t7" name="contextActive">
         <LocalContextMenu><Foo /></LocalContextMenu>
       </MockContextProvider>,
     );
@@ -173,10 +174,45 @@ describe('LocalContextMenu', () => {
 
   it('does not render visible Tooltip when local tooltips are disabled via edit context.', () => {
     const wrapper = mount(
-      <MockContextProvider active getMenuOptions={options} id="t8" name="toolbarActive" tooltipsDisabled>
+      <MockContextProvider active getMenuOptions={testOptions} id="t8" name="toolbarActive" tooltipsDisabled>
         <LocalContextMenu><Foo /></LocalContextMenu>
       </MockContextProvider>,
     );
     expect(wrapper.find('Tooltip[visible=true]')).toHaveLength(0);
+  });
+});
+
+describe('Ordered options', () => {
+  let mockOptionsGetter:jest.SpyInstance<TMenuOption[], []>;
+
+  const setMockOptions = (ops: TMenuOption[]) => {
+    mockOptionsGetter.mockReturnValue(ops);
+  };
+
+  beforeEach(() => {
+    mockOptionsGetter = jest.spyOn(PageEditContext.prototype, 'contextMenuOptions', 'get');
+  });
+
+  afterEach(() => {
+    mockOptionsGetter.mockRestore();
+  });
+
+  const findOptions = (wrapper: ShallowWrapper) => {
+    const wrapper$ = wrapper.find(LocalContextMenu).dive();
+    const overlay = shallow(wrapper$.prop('overlay'));
+    return overlay.prop('options');
+  }
+
+  it('Renders only local options', () => {
+    const foo = { name: 'Foo', local: true };
+    const bar = { name: 'Bar' };
+    const baz = { name: 'Baz', local: false };
+    const options = [foo, bar];
+    setMockOptions(options);
+    const Test = () => (
+      <LocalContextMenu><Foo /></LocalContextMenu>
+    );
+    const options$ = findOptions(shallow(<Test />));
+    expect(options$).toEqual([foo]);
   });
 });
