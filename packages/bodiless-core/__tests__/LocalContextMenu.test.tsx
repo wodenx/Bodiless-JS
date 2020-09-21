@@ -224,19 +224,20 @@ describe('Ordered options', () => {
 
     setMockOptions([c1a, c2a, c1b]);
     const options = getRenderedOptions();
-    const groups = options.filter(o => !o.group);
+    const groups = options.filter(o => o.Component === 'group');
     expect(groups).toHaveLength(2);
-    expect(groups.find(g => g.name === c1.id)!.label).toBe('C1');
-    expect(groups.find(g => g.name === c2.id)!.label).toBe('C2');
-    expect(options.find(o => o.name === 'c1a')!.group).toBe(c1.id);
-    expect(options.find(o => o.name === 'c1b')!.group).toBe(c1.id);
-    expect(options.find(o => o.name === 'c2a')!.group).toBe(c2.id);
+    const g1 = groups.find(g => g.label === 'C1');
+    const g2 = groups.find(g => g.label === 'C2');
+    expect(g1).toBeDefined();
+    expect(g2).toBeDefined();
+    expect(options.find(o => o.name === 'c1b')!.group).toBe(g1!.name);
+    expect(options.find(o => o.name === 'c2a')!.group).toBe(g2!.name);
   });
 
-  it('Orders groups in correctly', () => {
+  it('Orders groups correctly', () => {
     const c1 = new PageEditContext({ name: 'C1', id: v1() });
     const c2 = new PageEditContext({ name: 'C2', id: v1() }, c1);
-    const c3 = new PageEditContext({ name: 'C2', id: v1() }, c2);
+    const c3 = new PageEditContext({ name: 'C3', id: v1() }, c2);
     const local = true;
 
     const c1a = { name: 'c1a', context: c1, local };
@@ -244,6 +245,9 @@ describe('Ordered options', () => {
     const c3a = { name: 'c2a', context: c3, local };
 
     setMockOptions([c1a, c3a, c2a]);
-    const options = getRenderedOptions();
+    const options = getRenderedOptions().filter(o => o.Component === 'group');
+    expect(options[0].label).toBe(c3.name);
+    expect(options[1].label).toBe(c2.name);
+    expect(options[2].label).toBe(c1.name);
   });
 });

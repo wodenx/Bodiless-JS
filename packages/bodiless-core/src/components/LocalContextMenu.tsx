@@ -46,8 +46,8 @@ const useLocalOptions = () => {
     if (op.context && !op.group) {
       const { context } = op;
       const { id: groupName, name: groupLabel } = context;
-      options.set(`context-${groupName}`, {
-        name: `context-${groupName}`, label: groupLabel, context, Component: 'group',
+      options.set(groupName, {
+        name: groupName, label: groupLabel, context, Component: 'group',
       });
       options.set(op.name, { ...op, group: groupName });
     } else {
