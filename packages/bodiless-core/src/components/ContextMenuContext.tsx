@@ -17,7 +17,7 @@ import { Text, TextArea } from 'informed';
 import ReactTooltip from 'rc-tooltip';
 import { omit } from 'lodash';
 import ReactTagsField from './ReactTagsField';
-import type { UI, ContextMenuFormProps } from '../Types/ContextMenuTypes';
+import type { ContextMenuUI, ContextMenuFormProps } from '../Types/ContextMenuTypes';
 
 type ContextType = {
   // eslint-disable-next-line max-len
@@ -25,7 +25,7 @@ type ContextType = {
 };
 
 type ContextUIType = {
-  ui?: UI;
+  ui?: ContextMenuUI;
 };
 
 const defaultUI = {
@@ -56,13 +56,13 @@ const defaultUI = {
   ContextMenuGroup: React.Fragment,
 };
 
-const getUI = (ui: UI = {}) => ({
+const getUI = (ui: ContextMenuUI = {}) => ({
   ...defaultUI,
   ...ui,
 });
 
 const ContextMenuContext = createContext<ContextType>({});
-const ContextMenuUIContext = createContext<UI>({});
+const ContextMenuUIContext = createContext<ContextMenuUI>({});
 
 const useContextMenuContext = () => useContext(ContextMenuContext);
 const useMenuOptionUI = () => getUI(useContext(ContextMenuUIContext));

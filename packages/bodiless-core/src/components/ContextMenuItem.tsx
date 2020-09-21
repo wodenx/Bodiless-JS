@@ -17,10 +17,11 @@ import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useEditContext } from '../hooks';
 import { useContextMenuContext, useMenuOptionUI } from './ContextMenuContext';
-import type { IContextMenuItemProps as IProps, ContextMenuFormProps } from '../Types/ContextMenuTypes';
+import type { IContextMenuItemProps as IProps, ContextMenuFormProps, TMenuOption } from '../Types/ContextMenuTypes';
 
 const ContextMenuItem = observer((props: IProps) => {
-  const { option, index } = props;
+  const { option: option$, name, index } = props;
+  const option: TMenuOption = option$ || { name };
   const [renderForm, setRenderForm$] = useState<(props:ContextMenuFormProps) => JSX.Element>();
   const [isToolTipShown, setIsToolTipShown] = useState(false);
   const { isPositionToggled } = useEditContext();

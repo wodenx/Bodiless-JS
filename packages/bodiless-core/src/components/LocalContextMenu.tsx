@@ -38,16 +38,33 @@ const onPopupAlign = (domNode: Element) => {
   }
 };
 
+const useLocalOptions = () => {
+  const { contextMenuOptions } = useEditContext();
+  const options = new Map<string, TMenuOption>();
+  contextMenuOptions.forEach(op => {
+    if (!op.local) return;
+    if (op.context && !op.group) {
+      const { context } = op;
+      const { id: groupName, name: groupLabel } = context;
+      options.set(`context-${groupName}`, {
+        name: `context-${groupName}`, label: groupLabel, context, Component: 'group',
+      });
+      options.set(op.name, { ...op, group: groupName });
+    } else {
+      options.set(op.name, op);
+    }
+  });
+  return Array.from(options.values());
+};
+
 /**
  * @private
  *
  * Renders children inside an rc-tooltip whose overlay contents contain all local menu option icons.
  */
 const ContextMenuOverlay = observer<{}>(() => {
-  const context = useEditContext();
   const { LocalContextMenu: Menu } = useUI();
-  const { contextMenuOptions } = context;
-  const options = contextMenuOptions.filter((option: TMenuOption) => Boolean(option.local));
+  const options = useLocalOptions();
   return <Menu options={options} />;
 });
 

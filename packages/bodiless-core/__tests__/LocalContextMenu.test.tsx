@@ -15,7 +15,8 @@
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["isInnermost"] }] */
 
 import React, { FC, useEffect } from 'react';
-import { mount, shallow, ShallowWrapper } from 'enzyme';
+import { mount, shallow } from 'enzyme';
+import { v1 } from 'uuid';
 import PageEditContext from '../src/PageEditContext';
 import LocalContextMenu from '../src/components/LocalContextMenu';
 import ContextMenu from '../src/components/ContextMenu';
@@ -197,22 +198,52 @@ describe('Ordered options', () => {
     mockOptionsGetter.mockRestore();
   });
 
-  const findOptions = (wrapper: ShallowWrapper) => {
-    const wrapper$ = wrapper.find(LocalContextMenu).dive();
-    const overlay = shallow(wrapper$.prop('overlay'));
+  const getRenderedOptions = ():TMenuOption[] => {
+    const wrapper = shallow(<LocalContextMenu><Foo /></LocalContextMenu>);
+    const overlay = shallow(wrapper.prop('overlay'));
     return overlay.prop('options');
-  }
+  };
 
   it('Renders only local options', () => {
     const foo = { name: 'Foo', local: true };
     const bar = { name: 'Bar' };
     const baz = { name: 'Baz', local: false };
-    const options = [foo, bar];
-    setMockOptions(options);
-    const Test = () => (
-      <LocalContextMenu><Foo /></LocalContextMenu>
-    );
-    const options$ = findOptions(shallow(<Test />));
-    expect(options$).toEqual([foo]);
+    setMockOptions([foo, bar, baz]);
+    const options = getRenderedOptions();
+    expect(options).toEqual([foo]);
+  });
+
+  it.only('Creates groups based on context', () => {
+    const local = true;
+    const c1 = new PageEditContext({ name: 'C1', id: v1() });
+    const c2 = new PageEditContext({ name: 'C2', id: v1() });
+
+    const c1a = { name: 'c1a', context: c1, local };
+    const c1b = { name: 'c1b', context: c1, local };
+    const c2a = { name: 'c2a', context: c2, local };
+
+    setMockOptions([c1a, c2a, c1b]);
+    const options = getRenderedOptions();
+    const groups = options.filter(o => !o.group);
+    expect(groups).toHaveLength(2);
+    expect(groups.find(g => g.name === c1.id)!.label).toBe('C1');
+    expect(groups.find(g => g.name === c2.id)!.label).toBe('C2');
+    expect(options.find(o => o.name === 'c1a')!.group).toBe(c1.id);
+    expect(options.find(o => o.name === 'c1b')!.group).toBe(c1.id);
+    expect(options.find(o => o.name === 'c2a')!.group).toBe(c2.id);
+  });
+
+  it('Orders groups in correctly', () => {
+    const c1 = new PageEditContext({ name: 'C1', id: v1() });
+    const c2 = new PageEditContext({ name: 'C2', id: v1() }, c1);
+    const c3 = new PageEditContext({ name: 'C2', id: v1() }, c2);
+    const local = true;
+
+    const c1a = { name: 'c1a', context: c1, local };
+    const c2a = { name: 'c2a', context: c2, local };
+    const c3a = { name: 'c2a', context: c3, local };
+
+    setMockOptions([c1a, c3a, c2a]);
+    const options = getRenderedOptions();
   });
 });
