@@ -38,23 +38,68 @@ const onPopupAlign = (domNode: Element) => {
   }
 };
 
+// const findInnerContext = (options: TMenuOption[]): PageEditContextInterface|undefined => {
+//   let innerContext: PageEditContextInterface|undefined;
+//   const isDescendant = (c: PageEditContextInterface|undefined): boolean => {
+//     if (!c) return false;
+//     if (!innerContext) return true;
+//     if (c === innerContext) return false;
+//     for (let c$ = c.parent; c$; c$ = c$.parent) {
+//       if (c$ === c) return true;
+//     }
+//     return false;
+//   };
+//   options.forEach(op => {
+//     if (isDescendant(op.context)) innerContext = op.context;
+//   });
+//
+//   return innerContext;
+// };
+
+const filterOptions = (initialOptions: TMenuOption[]) => {
+  const options = new Map<string, TMenuOption>();
+  initialOptions.forEach(op => {
+    if (op.local) options.set(op.name, op);
+  });
+  return options;
+};
+
+const recordNamedGroups = (options: Map<string, TMenuOption>) => {
+  const groups = new Set<string>();
+  options.forEach(op => {
+    if (op.group) groups.add(op.group);
+  });
+  return groups;
+};
+
+// Set a default group for this context only if:
+// - it is not itself a named custom group
+// - it does not already belong to a named custom group
+// - it has an associated context from which to get group name
+const addDefaultGroup = (option: TMenuOption, groups: Set<string>) => {
+  if (groups.has(option.name) || option.group || !option.context) return [option];
+  const { context } = option;
+  const { id: name, name: label } = context;
+  const options: TMenuOption[] = [{ ...option, group: name }];
+  if (!groups.has(name)) {
+    // Create the group and record it so we don't add it twice.
+    options.push({
+      name, label, context, Component: 'group',
+    });
+    groups.add(name);
+  }
+  return options;
+};
+
 const useLocalOptions = () => {
   const { contextMenuOptions } = useEditContext();
-  const options = new Map<string, TMenuOption>();
-  contextMenuOptions.forEach(op => {
-    if (!op.local) return;
-    if (op.context && !op.group) {
-      const { context } = op;
-      const { id: groupName, name: groupLabel } = context;
-      options.set(groupName, {
-        name: groupName, label: groupLabel, context, Component: 'group',
-      });
-      options.set(op.name, { ...op, group: groupName });
-    } else {
-      options.set(op.name, op);
-    }
+  const options = filterOptions(contextMenuOptions);
+  const groups = recordNamedGroups(options);
+  const finalOptions: TMenuOption[] = [];
+  options.forEach(op => {
+    finalOptions.push(...addDefaultGroup(op, groups));
   });
-  return Array.from(options.values());
+  return finalOptions;
 };
 
 /**

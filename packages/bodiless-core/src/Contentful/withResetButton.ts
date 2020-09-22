@@ -46,7 +46,10 @@ const useMenuOptions = (menuOptionWithNodeKey?: MenuOptionWithNodeKey) => () => 
 };
 
 const withResetButton = (menuOptionWithNodeKey?: MenuOptionWithNodeKey) => flowRight(
-  withMenuOptions({ useMenuOptions: useMenuOptions(menuOptionWithNodeKey) }),
+  withMenuOptions({
+    useMenuOptions: useMenuOptions(menuOptionWithNodeKey),
+    name: 'Default Content',
+  }),
   withContextActivator('onClick'),
   withLocalContextMenu,
 );

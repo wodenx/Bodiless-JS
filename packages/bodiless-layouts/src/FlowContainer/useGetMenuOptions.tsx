@@ -15,7 +15,7 @@
 import { useCallback } from 'react';
 import { omit } from 'lodash';
 import {
-  useEditContext, useActivateOnEffect, useGetter,
+  useEditContext, useActivateOnEffect, useGetter, TMenuOption,
 } from '@bodiless/core';
 import { EditFlowContainerProps, FlowContainerItem } from './types';
 import type { FlowContainerDataHandlers, FlowContainerItemHandlers } from './model';
@@ -92,6 +92,8 @@ const useDeleteButton = (
     name: 'delete',
     label: 'Delete',
     icon: 'delete',
+    global: false,
+    local: true,
     handler,
     isHidden: useCallback(() => !context.isEdit, []),
   };
@@ -113,6 +115,8 @@ const useAddButton = (
   return {
     icon: 'add',
     label: 'Add',
+    global: false,
+    local: true,
     name,
     handler: () => componentSelectorForm(props, insertItem),
     isHidden,
@@ -130,6 +134,8 @@ const useSwapButton = (
     name: 'swap',
     label: 'Swap',
     icon: 'repeat',
+    global: false,
+    local: true,
     handler: () => componentSelectorForm(props, replaceItem),
     isHidden: useCallback(() => !context.isEdit, []),
   };
@@ -144,8 +150,17 @@ const useSwapButton = (
  */
 function useMenuOptions(props: EditFlowContainerProps) {
   const handlers = { ...useFlowContainerDataHandlers(), ...useItemHandlers() };
-  const addButton = useAddButton(handlers, withNoDesign(props));
-  return [addButton];
+  const addButton: TMenuOption = useAddButton(handlers, withNoDesign(props));
+  addButton.group = 'flowcontainergroup';
+  const flowContainerGroup: TMenuOption = {
+    name: 'flowcontainergroup',
+    label: 'Flow Container',
+    global: false,
+    local: true,
+    isHidden: addButton.isHidden,
+    Component: 'group',
+  };
+  return [addButton, flowContainerGroup];
 }
 
 /**

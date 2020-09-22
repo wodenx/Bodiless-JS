@@ -213,7 +213,7 @@ describe('Ordered options', () => {
     expect(options).toEqual([foo]);
   });
 
-  it.only('Creates groups based on context', () => {
+  it('Creates groups based on context', () => {
     const local = true;
     const c1 = new PageEditContext({ name: 'C1', id: v1() });
     const c2 = new PageEditContext({ name: 'C2', id: v1() });
@@ -234,20 +234,47 @@ describe('Ordered options', () => {
     expect(options.find(o => o.name === 'c2a')!.group).toBe(g2!.name);
   });
 
-  it('Orders groups correctly', () => {
-    const c1 = new PageEditContext({ name: 'C1', id: v1() });
-    const c2 = new PageEditContext({ name: 'C2', id: v1() }, c1);
-    const c3 = new PageEditContext({ name: 'C3', id: v1() }, c2);
+  it('Preserves named groups', () => {
     const local = true;
-
-    const c1a = { name: 'c1a', context: c1, local };
-    const c2a = { name: 'c2a', context: c2, local };
-    const c3a = { name: 'c2a', context: c3, local };
-
-    setMockOptions([c1a, c3a, c2a]);
-    const options = getRenderedOptions().filter(o => o.Component === 'group');
-    expect(options[0].label).toBe(c3.name);
-    expect(options[1].label).toBe(c2.name);
-    expect(options[2].label).toBe(c1.name);
+    const context = new PageEditContext({ name: 'C1', id: v1() });
+    const a = { name: 'a', context, local };
+    const b = { name: 'b', context, local };
+    const c = {
+      name: 'c', context, group: 'a', local,
+    };
+    setMockOptions([a, b, c]);
+    const options = getRenderedOptions();
+    expect(options.find(o => o.name === 'a')!.group).toBeUndefined();
+    expect(options.find(o => o.name === 'c')!.group).toBe('a');
+    const groupName = options.find(o => o.name === 'b')!.group;
+    expect(options.find(o => o.name === groupName)!.label).toBe('C1');
+    expect(options.filter(o => o.Component === 'group')).toHaveLength(1);
   });
+
+  it.only('Orders named and default groups properly', () => {
+    const local = true;
+    const context = new PageEditContext({ name: 'C1', id: v1() });
+    const initialOptions: TMenuOption[] = [
+      {
+        name: 'first', context, local, Component: 'group',
+      },
+      { name: 'b', context, local },
+      {
+        name: 'last', context, local, Component: 'group',
+      },
+      {
+        name: 'c', context, local, group: 'last',
+      },
+      {
+        name: 'a', context, local, group: 'first',
+      },
+    ];
+    setMockOptions(initialOptions);
+    const options = getRenderedOptions();
+    const groups = options.filter(o => o.Component === 'group');
+    expect(groups[0].name).toBe('first');
+    expect(groups[1].label).toBe('C1');
+    expect(groups[2].name).toBe('last');
+  });
+
 });

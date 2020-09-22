@@ -83,7 +83,7 @@ const SlateSortableResizable = (props: Props) => {
 
   return (
     <PageContextProvider
-      name={`flexItem-${uuid}`}
+      name="Flow Container Item"
       id={`flexItem-${uuid}`}
       getMenuOptions={useGetMenuOptions()}
     >
