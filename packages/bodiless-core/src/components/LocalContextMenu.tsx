@@ -16,9 +16,11 @@ import React, { FC, ComponentType } from 'react';
 import { observer } from 'mobx-react-lite';
 import Tooltip from 'rc-tooltip';
 
+import { flow } from 'lodash';
 import { useEditContext } from '../hooks';
 import { useUI } from './PageEditor';
 import { TMenuOption } from '../Types/ContextMenuTypes';
+import { PageEditContextInterface } from '../PageEditContext/types';
 
 /**
  * @private
@@ -38,68 +40,111 @@ const onPopupAlign = (domNode: Element) => {
   }
 };
 
-// const findInnerContext = (options: TMenuOption[]): PageEditContextInterface|undefined => {
-//   let innerContext: PageEditContextInterface|undefined;
-//   const isDescendant = (c: PageEditContextInterface|undefined): boolean => {
-//     if (!c) return false;
-//     if (!innerContext) return true;
-//     if (c === innerContext) return false;
-//     for (let c$ = c.parent; c$; c$ = c$.parent) {
-//       if (c$ === c) return true;
-//     }
-//     return false;
-//   };
-//   options.forEach(op => {
-//     if (isDescendant(op.context)) innerContext = op.context;
-//   });
-//
-//   return innerContext;
-// };
-
-const filterOptions = (initialOptions: TMenuOption[]) => {
-  const options = new Map<string, TMenuOption>();
-  initialOptions.forEach(op => {
-    if (op.local) options.set(op.name, op);
-  });
-  return options;
+type LocalOptionsMap = {
+  options: Map<string, TMenuOption>,
+  groups: Set<string>,
 };
 
-const recordNamedGroups = (options: Map<string, TMenuOption>) => {
+// Filters out non-local options and records named groups.
+const buildMap = (options$: TMenuOption[]): LocalOptionsMap => {
+  const options = new Map<string, TMenuOption>();
   const groups = new Set<string>();
-  options.forEach(op => {
+  options$.forEach(op => {
+    if (!op.local) return;
+    options.set(op.name, op);
     if (op.group) groups.add(op.group);
   });
-  return groups;
+  return { options, groups };
 };
 
-// Set a default group for this context only if:
-// - it is not itself a named custom group
-// - it does not already belong to a named custom group
-// - it has an associated context from which to get group name
-const addDefaultGroup = (option: TMenuOption, groups: Set<string>) => {
-  if (groups.has(option.name) || option.group || !option.context) return [option];
-  const { context } = option;
-  const { id: name, name: label } = context;
-  const options: TMenuOption[] = [{ ...option, group: name }];
-  if (!groups.has(name)) {
-    // Create the group and record it so we don't add it twice.
-    options.push({
-      name, label, context, Component: 'group',
-    });
-    groups.add(name);
-  }
-  return options;
+const addDefaultGroups = (map: LocalOptionsMap): LocalOptionsMap => {
+  const local = true;
+  const Component = 'group';
+  const groups = new Set<string>();
+  const options = new Map<string, TMenuOption>();
+  map.options.forEach(op => {
+    let op$: TMenuOption = op;
+    // Add a default group for an option only if
+    // - The option is not itself a named group, and
+    // - The option does not belong to a named group, and
+    // - The option has a context to provide a group name and label
+    if (!map.groups.has(op.name) && !op.group && op.context) {
+      const { context } = op;
+      const { id: name, name: label } = context;
+      // Add the group property to the option.
+      op$ = { ...op, group: name };
+      // Create the group option if it does not exist.
+      if (!groups.has(name)) {
+        groups.add(name);
+        options.set(name, {
+          name, label, context, local, Component,
+        });
+      }
+    }
+    options.set(op$.name, op$);
+    if (map.groups.has(op$.name)) groups.add(op$.name);
+  });
+  return { options, groups };
+};
+
+// If a group has a merge property, then merge it with the next group if one exists.
+const mergeGroups = (map: LocalOptionsMap): LocalOptionsMap => {
+  const groups = new Set<string>(map.groups);
+  const options = new Map<string, TMenuOption>(map.options.entries());
+  const groupArray = Array.from(map.groups.values());
+  groupArray.forEach((group, index) => {
+    if (options.get(group)!.groupMerge === 'merge') {
+      const next = groupArray[index + 1];
+      if (next) {
+        const members = Array.from(options.values()).filter(op => op.group === group);
+        members.forEach(op => {
+          options.set(op.name, { ...op, group: next });
+        });
+        groups.delete(group);
+        options.delete(group);
+      }
+    }
+  });
+  return { options, groups };
+};
+
+// Ensure that options for innermost contexts appear first.
+const reverseContextOrder = (map: LocalOptionsMap): LocalOptionsMap => {
+  // Get list of contexts in reverse order.
+  const contexts = new Set<PageEditContextInterface>();
+  const groupArray = Array.from(map.groups.values());
+  [...groupArray].reverse().forEach(g => {
+    const context = map.options.get(g)?.context;
+    if (context) contexts.add(context);
+  });
+
+  // Create the correclty ordered list of groups.
+  const groups = new Set<string>();
+  contexts.forEach(c => {
+    const cgroups = groupArray.filter(g => map.options.get(g)!.context === c);
+    cgroups.forEach(g => groups.add(g));
+  });
+
+  // Delete each group option and re-add it in the correct order.
+  const options = new Map<string, TMenuOption>(map.options);
+  groups.forEach(g => {
+    const option = options.get(g)!; // We know there is an option for every group by now.
+    options.delete(g);
+    options.set(g, option);
+  });
+
+  return { options, groups };
 };
 
 const useLocalOptions = () => {
   const { contextMenuOptions } = useEditContext();
-  const options = filterOptions(contextMenuOptions);
-  const groups = recordNamedGroups(options);
-  const finalOptions: TMenuOption[] = [];
-  options.forEach(op => {
-    finalOptions.push(...addDefaultGroup(op, groups));
-  });
-  return finalOptions;
+  const { options } = flow(
+    buildMap,
+    addDefaultGroups,
+    mergeGroups,
+    reverseContextOrder,
+  )(contextMenuOptions);
+  return Array.from(options.values());
 };
 
 /**

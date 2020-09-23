@@ -53,7 +53,9 @@ const defaultUI = {
   ToolbarDivider: 'div',
   Tooltip: ReactTooltip,
   Toolbar: 'div',
-  ContextMenuGroup: React.Fragment,
+  ContextMenuGroup: ({ children, key }: any) => (
+    <React.Fragment key={key}>{children}</React.Fragment>
+  ),
 };
 
 const getUI = (ui: ContextMenuUI = {}) => ({

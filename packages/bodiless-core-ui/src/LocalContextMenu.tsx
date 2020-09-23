@@ -47,16 +47,22 @@ const GroupTitle = flow(
   removeClasses('bl-mb-grid-2'),
 )(ComponentFormTitle);
 
-const ContextMenuGroup: FC<IContextMenuItemProps> = ({ option, children }) => (
-  <div className="bl-border-t first:bl-border-t-0 bl-border-white bl-mt-grid-2 first:bl-mt-grid-0">
-    {option && option.label && (
-      <GroupTitle>{option.label}</GroupTitle>
-    )}
-    <div className="flex">
-      {children}
+const ContextMenuGroup: FC<IContextMenuItemProps> = ({ option, children }) => {
+  const hidden: boolean = Boolean(option && (
+    typeof option.isHidden === 'function' ? option.isHidden() : option.isHidden
+  ));
+  if (hidden) return null;
+  return (
+    <div className="bl-border-t first:bl-border-t-0 bl-border-white bl-mt-grid-2 first:bl-mt-grid-0">
+      {option && option.label && (
+        <GroupTitle>{option.label}</GroupTitle>
+      )}
+      <div className="flex">
+        {children}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const ui: ContextMenuUI = {
   ComponentFormText,

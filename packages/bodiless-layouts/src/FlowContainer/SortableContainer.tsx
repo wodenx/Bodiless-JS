@@ -15,7 +15,9 @@
 import React, { ComponentType, HTMLProps } from 'react';
 import { observer } from 'mobx-react-lite';
 import { SortableContainer, SortEndHandler } from 'react-sortable-hoc';
-import { useContextActivator, useEditContext, withLocalContextMenu, withContextActivator } from '@bodiless/core';
+import {
+  useContextActivator, useEditContext, withLocalContextMenu, withContextActivator,
+} from '@bodiless/core';
 import { flow } from 'lodash';
 
 type FinalUI = {
@@ -36,7 +38,6 @@ const defaultUI: FinalUI = {
 };
 
 const getUI = (ui: UI = {}) => ({ ...defaultUI, ...ui });
-
 
 const FlowContainerEmpty$ = (ui: UI) => {
   const { FlowContainerEmptyWrapper } = getUI(ui);

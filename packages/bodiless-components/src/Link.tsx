@@ -36,6 +36,7 @@ const options: BodilessOptions<Props, Data> = {
   icon: 'link',
   name: 'Link',
   label: 'Link',
+  groupMerge: 'merge',
   renderForm: ({ componentProps: { unwrap }, closeForm }) => {
     const {
       ComponentFormTitle,

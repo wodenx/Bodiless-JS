@@ -251,30 +251,115 @@ describe('Ordered options', () => {
     expect(options.filter(o => o.Component === 'group')).toHaveLength(1);
   });
 
-  it.only('Orders named and default groups properly', () => {
+  it('Orders default groups properly', () => {
     const local = true;
-    const context = new PageEditContext({ name: 'C1', id: v1() });
+    const outer = new PageEditContext({ name: 'Outer', id: v1() });
+    const inner = new PageEditContext({ name: 'Inner', id: v1() });
+    const initialOptions: TMenuOption[] = [
+      { name: 'outer', context: outer, local },
+      { name: 'inner', context: inner, local },
+    ];
+    setMockOptions(initialOptions);
+    const options = getRenderedOptions();
+    const groups = options.filter(o => o.Component === 'group');
+    expect(groups[0].label).toBe('Inner');
+    expect(groups[1].label).toBe('Outer');
+  });
+
+  it('Orders custom groups from different contexts correctly', () => {
+    const local = true;
+    const outer = new PageEditContext({ name: 'Outer', id: v1() });
+    const inner = new PageEditContext({ name: 'Inner', id: v1() });
     const initialOptions: TMenuOption[] = [
       {
-        name: 'first', context, local, Component: 'group',
-      },
-      { name: 'b', context, local },
-      {
-        name: 'last', context, local, Component: 'group',
+        name: 'outer', context: outer, local, Component: 'group',
       },
       {
-        name: 'c', context, local, group: 'last',
+        name: 'o1', context: outer, local, group: 'outer',
       },
       {
-        name: 'a', context, local, group: 'first',
+        name: 'inner', context: inner, local, Component: 'group',
+      },
+      {
+        name: 'i1', context: inner, local, group: 'inner',
       },
     ];
     setMockOptions(initialOptions);
     const options = getRenderedOptions();
     const groups = options.filter(o => o.Component === 'group');
-    expect(groups[0].name).toBe('first');
-    expect(groups[1].label).toBe('C1');
-    expect(groups[2].name).toBe('last');
+    expect(groups).toHaveLength(2);
+    expect(groups[0].name).toBe('inner');
+    expect(groups[1].name).toBe('outer');
   });
 
+  it('Orders custom groups from the same context correctly', () => {
+    const local = true;
+    const context = new PageEditContext({ name: 'Middle', id: v1() });
+    const initialOptions: TMenuOption[] = [
+      {
+        name: 'first', label: 'First', context, local, Component: 'group',
+      },
+      { name: 'i1', context, local },
+      {
+        name: 'last', label: 'Last', context, local, Component: 'group',
+      },
+      {
+        name: 'i2', context, local, group: 'last',
+      },
+      {
+        name: 'i3', context, local, group: 'first',
+      },
+    ];
+    setMockOptions(initialOptions);
+    const options = getRenderedOptions();
+    const groups = options.filter(o => o.Component === 'group');
+    expect(groups).toHaveLength(3);
+    expect(groups[0].label).toBe('First');
+    expect(groups[1].label).toBe('Middle');
+    expect(groups[2].label).toBe('Last');
+  });
+
+  it('Merges groups when specified', () => {
+    const local = true;
+    const outer = new PageEditContext({ name: 'Outer', id: v1() });
+    const inner = new PageEditContext({ name: 'Inner', id: v1() }, outer);
+    const initialOptions: TMenuOption[] = [
+      { name: 'o1', context: outer, local },
+      {
+        name: 'o2', context: outer, local, group: 'merge',
+      },
+      { name: 'o3', context: outer, local },
+      { name: 'merge', groupMerge: 'merge', local },
+      { name: 'i1', context: inner, local },
+    ];
+    setMockOptions(initialOptions);
+    const options = getRenderedOptions();
+    expect(options.find(o => o.name === 'o1')!.group).toBe(outer.id);
+    expect(options.find(o => o.name === 'o2')!.group).toBe(inner.id);
+    expect(options.find(o => o.name === 'o3')!.group).toBe(outer.id);
+    expect(options.find(o => o.name === 'merge'))!.toBeUndefined();
+    expect(options.find(o => o.name === 'i1')!.group).toBe(inner.id);
+    expect(options.find(o => o.name === outer.id))!.toBeDefined();
+    expect(options.find(o => o.name === inner.id))!.toBeDefined();
+  });
+
+  it('Does not delete a merge group if it is innermost', () => {
+    const local = true;
+    const outer = new PageEditContext({ name: 'Outer', id: v1() });
+    const initialOptions: TMenuOption[] = [
+      { name: 'o1', context: outer, local },
+      {
+        name: 'o2', context: outer, local, group: 'merge',
+      },
+      { name: 'o3', context: outer, local },
+      { name: 'merge', groupMerge: 'merge', local },
+    ];
+    setMockOptions(initialOptions);
+    const options = getRenderedOptions();
+    expect(options.find(o => o.name === 'o1')!.group).toBe(outer.id);
+    expect(options.find(o => o.name === 'o2')!.group).toBe('merge');
+    expect(options.find(o => o.name === 'o3')!.group).toBe(outer.id);
+    expect(options.find(o => o.name === 'merge'))!.toBeDefined();
+    expect(options.find(o => o.name === outer.id))!.toBeDefined();
+  });
 });

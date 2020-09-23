@@ -35,5 +35,13 @@ export type EditButtonProps<D> = {
 };
 
 export type EditButtonOptions<P, D> = Omit<TMenuOption, 'handler'> & {
+  /**
+   * Callback to render the body of the edit form.
+   */
   renderForm: FormBodyRenderer<P, D>,
+  /**
+   * Optional label for the context menu group to which the button will belong.
+   * If omitted, will use the button label.
+   */
+  groupLabel?: string,
 } & EditDataHandler<D>;
