@@ -26,8 +26,15 @@ import asTaggableItem from './Taggable/asTaggableItem';
 import withListTitle from './List/withListTitle';
 import asEditableList from './List/asEditableList';
 import asBasicSublist from './List/asBasicSublist';
+import asBodilessList, {
+  asSubList, asTitledItem, withSubListDesign as withSimpleSubListDesign,
+} from './List/asBodilessList';
 import withSublist, { withBasicSublist } from './List/withSublist';
 import withDeleteSublistOnUnwrap from './List/withDeleteSublistOnUnwrap';
+import asChamelionSubList, {
+  withSubLists,
+  withSubListDesign,
+} from './List/asChamelionSubList';
 import {
   withMeta, withMetaStatic, withMetaHtml, withTitle,
 } from './Meta/Meta';
@@ -49,8 +56,11 @@ import {
   ifViewportIs,
   ifViewportIsNot,
 } from './withResponsiveToggle';
+import asBreadcrumb, { useBreadcrumbContext } from './asBreadcrumb';
+import withBodilessLinkToggle from './withBodilessLinkToggle';
 
 export {
+  withBodilessLinkToggle,
   asBodilessLink,
   Image,
   asBodilessImage,
@@ -60,6 +70,13 @@ export {
   NodeViewer,
   withLinkToggle,
   List,
+  asBodilessList,
+  withSimpleSubListDesign,
+  asChamelionSubList,
+  withSubLists,
+  withSubListDesign,
+  asTitledItem,
+  asSubList,
   asEditableList,
   asBasicSublist,
   asTestableList,
@@ -94,7 +111,11 @@ export {
   ifViewportIsNot,
   withMetaForm,
   withMetaSnippet,
+  asBreadcrumb,
+  useBreadcrumbContext,
 };
+
+export * from './Chamelion/index';
 
 export type {
   FinalProps as ListProps,

@@ -13,7 +13,9 @@
  */
 
 import React, { FC, createContext, useContext } from 'react';
-import { Text, TextArea } from 'informed';
+import {
+  Text, TextArea, Radio, RadioGroup, Checkbox, Option, Select,
+} from 'informed';
 import ReactTooltip from 'rc-tooltip';
 import { omit } from 'lodash';
 import ReactTagsField from './ReactTagsField';
@@ -28,7 +30,11 @@ type ContextUIType = {
   ui?: ContextMenuUI;
 };
 
-const defaultUI = {
+const DefaultToolbarButton = (props: any) => (
+  <div {...omit(props, 'isActive', 'isDisabled', 'isFirst')} />
+);
+
+const defaultUI: Required<ContextMenuUI> = {
   Icon: (props: any) => <i {...omit(props, 'isActive')} />,
   ComponentFormTitle: 'h3',
   ComponentFormLabel: 'label',
@@ -47,8 +53,8 @@ const defaultUI = {
   ComponentFormListItem: 'li',
   ComponentFormDescription: 'div',
   ContextSubMenu: React.Fragment,
-  ToolbarButton: (props: any) => <div {...omit(props, 'isActive', 'isDisabled', 'isFirst')} />,
-  ToolbarButtonLabel: 'span',
+  HorizontalToolbarButton: DefaultToolbarButton,
+  ToolbarButton: DefaultToolbarButton,
   FormWrapper: 'div',
   ToolbarDivider: 'div',
   Tooltip: ReactTooltip,
@@ -56,6 +62,14 @@ const defaultUI = {
   ContextMenuGroup: ({ children, key }: any) => (
     <React.Fragment key={key}>{children}</React.Fragment>
   ),
+  ToolbarButtonLabel: 'span',
+  ComponentFormRadio: Radio,
+  ComponentFormRadioGroup: RadioGroup,
+  ComponentFormCheckBox: Checkbox,
+  ComponentFormFieldTitle: 'title',
+  ComponentFormOption: Option,
+  ComponentFormSelect: Select,
+  ComponentFormFieldWrapper: 'div',
 };
 
 const getUI = (ui: ContextMenuUI = {}) => ({

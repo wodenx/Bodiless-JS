@@ -14,9 +14,10 @@
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
-  intersection, flowRight, flow, mergeWith, omit,
+  intersection, flowRight, flow, mergeWith, identity,
 } from 'lodash';
 import React, { ComponentType, Fragment, useContext } from 'react';
+import { HOC } from './FClasses';
 
 export type DesignElement<P> = (c: ComponentType<P> | string) => ComponentType<P>;
 
@@ -67,9 +68,13 @@ export type FluidDesign = Design<DesignableComponents>;
  * ```
  * @param Tag A valid HTML element.
  */
-export const asComponent = <P extends object>(Tag: keyof JSX.IntrinsicElements) => (
-  (props: P) => <Tag {...props} />
-);
+export const asComponent = <P extends object>(
+  Tag: ComponentType<P> | (keyof JSX.IntrinsicElements),
+) => {
+  if (typeof Tag !== 'string') return Tag;
+  const AsComponent = (props: P) => <Tag {...props} />;
+  return AsComponent;
+};
 
 /**
  * is an HOC that will attach a displayName to an object
@@ -157,7 +162,9 @@ export const withDesign = <C extends DesignableComponents>(design: Design<C>) =>
   }
 );
 
-export const replaceWith = <P extends object>(Component: ComponentType<P>) => () => Component;
+export const replaceWith = <P extends object>(Component: ComponentType<P>) => (
+  (() => Component) as HOC
+);
 export const remove = <P extends React.HTMLAttributes<HTMLBaseElement>> () => (props:P) => {
   const { children } = props;
   return <>{children}</>;
@@ -205,18 +212,51 @@ export const withTransformer = <P, Q, X extends Object> (funcs: WithTransformerP
   }
 );
 
-export const designable = <C extends DesignableComponents> (start: C | Function) => (
-  <P extends object>(Component: ComponentType<P & DesignableComponentsProps<C>>) => {
-    const transformFixed = (props:DesignableProps<C> & P) => {
-      const { design } = props;
-      const apply = typeof start === 'function' ? start : applyDesign(start);
-      return { components: apply(design) } as DesignableComponentsProps<C>;
-    };
-    const transformPassthrough = (props:DesignableProps<C> & P) => omit(props, ['design']) as P;
-    const Designable = withTransformer({ transformFixed, transformPassthrough })(Component);
-    return Designable as ComponentType<DesignableProps<C> & P>;
-  }
+type TransformDesign = (design?: Design<any>) => Design<any>|undefined;
+
+/**
+ * May be used to extend the design specification of an underlying designable component.
+ * This allows you to add constituent sub-components to the design, and pass the original
+ * design on to the underlying component.
+ *
+ * @param transformDesign An optional transformer function which can be used to alter the
+ *   design of the original component (for example to remove irrelevant entries).  If this
+ *   function returns `undefined`, the design will be removed from the underlying component.
+ *
+ * @return A function with the same signature as `designable`.
+ */
+export const extendDesignable = (transformDesign: TransformDesign = identity) => (
+  <C extends DesignableComponents> (start: C | Function) => (
+    <P extends object>(Component: ComponentType<P & DesignableComponentsProps<C>>) => {
+      const transformFixed = (props:DesignableProps<C> & P) => {
+        const { design } = props;
+        const apply = typeof start === 'function' ? start : applyDesign(start);
+        return { components: apply(design) } as DesignableComponentsProps<C>;
+      };
+      const transformPassthrough = (props:DesignableProps<C> & P) => {
+        const { design, ...rest } = props;
+        const newDesign = transformDesign(design);
+        return (newDesign ? { ...rest, design: newDesign } : rest) as P;
+      };
+      // const transformPassthrough = (props:DesignableProps<C>&P) => omit(props, ['design']) as P;
+      const Designable = withTransformer({ transformFixed, transformPassthrough })(Component);
+      return Designable as ComponentType<DesignableProps<C> & P>;
+    }
+  )
 );
+
+/**
+ * Makes a component "designable". A designable component defines a set of constituent
+ * sub-components which can be modified by applying one or more HOC's.  You specify the
+ * HOC's to apply to each sub-component via the `withDesign` HOC.
+ *
+ * @param startComponents An object defining the set of constituent subcomponents. Each key
+ *   is a string which identifies the component. Each value is the component itself, which
+ *   will be modified by any HOC's provided by withDesign.
+ *
+ * @return An HOC which yields a designable version of the component to which it is applied.
+ */
+export const designable = extendDesignable(() => undefined);
 
 const varyDesign$ = <C extends DesignableComponents> (design:Design<C>):HOD<C> => (
   (baseDesign:Design<C> = {}) => (

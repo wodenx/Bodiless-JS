@@ -32,6 +32,7 @@ import {
   startWith,
   remove,
   designable,
+  extendDesignable,
   varyDesign,
   extendDesign,
 } from './Design';
@@ -60,6 +61,7 @@ export {
   hasProp,
   withoutProps,
   designable,
+  extendDesignable,
   varyDesign,
   extendDesign,
   asComponent,

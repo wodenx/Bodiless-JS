@@ -20,6 +20,7 @@ import {
   asEditableMainMenu,
   asEditableMainSubMenu,
   withSubmenu,
+  withMenuLinkTitle,
 } from '@bodiless/organisms';
 import { withEditorSimple } from '../Editors';
 import { asExceptMobile } from '../Elements.token';
@@ -27,13 +28,15 @@ import { asExceptMobile } from '../Elements.token';
 import { withMenuListStyles, withMenuSublistStyles } from './token';
 
 const MenuSubList = flow(
-  asEditableMainSubMenu(withEditorSimple),
+  asEditableMainSubMenu,
+  withMenuLinkTitle(withEditorSimple),
   asHorizontalSubMenu,
   withMenuSublistStyles,
 )(List);
 
 const MenuList = flow(
-  asEditableMainMenu(withEditorSimple),
+  asEditableMainMenu,
+  withMenuLinkTitle(withEditorSimple),
   asHorizontalMenu,
   withMenuListStyles,
   asExceptMobile,

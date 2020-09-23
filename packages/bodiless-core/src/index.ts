@@ -34,6 +34,7 @@ import withEditFormSnippet from './withEditFormSnippet';
 import withData from './withData';
 import NodeProvider, { useNode, useNodeDataHandlers } from './NodeProvider';
 import { DefaultContentNode } from './ContentNode';
+import type { ContentNode } from './ContentNode';
 import {
   withNodeAndHandlers,
   withNodeDataHandlers,
@@ -65,7 +66,7 @@ import {
 } from './NotificationProvider';
 import withNotificationButton from './withNotificationButton';
 import withChild from './withChild';
-import asBodilessComponent, { withActivatorWrapper } from './asBodilessComponent';
+import asBodilessComponent, { withActivatorWrapper, withBodilessData } from './asBodilessComponent';
 import type { Options as BodilessOptions, AsBodiless } from './asBodilessComponent';
 import { useMenuOptionUI } from './components/ContextMenuContext';
 import ContextSubMenu from './ContextMenu/ContextSubMenu';
@@ -75,6 +76,7 @@ import OnNodeErrorNotification from './OnNodeErrorNotification';
 export * from './components';
 export {
   asBodilessComponent,
+  withBodilessData,
   asStatic,
   asReadOnly,
   withContextActivator,
@@ -136,6 +138,7 @@ export {
 };
 
 export type {
+  ContentNode,
   BodilessOptions,
   PageEditContextInterface,
   TMenuOption,

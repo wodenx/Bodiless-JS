@@ -24,7 +24,7 @@ import { ifReadOnly, ifEditable } from './withEditToggle';
 import withEditButton from './withEditButton';
 import withData from './withData';
 import type { WithNodeProps, WithNodeKeyProps } from './Types/NodeTypes';
-import type { EditButtonOptions } from './Types/EditButtonTypes';
+import type { EditButtonOptions, EditButtonProps } from './Types/EditButtonTypes';
 import { useContextActivator } from './hooks';
 
 /**
@@ -52,7 +52,7 @@ type BodilessProps = Partial<WithNodeProps>;
 type AsBodiless<P, D> = (
   nodeKeys?: WithNodeKeyProps,
   defaultData?: D,
-  useOverrides?: ((props: P) => Partial<EditButtonOptions<P, D>>),
+  useOverrides?: ((props: P & EditButtonProps<D>) => Partial<EditButtonOptions<P, D>>),
 ) => HOC<P, P & BodilessProps>;
 
 /**
@@ -74,6 +74,22 @@ export const withActivatorWrapper = <P extends object>(event: string, Wrapper: C
     );
   }
 );
+
+/**
+ * Convenience HOC to plug a component into the bodiless data model.
+ *
+ * @param nodeKeys The nodekeys which will be used to locate the component's data.
+ *
+ * @param defaultData Default data to be provided for this component.
+ */
+const withBodilessData = <P extends object, D extends object>(
+  nodeKey?: WithNodeKeyProps,
+  defaultData?: D,
+) => flowRight(
+    withNodeKey(nodeKey),
+    withNode,
+    withNodeDataHandlers(defaultData),
+  );
 
 /**
  * Makes a component "Bodiless" by connecting it to the Bodiless-jS data flow and giving it
@@ -100,19 +116,17 @@ const asBodilessComponent = <P extends object, D extends object>(options: Option
   (
     nodeKeys?,
     defaultData = {} as D,
-    useOverrides?: (props: P) => Partial<EditButtonOptions<P, D>>,
+    useOverrides?: (props: P & EditButtonProps<D>) => Partial<EditButtonOptions<P, D>>,
   ) => {
     const {
       activateEvent = 'onClick', Wrapper, defaultData: defaultDataOption = {}, ...rest
     } = options;
     const editButtonOptions = useOverrides
-      ? (props: P) => ({ ...rest, ...useOverrides(props) })
+      ? (props: P & EditButtonProps<D>) => ({ ...rest, ...useOverrides(props) })
       : rest;
     const finalData = { ...defaultDataOption, ...defaultData };
     return flowRight(
-      withNodeKey(nodeKeys),
-      withNode,
-      withNodeDataHandlers(finalData),
+      withBodilessData(nodeKeys, finalData),
       ifReadOnly(
         withoutProps(['setComponentData']),
       ),
@@ -128,4 +142,5 @@ const asBodilessComponent = <P extends object, D extends object>(options: Option
 );
 
 export default asBodilessComponent;
+export { withBodilessData };
 export type { AsBodiless };

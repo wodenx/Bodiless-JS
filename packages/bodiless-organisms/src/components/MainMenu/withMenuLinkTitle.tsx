@@ -11,31 +11,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { flow } from 'lodash';
-import { withDesign, HOC } from '@bodiless/fclasses';
-import { asBodilessLink, withLinkToggle } from '@bodiless/components';
-import {
-  withNode, withNodeKey, withoutProps, withExtendHandler,
-} from '@bodiless/core';
+import { withDesign } from '@bodiless/fclasses';
 import AsEditable from './types/AsEditable';
-
-function stopPropagation(e: MouseEvent) {
-  e.stopPropagation();
-}
+import asMenuLink from './asMenuLink';
 
 /**
  * HOC, that injects editable link toggle component into component design (usually Menu or Submenu)
  */
-const withEditableTitle = (editable: AsEditable) => withDesign({
-  Title: flow(
-    asBodilessLink('title-link'),
-    withLinkToggle,
-    withExtendHandler('onClick', () => stopPropagation),
-    withNode,
-    withNodeKey('title'),
-    editable('text', 'Menu Item'),
-    withoutProps(['design']),
-  ) as HOC,
+const withMenuLinkTitle = (editable: AsEditable) => withDesign({
+  Title: asMenuLink(editable),
 });
 
-export default withEditableTitle;
+export default withMenuLinkTitle;

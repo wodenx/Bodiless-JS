@@ -44,13 +44,15 @@ describe('PageEditor', () => {
   });
 
   it('updates its menu option status when toggling', () => {
-    const wrapper = mount(<PageEditor />);
-    expect(wrapper.find('div[aria-label="Edit"]').prop('isActive')).toBeFalsy();
-    wrapper.find('div[aria-label="Edit"]').simulate('click');
-    const button = wrapper.findWhere(
-      n => (n.name() === 'ToolbarButton' && n.prop('aria-label') === 'Edit'),
+    const buttonFinder = (n: any) => (
+      n.name() === 'DefaultToolbarButton' && n.prop('aria-label') === 'Edit'
     );
-    expect(button.prop('isActive')).toBeTruthy();
+    const wrapper = mount(<PageEditor />);
+    const button = wrapper.findWhere(buttonFinder);
+    expect(button.prop('isActive')).toBeFalsy();
+    wrapper.find('div[aria-label="Edit"]').simulate('click');
+    const button$ = wrapper.findWhere(buttonFinder);
+    expect(button$.prop('isActive')).toBeTruthy();
   });
 
   it('Does not re-render a child context subscriber when edit mode toggles', () => {
