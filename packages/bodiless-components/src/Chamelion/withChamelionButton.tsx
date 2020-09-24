@@ -14,15 +14,16 @@
 
 import React, { ComponentType } from 'react';
 import {
-  withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator, withLocalContextMenu, TMenuOption,
+  withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator,
+  withLocalContextMenu, TMenuOption,
 } from '@bodiless/core';
 
 import { flowRight, pick } from 'lodash';
+import { v1 } from 'uuid';
 import {
   ChamelionButtonProps, ChamelionData, UseOverrides,
 } from './types';
 import { useChamelionContext, DEFAULT_KEY } from './withChamelionContext';
-import { v1 } from 'uuid';
 
 const useToggleButtonMenuOption = () => {
   const {
@@ -105,7 +106,7 @@ const withChamelionButton = <P extends object>(useOverrides?: UseOverrides<P>) =
     const id = v1();
     const baseDefinition = {
       name: `chamelion-${id}`,
-      group: `chamelion-${id}-group`, 
+      group: `chamelion-${id}-group`,
       global: false,
       local: true,
       ...extMenuOptions(),
