@@ -113,12 +113,12 @@ const withChamelionButton = <P extends object>(useOverrides?: UseOverrides<P>) =
     const overrides = useOverrides ? useOverrides(props) : {};
     // if useOverrides returns undefined, it means not to provide the button.
     if (overrides === undefined) return [];
-    const { groupLabel, ...rest } = overrides;
-    const menuOption:TMenuOption = { ...baseDefinition, ...rest };
+    const { groupLabel, groupMerge, ...menuOption } = { ...baseDefinition, ...overrides };
     const menuGroup:TMenuOption = {
       name: menuOption.group!,
       label: groupLabel || menuOption.label,
       Component: 'group',
+      groupMerge,
       ...pick(menuOption, 'local', 'global', 'isHidden'),
     };
     return [menuOption, menuGroup];

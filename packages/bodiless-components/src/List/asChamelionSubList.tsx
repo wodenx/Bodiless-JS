@@ -3,12 +3,17 @@ import { identity, flow } from 'lodash';
 import { withDesign, HOC, Design } from '@bodiless/fclasses';
 import { useChamelionContext, asBodilessChamelion } from '../Chamelion';
 
+const MERGE = true;
+
 const useChamelionOverrides = () => {
   const { isOn } = useChamelionContext();
   return {
-    icon: isOn ? 'repeat' : 'playlist_add',
-    label: isOn ? 'Swap' : 'Add',
+    // eslint-disable-next-line no-nested-ternary
+    icon: isOn ? (MERGE ? 'list' : 'repeat') : 'playlist_add',
     groupLabel: 'Sublist',
+    // eslint-disable-next-line no-nested-ternary
+    label: MERGE ? 'Sub' : (isOn ? 'Swap' : 'Add'),
+    groupMerge: MERGE ? 'merge' : 'none',
   };
 };
 
@@ -17,8 +22,9 @@ const useToggleOverrides = () => {
   return {
     isHidden: isOn,
     icon: 'playlist_add',
-    label: 'Add',
     groupLabel: 'Sublist',
+    label: MERGE ? 'Sub' : 'Add',
+    groupMerge: MERGE ? 'merge' : 'none',
   };
 };
 
