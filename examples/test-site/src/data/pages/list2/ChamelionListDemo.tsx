@@ -56,11 +56,15 @@ const asListDemo = (nodeKeys?: WithNodeKeyProps) => flow(
 const asBulletedList = withDesign({ Item: addClasses('list-disc') });
 const asNumberedList = withDesign({ Item: addClasses('list-decimal') });
 
+const mainListOverrides = () => ({
+  groupLabel: 'List Type',
+});
+
 const ListDemo = flow(
   asListDemo(),
   withDemoSubListDesign(withLinkTitle),
   withLinkTitle,
-  asBodilessChamelion('cham-list', { component: 'Bulleted' }),
+  asBodilessChamelion('cham-list', { component: 'Bulleted' }, mainListOverrides),
   withDesign({
     Bulleted: asBulletedList,
     Numbered: asNumberedList,

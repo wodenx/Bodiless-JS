@@ -65,7 +65,7 @@ const asEditableList = (List: ComponentType<FinalProps>) => (
         withoutProps(['onAdd', 'onDelete', 'canDelete']),
         ItemMenuOptionsProvider || identity,
         ifEditable(
-          withMenuOptions({ useMenuOptions, name: 'list-item' }),
+          withMenuOptions({ useMenuOptions, name: 'List Item' }),
         ),
       ),
     };

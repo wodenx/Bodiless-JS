@@ -14,14 +14,15 @@
 
 import React, { ComponentType } from 'react';
 import {
-  withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator, withLocalContextMenu,
+  withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator, withLocalContextMenu, TMenuOption,
 } from '@bodiless/core';
 
-import { flowRight } from 'lodash';
+import { flowRight, pick } from 'lodash';
 import {
   ChamelionButtonProps, ChamelionData, UseOverrides,
 } from './types';
 import { useChamelionContext, DEFAULT_KEY } from './withChamelionContext';
+import { v1 } from 'uuid';
 
 const useToggleButtonMenuOption = () => {
   const {
@@ -101,15 +102,26 @@ const withChamelionButton = <P extends object>(useOverrides?: UseOverrides<P>) =
     const extMenuOptions = Object.keys(selectableComponents).length > 1
       ? useSwapButtonMenuOption
       : useToggleButtonMenuOption;
+    const id = v1();
     const baseDefinition = {
-      name: 'chamelion-toggle',
+      name: `chamelion-${id}`,
+      group: `chamelion-${id}-group`, 
       global: false,
       local: true,
       ...extMenuOptions(),
     };
     const overrides = useOverrides ? useOverrides(props) : {};
     // if useOverrides returns undefined, it means not to provide the button.
-    return typeof overrides !== 'undefined' ? [{ ...baseDefinition, ...overrides }] : [];
+    if (overrides === undefined) return [];
+    const { groupLabel, ...rest } = overrides;
+    const menuOption:TMenuOption = { ...baseDefinition, ...rest };
+    const menuGroup:TMenuOption = {
+      name: menuOption.group!,
+      label: groupLabel || menuOption.label,
+      Component: 'group',
+      ...pick(menuOption, 'local', 'global', 'isHidden'),
+    };
+    return [menuOption, menuGroup];
   };
   return flowRight(
     withMenuOptions({ useMenuOptions, name: 'Chamelion' }),

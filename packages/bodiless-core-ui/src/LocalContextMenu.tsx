@@ -14,7 +14,7 @@
 
 import React, { FC } from 'react';
 import ReactTooltip from 'rc-tooltip';
-import { flow } from 'lodash';
+import { flow, identity } from 'lodash';
 import { addClasses, addProps, removeClasses } from '@bodiless/fclasses';
 import {
   ContextMenu, ContextMenuProps, ContextMenuUI, IContextMenuItemProps,
@@ -29,10 +29,11 @@ import {
 } from '@bodiless/ui';
 import ReactTagsField from './ReactTags';
 
+const HORIZONTAL = false;
+
 // For accessibility attributes, see https://www.w3.org/TR/wai-aria-practices/examples/toolbar/toolbar.html
 const Toolbar = flow(
-  // addClasses('bl-flex'),
-  addClasses(''),
+  HORIZONTAL ? addClasses('bl-flex') : identity,
   addProps({ role: 'toolbar', 'aria-label': 'Local Context Menu' }),
 )(Div);
 
@@ -47,13 +48,16 @@ const GroupTitle = flow(
   removeClasses('bl-mb-grid-2'),
 )(ComponentFormTitle);
 
-const ContextMenuGroup: FC<IContextMenuItemProps> = ({ option, children }) => {
+const ContextMenuGroup: FC<IContextMenuItemProps> = ({ option, children, ...rest }) => {
   const hidden: boolean = Boolean(option && (
     typeof option.isHidden === 'function' ? option.isHidden() : option.isHidden
   ));
+  const classes = HORIZONTAL
+    ? 'bl-border-l first:bl-border-l-0 bl-border-white bl-ml-5 bl-pl-5 first:bl-ml-0 last:bl-mr-5'
+    : 'bl-border-t first:bl-border-t-0 bl-border-white bl-mt-2 bl-pt-2 first:bl-mt-0 last:bl-mb-2';
   if (hidden) return null;
   return (
-    <div className="bl-border-t first:bl-border-t-0 bl-border-white bl-mt-grid-2 first:bl-mt-grid-0">
+    <div {...rest} className={classes}>
       {option && option.label && (
         <GroupTitle>{option.label}</GroupTitle>
       )}

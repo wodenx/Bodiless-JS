@@ -7,8 +7,8 @@ const useChamelionOverrides = () => {
   const { isOn } = useChamelionContext();
   return {
     icon: isOn ? 'repeat' : 'playlist_add',
-    label: 'Sub',
-    name: `chamelion-sublist-${v1()}`,
+    label: isOn ? 'Swap' : 'Add',
+    groupLabel: 'Sublist',
   };
 };
 
@@ -17,8 +17,8 @@ const useToggleOverrides = () => {
   return {
     isHidden: isOn,
     icon: 'playlist_add',
-    label: 'Sub',
-    name: `chamelion-sublist-${v1()}`,
+    label: 'Add',
+    groupLabel: 'Sublist',
   };
 };
 
