@@ -129,12 +129,12 @@ export const useClickOutside = (
   }, []);
 
   useEffect(() => {
-    document.addEventListener('click', clickListener);
-    document.addEventListener('keyup', escapeListener);
+    document.body.addEventListener('click', clickListener);
+    document.body.addEventListener('keyup', escapeListener);
 
     return () => {
-      document.removeEventListener('click', clickListener);
-      document.removeEventListener('keyup', escapeListener);
+      document.body.removeEventListener('click', clickListener);
+      document.body.removeEventListener('keyup', escapeListener);
     };
   });
 };

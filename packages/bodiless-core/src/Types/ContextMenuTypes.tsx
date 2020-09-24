@@ -29,6 +29,7 @@ export type TMenuOption = {
   isActive?: (() => boolean) | boolean;
   isDisabled?: (() => boolean) | boolean;
   isHidden?: (() => boolean) | boolean;
+  activateContext?: (() => boolean) | boolean;
   handler?: (event: React.MouseEvent) => any;
   local?: boolean;
   global?: boolean;
