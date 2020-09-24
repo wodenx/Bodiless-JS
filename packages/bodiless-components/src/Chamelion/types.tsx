@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import type { TMenuOption, EditButtonProps, EditButtonOptions } from '@bodiless/core';
+import type { EditButtonProps, EditButtonOptions } from '@bodiless/core';
 import {
   DesignableComponentsProps,
   DesignableComponents,

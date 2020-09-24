@@ -1,11 +1,11 @@
-import { v1 } from 'uuid';
 import { identity, flow } from 'lodash';
 import { withDesign, HOC, Design } from '@bodiless/fclasses';
 import { useChamelionContext, asBodilessChamelion } from '../Chamelion';
+import { UseOverrides } from '../Chamelion/types';
 
 const MERGE = true;
 
-const useChamelionOverrides = () => {
+const useChamelionOverrides: UseOverrides = () => {
   const { isOn } = useChamelionContext();
   return {
     // eslint-disable-next-line no-nested-ternary
@@ -17,7 +17,7 @@ const useChamelionOverrides = () => {
   };
 };
 
-const useToggleOverrides = () => {
+const useToggleOverrides: UseOverrides = () => {
   const { isOn } = useChamelionContext();
   return {
     isHidden: isOn,
@@ -28,11 +28,11 @@ const useToggleOverrides = () => {
   };
 };
 
-const useOverrides = () => {
+const useOverrides: UseOverrides = (props: any) => {
   const { selectableComponents } = useChamelionContext();
   return Object.keys(selectableComponents).length > 1
-    ? useChamelionOverrides()
-    : useToggleOverrides();
+    ? useChamelionOverrides(props)
+    : useToggleOverrides(props);
 };
 
 const asChamelionSubList = asBodilessChamelion('cham-sublist', {}, useOverrides);
