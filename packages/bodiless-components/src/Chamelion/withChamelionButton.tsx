@@ -15,6 +15,7 @@
 import React, { ComponentType } from 'react';
 import {
   withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator, withLocalContextMenu,
+  MenuOptionsDefinition,
 } from '@bodiless/core';
 
 import { flowRight } from 'lodash';
@@ -95,7 +96,10 @@ export const withUnwrap = <P extends object>(Component: ComponentType<P>) => {
  *
  * @return HOC which adds the menu button.
  */
-const withChamelionButton = <P extends object>(useOverrides?: UseOverrides<P>) => {
+const withChamelionButton = <P extends object>(
+  useOverrides?: UseOverrides<P>,
+  contextProps?: Partial<MenuOptionsDefinition<P>>,
+) => {
   const useMenuOptions = (props: P) => {
     const { selectableComponents } = useChamelionContext();
     const extMenuOptions = Object.keys(selectableComponents).length > 1
@@ -112,7 +116,7 @@ const withChamelionButton = <P extends object>(useOverrides?: UseOverrides<P>) =
     return typeof overrides !== 'undefined' ? [{ ...baseDefinition, ...overrides }] : [];
   };
   return flowRight(
-    withMenuOptions({ useMenuOptions, name: 'Chamelion' }),
+    withMenuOptions({ useMenuOptions, name: 'Chamelion', ...contextProps }),
     withContextActivator('onClick'),
     withLocalContextMenu,
     withUnwrap,

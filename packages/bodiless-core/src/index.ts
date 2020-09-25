@@ -49,7 +49,7 @@ import { ifEditable, ifReadOnly, useEditToggle } from './withEditToggle';
 import type { ContextMenuFormProps, IContextMenuItemProps, TMenuOption } from './Types/ContextMenuTypes';
 import type { PageEditContextInterface } from './PageEditContext/types';
 import type { EditButtonOptions, EditButtonProps } from './Types/EditButtonTypes';
-import type { TMenuOptionGetter } from './Types/PageContextProviderTypes';
+import type { TMenuOptionGetter, MenuOptionsDefinition } from './Types/PageContextProviderTypes';
 import type { WithNodeProps, WithNodeKeyProps } from './Types/NodeTypes';
 import type { TOverlaySettings } from './Types/PageOverlayTypes';
 import type { Snippet as FormSnippet } from './withCompoundForm';
@@ -152,6 +152,7 @@ export type {
   IContextMenuItemProps,
   AsBodiless,
   FormSnippet,
+  MenuOptionsDefinition,
 };
 
 export type Bodiless<P, Q> = (C: ComponentType<P> | string) => ComponentType<Q>;
