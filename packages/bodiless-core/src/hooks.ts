@@ -123,6 +123,8 @@ export const useClickOutside = (
   }, []);
 
   const clickListener = useCallback((e: MouseEvent) => {
+    // Prevent click outside when page loading overlay is active
+    if (e.target instanceof Element && e.target.id === 'page-overlay') return;
     if (ref.current && !ref.current.contains(e.target)) {
       callback(e);
     }
