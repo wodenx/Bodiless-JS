@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`asChamelionSubList works 1`] = `
+<ul>
+  <li>
+    <span>
+      Top
+    </span>
+    <ul>
+      <li
+        class="list-disc ml-5"
+      >
+        <span>
+          Bulleted
+        </span>
+        <ul>
+          <li
+            class="list-decimal ml-5"
+          >
+            <span>
+              Numbered
+            </span>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+`;

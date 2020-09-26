@@ -22,7 +22,7 @@ export {
   SingleAccordion,
   SingleAccordionClean,
   asSingleAccordion,
-  asTestableAccordion,
+  asTestableSingleAccordion,
 } from './components/SingleAccordion';
 
 export {
@@ -33,9 +33,10 @@ export {
   asHorizontalSubMenu,
   asMainMenu,
   asMainSubMenu,
-  asMenu,
+  asStylableList,
   MenuLink,
   withSubmenu,
+  withMenuLinkTitle,
 } from './components/MainMenu/index';
 
 export {
@@ -77,10 +78,15 @@ export {
 };
 
 export {
+  AccordionClean,
   useAccordionContext,
   asAccordionWrapper,
   asAccodionTitle,
   asAccordionBody,
+  asTestableAccordion,
+  isAccordionExpanded,
+  isAccordionContracted,
+  withDisableExpandOnClick,
 } from './components/Accordion';
 
 export {
@@ -89,3 +95,5 @@ export {
   BCarouselClean,
   asEditableCarousel,
 } from './components/Carousel';
+
+export * from './components/Menu';
