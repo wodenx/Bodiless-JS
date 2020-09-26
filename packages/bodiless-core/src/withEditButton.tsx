@@ -128,7 +128,7 @@ const withEditButton = <P extends object, D extends object>(
 ) => flowRight(
     withMenuOptions({
       useMenuOptions: createMenuOptionHook(options),
-      name: 'Edit Button',
+      name: 'Edit',
     }),
     withoutProps(['setComponentData', 'isActive']),
   );

@@ -21,6 +21,7 @@ import { observer } from 'mobx-react-lite';
 import withEditButton from '../src/withEditButton';
 import { useEditContext } from '../src/hooks';
 import ContextMenuItem from '../src/components/ContextMenuItem';
+import { TMenuOption, EditButtonOptions } from '../lib';
 
 type Props = HTMLProps<HTMLDivElement>;
 type Data = {
@@ -147,22 +148,33 @@ describe('withEditButton', () => {
   });
 
   it('creates the correct context menu option', () => {
-    const options = {
+    const options: EditButtonOptions<any, any> = {
       icon: Math.random().toString(),
       name: Math.random().toString(),
       renderForm: () => <></>,
+      groupLabel: Math.random().toString(),
+      groupMerge: 'merge',
       global: false,
     };
     const Foo = withEditButton<Props, Data>(options)('div');
     const wrapper = shallow(
       <Foo setComponentData={() => undefined} componentData={{}} />,
     );
-    expect(wrapper.prop('name')).toBe(options.name);
-    const menuOptions = wrapper.prop('getMenuOptions')();
-    expect(menuOptions.length).toBe(1);
-    expect(menuOptions[0].icon).toBe(options.icon);
-    expect(menuOptions[0].name).toBe(options.name);
-    expect(menuOptions[0].global).toBe(false);
-    expect(menuOptions[0].local).toBeUndefined();
+
+    console.log(wrapper.debug());
+    // @TODO Need to be able to pass context definition overrides.
+    // expect(wrapper.prop('name')).toBe(options.name);
+    const menuOptions: TMenuOption[] = wrapper.prop('getMenuOptions')();
+    expect(menuOptions.length).toBe(2);
+    const option = menuOptions.find(o => o.name === options.name);
+    expect(option!.icon).toBe(options.icon);
+    expect(option!.global).toBe(false);
+    expect(option!.local).toBeUndefined();
+    const group = menuOptions.find(o => o.name === `${options.name}-group`);
+    expect(group!.label).toBe(options.groupLabel);
+    expect(group!.groupMerge).toBe(options.groupMerge);
+    expect(group!.global).toBe(false);
+    expect(group!.local).toBeUndefined();
+    expect(group!.Component).toBe('group');
   });
 });

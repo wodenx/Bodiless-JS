@@ -19,7 +19,7 @@ import {
 import ReactTooltip from 'rc-tooltip';
 import { omit } from 'lodash';
 import ReactTagsField from './ReactTagsField';
-import type { UI as ContextMenuUI, ContextMenuFormProps } from '../Types/ContextMenuTypes';
+import type { ContextMenuUI, ContextMenuFormProps } from '../Types/ContextMenuTypes';
 
 type ContextType = {
   // eslint-disable-next-line max-len

@@ -183,7 +183,7 @@ describe('LocalContextMenu', () => {
   });
 });
 
-describe('Ordered options', () => {
+describe('Grouped options', () => {
   let mockOptionsGetter:jest.SpyInstance<TMenuOption[], []>;
 
   const setMockOptions = (ops: TMenuOption[]) => {
@@ -361,5 +361,56 @@ describe('Ordered options', () => {
     expect(options.find(o => o.name === 'o3')!.group).toBe(outer.id);
     expect(options.find(o => o.name === 'merge'))!.toBeDefined();
     expect(options.find(o => o.name === outer.id))!.toBeDefined();
+  });
+
+  describe('Hiding empty groups', () => {
+    const local = true;
+    const isHidden = (option?: TMenuOption) => {
+      if (!option) return true;
+      return typeof option.isHidden === 'function' ? option.isHidden() : Boolean(option.isHidden);
+    };
+    it('Hides groups with no visible options', () => {
+      const initialOptions: TMenuOption[] = [
+        { name: 'empty-group', local, Component: 'group' },
+        {
+          name: 'hidden-option', isHidden: true, local, group: 'empty-group',
+        },
+        {
+          name: 'hidden-option-2', isHidden: () => true, local, group: 'empty-group',
+        },
+
+      ];
+      setMockOptions(initialOptions);
+      const options = getRenderedOptions();
+      const group = options.find(o => o.Component === 'group');
+      expect(isHidden(group)).toBeTruthy();
+    });
+
+    it('Shows groups with at least one visible options', () => {
+      const initialOptions: TMenuOption[] = [
+        { name: 'empty-group', local, Component: 'group' },
+        {
+          name: 'hidden-option', isHidden: true, local, group: 'empty-group',
+        },
+        { name: 'visible-option', local, group: 'empty-group' },
+      ];
+      setMockOptions(initialOptions);
+      const options = getRenderedOptions();
+      const group = options.find(o => o.Component === 'group');
+      expect(isHidden(group)).toBeFalsy();
+    });
+
+    it('Hides explicitly hidden groups even if they have visible options', () => {
+      const initialOptions: TMenuOption[] = [
+        {
+          name: 'group', local, Component: 'group', isHidden: true,
+        },
+        { name: 'visible-option', local, group: 'group' },
+      ];
+      setMockOptions(initialOptions);
+      const options = getRenderedOptions();
+      const group = options.find(o => o.Component === 'group');
+      expect(isHidden(group)).toBeTruthy();
+    });
   });
 });

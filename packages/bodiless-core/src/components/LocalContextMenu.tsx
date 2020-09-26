@@ -125,6 +125,9 @@ const reverseContextOrder = (map: LocalOptionsMap): LocalOptionsMap => {
     cgroups.forEach(g => groups.add(g));
   });
 
+  // Add any groups without context at the end
+  groupArray.filter(g => !map.options.get(g)!.context).forEach(g => groups.add(g));
+
   // Delete each group option and re-add it in the correct order.
   const options = new Map<string, TMenuOption>(map.options);
   groups.forEach(g => {
@@ -136,6 +139,33 @@ const reverseContextOrder = (map: LocalOptionsMap): LocalOptionsMap => {
   return { options, groups };
 };
 
+// Sets the isHidden property of all groups so as to hide groups which have no visible members.
+const addHideEmptyGroups = (map: LocalOptionsMap): LocalOptionsMap => {
+  type FlowTest = (b: boolean) => boolean;
+  const flowIsHidden = (isHidden?: boolean|(() => boolean)): FlowTest => (result: boolean) => (
+    (typeof isHidden === 'function' ? isHidden() : Boolean(isHidden)) && result
+  );
+  const options = new Map(map.options);
+  map.groups.forEach(groupName => {
+    const group = options.get(groupName);
+    const members = Array.from(options.values()).filter(o => o.group === groupName);
+    const tests = members.reduce(
+      (acc, next) => [...acc, flowIsHidden(next.isHidden)], [] as FlowTest[],
+    );
+    // Groups are hidden by default
+    const isHidden = () => {
+      const groupIsHidden = typeof group!.isHidden === 'function'
+        ? group!.isHidden() : group!.isHidden;
+      // A group which is explicitly hidden should never be shown.
+      if (groupIsHidden) return true;
+      // Otherwise, group visibility is determined by visibility of its members.
+      return flow(...tests)(true);
+    };
+    options.set(groupName, { ...group!, isHidden });
+  });
+  return { groups: map.groups, options };
+};
+
 const useLocalOptions = () => {
   const { contextMenuOptions } = useEditContext();
   const { options } = flow(
@@ -143,6 +173,7 @@ const useLocalOptions = () => {
     addDefaultGroups,
     mergeGroups,
     reverseContextOrder,
+    addHideEmptyGroups,
   )(contextMenuOptions);
   return Array.from(options.values());
 };

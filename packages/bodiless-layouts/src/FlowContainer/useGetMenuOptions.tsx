@@ -111,6 +111,7 @@ const useAddButton = (
   const isHidden = item
     ? useCallback(() => !context.isEdit || getItems().length >= maxComponents, [maxComponents])
     : useCallback(() => !context.isEdit || getItems().length > 0, []);
+  // @TODO For nested flow containers we'll have to give these unique names.
   const name = item ? 'add-item' : 'add';
   return {
     icon: 'add',
@@ -151,16 +152,7 @@ const useSwapButton = (
 function useMenuOptions(props: EditFlowContainerProps) {
   const handlers = { ...useFlowContainerDataHandlers(), ...useItemHandlers() };
   const addButton: TMenuOption = useAddButton(handlers, withNoDesign(props));
-  addButton.group = 'flowcontainergroup';
-  const flowContainerGroup: TMenuOption = {
-    name: 'flowcontainergroup',
-    label: 'Flow Container',
-    global: false,
-    local: true,
-    isHidden: addButton.isHidden,
-    Component: 'group',
-  };
-  return [addButton, flowContainerGroup];
+  return [addButton];
 }
 
 /**
