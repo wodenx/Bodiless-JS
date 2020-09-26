@@ -25,24 +25,18 @@ import {
   designable, asComponent, addProps, withDesign,
 } from '@bodiless/fclasses';
 import { useItemsMutators, useItemsAccessors } from './model';
-import {
-  Props, FinalProps, ListDesignableComponents, ItemProps,
-} from './types';
+import { Props, FinalProps, ListDesignableComponents } from './types';
 
 const NodeProvider = withNode<PropsWithChildren<{}>, any>(Fragment);
 type ItemWithNodeProps = {
   nodeKey: string,
   component: ComponentType<any> | string,
 };
-
-const ItemWithNode: FC<ItemWithNodeProps&ItemProps> = props => {
-  const { nodeKey, component: Component, ...rest } = props;
-  return (
-    <NodeProvider nodeKey={nodeKey}>
-      <Component {...rest} />
-    </NodeProvider>
-  );
-};
+const ItemWithNode: FC<ItemWithNodeProps> = ({ nodeKey, component: Component, ...rest }) => (
+  <NodeProvider nodeKey={nodeKey}>
+    <Component {...rest} />
+  </NodeProvider>
+);
 
 const startComponents: ListDesignableComponents = {
   Wrapper: asComponent('ul'),
@@ -71,15 +65,12 @@ const BasicList: FC<Props> = ({
 
   // Iterate over all items in the list creating list items.
   const items = itemData.map(item => (
-    <ItemWithNode
-      component={Item}
-      key={item}
-      nodeKey={item}
-      onAdd={() => addItem(item)}
-      onDelete={() => deleteItem(item)}
-      canDelete={canDelete}
-    >
-      <Title />
+    <ItemWithNode component={Item} key={item} nodeKey={item}>
+      <Title
+        onAdd={() => addItem(item)}
+        onDelete={() => deleteItem(item)}
+        canDelete={canDelete}
+      />
     </ItemWithNode>
   ));
   return (

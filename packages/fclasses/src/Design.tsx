@@ -34,7 +34,7 @@ export type DesignableComponents = {
  */
 export type Design<C extends DesignableComponents> = {
   [Key in keyof C]?: (component: C[Key]) => C[Key]
-};
+} & { _final?: Design<C> };
 
 /**
  * This is the type of the props for a designable whose underlying component
@@ -141,6 +141,22 @@ export const applyDesign = <C extends DesignableComponents> (
       );
     }
   );
+
+/**
+ * Creates an HOC which applies a specified design to the wrapped component.
+ *
+ * A design is a keyed set of HOC's which should be applied to constituant elements
+ * of the wrapped component. The wrapped component itself should accept a components
+ * prop, and be wrapped in the `designable` HOC to define a set of base components
+ * to which the HOC's should apply.
+ *
+ * @param design
+ * The design to apply
+ *
+ * @return
+ * HOC which applies the design to the wrapped component.
+ *
+ */
 export const withDesign = <C extends DesignableComponents>(design: Design<C>) => (
   <P extends DesignableProps<C>>(Component: ComponentType<P>) => {
     const WithDesign = (props: P) => {
@@ -212,6 +228,61 @@ export const withTransformer = <P, Q, X extends Object> (funcs: WithTransformerP
   }
 );
 
+/**
+ * @private
+ *
+ * Takes a design and returns a hOD which extends a base design (flows the HOC's for each key
+ * in the new design to each key in the base design, adding keys if they do not exist.
+ *
+ * @param design The design which will extend the base design.
+ *
+ * @return HOD which extends a base design with the provided design.
+ */
+const extendDesign$ = <C extends DesignableComponents> (design: Design<C>) => (
+  (baseDesign: Design<C> = {}) => (
+    Object.getOwnPropertyNames(design).reduce(
+      (acc, key) => (
+        acc[key]
+        // We just checked for key in acc and we are iterating design.
+          ? { ...acc, [key]: flow(acc[key]!, design[key]!) } as Design<C>
+          : { ...acc, [key]: design[key] } as Design<C>
+      ),
+      baseDesign,
+    ) as Design<C>
+  )
+);
+
+/**
+ * Specifies a design which should be applied to a component "finally" (ie after
+ * all normal designs have been applied). This is useful if you want to be sure
+ * that your design will take effect even if a normal design uses `replaceWith`
+ * to replace a component.
+ *
+ * Note that just like `withDesign`, this may be called more than once on the
+ * same component, and the final designs will be applied "outside-in", just
+ * like normal designs.
+ *
+ * @param design
+ * The design to apply
+ *
+ * @return
+ * An HOC which applies the speciried design to the wrapped component after
+ * all other designes
+ */
+export const withFinalDesign = <C extends DesignableComponents>(design: Design<C>) => (
+  <P extends DesignableProps<C>>(Component: ComponentType<P>) => {
+    const WithFinalDesign = (props: P) => {
+      const { design: designFromProps } = props;
+      const { _final: finalFromProps } = designFromProps || {};
+      // eslint-disable-next-line no-underscore-dangle
+      const _final = finalFromProps ? extendDesign$(finalFromProps)(design) : design;
+      const finalDesign = { ...designFromProps, _final };
+      return <Component {...props} design={finalDesign} />;
+    };
+    return WithFinalDesign;
+  }
+);
+
 type TransformDesign = (design?: Design<any>) => Design<any>|undefined;
 
 /**
@@ -230,8 +301,13 @@ export const extendDesignable = (transformDesign: TransformDesign = identity) =>
     <P extends object>(Component: ComponentType<P & DesignableComponentsProps<C>>) => {
       const transformFixed = (props:DesignableProps<C> & P) => {
         const { design } = props;
+        const { _final, ...restDesign } = design || {};
+        // eslint-disable-next-line no-underscore-dangle
+        const design$ = _final
+          ? extendDesign$(_final!)(restDesign as Design<C>)
+          : restDesign as Design<C>;
         const apply = typeof start === 'function' ? start : applyDesign(start);
-        return { components: apply(design) } as DesignableComponentsProps<C>;
+        return { components: apply(design$) } as DesignableComponentsProps<C>;
       };
       const transformPassthrough = (props:DesignableProps<C> & P) => {
         const { design, ...rest } = props;
@@ -277,19 +353,6 @@ const varyDesign$ = <C extends DesignableComponents> (design:Design<C>):HOD<C> =
   )
 );
 
-const extendDesign$ = <C extends DesignableComponents> (design: Design<C>) => (
-  (baseDesign: Design<C> = {}) => (
-    Object.getOwnPropertyNames(design).reduce(
-      (acc, key) => (
-        acc[key]
-        // We just checked for key in acc and we are iterating design.
-          ? { ...acc, [key]: flow(acc[key]!, design[key]!) } as Design<C>
-          : { ...acc, [key]: design[key] } as Design<C>
-      ),
-      baseDesign,
-    ) as Design<C>
-  )
-);
 type DesignOrHod<C extends DesignableComponents> = Design<C> | HOD<C>;
 const flowDesignsWith = <C extends DesignableComponents> (func: (d:Design<C>) => HOD<C>) => (
   (...designs: DesignOrHod<C>[]) => (baseDesign: Design<C> = {}) => (

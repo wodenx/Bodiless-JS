@@ -16,12 +16,15 @@
 import { mount } from 'enzyme';
 import React, { ComponentType, FC } from 'react';
 
-import { omit } from 'lodash';
+import { omit, flow } from 'lodash';
 import {
   withDesign,
   DesignableProps,
   Design,
   extendDesignable,
+  DesignableComponentsProps,
+  designable,
+  withFinalDesign,
 } from '../src/Design';
 
 type SpanType = ComponentType<any>;
@@ -34,16 +37,18 @@ type MyDesign = Design<MyDesignableComponents>;
 
 const Span: SpanType = props => <span {...props} />;
 const hoc = (newClassName: string) => (C: SpanType):SpanType => props => {
-  const { className, ...rest } = props;
-  const combinedClassName = newClassName + (className || '');
+  const { className = '', ...rest } = props;
+  const combinedClassName = `${className} ${newClassName}`.trim();
   return <C className={combinedClassName} {...rest} />;
 };
+const myStartComponents = {
+  foo: Span as SpanType,
+  bar: Span as SpanType,
+  baz: Span as SpanType,
+};
+
 const DesignPrinter: FC<DesignableProps<MyDesignableComponents>> = ({ design }) => {
-  const components = {
-    foo: Span as SpanType,
-    bar: Span as SpanType,
-    baz: Span as SpanType,
-  };
+  const components = { ...myStartComponents };
   if (design) {
     if (design.foo) {
       components.foo = design.foo(components.foo);
@@ -114,8 +119,39 @@ describe('withDesign', () => {
     const Test1 = withDesign(outer)(Test);
     const wrapper1 = mount(<Test1 />);
     // have to use last() because each hoc adds a component that is found
-    expect(wrapper1.find('#foo').last().props().className).toBe('innerAouterC');
-    expect(wrapper1.find('#bar').last().props().className).toBe('innerBouterD');
+    expect(wrapper1.find('#foo').last().props().className).toBe('outerC innerA');
+    expect(wrapper1.find('#bar').last().props().className).toBe('outerD innerB');
     expect(wrapper1.find('#baz').last().props().className).toBe('outerE');
+  });
+});
+
+describe('withFinalDesign', () => {
+  it('Applies a final design finally', () => {
+    type Components = {
+      Foo: ComponentType<any>,
+    };
+    const startComponents: Components = {
+      Foo: (props: any) => <span id="foo" {...props} />,
+    };
+    const Test$: FC<DesignableComponentsProps<Components>> = (
+      { components, ...rest },
+    ) => {
+      const { Foo } = components;
+      return <Foo {...rest} />;
+    };
+    const baseDesign = { Foo: hoc('base') };
+    const nextDesign = { Foo: hoc('next') };
+    const innerFinal = { Foo: hoc('inner-final') };
+    const outerFinal = { Foo: hoc('outer-final') };
+    const Test = flow(
+      designable(startComponents),
+      withFinalDesign(innerFinal),
+      withDesign(baseDesign),
+      withFinalDesign(outerFinal),
+      withDesign(nextDesign),
+    )(Test$);
+    const wrapper = mount(<Test />);
+    expect(wrapper.find('span#foo').prop('className'))
+      .toBe('outer-final inner-final next base');
   });
 });

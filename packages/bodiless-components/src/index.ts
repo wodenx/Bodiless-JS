@@ -21,16 +21,16 @@ import Image, {
 } from './Image';
 import NodeViewer from './NodeViewer';
 import withLinkToggle from './LinkToggle';
-import List, { asTestableList } from './List';
+import List, { asTestableList } from './List_DEPRECATED';
 import asTaggableItem from './Taggable/asTaggableItem';
-import withListTitle from './List/withListTitle';
-import asEditableList from './List/asEditableList';
-import asBasicSublist from './List/asBasicSublist';
+import withListTitle from './List_DEPRECATED/withListTitle';
+import asEditableList from './List_DEPRECATED/asEditableList';
+import asBasicSublist from './List_DEPRECATED/asBasicSublist';
 import asBodilessList, {
   asSubList, asTitledItem, withSubListDesign as withSimpleSubListDesign,
 } from './List/asBodilessList';
-import withSublist, { withBasicSublist } from './List/withSublist';
-import withDeleteSublistOnUnwrap from './List/withDeleteSublistOnUnwrap';
+import withSublist, { withBasicSublist } from './List_DEPRECATED/withSublist';
+import withDeleteSublistOnUnwrap from './List_DEPRECATED/withDeleteSublistOnUnwrap';
 import asChamelionSubList, {
   withSubLists,
   withSubListDesign,
@@ -119,7 +119,6 @@ export * from './Chamelion/index';
 
 export type {
   FinalProps as ListProps,
-  TitleProps as ListTitleProps,
   ListDesignableComponents,
 } from './List/types';
 export type { MetaFormFieldType };

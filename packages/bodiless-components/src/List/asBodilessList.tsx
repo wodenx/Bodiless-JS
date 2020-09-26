@@ -19,10 +19,11 @@ import React, { ComponentType, PropsWithChildren, FC } from 'react';
 import { flow, identity } from 'lodash';
 import {
   replaceWith, withDesign, asComponent, DesignableComponentsProps, designable, HOC,
+  withFinalDesign,
 } from '@bodiless/fclasses';
 
-import asEditableList from './asEditableList';
-import BodilessList from '.';
+import withListButtons from './withListButtons';
+import BodilessList from './index';
 
 type ComponentOrTag<P> = ComponentType<P>|keyof JSX.IntrinsicElements;
 
@@ -85,7 +86,10 @@ const asBodilessList = (
   // defaultData?: Data,
 ) => <P extends object>(Component: ComponentOrTag<P>) => flow(
   replaceWith(BodilessList),
-  asEditableList,
+  withFinalDesign({
+    Item: withListButtons,
+  }),
+  // asEditableList,
   withDesign({
     Wrapper: replaceWith(asComponent(Component)),
   }),
@@ -93,7 +97,7 @@ const asBodilessList = (
 )(Component);
 
 // This ensures that the original item is used as the sublist wrapper item.
-const asSubListWrapper = (Component: any) => withDesign({
+const asSubListWrapper = (Component: any) => withDesign<SubListComponents>({
   WrapperItem: replaceWith(Component),
 })(SubList);
 
