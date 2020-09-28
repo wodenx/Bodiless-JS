@@ -16,11 +16,10 @@ import React, { ComponentType } from 'react';
 import {
   ifEditable,
   useNode,
-  MenuOptionsDefinition,
 } from '@bodiless/core';
 import type { WithNodeKeyProps } from '@bodiless/core';
 import { flowRight } from 'lodash';
-import { ChamelionData, UseOverrides, ChamelionButtonProps } from './types';
+import { ChamelionData, UseOverrides } from './types';
 import withChamelionButton from './withChamelionButton';
 import applyChamelion from './applyChamelion';
 import withChamelionContext from './withChamelionContext';
@@ -53,11 +52,10 @@ const asBodilessChamelion = (
   nodeKeys: WithNodeKeyProps,
   defaultData?: ChamelionData,
   useOverrides?: UseOverrides,
-  contextProps?: Partial<MenuOptionsDefinition<ChamelionButtonProps>>,
 ) => flowRight(
   withChamelionContext(nodeKeys, defaultData),
   ifEditable(
-    withChamelionButton(useOverrides, contextProps),
+    withChamelionButton(useOverrides),
   ),
   applyChamelion,
 );

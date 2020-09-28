@@ -35,6 +35,7 @@ import asChamelionSubList, {
   withSubLists,
   withSubListDesign,
 } from './List/asChamelionSubList';
+import { hasChildSubList } from './List/withListButtons';
 import {
   withMeta, withMetaStatic, withMetaHtml, withTitle,
 } from './Meta/Meta';
@@ -75,6 +76,7 @@ export {
   asChamelionSubList,
   withSubLists,
   withSubListDesign,
+  hasChildSubList,
   asTitledItem,
   asSubList,
   asEditableList,

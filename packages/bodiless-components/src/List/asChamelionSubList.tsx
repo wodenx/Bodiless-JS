@@ -1,24 +1,12 @@
 import { v1 } from 'uuid';
 import { identity, flow } from 'lodash';
 import { withDesign, HOC, Design } from '@bodiless/fclasses';
-import { useEditContext, PageEditContextInterface, EditButtonOptions } from '@bodiless/core';
-import { useCallback } from 'react';
+import { EditButtonOptions } from '@bodiless/core';
 import { useChamelionContext, asBodilessChamelion } from '../Chamelion';
 
-const hasChildSubList = (context: PageEditContextInterface): boolean => {
-  const descendants = context.activeDescendants || [];
-  // The first child list is the one to which this toggle applies,
-  // so we check to see if more than one.
-  // return descendants.filter(c => c.type === 'sublist-toggle').length > 1;
-  // return descendants.filter(c => c.type === 'list-item').length > 1;
-  return false;
-};
-
 const useChamelionOverrides = ():Partial<EditButtonOptions<any, any>> => {
-  const context = useEditContext();
   const { isOn } = useChamelionContext();
   return {
-    isHidden: useCallback(() => hasChildSubList(context), []),
     icon: isOn ? 'repeat' : 'playlist_add',
     name: `chamelion-sublist-${v1()}`,
     label: 'Sub',
@@ -30,9 +18,8 @@ const useChamelionOverrides = ():Partial<EditButtonOptions<any, any>> => {
 
 const useToggleOverrides = ():Partial<EditButtonOptions<any, any>> => {
   const { isOn } = useChamelionContext();
-  const context = useEditContext();
   return {
-    isHidden: useCallback(() => isOn || hasChildSubList(context), [isOn]),
+    isHidden: isOn,
     icon: 'playlist_add',
     name: `chamelion-sublist-${v1()}`,
     label: 'Sub',
@@ -53,7 +40,6 @@ const asChamelionSubList = asBodilessChamelion(
   'cham-sublist',
   {},
   useOverrides,
-  { type: 'sublist-toggle', name: 'Sublist' },
 );
 
 const withSubListDesign$ = (depth: number) => (design: Design<any>, hoc: HOC = identity): HOC => (

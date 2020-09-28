@@ -31,11 +31,12 @@ import ReactTagsField from './ReactTags';
 
 // Stacked toolbar orientation...
 // Horizontal
-// const toolbarClasses = 'bl-flex';
-// const groupClasses = 'bl-border-l first:bl-border-l-0 bl-border-white bl-ml-4 first:bl-ml-0 bl-pl-4';
+const toolbarClasses = 'bl-flex';
+const groupClasses = 'bl-border-l first:bl-border-l-0 bl-border-white bl-ml-4 first:bl-ml-0 bl-pl-4';
 // Vertical
-const toolbarClasses = '';
-const groupClasses = 'bl-border-t first:bl-border-t-0 bl-border-white bl-mt-grid-2 first:bl-mt-grid-0';
+// const toolbarClasses = '';
+// eslint-disable-next-line max-len
+// const groupClasses = 'bl-border-t first:bl-border-t-0 bl-border-white bl-mt-grid-2 first:bl-mt-grid-0';
 
 // For accessibility attributes, see https://www.w3.org/TR/wai-aria-practices/examples/toolbar/toolbar.html
 const Toolbar = flow(

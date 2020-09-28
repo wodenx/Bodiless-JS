@@ -15,22 +15,21 @@
 import { useMemo } from 'react';
 import {
   withMenuOptions, withLocalContextMenu,
-  withContextActivator, ifEditable, PageEditContextInterface, useEditContext,
+  withContextActivator, ifEditable, PageEditContextInterface,
 } from '@bodiless/core';
 import { v1 } from 'uuid';
 
 import { ItemProps } from './types';
 
-const hasChildList = (context: PageEditContextInterface): boolean => {
+const hasChildSubList = (context: PageEditContextInterface, count: number = 1): boolean => {
   const descendants = context.activeDescendants || [];
   // The first child list is the one to which this toggle applies,
   // so we check to see if more than one.
-  // return descendants.filter(c => c.type === 'list-item').length > 1;
-  return false;
+  return descendants.filter(c => c.type === 'list-item').length > count;
 };
 
 const useMenuOptions = (props: ItemProps) => {
-  const context = useEditContext();
+  // const context = useEditContext();
   const {
     onAdd, onDelete, canDelete,
   } = props;
@@ -38,7 +37,7 @@ const useMenuOptions = (props: ItemProps) => {
   const menuOptions = useMemo(() => ([
     {
       name: `add-${v1()}`,
-      isHidden: () => hasChildList(context),
+      // isHidden: () => hasChildSubList(context),
       icon: 'add',
       label: 'Add',
       handler: onAdd,
@@ -49,7 +48,8 @@ const useMenuOptions = (props: ItemProps) => {
       name: `remove-${v1()}`,
       icon: 'delete',
       label: 'Delete',
-      isHidden: () => !canDelete() || hasChildList(context),
+      // isHidden: () => !canDelete() || hasChildSubList(context),
+      isHidden: () => !canDelete(),
       handler: onDelete,
       global: false,
       local: true,
@@ -66,3 +66,4 @@ const withListButtons = ifEditable(
 );
 
 export default withListButtons;
+export { hasChildSubList };
