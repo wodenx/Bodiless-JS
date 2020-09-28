@@ -363,6 +363,31 @@ describe('Grouped options', () => {
     expect(options.find(o => o.name === outer.id))!.toBeDefined();
   });
 
+  it('Merges up correctly', () => {
+    const local = true;
+    const outer = new PageEditContext({ name: 'Outer', id: v1() });
+    const inner = new PageEditContext({ name: 'Inner', id: v1() }, outer);
+    const initialOptions: TMenuOption[] = [
+      { name: 'o1', context: outer, local },
+      { name: 'o2', context: outer, local },
+      {
+        name: 'i1', context: inner, local, group: 'merge',
+      },
+      { name: 'merge', groupMerge: 'merge-up', local },
+      { name: 'i2', context: inner, local },
+    ];
+    setMockOptions(initialOptions);
+    const options = getRenderedOptions();
+    expect(options.find(o => o.name === 'o1')!.group).toBe(outer.id);
+    expect(options.find(o => o.name === 'o2')!.group).toBe(outer.id);
+    expect(options.find(o => o.name === 'i1')!.group).toBe(outer.id);
+    expect(options.find(o => o.name === 'merge'))!.toBeUndefined();
+    expect(options.find(o => o.name === 'i2')!.group).toBe(inner.id);
+    expect(options.find(o => o.name === outer.id))!.toBeDefined();
+    expect(options.find(o => o.name === inner.id))!.toBeDefined();
+
+  });
+
   describe('Hiding empty groups', () => {
     const local = true;
     const isHidden = (option?: TMenuOption) => {

@@ -21,10 +21,10 @@ const useChamelionOverrides = ():Partial<EditButtonOptions<any, any>> => {
     isHidden: useCallback(() => hasChildSubList(context), []),
     icon: isOn ? 'repeat' : 'playlist_add',
     name: `chamelion-sublist-${v1()}`,
-    // label: 'Sub',
-    // groupMerge: 'merge',
-    label: isOn ? 'Swap' : 'Add',
-    groupLabel: 'Sublist',
+    label: 'Sub',
+    groupMerge: 'merge-up',
+    // label: isOn ? 'Swap' : 'Add',
+    // groupLabel: 'Sublist',
   };
 };
 
@@ -35,10 +35,10 @@ const useToggleOverrides = ():Partial<EditButtonOptions<any, any>> => {
     isHidden: useCallback(() => isOn || hasChildSubList(context), [isOn]),
     icon: 'playlist_add',
     name: `chamelion-sublist-${v1()}`,
-    // label: 'Sub',
-    // groupMerge: 'merge',
-    label: 'Add',
-    groupLabel: 'Sublist',
+    label: 'Sub',
+    groupMerge: 'merge-up',
+    // label: 'Add',
+    // groupLabel: 'Sublist',
   };
 };
 

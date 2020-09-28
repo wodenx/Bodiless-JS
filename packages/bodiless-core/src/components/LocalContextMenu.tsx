@@ -103,6 +103,14 @@ const mergeGroups = (map: LocalOptionsMap): LocalOptionsMap => {
         groups.delete(group);
         options.delete(group);
       }
+    } else if (options.get(group)!.groupMerge === 'merge-up' && index > 0) {
+      const next = groupArray[index - 1];
+      const members = Array.from(options.values()).filter(op => op.group === group);
+      members.forEach(op => {
+        options.set(op.name, { ...op, group: next });
+      });
+      groups.delete(group);
+      options.delete(group);
     }
   });
   return { options, groups };

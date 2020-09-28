@@ -114,7 +114,7 @@ export type TMenuOption = {
    * - 'merge' - This group merges into the next innermost group (if one exists).
    * Default is 'none'.
    */
-  groupMerge?: 'merge'|'none';
+  groupMerge?: 'merge'|'merge-up'|'none';
   /**
    * An optional component used to render this item, or one of '_item' or '_group' to specify
    * which default component should be used. If not specified, then the option will be rendered
