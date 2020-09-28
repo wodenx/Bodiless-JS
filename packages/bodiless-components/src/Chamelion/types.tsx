@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import type { TMenuOption, EditButtonProps } from '@bodiless/core';
+import type { EditButtonProps, EditButtonOptions } from '@bodiless/core';
 import {
   DesignableComponentsProps,
   DesignableComponents,
@@ -34,4 +34,4 @@ export type ChamelionState = {
 export type ChamelionProps =
   EditButtonProps<ChamelionData> & DesignableComponentsProps<ChamelionComponents>;
 export type ChamelionButtonProps = ChamelionProps & EditButtonProps<ChamelionData>;
-export type UseOverrides<P = any> = (props: P) => Partial<TMenuOption>;
+export type UseOverrides<P = any> = (props: P) => Partial<EditButtonOptions<P, ChamelionData>>;

@@ -15,10 +15,11 @@
 import React, { ComponentType } from 'react';
 import {
   withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator, withLocalContextMenu,
-  MenuOptionsDefinition,
+  TMenuOption,
 } from '@bodiless/core';
 
 import { flowRight } from 'lodash';
+import { v1 } from 'uuid';
 import {
   ChamelionButtonProps, ChamelionData, UseOverrides,
 } from './types';
@@ -98,25 +99,39 @@ export const withUnwrap = <P extends object>(Component: ComponentType<P>) => {
  */
 const withChamelionButton = <P extends object>(
   useOverrides?: UseOverrides<P>,
-  contextProps?: Partial<MenuOptionsDefinition<P>>,
 ) => {
-  const useMenuOptions = (props: P) => {
+  const useMenuOptions = (props: P):TMenuOption[] => {
     const { selectableComponents } = useChamelionContext();
     const extMenuOptions = Object.keys(selectableComponents).length > 1
       ? useSwapButtonMenuOption
       : useToggleButtonMenuOption;
-    const baseDefinition = {
-      name: 'chamelion-toggle',
+    const name = `chamelion-${v1()}`;
+    const baseDefinition:TMenuOption = {
+      name,
+      group: `${name}-group`,
       global: false,
       local: true,
       ...extMenuOptions(),
     };
     const overrides = useOverrides ? useOverrides(props) : {};
     // if useOverrides returns undefined, it means not to provide the button.
-    return typeof overrides !== 'undefined' ? [{ ...baseDefinition, ...overrides }] : [];
+    if (overrides === undefined) return [];
+    const { groupMerge, groupLabel, ...overrides$ } = overrides;
+    const menuOption:TMenuOption = { ...baseDefinition, ...overrides$ };
+    // Create a group so we have control over name and merge behavior.
+    const menuGroup:TMenuOption = {
+      name: menuOption.group!, // We set the group above so we know it's defined.
+      label: groupLabel || menuOption.label,
+      local: menuOption.local,
+      global: menuOption.global,
+      Component: 'group',
+      groupMerge,
+    };
+    // return [menuOption];
+    return [menuOption, menuGroup];
   };
   return flowRight(
-    withMenuOptions({ useMenuOptions, name: 'Chamelion', ...contextProps }),
+    withMenuOptions({ useMenuOptions, name: 'Chamelion' }),
     withContextActivator('onClick'),
     withLocalContextMenu,
     withUnwrap,

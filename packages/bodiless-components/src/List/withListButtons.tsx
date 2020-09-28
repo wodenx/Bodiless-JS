@@ -25,7 +25,8 @@ const hasChildList = (context: PageEditContextInterface): boolean => {
   const descendants = context.activeDescendants || [];
   // The first child list is the one to which this toggle applies,
   // so we check to see if more than one.
-  return descendants.filter(c => c.type === 'list-item').length > 1;
+  // return descendants.filter(c => c.type === 'list-item').length > 1;
+  return false;
 };
 
 const useMenuOptions = (props: ItemProps) => {
