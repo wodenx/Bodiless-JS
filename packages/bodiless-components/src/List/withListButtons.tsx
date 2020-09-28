@@ -31,7 +31,7 @@ const hasChildList = (context: PageEditContextInterface): boolean => {
 const useMenuOptions = (props: ItemProps) => {
   const context = useEditContext();
   const {
-    onAdd, onDelete, canDelete,
+    addItem, deleteItem, canDelete,
   } = props;
 
   const menuOptions = useMemo(() => ([
@@ -40,7 +40,7 @@ const useMenuOptions = (props: ItemProps) => {
       isHidden: () => hasChildList(context),
       icon: 'add',
       label: 'Add',
-      handler: onAdd,
+      handler: addItem,
       global: false,
       local: true,
     },
@@ -49,7 +49,7 @@ const useMenuOptions = (props: ItemProps) => {
       icon: 'delete',
       label: 'Delete',
       isHidden: () => !canDelete() || hasChildList(context),
-      handler: onDelete,
+      handler: deleteItem,
       global: false,
       local: true,
     },
