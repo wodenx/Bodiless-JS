@@ -19,6 +19,8 @@ import {
 } from '@bodiless/core';
 import { v1 } from 'uuid';
 
+import { withFinalDesign } from '@bodiless/fclasses';
+import { flow } from 'lodash';
 import { ItemProps } from './types';
 
 const hasChildList = (context: PageEditContextInterface): boolean => {
@@ -58,10 +60,20 @@ const useMenuOptions = (props: ItemProps) => {
   return menuOptions;
 };
 
+/**
+ * HOC which adds list edit buttons (Add and Delete Item).
+ */
 const withListButtons = ifEditable(
-  withMenuOptions({ useMenuOptions, name: 'List Item', type: 'list-item' }),
-  withContextActivator('onClick'),
-  withLocalContextMenu,
+  withFinalDesign({
+    Item: withMenuOptions({ useMenuOptions, name: 'List Item', type: 'list-item' }),
+    // @TODO: These are here bc of rc-menu.  If possible, they should go on the item,
+    // not the title, but rc-menu items don't accept click events, and can't be
+    // wrapped without breaking things.
+    Title: flow(
+      withContextActivator('onClick'),
+      withLocalContextMenu,
+    ),
+  }),
 );
 
 export default withListButtons;
