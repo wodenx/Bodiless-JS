@@ -13,7 +13,7 @@
  */
 import { flow } from 'lodash';
 import {
-  withDesign,
+  withDesign, HOC,
 } from '@bodiless/fclasses';
 import {
   withNode,
@@ -25,11 +25,11 @@ import {
   withLinkToggle,
 } from '@bodiless/components';
 import asEditableMenu from '../MainMenu/asEditableMenu';
+import withEditableTitle from '../MainMenu/withEditableTitle';
 import asBurgerSubMenu from './asBurgerSubMenu';
 import AsEditable from '../MainMenu/types/AsEditable';
-import withMenuLinkTitle from '../MainMenu/withMenuLinkTitle';
 
-const asEditableBurgerSubMenu = (HeaderContent: string, asEditable: AsEditable) => flow(
+const asEditableBurgerSubMenu = (HeaderContent: string, editable: AsEditable) => flow(
   asBurgerSubMenu(HeaderContent),
   withDesign({
     Title: flow(
@@ -44,11 +44,10 @@ const asEditableBurgerSubMenu = (HeaderContent: string, asEditable: AsEditable) 
       InnerLinks: flow(
         withNode,
         withDeleteSublistOnUnwrap,
-        asEditableMenu,
-        // @TODO: Extract this
-        withMenuLinkTitle(asEditable),
-      ),
+        asEditableMenu(editable),
+      ) as HOC,
     }),
   }),
+  withEditableTitle(editable),
 );
 export default asEditableBurgerSubMenu;

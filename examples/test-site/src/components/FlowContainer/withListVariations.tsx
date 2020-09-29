@@ -11,20 +11,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { flow } from 'lodash';
-import { asEditableList } from '@bodiless/components';
-import asStylableList from './asStylableList';
-import withEditableTitle from './withEditableTitle';
-import AsEditable from './types/AsEditable';
+import {
+  withTitle,
+  withDesc,
+} from '@bodiless/layouts';
+import {
+  varyDesign,
+  replaceWith,
+  withDesign,
+} from '@bodiless/fclasses';
 
-/**
- * HOC, produces *editable* menu
- */
-const asEditableMenu = (editable: AsEditable) => flow(
-  asEditableList,
-  asStylableList,
-  withEditableTitle(editable),
-);
+import ChamelionListDemo from '../../data/pages/list2/ChamelionListDemo';
+import { withType } from './Categories';
 
-export default asEditableMenu;
+const listVariations = {
+  ChamelionList: flow(
+    replaceWith(ChamelionListDemo),
+    withType('List')(),
+    withTitle('Chamelion LIst'),
+    withDesc('Multi-level list with choice between bullets and numbers.\n'),
+  ),
+};
+
+export default withDesign(varyDesign(
+  listVariations,
+)());

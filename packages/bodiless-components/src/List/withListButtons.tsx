@@ -19,6 +19,8 @@ import {
 } from '@bodiless/core';
 import { v1 } from 'uuid';
 
+import { withFinalDesign } from '@bodiless/fclasses';
+import { flow } from 'lodash';
 import { ItemProps } from './types';
 
 const hasChildSubList = (context: PageEditContextInterface, count: number = 1): boolean => {
@@ -31,7 +33,7 @@ const hasChildSubList = (context: PageEditContextInterface, count: number = 1): 
 const useMenuOptions = (props: ItemProps) => {
   // const context = useEditContext();
   const {
-    onAdd, onDelete, canDelete,
+    addItem, deleteItem, canDelete,
   } = props;
 
   const menuOptions = useMemo(() => ([
@@ -40,7 +42,7 @@ const useMenuOptions = (props: ItemProps) => {
       // isHidden: () => hasChildSubList(context),
       icon: 'add',
       label: 'Add',
-      handler: onAdd,
+      handler: addItem,
       global: false,
       local: true,
     },
@@ -50,7 +52,7 @@ const useMenuOptions = (props: ItemProps) => {
       label: 'Delete',
       // isHidden: () => !canDelete() || hasChildSubList(context),
       isHidden: () => !canDelete(),
-      handler: onDelete,
+      handler: deleteItem,
       global: false,
       local: true,
     },
@@ -59,10 +61,20 @@ const useMenuOptions = (props: ItemProps) => {
   return menuOptions;
 };
 
+/**
+ * HOC which adds list edit buttons (Add and Delete Item).
+ */
 const withListButtons = ifEditable(
-  withMenuOptions({ useMenuOptions, name: 'List Item', type: 'list-item' }),
-  withContextActivator('onClick'),
-  withLocalContextMenu,
+  withFinalDesign({
+    Item: withMenuOptions({ useMenuOptions, name: 'List Item', type: 'list-item' }),
+    // @TODO: These are here bc of rc-menu.  If possible, they should go on the item,
+    // not the title, but rc-menu items don't accept click events, and can't be
+    // wrapped without breaking things.
+    Title: flow(
+      withContextActivator('onClick'),
+      withLocalContextMenu,
+    ),
+  }),
 );
 
 export default withListButtons;

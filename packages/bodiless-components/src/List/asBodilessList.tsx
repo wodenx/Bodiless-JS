@@ -19,7 +19,6 @@ import React, { ComponentType, PropsWithChildren, FC } from 'react';
 import { flow, identity } from 'lodash';
 import {
   replaceWith, withDesign, asComponent, DesignableComponentsProps, designable, HOC,
-  withFinalDesign,
 } from '@bodiless/fclasses';
 
 import withListButtons from './withListButtons';
@@ -86,10 +85,7 @@ const asBodilessList = (
   // defaultData?: Data,
 ) => <P extends object>(Component: ComponentOrTag<P>) => flow(
   replaceWith(BodilessList),
-  withFinalDesign({
-    Item: withListButtons,
-  }),
-  // asEditableList,
+  withListButtons,
   withDesign({
     Wrapper: replaceWith(asComponent(Component)),
   }),

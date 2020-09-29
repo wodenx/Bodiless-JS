@@ -17,8 +17,8 @@ import { DesignableComponentsProps, DesignableProps } from '@bodiless/fclasses';
 import { WithNodeProps } from '@bodiless/core';
 
 export type ItemProps = {
-  onAdd: () => void,
-  onDelete: () => void,
+  addItem: () => void,
+  deleteItem: () => void,
   canDelete: () => boolean,
 };
 

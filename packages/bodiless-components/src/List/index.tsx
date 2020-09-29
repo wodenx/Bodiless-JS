@@ -75,8 +75,8 @@ const BasicList: FC<Props> = ({
       component={Item}
       key={item}
       nodeKey={item}
-      onAdd={() => addItem(item)}
-      onDelete={() => deleteItem(item)}
+      addItem={() => addItem(item)}
+      deleteItem={() => deleteItem(item)}
       canDelete={canDelete}
     >
       <Title />
