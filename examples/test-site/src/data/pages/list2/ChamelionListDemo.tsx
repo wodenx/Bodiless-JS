@@ -17,7 +17,7 @@ import { withLinkTitle } from './ListDemo';
  * Defines the types of all sublists
  */
 const asDemoSubList = flow(
-  asSubList,
+  asSubList(),
   withDeleteNodeOnUnwrap,
   asStylableList,
 );

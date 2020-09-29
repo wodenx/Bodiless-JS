@@ -385,7 +385,6 @@ describe('Grouped options', () => {
     expect(options.find(o => o.name === 'i2')!.group).toBe(inner.id);
     expect(options.find(o => o.name === outer.id))!.toBeDefined();
     expect(options.find(o => o.name === inner.id))!.toBeDefined();
-
   });
 
   describe('Hiding empty groups', () => {

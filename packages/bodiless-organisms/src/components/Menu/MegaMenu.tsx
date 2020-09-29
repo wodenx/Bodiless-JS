@@ -34,8 +34,10 @@ import {
 // First we build a basic list with the correct data structure.
 
 // Defines the basic sublist for all mubmenu types.
-const asMenuSubList = flow(
-  asSubList,
+const asMenuSubList = (
+  groupLabel: string,
+) => flow(
+  asSubList(() => ({ groupLabel })),
   withDeleteNodeOnUnwrap,
   asStylableList,
   // @TODO: Should we be providing titles at all? It will almost always be overridden at site level.
@@ -65,6 +67,19 @@ const withSubMenuDesign = (design: any) => {
   });
 };
 
+const withSubLists = withDesign({
+  Item: withDesign({
+    Basic: asMenuSubList('Submenu Item'),
+    Touts: asMenuSubList('Submenu Item'),
+    Columns: flow(
+      asMenuSubList('Col. Header'),
+      withDesign({
+        Item: asMenuSubList('Col. Item'),
+      }),
+    ),
+  }),
+});
+
 /**
  * Applies a list design (or other HOC) to the main menu and all submenus.
  *
@@ -90,13 +105,13 @@ const withMenuDesign = (design: any) => {
  * @return HOC which creates a basic mega menu list.
  */
 const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
-  asBodilessList(nodeKeys),
+  asBodilessList(nodeKeys, undefined, () => ({ groupLabel: 'Menu Item' })),
   asStylableList,
   withDesign({
     Title: asDefaultMenuLink,
     Item: asChamelionSubList,
   }),
-  withSubMenuDesign(asMenuSubList),
+  withSubLists,
 );
 
 // Next we replace basic list elements with rc-menu elements to create a menu.

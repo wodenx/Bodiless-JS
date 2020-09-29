@@ -23,6 +23,7 @@ import {
 
 import withListButtons from './withListButtons';
 import BodilessList from './index';
+import { Data, UseListOverrides } from './types';
 
 type ComponentOrTag<P> = ComponentType<P>|keyof JSX.IntrinsicElements;
 
@@ -79,18 +80,20 @@ const SubList = designable(startComponents)(SubList$);
  *
  * @param nodeKeys
  */
-const asBodilessList = (
+const asBodilessList = <P extends object>(
   nodeKeys?: WithNodeKeyProps,
   // @TODO - Handle default data
-  // defaultData?: Data,
-) => <P extends object>(Component: ComponentOrTag<P>) => flow(
-  replaceWith(BodilessList),
-  withListButtons,
-  withDesign({
-    Wrapper: replaceWith(asComponent(Component)),
-  }),
-  withNodeKey(nodeKeys),
-)(Component);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  defaultData?: Data,
+  useOverrides?: UseListOverrides<P>,
+) => (Component: ComponentOrTag<P>) => flow(
+    replaceWith(BodilessList),
+    withListButtons(useOverrides),
+    withDesign({
+      Wrapper: replaceWith(asComponent(Component)),
+    }),
+    withNodeKey(nodeKeys),
+  )(Component);
 
 // This ensures that the original item is used as the sublist wrapper item.
 const asSubListWrapper = (Component: any) => withDesign<SubListComponents>({
@@ -100,8 +103,8 @@ const asSubListWrapper = (Component: any) => withDesign<SubListComponents>({
 /**
  * HOC which can be applied to a list item to convert it to a sublist.
  */
-const asSubList = flow(
-  asBodilessList('sublist'),
+const asSubList = (useOverrides?: UseListOverrides) => flow(
+  asBodilessList('sublist', undefined, useOverrides),
   withDesign({
     Wrapper: asSubListWrapper,
   }),

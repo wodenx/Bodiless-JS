@@ -15,13 +15,13 @@
 import { useMemo } from 'react';
 import {
   withMenuOptions, withLocalContextMenu,
-  withContextActivator, ifEditable, PageEditContextInterface,
+  withContextActivator, ifEditable, PageEditContextInterface, TMenuOption, useEditContext,
 } from '@bodiless/core';
 import { v1 } from 'uuid';
 
 import { withFinalDesign } from '@bodiless/fclasses';
 import { flow } from 'lodash';
-import { ItemProps } from './types';
+import { ItemProps, UseListOverrides } from './types';
 
 const hasChildSubList = (context: PageEditContextInterface, count: number = 1): boolean => {
   const descendants = context.activeDescendants || [];
@@ -30,31 +30,53 @@ const hasChildSubList = (context: PageEditContextInterface, count: number = 1): 
   return descendants.filter(c => c.type === 'list-item').length > count;
 };
 
-const useMenuOptions = (props: ItemProps) => {
+const useMenuOptions = (useOverrides: UseListOverrides = () => ({})) => (props: ItemProps) => {
   // const context = useEditContext();
   const {
     addItem, deleteItem, canDelete,
   } = props;
 
-  const menuOptions = useMemo(() => ([
+  // Search for parent lists to set the default group label
+  const context = useEditContext();
+  let n = 0;
+  for (let c:PageEditContextInterface|undefined = context; c; c = c.parent) {
+    if (c.type === 'list-item') n += 1;
+  }
+  const sublistLabel = n > 1 ? `Sublist ${n} Item` : 'Sublist Item';
+  const defaultGroupLabel = n > 0 ? sublistLabel : 'List Item';
+
+  const { groupLabel = defaultGroupLabel, global = false, local = true } = useOverrides(props);
+  const id = v1();
+  const group = `list-item-group-${id}`;
+
+  const menuOptions:TMenuOption[] = useMemo(() => ([
     {
-      name: `add-${v1()}`,
+      name: `add-${id}`,
       // isHidden: () => hasChildSubList(context),
       icon: 'add',
       label: 'Add',
       handler: addItem,
-      global: false,
-      local: true,
+      global,
+      local,
+      group,
     },
     {
-      name: `remove-${v1()}`,
+      name: `remove-${id}`,
       icon: 'delete',
       label: 'Delete',
       // isHidden: () => !canDelete() || hasChildSubList(context),
       isHidden: () => !canDelete(),
       handler: deleteItem,
-      global: false,
-      local: true,
+      global,
+      local,
+      group,
+    },
+    {
+      name: group,
+      label: groupLabel,
+      global,
+      local,
+      Component: 'group',
     },
   ]), []);
 
@@ -64,9 +86,13 @@ const useMenuOptions = (props: ItemProps) => {
 /**
  * HOC which adds list edit buttons (Add and Delete Item).
  */
-const withListButtons = ifEditable(
+const withListButtons = (useOverrides?: UseListOverrides) => ifEditable(
   withFinalDesign({
-    Item: withMenuOptions({ useMenuOptions, name: 'List Item', type: 'list-item' }),
+    Item: withMenuOptions({
+      useMenuOptions: useMenuOptions(useOverrides),
+      name: 'List Item',
+      type: 'list-item',
+    }),
     // @TODO: These are here bc of rc-menu.  If possible, they should go on the item,
     // not the title, but rc-menu items don't accept click events, and can't be
     // wrapped without breaking things.
