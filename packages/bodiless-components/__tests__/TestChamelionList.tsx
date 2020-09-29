@@ -28,7 +28,7 @@ const withItemTitle = (title: string) => withDesign({
  * Defines the all sublists
  */
 const asSubList$ = (title: string, className: string) => flow(
-  asSubList,
+  asSubList(),
   withDesign({
     Item: addProps({ className }),
   }),

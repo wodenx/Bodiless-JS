@@ -103,7 +103,7 @@ describe('asBodilessChamelion', () => {
     describe('Toggle Button', () => {
       const callHandler = (wrapper: ReactWrapper<any, any>) => {
         const { getMenuOptions } = wrapper.find(PageContextProvider).props();
-        const options = getMenuOptions!();
+        const options = getMenuOptions!().filter(o => o.Component !== 'group');
         expect(options).toHaveLength(1);
         // @ts-ignore no need to simulate the event argument
         return options[0].handler();
@@ -133,7 +133,7 @@ describe('asBodilessChamelion', () => {
     describe('Swap Button', () => {
       const getForm = (wrapper: ReactWrapper<any, any>) => {
         const { getMenuOptions } = wrapper.find(PageContextProvider).props();
-        const options = getMenuOptions!();
+        const options = getMenuOptions!().filter(o => o.Component !== 'group');
         expect(options).toHaveLength(1);
         // @ts-ignore no need to simulate the event argument
         const render = options[0].handler();
