@@ -17,6 +17,8 @@ import {
   asMainMenuClean as asMegaMenu,
   withMenuDesign as withMegaMenuDesign,
   asBreadcrumbsClean as asMegaMenuBreadcrumbs,
+  withCustomBreadcrumbItem,
+  asCustomBreadcrumbItem,
 } from './MegaMenu';
 
 import {
@@ -35,6 +37,8 @@ export {
   asMegaMenu,
   withMegaMenuDesign,
   asMegaMenuBreadcrumbs,
+  asCustomBreadcrumbItem,
+  withCustomBreadcrumbItem,
 };
 
 export {

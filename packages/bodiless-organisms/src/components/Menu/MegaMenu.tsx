@@ -12,12 +12,13 @@
  * limitations under the License.
  */
 
+import React, { ComponentType } from 'react';
 import { flow, flowRight } from 'lodash';
 
 import {
-  withDesign, addClassesIf,
+  withDesign, addClassesIf
 } from '@bodiless/fclasses';
-import { withSidecarNodes, WithNodeKeyProps } from '@bodiless/core';
+import { withSidecarNodes, WithNodeKeyProps, useNode, withChild } from '@bodiless/core';
 import {
   asBreadcrumb, useBreadcrumbContext, asBodilessList, asSubList,
   withDeleteNodeOnUnwrap, asChamelionSubList,
@@ -139,6 +140,18 @@ const asMainMenuClean = flowRight(
 
 // Now we create breaccrumbs
 
+const asCustomBreadcrumbItem = (Component: ComponentType<any>) => {
+  const AsCustomBreadcrumbItem = (props: any) => {
+    const context = useBreadcrumbContext();
+    const { node } = useNode();
+    const hasLast = context.hasLast(node.pagePath);
+    return !hasLast ? <Component {...props} /> : <></>
+  };
+  AsCustomBreadcrumbItem.displayName = "WithCustomBreadcrumbItem";
+  return AsCustomBreadcrumbItem;
+}
+const withCustomBreadcrumbItem = (CustomBreadcrumbItem: ComponentType<any>) => withChild(CustomBreadcrumbItem);
+
 /**
  * HOC which can be applied to a base menu to make it into a site's breadcrumbs
  *
@@ -147,7 +160,7 @@ const asMainMenuClean = flowRight(
  * @return A clean (unstyled) site breadcrumb component.
  */
 const asBreadcrumbsClean = withMenuDesign({
-  Item: withSidecarNodes(asBreadcrumb('title$component')),
+  Item: withSidecarNodes(asBreadcrumb('title$link')),
   Title: flow(
     addClassesIf(() => !useBreadcrumbContext().isActive)('hidden'),
     observer,
@@ -162,4 +175,5 @@ const asBreadcrumbsClean = withMenuDesign({
 
 export {
   asMenuSubList, asMenuBase, asMainMenuClean, withMenuDesign, asBreadcrumbsClean,
+  withCustomBreadcrumbItem, asCustomBreadcrumbItem,
 };

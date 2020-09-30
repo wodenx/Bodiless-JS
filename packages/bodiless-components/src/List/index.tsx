@@ -53,6 +53,8 @@ const startComponents: ListDesignableComponents = {
 };
 
 const BasicList: FC<Props> = ({
+  // ToDo: make children placemenent configurable
+  children,
   components,
   unwrap,
   onDelete,
@@ -85,6 +87,7 @@ const BasicList: FC<Props> = ({
   return (
     <Wrapper {...rest}>
       {items}
+      {children}
     </Wrapper>
   );
 };

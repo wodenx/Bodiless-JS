@@ -35,6 +35,7 @@ type BreadcrumbContextInterface = {
   isAncestorOf: (descendant?: BreadcrumbContextInterface) => boolean;
   spawn: (href: string) => BreadcrumbContextInterface;
   readonly isActive: boolean;
+  readonly hasLast: boolean;
   activate: () => void;
 };
 
@@ -97,6 +98,15 @@ export class BreadcrumbContext implements BreadcrumbContextInterface {
 
   get isActive(): boolean {
     return this.store.isActive(this);
+  }
+
+  hasLast(path: string): boolean {
+    const activeItem = this.store.activeItem;
+    if (activeItem !== undefined) {
+      console.log(activeItem);
+      console.log(activeItem.url)
+    }
+    return activeItem !== undefined && activeItem.url === path; 
   }
 
   activate() {

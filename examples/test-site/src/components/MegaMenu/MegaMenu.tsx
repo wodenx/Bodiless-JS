@@ -14,11 +14,11 @@
 
 import { flow } from 'lodash';
 import {
-  withDesign, replaceWith, H2, addClasses, stylable,
+  withDesign, replaceWith, H2, addClasses, stylable, Li,
 } from '@bodiless/fclasses';
 import {
   asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaMenu, asMegaMenuBreadcrumbs,
-  asMenuLink,
+  asMenuLink, withCustomBreadcrumbItem, asCustomBreadcrumbItem,
 } from '@bodiless/organisms';
 import { Fragment } from 'react';
 import { asReadOnly } from '@bodiless/core';
@@ -83,6 +83,12 @@ const asInline = withDesign({
   Item: addClasses('inline pl-5'),
 });
 
+const CustomBreadcrumbItem = flow(
+  withEditorSimple('custom-item', 'Enter item'),
+  addClasses('inline pl-5'),
+  asCustomBreadcrumbItem,
+)(Li);
+
 const MegaMenuBreadcrumbs = flow(
   asMegaMenuBase(),
   withMegaMenuDesign({
@@ -90,7 +96,10 @@ const MegaMenuBreadcrumbs = flow(
   }),
   asMegaMenuBreadcrumbs,
   withMegaMenuDesign(asInline),
-  asReadOnly,
+  withDesign({
+    Item: asReadOnly,
+  }),
+  withCustomBreadcrumbItem(CustomBreadcrumbItem),
 )('ul');
 
 export default MegaMenu;
