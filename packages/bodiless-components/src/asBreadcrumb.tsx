@@ -102,11 +102,9 @@ export class BreadcrumbContext implements BreadcrumbContextInterface {
 
   hasLast(path: string): boolean {
     const activeItem = this.store.activeItem;
-    if (activeItem !== undefined) {
-      console.log(activeItem);
-      console.log(activeItem.url)
-    }
-    return activeItem !== undefined && activeItem.url === path; 
+    return activeItem !== undefined
+      // ToDo: made it more maintainable
+      && activeItem.url.pathname.replace(/\/$/, '') === path.replace(/\/$/, '');
   }
 
   activate() {

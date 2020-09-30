@@ -141,13 +141,13 @@ const asMainMenuClean = flowRight(
 // Now we create breaccrumbs
 
 const asCustomBreadcrumbItem = (Component: ComponentType<any>) => {
-  const AsCustomBreadcrumbItem = (props: any) => {
+  const AsCustomBreadcrumbItem = observer((props: any) => {
     const context = useBreadcrumbContext();
     const { node } = useNode();
     const hasLast = context.hasLast(node.pagePath);
     return !hasLast ? <Component {...props} /> : <></>
-  };
-  AsCustomBreadcrumbItem.displayName = "WithCustomBreadcrumbItem";
+  });
+  AsCustomBreadcrumbItem.displayName = "AsCustomBreadcrumbItem";
   return AsCustomBreadcrumbItem;
 }
 const withCustomBreadcrumbItem = (CustomBreadcrumbItem: ComponentType<any>) => withChild(CustomBreadcrumbItem);
