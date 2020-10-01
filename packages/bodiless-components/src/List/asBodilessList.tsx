@@ -111,7 +111,7 @@ const asSubList = flow(
 const withSimpleSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
   depth === 0 ? identity
     : withDesign({
-    Item: flow(
+      Item: flow(
         withDesign$,
         withSimpleSubListDesign(depth - 1)(withDesign$),
       ),
