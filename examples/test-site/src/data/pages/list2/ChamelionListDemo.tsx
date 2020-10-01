@@ -1,70 +1,64 @@
 import { flow } from 'lodash';
 import {
-  asStylableList,
-} from '@bodiless/organisms';
-import {
-  addClasses, withDesign, HOC,
+  addClasses, withDesign, HOC, replaceWith, A, stylable,
 } from '@bodiless/fclasses';
 import {
-  asSubList, withDeleteNodeOnUnwrap, asBodilessList,
-  withSubListDesign, withSubLists, asBodilessChamelion,
+  asBodilessList,
+  withSubListDesign, withSubLists, asBodilessChamelion, asEditable,
 } from '@bodiless/components';
-import { WithNodeKeyProps } from '@bodiless/core';
-import { ComponentType } from 'react';
-import { withLinkTitle } from './ListDemo';
+import { asLink, asEditableLink } from '../../../components/Elements.token';
+import { asToggledSubList } from './ListDemo';
+import { withItemMargin } from './SimpleListDemo';
 
 /**
- * Defines the all sublists
+ * Defines the title for all list items.
  */
-const asDemoSubList = flow(
-  asSubList,
-  withDeleteNodeOnUnwrap,
-  asStylableList,
-);
-const asBulletedSubList = flow(
-  asDemoSubList,
-  withDesign({
-    Item: addClasses('list-disc'),
-  }),
-);
-const asNumberedSubList = flow(
-  asDemoSubList,
-  withDesign({
-    Item: addClasses('list-decimal'),
-  }),
-);
-
-const DEPTH = 3;
-const withDemoSubLists = withSubLists(DEPTH)({
-  Bullet: asBulletedSubList,
-  Numbered: asNumberedSubList,
+export const withLinkTitle = withDesign({
+  Title: flow(
+    replaceWith(A),
+    asLink,
+    asEditableLink('link'),
+    asEditable('text', 'List Item'),
+  ),
 });
-const withDemoSubListDesign = (withDesign$: HOC) => withSubListDesign(DEPTH)({
-  Bullet: withDesign$,
+
+const asBulletedList = withDesign({
+  Item: flow(stylable, addClasses('list-disc')),
+});
+
+const asNumberedList = withDesign({
+  Item: flow(stylable, addClasses('list-decimal')),
+});
+
+const subLists = {
+  Bulleted: flow(
+    asToggledSubList,
+    asBulletedList,
+  ),
+  Numbered: flow(
+    asToggledSubList,
+    asNumberedList,
+  ),
+};
+
+const withSubListDesigns = (withDesign$: HOC) => withSubListDesign(2)({
+  Bulleted: withDesign$,
   Numbered: withDesign$,
 });
 
-const asListDemo = (nodeKeys?: WithNodeKeyProps) => flow(
-  asBodilessList(nodeKeys),
-  asStylableList,
-  withDemoSubLists,
-  withDemoSubListDesign(withDesign({
-    Item: addClasses('ml-5'),
-  })),
-);
-
-const asBulletedList = withDesign({ Item: addClasses('list-disc') });
-const asNumberedList = withDesign({ Item: addClasses('list-decimal') });
-
-const ListDemo = flow(
-  asListDemo(),
-  withDemoSubListDesign(withLinkTitle),
+const List = flow(
+  asBodilessList(),
   withLinkTitle,
+  withSubLists(2)(subLists),
+  withSubListDesigns(flow(
+    withItemMargin,
+    withLinkTitle,
+  )),
   asBodilessChamelion('cham-list', { component: 'Bulleted' }),
   withDesign({
     Bulleted: asBulletedList,
     Numbered: asNumberedList,
   }),
-)('ul') as ComponentType<any>;
+)('ul');
 
-export default ListDemo;
+export default List;

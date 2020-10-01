@@ -72,6 +72,9 @@ const withListButtons = ifEditable(
     Title: flow(
       withContextActivator('onClick'),
       withLocalContextMenu,
+      // @TODO: Fix this: We need to add an empty context here so that we don't end up with 2 local
+      // menus associated with the same context when using the chamelion button.
+      withMenuOptions({ useMenuOptions: () => [], name: 'List Item Title ' }),
     ),
   }),
 );

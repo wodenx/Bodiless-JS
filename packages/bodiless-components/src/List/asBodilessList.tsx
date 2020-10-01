@@ -13,7 +13,7 @@
  */
 
 import {
-  WithNodeKeyProps, withNodeKey, useNode, NodeProvider,
+  WithNodeKeyProps, withNodeKey, useNode, NodeProvider, WithNodeProps,
 } from '@bodiless/core';
 import React, { ComponentType, PropsWithChildren, FC } from 'react';
 import { flow, identity } from 'lodash';
@@ -83,7 +83,7 @@ const asBodilessList = (
   nodeKeys?: WithNodeKeyProps,
   // @TODO - Handle default data
   // defaultData?: Data,
-) => <P extends object>(Component: ComponentOrTag<P>) => flow(
+) => <P extends object>(Component: ComponentOrTag<P>): ComponentType<P & WithNodeProps> => flow(
   replaceWith(BodilessList),
   withListButtons,
   withDesign({
