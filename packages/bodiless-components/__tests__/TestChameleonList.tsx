@@ -10,7 +10,7 @@ import asBodilessList, {
   asSubList,
 } from '../src/List/asBodilessList';
 
-import asChamelionSubList from '../src/List/asChamelionSubList';
+import asChameleonSubList from '../src/List/asChameleonSubList';
 
 const data = {
   'list3$default$cham-sublist': { component: 'Bullet' },
@@ -39,13 +39,13 @@ const asNumberedSubList = asSubList$('Numbered', 'list-decimal ml-5');
 
 const withDemoSubLists = withDesign({
   Item: flow(
-    asChamelionSubList,
+    asChameleonSubList,
     withDesign({
       Bullet: flow(
         asBulletedSubList,
         withDesign({
           Item: flow(
-            asChamelionSubList,
+            asChameleonSubList,
             withDesign({
               Bullet: asNumberedSubList,
             }),

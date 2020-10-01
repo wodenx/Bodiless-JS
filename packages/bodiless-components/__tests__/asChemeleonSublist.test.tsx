@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { render } from 'enzyme';
-import TestList from './TestChamelionList';
+import TestList from './TestChameleonList';
 
-describe('asChamelionSubList', () => {
+describe('asChameleonSubList', () => {
   it('works', () => {
     const $ = render(<TestList />);
     expect($).toMatchSnapshot();

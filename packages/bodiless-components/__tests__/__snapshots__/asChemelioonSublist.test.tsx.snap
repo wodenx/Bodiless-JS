@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`asChamelionSubList works 1`] = `
+exports[`asChameleonSubList works 1`] = `
 <ul>
   <li>
     <span>

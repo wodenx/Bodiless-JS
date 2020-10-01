@@ -22,7 +22,7 @@ import {
 import { flow } from 'lodash';
 import Layout from '../../../components/Layout';
 // import { OuterList, OuterLinkList } from './OldListDemo';
-import ChamelionListDemo from './ChamelionListDemo';
+import ChameleonListDemo from './ChameleonListDemo';
 import ListDemo from './ListDemo';
 import SimpleListDemo from './SimpleListDemo';
 import { asHeader1, asHeader3 } from '../../../components/Elements.token';
@@ -77,7 +77,7 @@ export default (props: any) => (
             each sublist can be switched between bullets and numbers.  The titles in
             the list are editable links.
           </p>
-          <ChamelionListDemo nodeKey="list1" />
+          <ChameleonListDemo nodeKey="list1" />
         </Wrapper>
       </div>
     </Layout>

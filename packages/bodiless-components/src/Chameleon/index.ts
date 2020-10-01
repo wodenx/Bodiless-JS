@@ -12,18 +12,18 @@
  * limitations under the License.
  */
 
-import asBodilessChamelion, { withDeleteNodeOnUnwrap } from './asBodilessChamelion';
-import applyChamelion from './applyChamelion';
-import withChamelionComponentFormControls from './withChamelionComponentFormControls';
-import withChamelionButton from './withChamelionButton';
-import withChamelionContext, { useChamelionContext } from './withChamelionContext';
+import asBodilessChameleon, { withDeleteNodeOnUnwrap } from './asBodilessChameleon';
+import applyChameleon from './applyChameleon';
+import withChameleonComponentFormControls from './withChameleonComponentFormControls';
+import withChameleonButton from './withChameleonButton';
+import withChameleonContext, { useChameleonContext } from './withChameleonContext';
 
 export {
-  asBodilessChamelion,
+  asBodilessChameleon,
   withDeleteNodeOnUnwrap,
-  applyChamelion,
-  withChamelionButton,
-  withChamelionComponentFormControls,
-  withChamelionContext,
-  useChamelionContext,
+  applyChameleon,
+  withChameleonButton,
+  withChameleonComponentFormControls,
+  withChameleonContext,
+  useChameleonContext,
 };

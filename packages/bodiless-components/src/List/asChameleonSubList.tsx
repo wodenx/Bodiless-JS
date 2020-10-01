@@ -2,13 +2,13 @@ import { v1 } from 'uuid';
 import { identity, flow } from 'lodash';
 import { withDesign, HOC, Design } from '@bodiless/fclasses';
 import { EditButtonOptions } from '@bodiless/core';
-import { useChamelionContext, asBodilessChamelion } from '../Chamelion';
+import { useChameleonContext, asBodilessChameleon } from '../Chameleon';
 
-const useChamelionOverrides = ():Partial<EditButtonOptions<any, any>> => {
-  const { isOn } = useChamelionContext();
+const useChameleonOverrides = ():Partial<EditButtonOptions<any, any>> => {
+  const { isOn } = useChameleonContext();
   return {
     icon: isOn ? 'repeat' : 'playlist_add',
-    name: `chamelion-sublist-${v1()}`,
+    name: `chameleon-sublist-${v1()}`,
     label: 'Sub',
     groupMerge: 'merge-up',
     // label: isOn ? 'Swap' : 'Add',
@@ -17,11 +17,11 @@ const useChamelionOverrides = ():Partial<EditButtonOptions<any, any>> => {
 };
 
 const useToggleOverrides = ():Partial<EditButtonOptions<any, any>> => {
-  const { isOn } = useChamelionContext();
+  const { isOn } = useChameleonContext();
   return {
     isHidden: isOn,
     icon: 'playlist_add',
-    name: `chamelion-sublist-${v1()}`,
+    name: `chameleon-sublist-${v1()}`,
     label: 'Sub',
     groupMerge: 'merge-up',
     // label: 'Add',
@@ -30,13 +30,13 @@ const useToggleOverrides = ():Partial<EditButtonOptions<any, any>> => {
 };
 
 const useOverrides = () => {
-  const { selectableComponents } = useChamelionContext();
+  const { selectableComponents } = useChameleonContext();
   return Object.keys(selectableComponents).length > 1
-    ? useChamelionOverrides()
+    ? useChameleonOverrides()
     : useToggleOverrides();
 };
 
-const asChamelionSubList = asBodilessChamelion(
+const asChameleonSubList = asBodilessChameleon(
   'cham-sublist',
   {},
   useOverrides,
@@ -68,7 +68,7 @@ const withSubListDesign = (depth: number) => (
 );
 
 /**
- * Attaches nested chamelion sublists of arbitrary depth to a list.
+ * Attaches nested chameleon sublists of arbitrary depth to a list.
  *
  * This returns a function which takes a sublist definition, either as a single HOC or a
  * design.  If a single HOC is provided, the effect is a single sublist type which can
@@ -79,7 +79,7 @@ const withSubListDesign = (depth: number) => (
  * @return An function accepting a sublist definition and returning an HOC which adds the sublists.
  */
 const withSubLists = (depth: number) => (asSubList$: HOC|Design<any>): HOC => (
-  withSubListDesign(depth)(asSubList$, asChamelionSubList)
+  withSubListDesign(depth)(asSubList$, asChameleonSubList)
 );
-export default asChamelionSubList;
+export default asChameleonSubList;
 export { withSubLists, withSubListDesign };

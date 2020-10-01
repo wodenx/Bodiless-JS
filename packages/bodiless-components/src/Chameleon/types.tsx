@@ -18,20 +18,20 @@ import {
   DesignableComponents,
 } from '@bodiless/fclasses';
 
-export type ChamelionData = {
+export type ChameleonData = {
   component?: string | null;
 };
 
-export type ChamelionComponents = DesignableComponents;
+export type ChameleonComponents = DesignableComponents;
 
-export type ChamelionState = {
+export type ChameleonState = {
   isOn: boolean,
   activeComponent: string,
   setActiveComponent: (key: string|null) => void,
-  selectableComponents: Partial<ChamelionComponents>,
+  selectableComponents: Partial<ChameleonComponents>,
 };
 
-export type ChamelionProps =
-  EditButtonProps<ChamelionData> & DesignableComponentsProps<ChamelionComponents>;
-export type ChamelionButtonProps = ChamelionProps & EditButtonProps<ChamelionData>;
-export type UseOverrides<P = any> = (props: P) => Partial<EditButtonOptions<P, ChamelionData>>;
+export type ChameleonProps =
+  EditButtonProps<ChameleonData> & DesignableComponentsProps<ChameleonComponents>;
+export type ChameleonButtonProps = ChameleonProps & EditButtonProps<ChameleonData>;
+export type UseOverrides<P = any> = (props: P) => Partial<EditButtonOptions<P, ChameleonData>>;

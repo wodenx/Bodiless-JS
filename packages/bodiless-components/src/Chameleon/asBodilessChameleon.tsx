@@ -19,10 +19,10 @@ import {
 } from '@bodiless/core';
 import type { WithNodeKeyProps } from '@bodiless/core';
 import { flowRight } from 'lodash';
-import { ChamelionData, UseOverrides } from './types';
-import withChamelionButton from './withChamelionButton';
-import applyChamelion from './applyChamelion';
-import withChamelionContext from './withChamelionContext';
+import { ChameleonData, UseOverrides } from './types';
+import withChameleonButton from './withChameleonButton';
+import applyChameleon from './applyChameleon';
+import withChameleonContext from './withChameleonContext';
 
 const withDeleteNodeOnUnwrap = <P extends object>(Component: ComponentType<P> | string) => {
   const WithDeleteOnUnwrap = (props: P) => {
@@ -39,27 +39,27 @@ const withDeleteNodeOnUnwrap = <P extends object>(Component: ComponentType<P> | 
 };
 
 /**
- * Transforms the wrapped component into a "chamelion".  The chamelion accepts a design and
- * applies one of the design elements to itself depending on the chamelion state, which
+ * Transforms the wrapped component into a "chameleon".  The chameleon accepts a design and
+ * applies one of the design elements to itself depending on the chameleon state, which
  * is stored as bodiless data. A menu option is provided on the local context menu which
  * renders a form allowing the user to select one of the design element alternatives.
  *
- * @param nodeKeys Location where the chamelion state data should be stored.
- * @param defaultData Default chamelion state.
+ * @param nodeKeys Location where the chameleon state data should be stored.
+ * @param defaultData Default chameleon state.
  * @param useOverrides Hook returning overrides for the menu button.
  */
-const asBodilessChamelion = (
+const asBodilessChameleon = (
   nodeKeys: WithNodeKeyProps,
-  defaultData?: ChamelionData,
+  defaultData?: ChameleonData,
   useOverrides?: UseOverrides,
 ) => flowRight(
-  withChamelionContext(nodeKeys, defaultData),
+  withChameleonContext(nodeKeys, defaultData),
   ifEditable(
-    withChamelionButton(useOverrides),
+    withChameleonButton(useOverrides),
   ),
-  applyChamelion,
+  applyChameleon,
 );
 
-export default asBodilessChamelion;
+export default asBodilessChameleon;
 
 export { withDeleteNodeOnUnwrap };

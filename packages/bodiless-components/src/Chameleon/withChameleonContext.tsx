@@ -21,36 +21,36 @@ import {
 } from '@bodiless/fclasses';
 import { omit } from 'lodash';
 import type {
-  ChamelionState, ChamelionData, ChamelionButtonProps, ChamelionComponents,
+  ChameleonState, ChameleonData, ChameleonButtonProps, ChameleonComponents,
 } from './types';
 
-const ChamelionContext = createContext<ChamelionState|undefined>(undefined);
+const ChameleonContext = createContext<ChameleonState|undefined>(undefined);
 
 export const DEFAULT_KEY = '_default';
 
-const getSelectableComponents = (props: ChamelionButtonProps) => {
+const getSelectableComponents = (props: ChameleonButtonProps) => {
   const { components } = props;
   // @ts-ignore @TODO need to add metadata to component type
   if (components[DEFAULT_KEY].title) return components;
   return omit(components, DEFAULT_KEY);
 };
 
-const getActiveComponent = (props: ChamelionButtonProps) => {
+const getActiveComponent = (props: ChameleonButtonProps) => {
   const { componentData: { component } } = props;
   const components = getSelectableComponents(props);
   return (component && components[component]) ? component : DEFAULT_KEY;
 };
 
-const getIsOn = (props: ChamelionButtonProps) => getActiveComponent(props) !== DEFAULT_KEY;
+const getIsOn = (props: ChameleonButtonProps) => getActiveComponent(props) !== DEFAULT_KEY;
 
 /**
- * Gets the current chamelion context value.
+ * Gets the current chameleon context value.
  *
- * @see withChamelionContext
+ * @see withChameleonContext
  */
-const useChamelionContext = (): ChamelionState => {
-  const value = useContext(ChamelionContext);
-  if (!value) throw new Error('No active chamelion context');
+const useChameleonContext = (): ChameleonState => {
+  const value = useContext(ChameleonContext);
+  if (!value) throw new Error('No active chameleon context');
   return value;
 };
 
@@ -62,8 +62,8 @@ const useChamelionContext = (): ChamelionState => {
  *
  * @param Component
  */
-const applyChamelionDesign = <P extends object>(Component: ComponentType<P> | string) => {
-  const apply = (design: Design<ChamelionComponents> = {}) => {
+const applyChameleonDesign = <P extends object>(Component: ComponentType<P> | string) => {
+  const apply = (design: Design<ChameleonComponents> = {}) => {
     const Component$ = asComponent(Component as ComponentType<P>);
     const start = Object.keys(design).reduce((acc, key) => ({
       ...acc,
@@ -74,12 +74,12 @@ const applyChamelionDesign = <P extends object>(Component: ComponentType<P> | st
   return extendDesignable()(apply);
 };
 
-const withChamelionContext = (
+const withChameleonContext = (
   nodeKeys: WithNodeKeyProps,
-  defaultData?: ChamelionData,
+  defaultData?: ChameleonData,
 ): HOC => <P extends object>(Component: ComponentType<P>|string) => {
-  const WithChamelionContext: FC<P & ChamelionButtonProps> = props => (
-    <ChamelionContext.Provider value={{
+  const WithChameleonContext: FC<P & ChameleonButtonProps> = props => (
+    <ChameleonContext.Provider value={{
       isOn: getIsOn(props),
       activeComponent: getActiveComponent(props),
       selectableComponents: getSelectableComponents(props),
@@ -89,16 +89,16 @@ const withChamelionContext = (
       <Component
         {...omit(props, 'componentData', 'components', 'setComponentData') as P}
       />
-    </ChamelionContext.Provider>
+    </ChameleonContext.Provider>
   );
 
   return withSidecarNodes(
     // We apply the design to a fragment here so as to get the keys. We can't get the actual
-    // components until `applyChamelion` bc we don't yet know the start component.
-    applyChamelionDesign(Fragment),
+    // components until `applyChameleon` bc we don't yet know the start component.
+    applyChameleonDesign(Fragment),
     withBodilessData(nodeKeys, defaultData),
-  )(WithChamelionContext);
+  )(WithChameleonContext);
 };
 
-export default withChamelionContext;
-export { useChamelionContext, applyChamelionDesign };
+export default withChameleonContext;
+export { useChameleonContext, applyChameleonDesign };
