@@ -9,7 +9,6 @@ import {
 import { ComponentType } from 'react';
 import { withItemMargin, withSimpleTitle } from './SimpleListDemo';
 
-
 /**
  * Defines the all sublists
  */
