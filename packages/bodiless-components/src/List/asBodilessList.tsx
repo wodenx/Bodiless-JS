@@ -22,7 +22,7 @@ import {
 } from '@bodiless/fclasses';
 
 import withListButtons from './withListButtons';
-import BodilessList from './index';
+import BodilessList from './List';
 
 type ComponentOrTag<P> = ComponentType<P>|keyof JSX.IntrinsicElements;
 
@@ -108,15 +108,15 @@ const asSubList = flow(
   asTitledItem,
 );
 
-const withSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
+const withSimpleSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
   depth === 0 ? identity
     : withDesign({
-      Item: flow(
+    Item: flow(
         withDesign$,
-        withSubListDesign(depth - 1)(withDesign$),
+        withSimpleSubListDesign(depth - 1)(withDesign$),
       ),
     }) as HOC
 );
 
 export default asBodilessList;
-export { asSubList, asTitledItem, withSubListDesign };
+export { asSubList, asTitledItem, withSimpleSubListDesign };
