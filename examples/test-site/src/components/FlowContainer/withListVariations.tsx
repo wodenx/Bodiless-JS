@@ -22,14 +22,14 @@ import {
   withDesign,
 } from '@bodiless/fclasses';
 
-import ChamelionListDemo from '../../data/pages/list2/ChamelionListDemo';
+import ChameleonListDemo from '../../data/pages/list2/ChameleonListDemo';
 import { withType } from './Categories';
 
 const listVariations = {
-  ChamelionList: flow(
-    replaceWith(ChamelionListDemo),
+  ChameleonList: flow(
+    replaceWith(ChameleonListDemo),
     withType('List')(),
-    withTitle('Chamelion LIst'),
+    withTitle('Chameleon LIst'),
     withDesc('Multi-level list with choice between bullets and numbers.\n'),
   ),
 };

@@ -15,15 +15,15 @@
 import React, { ComponentType, FC } from 'react';
 import { withoutProps } from '@bodiless/fclasses';
 import { flow } from 'lodash';
-import { applyChamelionDesign, useChamelionContext } from './withChamelionContext';
-import { ChamelionProps } from './types';
+import { applyChameleonDesign, useChameleonContext } from './withChameleonContext';
+import { ChameleonProps } from './types';
 
 /**
  * Applies the appropriate design to the wrapped component depending on the
- * chamelion state.  Must be called within a context defined by `withChamelionContext`.
+ * chameleon state.  Must be called within a context defined by `withChameleonContext`.
  *
- * Use this function when you want to separate the form controlling the chamelion
- * state from the component on which the chamelion acts (for example, if you want
+ * Use this function when you want to separate the form controlling the chameleon
+ * state from the component on which the chameleon acts (for example, if you want
  * to add controls to a component edit form, but actually act on the component
  * to which the edit form was added), eg:
  *
@@ -32,29 +32,29 @@ import { ChamelionProps } from './types';
  *   withDesign({
  *     Disabled: flow(replaceWith('span'), withoutProps('href'), withTitle('Disabled'))
  *   }),
- *   withChamelionContext('link-chamelion'),
- *   withChamelionComponenFormConrols,
+ *   withChameleonContext('link-chameleon'),
+ *   withChameleonComponenFormConrols,
  *   asBodilessLink('link')
- *   applyChamelion,
+ *   applyChameleon,
  * )('a');
  * ```
  *
  * Note the use of `withTitle` here.  Only design elements with title metadata will be considered
- * valid chamelion states.
+ * valid chameleon states.
  *
  * @return The wrapped component enhanced by the appropriate HOC's from the design.
  */
-const applyChamelion = <P extends object>(Component: ComponentType<P>|string) => {
-  const Chamelion: FC<P & ChamelionProps> = props => {
-    const { activeComponent } = useChamelionContext();
+const applyChameleon = <P extends object>(Component: ComponentType<P>|string) => {
+  const Chameleon: FC<P & ChameleonProps> = props => {
+    const { activeComponent } = useChameleonContext();
     const { components, ...rest } = props;
     const ActiveComponent = components[activeComponent];
     return <ActiveComponent {...rest as P} />;
   };
   return flow(
     withoutProps('design'),
-    applyChamelionDesign(Component),
-  )(Chamelion);
+    applyChameleonDesign(Component),
+  )(Chameleon);
 };
 
-export default applyChamelion;
+export default applyChameleon;

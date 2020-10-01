@@ -15,13 +15,13 @@
 import React, { ComponentType, FC } from 'react';
 
 import { flowRight } from 'lodash';
-import { ChamelionButtonProps } from './types';
-import { DEFAULT_KEY, useChamelionContext } from './withChamelionContext';
-import { withUnwrap } from './withChamelionButton';
+import { ChameleonButtonProps } from './types';
+import { DEFAULT_KEY, useChameleonContext } from './withChameleonContext';
+import { withUnwrap } from './withChameleonButton';
 
 const withWrapOnSubmit = <P extends object>(Component: ComponentType<P>) => {
-  const WithWrapOnSubmit: FC<P & ChamelionButtonProps> = props => {
-    const { isOn, setActiveComponent, selectableComponents } = useChamelionContext();
+  const WithWrapOnSubmit: FC<P & ChameleonButtonProps> = props => {
+    const { isOn, setActiveComponent, selectableComponents } = useChameleonContext();
     if (isOn) return <Component {...props} />;
     const newKey = Object.keys(selectableComponents).find(key => key !== DEFAULT_KEY) || null;
     return <Component {...props} onSubmit={() => setActiveComponent(newKey)} />;
@@ -29,9 +29,9 @@ const withWrapOnSubmit = <P extends object>(Component: ComponentType<P>) => {
   return WithWrapOnSubmit;
 };
 
-const withChamelionComponentFormControls = flowRight(
+const withChameleonComponentFormControls = flowRight(
   withWrapOnSubmit,
   withUnwrap,
 );
 
-export default withChamelionComponentFormControls;
+export default withChameleonComponentFormControls;

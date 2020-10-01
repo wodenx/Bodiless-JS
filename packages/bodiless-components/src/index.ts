@@ -31,10 +31,10 @@ import asBodilessList, {
 } from './List/asBodilessList';
 import withSublist, { withBasicSublist } from './List_DEPRECATED/withSublist';
 import withDeleteSublistOnUnwrap from './List_DEPRECATED/withDeleteSublistOnUnwrap';
-import asChamelionSubList, {
+import asChameleonSubList, {
   withSubLists,
   withSubListDesign,
-} from './List/asChamelionSubList';
+} from './List/asChameleonSubList';
 import {
   withMeta, withMetaStatic, withMetaHtml, withTitle,
 } from './Meta/Meta';
@@ -72,7 +72,7 @@ export {
   List,
   asBodilessList,
   withSimpleSubListDesign,
-  asChamelionSubList,
+  asChameleonSubList,
   withSubLists,
   withSubListDesign,
   asTitledItem,
@@ -115,7 +115,7 @@ export {
   useBreadcrumbContext,
 };
 
-export * from './Chamelion/index';
+export * from './Chameleon/index';
 
 export type {
   FinalProps as ListProps,

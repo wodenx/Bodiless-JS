@@ -21,7 +21,7 @@ import {
   withSidecarNodes, WithNodeKeyProps,
 } from '@bodiless/core';
 import {
-  asBreadcrumb, useBreadcrumbContext, asBodilessList, asChamelionSubList,
+  asBreadcrumb, useBreadcrumbContext, asBodilessList, asChameleonSubList,
 } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
@@ -75,7 +75,7 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flowRight(
   withSubMenuDesign(asMenuSubList),
   withDesign({
     Title: asMenuLink(() => identity),
-    Item: asChamelionSubList,
+    Item: asChameleonSubList,
   }),
   asStylableList,
   asBodilessList(nodeKeys),
@@ -88,7 +88,7 @@ const asBasicSubMenu = flow(
 );
 
 // Applies above designs to the chameilion sublist
-const asChamelionSubMenu = withDesign({
+const asChameleonSubMenu = withDesign({
   Basic: asBasicSubMenu,
   _default: asMenuItem,
 });
@@ -103,7 +103,7 @@ const asChamelionSubMenu = withDesign({
 const asMainMenuClean = flowRight(
   asMenu,
   withDesign({
-    Item: asChamelionSubMenu,
+    Item: asChameleonSubMenu,
   }),
 );
 

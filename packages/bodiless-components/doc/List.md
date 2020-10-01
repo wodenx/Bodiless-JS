@@ -256,7 +256,7 @@ Finally, let's turn the top-level list itself into a chameleon which can switch 
 bulleted and numbered:
 
 ```ts
-  asBodilessChamelion('cham-list', { component: 'Bulleted' }),
+  asBodilessChameleon('cham-list', { component: 'Bulleted' }),
   withDesign({
     Bulleted: asBulletedList,
     Numbered: asNumberedList,

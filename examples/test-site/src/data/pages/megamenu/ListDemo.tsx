@@ -21,11 +21,11 @@ import {
   asSubList,
 } from '@bodiless/components';
 import { asStylableList, asMenuLink } from '@bodiless/organisms';
-import asChamelionTitle from './asChamelionTitle';
+import asChameleonTitle from './asChameleonTitle';
 
 const Foo = (props: any) => <div id="foo" {...props} />;
-export const MenuLinkChamelion = flow(
-  asChamelionTitle,
+export const MenuLinkChameleon = flow(
+  asChameleonTitle,
   stylable,
   withDesign({
     Link: addClasses('italic'),

@@ -32,7 +32,7 @@ const withLessItemMargin = withDesign({
 });
 
 const withLessMarginOnInnerList = withDesign({
-  Item: withDesign({ // This item is a chamelion component
+  Item: withDesign({ // This item is a chameleon component
     SubList: withDesign({ // It's "SubList" state design is the actual sublist.
       Item: withDesign({
         SubList: withLessItemMargin,
