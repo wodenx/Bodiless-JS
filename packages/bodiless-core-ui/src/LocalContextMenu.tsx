@@ -32,7 +32,7 @@ import ReactTagsField from './ReactTags';
 // Stacked toolbar orientation...
 // Horizontal
 const toolbarClasses = 'bl-flex';
-const groupClasses = 'bl-border-l first:bl-border-l-0 bl-border-white bl-ml-4 first:bl-ml-0 bl-pl-4';
+const groupClasses = 'bl-border-l first:bl-border-l-0 bl-border-white bl-px-3';
 // Vertical
 // const toolbarClasses = '';
 // eslint-disable-next-line max-len

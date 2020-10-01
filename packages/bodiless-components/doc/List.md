@@ -52,9 +52,9 @@ import { asSubList } from '@bodiless/components';
 
 const withSubLists = withDesign({
   Item: flow(
-    asSubList,
+    asSubList(),
     withDesign({
-      Item: asSubList,
+      Item: asSubList(),
     }),
   ),
 });
@@ -118,7 +118,7 @@ const BasicCompoundList = flow(
   asBodilessList(),
   withTitle,
   withSimpleSubListDesign(2)(flow(
-    asSubList,
+    asSubList(),
     withTitle,
     withItemMargin,
   )),
@@ -139,7 +139,7 @@ item will have a sublist. Tp do so, we leverage the bodiless
 import { withDeleteNodeOnUnwrap, withSubLists, withSubListDesign } from '@bodiless/components';
 
 const asToggledSubList = flow(
-  asSubList,
+  asSubList(),
   withDeleteNodeOnUnwrap,
 );
 
@@ -262,4 +262,44 @@ bulleted and numbered:
     Numbered: asNumberedList,
   }),
 )('ul');
+```
+## Advanced Topics
+
+### Optional Parameters
+
+Link other bodiless components, `asBodilessList` accepts 3 optional positional parameters.
+
+#### Node Keys
+
+You can specify a node key for the list as a first parameter, so you can write:
+```ts
+const List = asBodilessList('my-list');
+<List />
+```
+instead of
+```ts
+const List = asBodilessList();
+<List nodeKey="my-list" />
+```
+This is useful if your list is a piece of a larger component which you are extending
+via the design API.
+
+#### Default Data
+
+Similarly, you can specify default data for the list as a second parameter (NOT YET IMPLEMENTED).
+
+#### Overrides
+
+Finally, you can specify a custom hook providing edit button overrides as a
+third parameter. You can also provide overrides as a parameter to `asSubList`.
+This allows you to customize attributes of the menu buttons for specific lists.
+One common use-case is to customize the group label for the buttons at different
+depths:
+
+```ts
+const asNestedMenu = flow(
+  asBodilessList(undefined, undefined, () => ({ groupLabel: 'Main Menu Item' })),
+  withSubLists(1)(asSubList(() => ({ groupLabel: 'Sub Menu Item' }))),
+  ...
+);
 ```
