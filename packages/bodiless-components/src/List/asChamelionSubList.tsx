@@ -63,7 +63,7 @@ const withSubListDesign = (depth: number) => (
   hoc: HOC = identity,
 ): HOC => (
   typeof withDesign$ === 'function'
-    ? withSubListDesign$(depth)({ On: withDesign$ }, hoc)
+    ? withSubListDesign$(depth)({ SubList: withDesign$ }, hoc)
     : withSubListDesign$(depth)(withDesign$, hoc)
 );
 

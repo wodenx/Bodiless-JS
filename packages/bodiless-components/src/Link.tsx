@@ -50,7 +50,7 @@ const options: BodilessOptions<Props, Data> = {
       if (unwrap) {
         unwrap();
       }
-      closeForm();
+      closeForm(event);
     };
     return (
       <>

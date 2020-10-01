@@ -13,7 +13,7 @@
  */
 
 import {
-  WithNodeKeyProps, withNodeKey, useNode, NodeProvider,
+  WithNodeKeyProps, withNodeKey, useNode, NodeProvider, WithNodeProps,
 } from '@bodiless/core';
 import React, { ComponentType, PropsWithChildren, FC } from 'react';
 import { flow, identity } from 'lodash';
@@ -86,7 +86,7 @@ const asBodilessList = <P extends object>(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   defaultData?: Data,
   useOverrides?: UseListOverrides<P>,
-) => (Component: ComponentOrTag<P>) => flow(
+) => (Component: ComponentOrTag<P>): ComponentType<P & WithNodeProps> => flow(
     replaceWith(BodilessList),
     withListButtons(useOverrides),
     withDesign({

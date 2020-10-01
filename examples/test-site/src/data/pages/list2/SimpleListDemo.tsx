@@ -1,23 +1,68 @@
 import { flow } from 'lodash';
-import { asSubList, asBodilessList, withSimpleSubListDesign } from '@bodiless/components';
-import { withDesign, addClasses, HOC } from '@bodiless/fclasses';
-import { asStylableList } from '@bodiless/organisms';
-import { withLinkTitle } from './ListDemo';
+import {
+  asSubList, asBodilessList, asEditable, withSimpleSubListDesign,
+} from '@bodiless/components';
+import {
+  withDesign, addClasses, stylable, replaceWith,
+} from '@bodiless/fclasses';
 
-const asSimpleSubList = flow(
-  asSubList,
-  asStylableList,
-);
+export const withSimpleTitle = withDesign({
+  Title: flow(
+    // @ts-ignore
+    replaceWith('span'),
+    asEditable('text', 'Item'),
+  ),
+});
 
-const withSubListDesign = withSimpleSubListDesign(4);
+export const withItemMargin = withDesign({
+  Item: flow(stylable, addClasses('ml-5')),
+});
 
-const SimpleList = flow(
+const withSubLists = withDesign({
+  Item: flow(
+    asSubList,
+    withDesign({
+      Item: asSubList,
+    }),
+  ),
+});
+
+const withTitles = withDesign({
+  Item: flow(
+    withSimpleTitle,
+    withDesign({
+      Item: withSimpleTitle,
+    }),
+  ),
+});
+
+const withMargins = withDesign({
+  Item: flow(
+    withItemMargin,
+    withDesign({
+      Item: withItemMargin,
+    }),
+  ),
+});
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const BasicCompoundListVerbose = flow(
   asBodilessList(),
-  asStylableList,
-  withSubListDesign(asSimpleSubList as HOC),
-  withSubListDesign(withLinkTitle),
-  withLinkTitle,
-  withSubListDesign(withDesign({ Item: addClasses('ml-5') })),
+  withSimpleTitle,
+  withSubLists,
+  withTitles,
+  withMargins,
 )('ul');
 
-export default SimpleList;
+const withListDesign = withSimpleSubListDesign(2);
+const BasicCompoundList = flow(
+  asBodilessList(),
+  withSimpleTitle,
+  withListDesign(flow(
+    asSubList,
+    withSimpleTitle,
+    withItemMargin,
+  )),
+)('ul');
+
+export default BasicCompoundList;

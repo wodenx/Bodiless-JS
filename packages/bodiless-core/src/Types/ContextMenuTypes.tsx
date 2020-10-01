@@ -96,6 +96,7 @@ export type TMenuOption = {
    * value of the render fuction.
    */
   handler?: (event: React.MouseEvent) => any;
+  activateContext?: (() => boolean) | boolean;
   /**
    * When true, display this button on the local context menu.  Default is false.
    */
@@ -184,10 +185,15 @@ export type IContextMenuProps = {
   ui?: ContextMenuUI;
   isPositionToggled?: boolean;
   renderInTooltip?: boolean;
+  /**
+   * `closeForm` prop used to override the default `closeForm` behaviour if provided.
+   * Currently it will only be triggered by clicking outside of `ComponentFormCloseButton`.
+   */
+  closeForm?: (e: any) => void;
 } & HTMLProps<HTMLElement>;
 
 export type ContextMenuFormProps = {
-  closeForm: () => void;
   ui?: ContextMenuUI;
+  closeForm: (e: any) => void;
   'aria-label'?: string;
 };

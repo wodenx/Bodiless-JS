@@ -120,6 +120,7 @@ const useAddButton = (
     local: true,
     name,
     handler: () => componentSelectorForm(props, insertItem),
+    activateContext: false,
     isHidden,
   };
 };
@@ -138,6 +139,7 @@ const useSwapButton = (
     global: false,
     local: true,
     handler: () => componentSelectorForm(props, replaceItem),
+    activateContext: false,
     isHidden: useCallback(() => !context.isEdit, []),
   };
 };
