@@ -65,7 +65,7 @@ const withMenuStyles = flow(
 );
 
 const withSimpleSubMenuStyles = withDesign({
-  Basic: withBasicSubMenuStyles,
+  SubMenu: withBasicSubMenuStyles,
 });
 
 export const withSimpleMenuStyles = flow(

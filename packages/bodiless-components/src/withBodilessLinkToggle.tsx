@@ -12,12 +12,12 @@
  * limitations under the License.
  */
 
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import {
   withSidecarNodes,
   ifReadOnly, ifEditable, withOnlyProps,
 } from '@bodiless/core';
-import { flowRight } from 'lodash';
+import { flowRight, identity } from 'lodash';
 import { replaceWith, withoutProps, withDesign } from '@bodiless/fclasses';
 import type { HOC } from '@bodiless/fclasses';
 import { withChameleonComponentFormControls, applyChameleon, withChameleonContext } from './Chameleon';
@@ -33,15 +33,9 @@ const withBodilessLinkToggle = (asEditableLink: HOC) => flowRight(
       ifEditable(replaceWith(Span)),
       ifReadOnly(replaceWith(SafeFragment)),
     ),
-    // @TODO: Make withTitle available in bodiless-components, or move this somewhere?
-    // On: withTitle('Link'),
-    On: (C: any) => {
-      const C$ = (props: any) => <C {...props} />;
-      C$.title = 'Link';
-      return C$;
-    },
+    Link: identity,
   }),
-  withChameleonContext('toggle'),
+  withChameleonContext('link-toggle'),
   withChameleonComponentFormControls,
   withSidecarNodes(
     asEditableLink,
