@@ -29,6 +29,8 @@ import MegaMenu, { MegaMenuList, MegaMenuBreadcrumbs } from '../../../components
 import { SimpleMenu, SimpleMenuList } from '../../../components/MegaMenu/SimpleMenu';
 import { asHeader2, asHeader3, asHeader1 } from '../../../components/Elements.token';
 
+import ContentfulSimpleMenu, { MenuContent } from '../../../components/MegaMenu/ContentfulSimpleMenu';
+
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
   const path = node.path.join('$');
@@ -58,13 +60,14 @@ export default (props: any) => (
       */}
     <Layout>
       <H1>Menu V2</H1>
-
       <H2>Simple Menu</H2>
-      <SimpleMenu nodeKey="list2" />
+      <ContentfulSimpleMenu nodeKey="list2" />
       <H3>Simple Menu as List</H3>
       <SimpleMenuList nodeKey="list2" />
       <H3>Simple Menu Data</H3>
       <NodeTreePrinter nodeKey="list2" />
+      <H3>Content</H3>
+      <MenuContent />
 
       <H2>Mega Menu</H2>
       <MegaMenu nodeKey="list1" className="w-full" />
