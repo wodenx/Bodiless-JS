@@ -499,7 +499,10 @@ module.exports = {
   |
   */
 
-  variants: {},
+  variants: {
+    overflow: ['responsive', 'hover', 'focus'],
+    position: ['responsive', 'hover', 'focus'],
+  },
 
   corePlugins: {},
 

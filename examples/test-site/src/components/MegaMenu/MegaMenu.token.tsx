@@ -13,74 +13,143 @@
  */
 
 import { flow } from 'lodash';
-import { asHorizontalSubMenu, asHorizontalMenu, asToutHorizontal } from '@bodiless/organisms';
-import { withDesign, addProps, addClasses } from '@bodiless/fclasses';
-import { withMenuSublistStyles, withMenuListStyles } from '../Menus/token';
-import { asExceptMobile } from '../Elements.token';
-import './megamenu.css';
+import { asToutHorizontal } from '@bodiless/organisms';
+import { withDesign, addClasses } from '@bodiless/fclasses';
+
 import { asToutWithPaddings, asToutDefaultStyle } from '../Tout/token';
 
-const withMegaMenuStyles = withDesign({
-  // @TODO: We add the class here to style rc-menu. Maybe can use design API if we ditch rc-menu.
-  Wrapper: addProps({ popupClassName: 'container bl-mega-menu' }),
-  // @TODO: What's the best starting width? They will shrink to fit if there are more.
-  Item: addClasses('w-1/3'),
+/**
+ * Utility Styles
+ * ===========================================
+ */
+const asVerticalSubMenu = withDesign({
+  Wrapper: withDesign({
+    List: addClasses('flex-col'),
+  }),
 });
 
-const withColumnStyles = flow(
-  withMenuSublistStyles,
-);
-
-const withBasicSubMenuStyles = flow(
-  asHorizontalSubMenu,
-  withMenuSublistStyles,
-);
-
-const withToutSubMenuStyles = flow(
-  withBasicSubMenuStyles,
-  withMegaMenuStyles,
-);
-
-const withColumnSubMenuStyles = flow(
-  withDesign({
-    Item: withColumnStyles,
+const asStaticOnHover = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: addClasses('hover:static'),
   }),
-  withBasicSubMenuStyles,
-  withMegaMenuStyles,
-);
-
-const withChameleonSubMenuStyles = withDesign({
-  Basic: withBasicSubMenuStyles,
-  Touts: withToutSubMenuStyles,
-  Columns: withColumnSubMenuStyles,
 });
 
-const withMenuStyles = flow(
-  withDesign({
-    Item: withChameleonSubMenuStyles,
-  }),
-  asHorizontalMenu,
-  withMenuListStyles,
-  asExceptMobile,
-);
-
-const withSimpleSubMenuStyles = withDesign({
-  SubMenu: withBasicSubMenuStyles,
+/**
+ * Base Menu Styles
+ * ===========================================
+ */
+const withBaseMenuStyles = withDesign({
+  Title: addClasses('LIST-TITLE'),
+  Wrapper: addClasses('w-full relative flex bg-teal-600 text-white'),
+  Item: addClasses('relative py-1 px-4 hover:bg-teal-500 overflow-hidden hover:overflow-visible min-w-100 leading-loose text-sm'),
 });
 
-export const withSimpleMenuStyles = flow(
-  withDesign({
-    Item: withSimpleSubMenuStyles,
+/**
+ * Base Sub Menu Styles
+ * ===========================================
+ */
+const withBaseSubMenuStyles = withDesign({
+  Wrapper: withDesign({
+    List: addClasses('flex absolute left-0 w-full bg-teal-600 text-white my-1 z-10'),
   }),
-  asHorizontalMenu,
-  withMenuListStyles,
-  asExceptMobile,
+  Item: addClasses('py-1 px-4 hover:bg-teal-500 min-w-100 leading-loose text-sm'),
+});
+
+/**
+ * Simple Sub Menu Styles
+ * ===========================================
+ */
+
+const asSimpleSubMenu = flow(
+  asVerticalSubMenu,
+  withBaseSubMenuStyles,
 );
 
+const asSimpleSubMenuStyles = withDesign({
+  SubMenu: asSimpleSubMenu,
+});
+
+/**
+ * Touts Sub Menu Styles
+ * ===========================================
+ */
 export const withMenuToutStyles = flow(
   asToutWithPaddings,
   asToutDefaultStyle,
   asToutHorizontal,
 );
 
-export default withMenuStyles;
+const withToutStyles = withDesign({
+  Item: addClasses('w-1/3'),
+});
+
+const asToutsSubMenu = flow(
+  withToutStyles,
+  asStaticOnHover,
+  withBaseSubMenuStyles,
+);
+
+/**
+ * Columns Sub Menu Styles
+ * ===========================================
+ */
+const asColumnSublist = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: addClasses('relative'),
+  }),
+  Item: addClasses('pr-2 pl-5'),
+});
+
+// Since removeClasses doesn't work this will allow correct hover effects on column items.
+const withColumnHoverEffect = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: addClasses('hover:bg-teal-600'),
+  }),
+  Item: addClasses('hover:bg-teal-500'),
+});
+
+const withColumnStyles = flow(
+  asColumnSublist,
+  withColumnHoverEffect,
+);
+
+const asColumnSubMenu = flow(
+  withDesign({
+    Item: withColumnStyles,
+  }),
+  asStaticOnHover,
+  withBaseSubMenuStyles,
+);
+
+/**
+ * Mega Menu Sub Menu Styles
+ * ===========================================
+ */
+
+const asMegaMenuSubListStyles = withDesign({
+  Basic: asSimpleSubMenu,
+  Touts: asToutsSubMenu,
+  Columns: asColumnSubMenu,
+});
+
+/**
+ * Simple Menu Styles
+ * ===========================================
+ */
+export const withSimpleMenuStyles = flow(
+  withDesign({
+    Item: asSimpleSubMenuStyles,
+  }),
+  withBaseMenuStyles,
+);
+
+/**
+ * Mega Menu Styles
+ * ===========================================
+ */
+export const withMegaMenuStyles = flow(
+  withDesign({
+    Item: asMegaMenuSubListStyles,
+  }),
+  withBaseMenuStyles,
+);

@@ -12,20 +12,26 @@
  * limitations under the License.
  */
 
-import { ComponentType } from 'react';
-import type { MenuProps } from 'rc-menu';
-import { replaceWith, withDesign, stylable } from '@bodiless/fclasses';
+import {
+  replaceWith, withDesign, stylable,
+  Ul, Li,
+} from '@bodiless/fclasses';
 import { flow } from 'lodash';
-import Menu, { ItemGroup, Item as MenuItem, SubMenu } from 'rc-menu';
-// import Menu, { ItemGroup, Item as MenuItem, SubMenu } from './RCMenu';
 import { ifEditable, withExtendHandler } from '@bodiless/core';
-import { asTitledItem } from '@bodiless/components';
+import { asTitledItem, SubList } from '@bodiless/components';
+
+const SubMenu = flow(
+  withDesign({
+    WrapperItem: stylable,
+    List: stylable,
+  }),
+)(SubList);
 
 export const asMenu = withDesign({
-  Wrapper: replaceWith(stylable(Menu as ComponentType<MenuProps>)),
+  Wrapper: replaceWith(Ul),
 });
 
-export const asMenuItem = replaceWith(stylable(MenuItem));
+export const asMenuItem = replaceWith(Li);
 
 export const withMenuItem = withDesign({
   Item: asMenuItem,
@@ -33,15 +39,15 @@ export const withMenuItem = withDesign({
 
 export const asSubMenu = flow(
   withDesign({
-    Wrapper: replaceWith(stylable(SubMenu)),
+    Wrapper: replaceWith(SubMenu),
   }),
   asTitledItem,
 );
 
 export const asMenuItemGroup = flow(
   withDesign({
-    Item: replaceWith(stylable(MenuItem)),
-    Wrapper: replaceWith(stylable(ItemGroup)),
+    Item: replaceWith(Li),
+    Wrapper: replaceWith(SubMenu),
   }),
   asTitledItem,
 );

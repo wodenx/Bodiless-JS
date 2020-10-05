@@ -24,7 +24,7 @@ import { Fragment } from 'react';
 import { asReadOnly } from '@bodiless/core';
 import { asEditable as withEditorSimple } from '@bodiless/components';
 // import { withEditorSimple } from '../Editors';
-import withMenuStyles, { withMenuToutStyles } from './MegaMenu.token';
+import { withMenuToutStyles, withMegaMenuStyles } from './MegaMenu.token';
 import { withToutEditors } from '../Tout';
 
 export const withTitleEditor = withEditorSimple('text', 'Menu Item');
@@ -63,7 +63,7 @@ const MegaMenu = flow(
       }),
     }),
   }),
-  withMenuStyles,
+  withMegaMenuStyles,
 )(Fragment);
 
 const MegaMenuList = flow(
