@@ -53,7 +53,7 @@ const withSubMenuDesign = (design: any) => {
   const withDesign$ = typeof design === 'function' ? design : withDesign(design);
   return withDesign({
     Item: withDesign({
-      Basic: withDesign$,
+      List: withDesign$,
       Touts: withDesign$,
       Columns: flow(
         withDesign$,
@@ -103,7 +103,7 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
 
 // Applies above designs to the chameilion sublist
 const asChameleonSubMenu = withDesign({
-  Basic: flowRight(
+  List: flowRight(
     withMenuItem,
     asSubMenu,
   ),

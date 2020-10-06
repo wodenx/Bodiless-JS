@@ -13,8 +13,9 @@
  */
 
 import { flow } from 'lodash';
+import { useEditContext } from '@bodiless/core';
 import { asToutHorizontal } from '@bodiless/organisms';
-import { withDesign, addClasses } from '@bodiless/fclasses';
+import { withDesign, addClasses, addClassesIf } from '@bodiless/fclasses';
 
 import { asToutWithPaddings, asToutDefaultStyle } from '../Tout/token';
 
@@ -22,6 +23,9 @@ import { asToutWithPaddings, asToutDefaultStyle } from '../Tout/token';
  * Utility Styles
  * ===========================================
  */
+const isActive = () => useEditContext().isActive;
+const isNotActive = () => !useEditContext().isActive;
+
 const asVerticalSubMenu = withDesign({
   Wrapper: withDesign({
     List: addClasses('flex-col'),
@@ -34,13 +38,31 @@ const asStaticOnHover = withDesign({
   }),
 });
 
+const asRelative = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: addClasses('relative'),
+  }),
+});
+
+const asExpandedOnEdit = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: addClassesIf(isActive)('overflow-visible'),
+  }),
+});
+
+const asRelativeOnEdit = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: addClassesIf(isNotActive)('relative'),
+  }),
+});
+
 /**
  * Base Menu Styles
  * ===========================================
  */
 const withBaseMenuStyles = withDesign({
   Wrapper: addClasses('w-full relative flex bg-teal-600 text-white'),
-  Item: addClasses('relative py-1 px-4 hover:bg-teal-500 overflow-hidden hover:overflow-visible min-w-100 leading-loose text-sm'),
+  Item: addClasses('py-1 px-4 hover:bg-teal-500 overflow-hidden hover:overflow-visible min-w-100 leading-loose text-sm'),
 });
 
 /**
@@ -62,6 +84,8 @@ const withBaseSubMenuStyles = withDesign({
 const asSimpleSubMenu = flow(
   asVerticalSubMenu,
   withBaseSubMenuStyles,
+  asExpandedOnEdit,
+  asRelative,
 );
 
 const asSimpleSubMenuStyles = withDesign({
@@ -86,6 +110,7 @@ const asToutsSubMenu = flow(
   withToutStyles,
   asStaticOnHover,
   withBaseSubMenuStyles,
+  asRelativeOnEdit,
 );
 
 /**
@@ -118,6 +143,7 @@ const asColumnSubMenu = flow(
   }),
   asStaticOnHover,
   withBaseSubMenuStyles,
+  asRelativeOnEdit,
 );
 
 /**
@@ -126,7 +152,7 @@ const asColumnSubMenu = flow(
  */
 
 const asMegaMenuSubListStyles = withDesign({
-  Basic: asSimpleSubMenu,
+  List: asSimpleSubMenu,
   Touts: asToutsSubMenu,
   Columns: asColumnSubMenu,
 });
