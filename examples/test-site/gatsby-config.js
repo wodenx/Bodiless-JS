@@ -11,6 +11,29 @@ const SITEURL = process.env.SITE_URL;
 // Gatsby plugins list.
 const plugins = [
   {
+    resolve: 'gatsby-source-apiserver',
+    options: {
+      entitiesArray: [
+        {
+          url: 'https://ghn3btyvqf.execute-api.ap-southeast-1.amazonaws.com/dev/v1/content/imodium/au/en/navigation/main-menu',
+          method: 'get',
+          headers: {
+            'x-api-key': process.env.HEADLESS_API_KEY,
+          },
+          name: 'nav',
+        },
+        {
+          url: 'https://ghn3btyvqf.execute-api.ap-southeast-1.amazonaws.com/dev/v1/content/imodium/au/en/taco-list/home-sections',
+          method: 'get',
+          headers: {
+            'x-api-key': process.env.HEADLESS_API_KEY,
+          },
+          name: 'tacos',
+        },
+      ],
+    },
+  },
+  {
     resolve: 'gatsby-plugin-compile-es6-packages',
     options: {
       modules: ['@bodiless/gatsby-theme-bodiless'],
