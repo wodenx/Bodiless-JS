@@ -44,15 +44,15 @@ const asRelative = withDesign({
   }),
 });
 
-const asExpandedOnEdit = withDesign({
+const asRelativeNotActive = withDesign({
   Wrapper: withDesign({
-    WrapperItem: addClassesIf(isActive)('overflow-visible'),
+    WrapperItem: addClassesIf(isNotActive)('relative'),
   }),
 });
 
-const asRelativeOnEdit = withDesign({
+const asExpandedOnActive = withDesign({
   Wrapper: withDesign({
-    WrapperItem: addClassesIf(isNotActive)('relative'),
+    WrapperItem: addClassesIf(isActive)('overflow-visible'),
   }),
 });
 
@@ -84,7 +84,7 @@ const withBaseSubMenuStyles = withDesign({
 const asSimpleSubMenu = flow(
   asVerticalSubMenu,
   withBaseSubMenuStyles,
-  asExpandedOnEdit,
+  asExpandedOnActive,
   asRelative,
 );
 
@@ -110,7 +110,7 @@ const asToutsSubMenu = flow(
   withToutStyles,
   asStaticOnHover,
   withBaseSubMenuStyles,
-  asRelativeOnEdit,
+  asRelativeNotActive,
 );
 
 /**
@@ -143,7 +143,7 @@ const asColumnSubMenu = flow(
   }),
   asStaticOnHover,
   withBaseSubMenuStyles,
-  asRelativeOnEdit,
+  asRelativeNotActive,
 );
 
 /**
