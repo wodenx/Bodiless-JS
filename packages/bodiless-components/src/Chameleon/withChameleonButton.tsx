@@ -47,8 +47,8 @@ const useSwapButtonMenuOption = () => {
       ComponentFormTitle,
     } = useMenuOptionUI();
     const radios = Object.getOwnPropertyNames(selectableComponents).map(name => (
-      <ComponentFormLabel key={name} htmlFor={`bl-component-form-chameleon-radio-${name}`}>
-        <ComponentFormRadio value={name} id={`bl-comonent-form-chameleon-radio-${name}`} />
+      <ComponentFormLabel key={name}>
+        <ComponentFormRadio value={name} />
         {/* @ts-ignore */}
         {selectableComponents[name].title || name}
       </ComponentFormLabel>
