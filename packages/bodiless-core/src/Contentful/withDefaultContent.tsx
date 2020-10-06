@@ -20,8 +20,9 @@ import { DefaultContentNode } from '../ContentNode';
 const withDefaultContent = <P extends object>(content: object) => (Component: CT<P>) => {
   const WithDefaultContent = (props: P) => {
     const { node } = useNode();
+    const content$ = typeof content === 'function' ? content(props) : content;
     // eslint-disable-next-line max-len
-    const nodeWithDefaultContent = ContentfulNode.create((node as DefaultContentNode<object>), content);
+    const nodeWithDefaultContent = ContentfulNode.create((node as DefaultContentNode<object>), content$);
     return (
       <NodeProvider node={nodeWithDefaultContent}>
         <Component {...props} />
