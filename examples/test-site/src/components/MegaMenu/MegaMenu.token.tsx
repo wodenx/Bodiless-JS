@@ -39,7 +39,6 @@ const asStaticOnHover = withDesign({
  * ===========================================
  */
 const withBaseMenuStyles = withDesign({
-  Title: addClasses('LIST-TITLE'),
   Wrapper: addClasses('w-full relative flex bg-teal-600 text-white'),
   Item: addClasses('relative py-1 px-4 hover:bg-teal-500 overflow-hidden hover:overflow-visible min-w-100 leading-loose text-sm'),
 });
