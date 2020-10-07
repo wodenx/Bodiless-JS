@@ -31,7 +31,8 @@ const withDeleteNodeOnUnwrap = <P extends object>(Component: ComponentType<P> | 
     const { unwrap, ...rest } = props as { unwrap?: () => void; };
     if (!unwrap) return <Component {...props} />;
     const unwrap$ = () => {
-      node.delete();
+      const path$ = node.path.concat('sublist');
+      node.delete(path$);
       if (unwrap) unwrap();
     };
     return <Component {...rest as P} unwrap={unwrap$} />;
