@@ -39,7 +39,6 @@ const asMenuSubList = flow(
   withDeleteNodeOnUnwrap,
   asStylableList,
   // @TODO: Should we be providing titles at all? It will almost always be overridden at site level.
-  withoutProps(['addItem', 'deleteItem', 'canDelete']),
   withDesign({
     Title: asDefaultMenuLink,
   }),
