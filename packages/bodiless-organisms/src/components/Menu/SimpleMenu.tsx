@@ -15,7 +15,7 @@
 import { flow } from 'lodash';
 
 import {
-  withDesign, addClassesIf, Design,
+  withDesign, addClassesIf, Design, withoutProps,
 } from '@bodiless/fclasses';
 import {
   withSidecarNodes, WithNodeKeyProps,
@@ -43,6 +43,18 @@ const asMenuSubList = flow(
 );
 
 /**
+ * Applies the specified design to the main list and all sublists.
+ *
+ * @param design
+ */
+const withMenuDesign = (design: Design<any>) => flow(
+  withSubListDesign(1)({
+    SubMenu: withDesign(design),
+  }),
+  withDesign(design),
+);
+
+/**
  * Bodiless HOC generator which creates the basic structure of the Mega Menu. The component
  * to which the HOC applies is irrelevant (it will be replaced by the Menu wrapper).
  *
@@ -57,18 +69,9 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
   asStylableList,
   withSubLists(1)({ SubMenu: asMenuSubList }),
-);
-
-/**
- * Applies the specified design to the main list and all sublists.
- *
- * @param design
- */
-const withMenuDesign = (design: Design<any>) => flow(
-  withSubListDesign(1)({
-    SubMenu: withDesign(design),
+  withMenuDesign({
+    Item: withoutProps(['addItem', 'deleteItem', 'canDelete']),
   }),
-  withDesign(design),
 );
 
 // Defines basic sub menu when displayed as main menu

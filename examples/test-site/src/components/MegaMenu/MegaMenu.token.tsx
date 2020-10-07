@@ -73,7 +73,7 @@ const withBaseSubMenuStyles = withDesign({
   Wrapper: withDesign({
     List: addClasses('flex absolute left-0 w-full bg-teal-600 text-white my-1 z-10'),
   }),
-  Item: addClasses('py-1 px-4 hover:bg-teal-500 min-w-100 leading-loose text-sm'),
+  Item: addClasses('py-1 pl-4 hover:bg-teal-500 min-w-100 leading-loose text-sm'),
 });
 
 /**

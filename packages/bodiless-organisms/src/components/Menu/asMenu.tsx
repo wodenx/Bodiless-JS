@@ -14,7 +14,7 @@
 
 import {
   replaceWith, withDesign, stylable,
-  Ul, Li,
+  Ul, Li, withoutProps,
 } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import { ifEditable, withExtendHandler } from '@bodiless/core';
@@ -31,7 +31,10 @@ export const asMenu = withDesign({
   Wrapper: replaceWith(Ul),
 });
 
-export const asMenuItem = replaceWith(Li);
+export const asMenuItem = flow(
+  replaceWith(Li),
+  withoutProps(['addItem', 'deleteItem', 'canDelete']),
+);
 
 export const withMenuItem = withDesign({
   Item: asMenuItem,
@@ -46,7 +49,7 @@ export const asSubMenu = flow(
 
 export const asMenuItemGroup = flow(
   withDesign({
-    Item: replaceWith(Li),
+    Item: asMenuItem,
     Wrapper: replaceWith(SubMenu),
   }),
   asTitledItem,

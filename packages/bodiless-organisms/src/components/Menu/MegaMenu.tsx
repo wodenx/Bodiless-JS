@@ -15,7 +15,7 @@
 import { flow, flowRight } from 'lodash';
 
 import {
-  withDesign, addClassesIf,
+  withDesign, addClassesIf, withoutProps,
 } from '@bodiless/fclasses';
 import { withSidecarNodes, WithNodeKeyProps } from '@bodiless/core';
 import {
@@ -39,6 +39,7 @@ const asMenuSubList = flow(
   withDeleteNodeOnUnwrap,
   asStylableList,
   // @TODO: Should we be providing titles at all? It will almost always be overridden at site level.
+  withoutProps(['addItem', 'deleteItem', 'canDelete']),
   withDesign({
     Title: asDefaultMenuLink,
   }),
@@ -97,6 +98,9 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
     Item: asChameleonSubList,
   }),
   withSubMenuDesign(asMenuSubList),
+  withMenuDesign({
+    Item: withoutProps(['addItem', 'deleteItem', 'canDelete']),
+  }),
 );
 
 // Next we replace basic list elements with rc-menu elements to create a menu.
