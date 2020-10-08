@@ -20,7 +20,6 @@ import {
   asEditableMainMenu,
   asEditableMainSubMenu,
   withSubmenu,
-  withMenuLinkTitle,
 } from '@bodiless/organisms';
 import { withEditorSimple } from '../Editors';
 import { asExceptMobile } from '../Elements.token';
