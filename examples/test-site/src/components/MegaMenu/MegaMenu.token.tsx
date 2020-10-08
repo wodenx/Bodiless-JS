@@ -56,13 +56,25 @@ const asExpandedOnActive = withDesign({
   }),
 });
 
+const asFullWidthSublist = withDesign({
+  Wrapper: withDesign({
+    List: addClasses('w-full'),
+  }),
+});
+
+const asResponsiveSublist = withDesign({
+  Wrapper: withDesign({
+    List: addClasses('min-w-full'),
+  }),
+});
+
 /**
  * Base Menu Styles
  * ===========================================
  */
 const withBaseMenuStyles = withDesign({
   Wrapper: addClasses('w-full relative flex bg-teal-600 text-white'),
-  Item: addClasses('py-1 px-4 hover:bg-teal-500 overflow-hidden hover:overflow-visible min-w-100 leading-loose text-sm'),
+  Item: addClasses('py-1 px-3 hover:bg-teal-500 overflow-hidden hover:overflow-visible min-w-100 leading-loose text-sm'),
 });
 
 /**
@@ -71,9 +83,9 @@ const withBaseMenuStyles = withDesign({
  */
 const withBaseSubMenuStyles = withDesign({
   Wrapper: withDesign({
-    List: addClasses('flex absolute left-0 w-full bg-teal-600 text-white my-1 z-10'),
+    List: addClasses('flex absolute left-0 bg-teal-600 text-white my-1 z-10'),
   }),
-  Item: addClasses('py-1 pl-4 hover:bg-teal-500 min-w-100 leading-loose text-sm'),
+  Item: addClasses('py-1 px-3 hover:bg-teal-500 min-w-100 leading-loose text-sm'),
 });
 
 /**
@@ -82,6 +94,7 @@ const withBaseSubMenuStyles = withDesign({
  */
 
 const asSimpleSubMenu = flow(
+  asResponsiveSublist,
   asVerticalSubMenu,
   withBaseSubMenuStyles,
   asExpandedOnActive,
@@ -107,6 +120,7 @@ const withToutStyles = withDesign({
 });
 
 const asToutsSubMenu = flow(
+  asFullWidthSublist,
   withToutStyles,
   asStaticOnHover,
   withBaseSubMenuStyles,
@@ -141,6 +155,7 @@ const asColumnSubMenu = flow(
   withDesign({
     Item: withColumnStyles,
   }),
+  asFullWidthSublist,
   asStaticOnHover,
   withBaseSubMenuStyles,
   asRelativeNotActive,

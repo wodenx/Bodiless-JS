@@ -20,7 +20,6 @@ import {
   asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaMenu, asMegaMenuBreadcrumbs,
   asMenuLink,
 } from '@bodiless/organisms';
-import { Fragment } from 'react';
 import { asReadOnly } from '@bodiless/core';
 import { asEditable as withEditorSimple } from '@bodiless/components';
 // import { withEditorSimple } from '../Editors';
@@ -64,7 +63,7 @@ const MegaMenu = flow(
     }),
   }),
   withMegaMenuStyles,
-)(Fragment);
+)('ul');
 
 const MegaMenuList = flow(
   asMegaMenuBase$,

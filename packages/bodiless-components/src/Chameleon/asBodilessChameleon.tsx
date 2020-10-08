@@ -25,7 +25,9 @@ import withChameleonButton from './withChameleonButton';
 import applyChameleon from './applyChameleon';
 import withChameleonContext from './withChameleonContext';
 
-const withDeleteNodeOnUnwrap = (path: string) => <P extends object>(Component: ComponentType<P> | string) => {
+const withDeleteNodeOnUnwrap = (
+  path: string,
+) => <P extends object>(Component: ComponentType<P> | string) => {
   const WithDeleteOnUnwrap = (props: P) => {
     const { node } = useNode();
     const { unwrap, ...rest } = props as { unwrap?: () => void; };

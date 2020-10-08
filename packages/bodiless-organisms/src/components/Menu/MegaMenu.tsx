@@ -27,9 +27,7 @@ import { observer } from 'mobx-react-lite';
 import { asDefaultMenuTout, asDefaultMenuLink } from './MenuTitles';
 import asStylableList from '../MainMenu/asStylableList';
 
-import {
-  asSubMenu, asMenuItemGroup, asMenu, withMenuItem, asMenuItem,
-} from './asMenu';
+import asSubMenu from './asSubMenu';
 
 // First we build a basic list with the correct data structure.
 
@@ -106,24 +104,20 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
 
 // Applies above designs to the chameilion sublist
 const asChameleonSubMenu = withDesign({
-  List: flowRight(
-    withMenuItem,
-    asSubMenu,
-  ),
+  List: asSubMenu,
   Touts: flowRight(
     withDesign({
       Title: asDefaultMenuTout,
     }),
-    withMenuItem,
     asSubMenu,
   ),
   Columns: flowRight(
     withDesign({
-      Item: asMenuItemGroup,
+      Item: asSubMenu,
     }),
     asSubMenu,
   ),
-  _default: asMenuItem,
+  _default: withoutProps(['addItem', 'deleteItem', 'canDelete']),
 });
 
 /**
@@ -134,7 +128,6 @@ const asChameleonSubMenu = withDesign({
  * @return A clean (unstyled) site main menu.
  */
 const asMainMenuClean = flowRight(
-  asMenu,
   withDesign({
     Item: asChameleonSubMenu,
   }),

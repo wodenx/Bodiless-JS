@@ -13,6 +13,7 @@
  */
 
 import { flow } from 'lodash';
+import { observer } from 'mobx-react-lite';
 
 import {
   withDesign, addClassesIf, Design, withoutProps,
@@ -24,13 +25,9 @@ import {
   asBreadcrumb, useBreadcrumbContext, asBodilessList,
   withSubListDesign, withSubLists, asSubList, withDeleteNodeOnUnwrap,
 } from '@bodiless/components';
-import { observer } from 'mobx-react-lite';
 
 import asStylableList from '../MainMenu/asStylableList';
-
-import {
-  asSubMenu, asMenu, withMenuItem, asMenuItem,
-} from './asMenu';
+import asSubMenu from './asSubMenu';
 
 /**
  * Creates a stylable sublist which deletes it's data when the last item is removed.
@@ -74,16 +71,9 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   }),
 );
 
-// Defines basic sub menu when displayed as main menu
-const asBasicSubMenu = flow(
-  asSubMenu,
-  withMenuItem,
-);
-
 // Applies above designs to the chameilion sublist
 const asChameleonSubMenu = withDesign({
-  SubMenu: asBasicSubMenu,
-  _default: asMenuItem,
+  SubMenu: asSubMenu,
 });
 
 /**
@@ -97,7 +87,6 @@ const asMainMenuClean = flow(
   withDesign({
     Item: asChameleonSubMenu,
   }),
-  asMenu,
 );
 
 /**

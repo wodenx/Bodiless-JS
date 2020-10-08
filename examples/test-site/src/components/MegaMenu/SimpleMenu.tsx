@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { Fragment, ComponentType } from 'react';
+import { ComponentType } from 'react';
 import { addClasses } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import {
@@ -29,7 +29,7 @@ export const SimpleMenu = flow(
   }),
   asSimpleMenu,
   withSimpleMenuStyles,
-)(Fragment);
+)('ul');
 
 export const SimpleMenuList = flow(
   asSimpleMenuBase(),
