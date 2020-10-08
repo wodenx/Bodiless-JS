@@ -68,7 +68,7 @@ export class BreadcrumbContext implements BreadcrumbContextInterface {
   readonly parent: BreadcrumbContextInterface|undefined;
 
   constructor(href: string = '/', parent?: BreadcrumbContextInterface) {
-    const base = window === undefined
+    const base = typeof window === 'undefined'
       ? DEFAULT_URL_BASE
       : `${window.location.protocol}//${window.location.host}`;
     this.url = new URL(href, base);
