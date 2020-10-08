@@ -28,15 +28,13 @@ import { asExceptMobile } from '../Elements.token';
 import { withMenuListStyles, withMenuSublistStyles } from './token';
 
 const MenuSubList = flow(
-  asEditableMainSubMenu,
-  withMenuLinkTitle(withEditorSimple),
+  asEditableMainSubMenu(withEditorSimple),
   asHorizontalSubMenu,
   withMenuSublistStyles,
 )(List);
 
 const MenuList = flow(
-  asEditableMainMenu,
-  withMenuLinkTitle(withEditorSimple),
+  asEditableMainMenu(withEditorSimple),
   asHorizontalMenu,
   withMenuListStyles,
   asExceptMobile,
