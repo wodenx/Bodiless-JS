@@ -13,18 +13,65 @@
  */
 
 import { flow } from 'lodash';
-import { asToutHorizontal } from '@bodiless/organisms';
-import { withDesign, addClasses } from '@bodiless/fclasses';
+import { useEditContext } from '@bodiless/core';
+import { withDesign, addClasses, addClassesIf } from '@bodiless/fclasses';
 
-import { asToutWithPaddings, asToutDefaultStyle } from '../Tout/token';
+/**
+ * Utility Styles
+ * ===========================================
+ */
+const isActive = () => useEditContext().isActive;
+const isNotActive = () => !useEditContext().isActive;
+
+const asVerticalSubMenu = withDesign({
+  Wrapper: withDesign({
+    List: addClasses('flex-col'),
+  }),
+});
+
+const asStaticOnHover = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: addClasses('hover:static'),
+  }),
+});
+
+const asRelative = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: addClasses('relative'),
+  }),
+});
+
+const asRelativeNotActive = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: addClassesIf(isNotActive)('relative'),
+  }),
+});
+
+const asExpandedOnActive = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: addClassesIf(isActive)('overflow-visible'),
+  }),
+});
+
+const asFullWidthSublist = withDesign({
+  Wrapper: withDesign({
+    List: addClasses('w-full'),
+  }),
+});
+
+const asResponsiveSublist = withDesign({
+  Wrapper: withDesign({
+    List: addClasses('w-content min-w-full'),
+  }),
+});
 
 /**
  * Base Menu Styles
  * ===========================================
  */
 const withBaseMenuStyles = withDesign({
-  Wrapper: addClasses('w-full bg-teal-600 text-white'),
-  Item: addClasses('py-1 px-3 hover:bg-teal-500 min-w-100 leading-loose text-sm'),
+  Wrapper: addClasses('relative flex'),
+  Item: addClasses('overflow-hidden hover:overflow-visible'),
 });
 
 /**
@@ -33,9 +80,8 @@ const withBaseMenuStyles = withDesign({
  */
 const withBaseSubMenuStyles = withDesign({
   Wrapper: withDesign({
-    List: addClasses('bg-teal-600 text-white my-1 z-10'),
+    List: addClasses('flex absolute left-0'),
   }),
-  Item: addClasses('py-1 px-3 hover:bg-teal-500 min-w-100 leading-loose text-sm'),
 });
 
 /**
@@ -43,52 +89,36 @@ const withBaseSubMenuStyles = withDesign({
  * ===========================================
  */
 const asSimpleSubMenu = flow(
+  asResponsiveSublist,
+  asVerticalSubMenu,
   withBaseSubMenuStyles,
+  asExpandedOnActive,
+  asRelative,
 );
 
 /**
  * Touts Sub Menu Styles
  * ===========================================
  */
-export const withMenuToutStyles = flow(
-  asToutWithPaddings,
-  asToutDefaultStyle,
-  asToutHorizontal,
-);
-
-const withToutStyles = withDesign({
-  Item: addClasses('w-1/3'),
-});
-
 const asToutsSubMenu = flow(
-  withToutStyles,
+  asFullWidthSublist,
+  asStaticOnHover,
   withBaseSubMenuStyles,
+  asRelativeNotActive,
 );
 
 /**
  * Columns Sub Menu Styles
  * ===========================================
  */
-// Since removeClasses doesn't work this will allow correct hover effects on column items.
-const withColumnHoverEffect = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: addClasses('hover:bg-teal-600'),
-  }),
-  Item: addClasses('hover:bg-teal-500'),
-});
-
-const withColumnStyles = flow(
-  withDesign({
-    Item: addClasses('pr-2 pl-5'),
-  }),
-  withColumnHoverEffect,
-);
-
 const asColumnSubMenu = flow(
   withDesign({
-    Item: withColumnStyles,
+    Item: asRelative,
   }),
+  asFullWidthSublist,
+  asStaticOnHover,
   withBaseSubMenuStyles,
+  asRelativeNotActive,
 );
 
 /**
@@ -114,7 +144,7 @@ const asMegaMenuSubListStyles = withDesign({
  * Simple Menu Styles
  * ===========================================
  */
-export const withSimpleMenuStyles = flow(
+export const withSimpleMenuDefaultStyles = flow(
   withDesign({
     Item: asSimpleSubMenuStyles,
   }),
@@ -125,7 +155,7 @@ export const withSimpleMenuStyles = flow(
  * Mega Menu Styles
  * ===========================================
  */
-export const withMegaMenuStyles = flow(
+export const withMegaMenuDefaultStyles = flow(
   withDesign({
     Item: asMegaMenuSubListStyles,
   }),

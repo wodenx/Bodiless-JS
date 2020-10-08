@@ -31,6 +31,11 @@ export {
 } from './MenuTitles';
 
 export {
+  withSimpleMenuDefaultStyles,
+  withMegaMenuDefaultStyles,
+} from './MegaMenu.token';
+
+export {
   asMegaMenuBase,
   asMegaMenu,
   withMegaMenuDesign,

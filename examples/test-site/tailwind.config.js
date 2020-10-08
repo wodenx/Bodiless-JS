@@ -14,6 +14,12 @@ module.exports = {
 
   theme: {
 
+    extend: {
+      width: {
+        content: 'max-content',
+      },
+    },
+
     /*
     |---------------------------------------------------------------------------
     | Colors                                https://tailwindcss.com/docs/colors
@@ -304,6 +310,7 @@ module.exports = {
       5: '5rem',
       // Used by main menu items to match the UI wireframes
       100: '100px',
+      full: '100%',
     },
 
     /*

@@ -26,7 +26,6 @@ import { observer } from 'mobx-react-lite';
 
 import { asDefaultMenuTout, asDefaultMenuLink } from './MenuTitles';
 import asStylableList from '../MainMenu/asStylableList';
-
 import asSubMenu from './asSubMenu';
 
 // First we build a basic list with the correct data structure.
