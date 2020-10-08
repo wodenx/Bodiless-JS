@@ -36,8 +36,8 @@ import {
 // Defines the basic sublist for all mubmenu types.
 const asMenuSubList = flow(
   asSubList,
-  withDeleteNodeOnUnwrap,
   asStylableList,
+  withDeleteNodeOnUnwrap('sublist'),
   // @TODO: Should we be providing titles at all? It will almost always be overridden at site level.
   withDesign({
     Title: asDefaultMenuLink,

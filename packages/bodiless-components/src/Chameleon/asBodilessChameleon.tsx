@@ -25,14 +25,14 @@ import withChameleonButton from './withChameleonButton';
 import applyChameleon from './applyChameleon';
 import withChameleonContext from './withChameleonContext';
 
-const withDeleteNodeOnUnwrap = <P extends object>(Component: ComponentType<P> | string) => {
+const withDeleteNodeOnUnwrap = (path: string) => <P extends object>(Component: ComponentType<P> | string) => {
   const WithDeleteOnUnwrap = (props: P) => {
     const { node } = useNode();
     const { unwrap, ...rest } = props as { unwrap?: () => void; };
     if (!unwrap) return <Component {...props} />;
     const unwrap$ = () => {
-      const path$ = node.path.concat('sublist');
-      node.delete(path$);
+      const node$ = path ? node.child(path) : node;
+      node$.delete();
       if (unwrap) unwrap();
     };
     return <Component {...rest as P} unwrap={unwrap$} />;
