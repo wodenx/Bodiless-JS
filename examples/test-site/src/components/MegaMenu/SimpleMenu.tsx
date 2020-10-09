@@ -13,14 +13,15 @@
  */
 
 import { ComponentType } from 'react';
-import { addClasses } from '@bodiless/fclasses';
 import { flow } from 'lodash';
+
+import { addClasses } from '@bodiless/fclasses';
 import {
-  asMenuLink, asSimpleMenuBase, withSimpleMenuDesign,
-  asSimpleMenu,
+  asMenuLink, asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenu,
 } from '@bodiless/organisms';
-import { withSimpleMenuStyles } from './MegaMenu.token';
+
 import { withTitleEditor } from './MegaMenu';
+import withSimpleMenuStyles from './SimpleMenu.token';
 
 export const SimpleMenu = flow(
   asSimpleMenuBase(),

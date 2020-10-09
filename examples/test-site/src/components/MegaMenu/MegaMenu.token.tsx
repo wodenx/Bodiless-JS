@@ -18,39 +18,17 @@ import { withDesign, addClasses } from '@bodiless/fclasses';
 
 import { asToutWithPaddings, asToutDefaultStyle } from '../Tout/token';
 
-/**
- * Base Menu Styles
- * ===========================================
- */
-const withBaseMenuStyles = withDesign({
-  Wrapper: addClasses('w-full bg-teal-600 text-white'),
-  Item: addClasses('py-1 px-3 hover:bg-teal-500 min-w-100 leading-loose text-sm'),
-});
-
-/**
- * Base Sub Menu Styles
- * ===========================================
- */
-const withBaseSubMenuStyles = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('bg-teal-600 text-white my-1 z-10'),
-  }),
-  Item: addClasses('py-1 px-3 hover:bg-teal-500 min-w-100 leading-loose text-sm'),
-});
-
-/**
- * Simple Sub Menu Styles
- * ===========================================
- */
-const asSimpleSubMenu = flow(
+import {
+  asSimpleSubMenu,
+  withBaseMenuStyles,
   withBaseSubMenuStyles,
-);
+} from './SimpleMenu.token';
 
 /**
  * Touts Sub Menu Styles
  * ===========================================
  */
-export const withMenuToutStyles = flow(
+const withMenuToutStyles = flow(
   asToutWithPaddings,
   asToutDefaultStyle,
   asToutHorizontal,
@@ -69,7 +47,6 @@ const asToutsSubMenu = flow(
  * Columns Sub Menu Styles
  * ===========================================
  */
-// Since removeClasses doesn't work this will allow correct hover effects on column items.
 const withColumnHoverEffect = withDesign({
   Wrapper: withDesign({
     WrapperItem: addClasses('hover:bg-teal-600'),
@@ -92,14 +69,6 @@ const asColumnSubMenu = flow(
 );
 
 /**
- * Simple Menu Sub Menu Styles
- * ===========================================
- */
-const asSimpleSubMenuStyles = withDesign({
-  SubMenu: asSimpleSubMenu,
-});
-
-/**
  * Mega Menu Sub Menu Styles
  * ===========================================
  */
@@ -111,23 +80,17 @@ const asMegaMenuSubListStyles = withDesign({
 });
 
 /**
- * Simple Menu Styles
- * ===========================================
- */
-export const withSimpleMenuStyles = flow(
-  withDesign({
-    Item: asSimpleSubMenuStyles,
-  }),
-  withBaseMenuStyles,
-);
-
-/**
  * Mega Menu Styles
  * ===========================================
  */
-export const withMegaMenuStyles = flow(
+const withMegaMenuStyles = flow(
   withDesign({
     Item: asMegaMenuSubListStyles,
   }),
   withBaseMenuStyles,
 );
+
+export default withMegaMenuStyles;
+export {
+  withMenuToutStyles,
+};
