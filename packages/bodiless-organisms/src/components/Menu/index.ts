@@ -14,19 +14,17 @@
 
 import {
   asMenuBase as asMegaMenuBase,
-  asMainMenuClean as asMegaMenu,
   withMenuDesign as withMegaMenuDesign,
   asBreadcrumbsClean as asMegaMenuBreadcrumbs,
 } from './MegaMenu';
 
 import {
   asMenuBase as asSimpleMenuBase,
-  asMainMenuClean as asSimpleMenu,
   withMenuDesign as withSimpleMenuDesign,
 } from './SimpleMenu';
 
-import withSimpleMenuDefaultStyles from './SimpleMenu.token';
-import withMegaMenuDefaultStyles from './MegaMenu.token';
+import asSimpleMenu from './SimpleMenu.token';
+import asMegaMenu from './MegaMenu.token';
 
 export {
   asMenuTout,
@@ -35,18 +33,16 @@ export {
 
 export {
   asMegaMenuBase,
-  asMegaMenu,
   withMegaMenuDesign,
   asMegaMenuBreadcrumbs,
 };
 
 export {
   asSimpleMenuBase,
-  asSimpleMenu,
   withSimpleMenuDesign,
 };
 
 export {
-  withSimpleMenuDefaultStyles,
-  withMegaMenuDefaultStyles,
+  asSimpleMenu,
+  asMegaMenu,
 };

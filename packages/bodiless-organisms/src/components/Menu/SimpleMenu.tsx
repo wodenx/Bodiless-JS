@@ -27,7 +27,6 @@ import {
 } from '@bodiless/components';
 
 import asStylableList from '../MainMenu/asStylableList';
-import asSubMenu from './asSubMenu';
 
 /**
  * Creates a stylable sublist which deletes it's data when the last item is removed.
@@ -71,24 +70,6 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   }),
 );
 
-// Applies above designs to the chameilion sublist
-const asChameleonSubMenu = withDesign({
-  SubMenu: asSubMenu,
-});
-
-/**
- * HOC which can be applied to a base menu to make it into a sites main menu.
- *
- * @param A base menu component created via asMenuBase()
- *
- * @return A clean (unstyled) site main menu.
- */
-const asMainMenuClean = flow(
-  withDesign({
-    Item: asChameleonSubMenu,
-  }),
-);
-
 /**
  * HOC which can be applied to a base menu to make it into a site's breadcrumbs
  *
@@ -111,5 +92,5 @@ const asBreadcrumbsClean = withMenuDesign({
 // });
 
 export {
-  asMenuBase, asMainMenuClean, asBreadcrumbsClean, withMenuDesign,
+  asMenuBase, asBreadcrumbsClean, withMenuDesign,
 };

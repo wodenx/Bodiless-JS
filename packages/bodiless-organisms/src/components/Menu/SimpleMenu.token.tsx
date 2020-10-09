@@ -89,14 +89,14 @@ const asSimpleSubMenuStyles = withDesign({
  * Simple Menu Styles
  * ===========================================
  */
-const withSimpleMenuDefaultStyles = flow(
+const asSimpleMenu = flow(
   withDesign({
     Item: asSimpleSubMenuStyles,
   }),
   withBaseMenuStyles,
 );
 
-export default withSimpleMenuDefaultStyles;
+export default asSimpleMenu;
 export {
   withBaseSubMenuStyles,
   withBaseMenuStyles,

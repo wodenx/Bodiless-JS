@@ -17,7 +17,7 @@ import { addClasses } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import {
   asMenuLink, asSimpleMenuBase, withSimpleMenuDesign,
-  asSimpleMenu, withSimpleMenuDefaultStyles,
+  asSimpleMenu,
 } from '@bodiless/organisms';
 import { withSimpleMenuStyles } from './MegaMenu.token';
 import { withTitleEditor } from './MegaMenu';
@@ -27,9 +27,8 @@ export const SimpleMenu = flow(
   withSimpleMenuDesign({
     Title: asMenuLink(withTitleEditor),
   }),
-  asSimpleMenu,
   withSimpleMenuStyles,
-  withSimpleMenuDefaultStyles,
+  asSimpleMenu,
 )('ul');
 
 export const SimpleMenuList = flow(

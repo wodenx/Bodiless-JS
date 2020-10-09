@@ -12,7 +12,8 @@
  * limitations under the License.
  */
 
-import { flow, flowRight } from 'lodash';
+import { flow } from 'lodash';
+import { observer } from 'mobx-react-lite';
 
 import {
   withDesign, addClassesIf, withoutProps,
@@ -22,11 +23,9 @@ import {
   asBreadcrumb, useBreadcrumbContext, asBodilessList, asSubList,
   withDeleteNodeOnUnwrap, asChameleonSubList,
 } from '@bodiless/components';
-import { observer } from 'mobx-react-lite';
 
-import { asDefaultMenuTout, asDefaultMenuLink } from './MenuTitles';
+import { asDefaultMenuLink } from './MenuTitles';
 import asStylableList from '../MainMenu/asStylableList';
-import asSubMenu from './asSubMenu';
 
 // First we build a basic list with the correct data structure.
 
@@ -35,10 +34,6 @@ const asMenuSubList = flow(
   asSubList,
   asStylableList,
   withDeleteNodeOnUnwrap('sublist'),
-  // @TODO: Should we be providing titles at all? It will almost always be overridden at site level.
-  withDesign({
-    Title: asDefaultMenuLink,
-  }),
 );
 
 /**
@@ -99,39 +94,6 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   }),
 );
 
-// Next we replace basic list elements with rc-menu elements to create a menu.
-
-// Applies above designs to the chameilion sublist
-const asChameleonSubMenu = withDesign({
-  List: asSubMenu,
-  Touts: flowRight(
-    withDesign({
-      Title: asDefaultMenuTout,
-    }),
-    asSubMenu,
-  ),
-  Columns: flowRight(
-    withDesign({
-      Item: asSubMenu,
-    }),
-    asSubMenu,
-  ),
-  _default: withoutProps(['addItem', 'deleteItem', 'canDelete']),
-});
-
-/**
- * HOC which can be applied to a base menu to make it into a sites main menu.
- *
- * @param A base menu component created via asMenuBase()
- *
- * @return A clean (unstyled) site main menu.
- */
-const asMainMenuClean = flowRight(
-  withDesign({
-    Item: asChameleonSubMenu,
-  }),
-);
-
 // Now we create breaccrumbs
 
 /**
@@ -156,5 +118,5 @@ const asBreadcrumbsClean = withMenuDesign({
 // });
 
 export {
-  asMenuSubList, asMenuBase, asMainMenuClean, withMenuDesign, asBreadcrumbsClean,
+  asMenuSubList, asMenuBase, withMenuDesign, asBreadcrumbsClean,
 };

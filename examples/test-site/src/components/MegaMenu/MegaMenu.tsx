@@ -17,8 +17,8 @@ import {
   withDesign, replaceWith, H2, addClasses, stylable,
 } from '@bodiless/fclasses';
 import {
-  asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaMenu, asMegaMenuBreadcrumbs,
-  asMenuLink, withMegaMenuDefaultStyles,
+  asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaMenuBreadcrumbs,
+  asMenuLink, asMegaMenu,
 } from '@bodiless/organisms';
 import { asReadOnly } from '@bodiless/core';
 import { asEditable as withEditorSimple } from '@bodiless/components';
@@ -54,7 +54,6 @@ const asMegaMenuBase$ = flow(
 
 const MegaMenu = flow(
   asMegaMenuBase$,
-  asMegaMenu,
   withDesign({
     Item: withDesign({
       Touts: withDesign({
@@ -63,7 +62,7 @@ const MegaMenu = flow(
     }),
   }),
   withMegaMenuStyles,
-  withMegaMenuDefaultStyles,
+  asMegaMenu,
 )('ul');
 
 const MegaMenuList = flow(
