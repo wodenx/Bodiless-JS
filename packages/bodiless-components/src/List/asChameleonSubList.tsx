@@ -20,6 +20,7 @@ const useChameleonOverrides = () => {
     icon: isOn ? 'repeat' : 'playlist_add',
     label: 'Sub',
     name: `chameleon-sublist-${v1()}`,
+    formTitle: 'Sublist',
   };
 };
 
@@ -31,6 +32,7 @@ const useToggleOverrides = () => {
     icon: 'playlist_add',
     label: 'Sub',
     name: `chameleon-sublist-${v1()}`,
+    formTitle: 'Sublist',
   };
 };
 

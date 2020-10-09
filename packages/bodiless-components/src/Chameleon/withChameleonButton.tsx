@@ -37,7 +37,7 @@ const useToggleButtonMenuOption = () => {
   };
 };
 
-const useSwapButtonMenuOption = () => {
+const useSwapButtonMenuOption = (formTitle: string = 'Choose a component') => {
   const { selectableComponents, activeComponent, setActiveComponent } = useChameleonContext();
   const renderForm = () => {
     const {
@@ -55,7 +55,7 @@ const useSwapButtonMenuOption = () => {
     ));
     return (
       <>
-        <ComponentFormTitle>Choose a component</ComponentFormTitle>
+        <ComponentFormTitle>{formTitle}</ComponentFormTitle>
         <ComponentFormRadioGroup field="component">
           {radios}
         </ComponentFormRadioGroup>
@@ -102,6 +102,8 @@ const withChameleonButton = <P extends object>(
 ) => {
   const useMenuOptions = (props: P) => {
     const { selectableComponents } = useChameleonContext();
+    const overrides = useOverrides ? useOverrides(props) : {};
+    const formTitle = typeof overrides !== 'undefined' ? overrides.formTitle : undefined;
     const extMenuOptions = Object.keys(selectableComponents).length > 1
       ? useSwapButtonMenuOption
       : useToggleButtonMenuOption;
@@ -109,9 +111,8 @@ const withChameleonButton = <P extends object>(
       name: 'chameleon-toggle',
       global: false,
       local: true,
-      ...extMenuOptions(),
+      ...extMenuOptions(formTitle),
     };
-    const overrides = useOverrides ? useOverrides(props) : {};
     // if useOverrides returns undefined, it means not to provide the button.
     return typeof overrides !== 'undefined' ? [{ ...baseDefinition, ...overrides }] : [];
   };
