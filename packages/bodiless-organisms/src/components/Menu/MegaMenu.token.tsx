@@ -16,28 +16,22 @@ import { flow } from 'lodash';
 import { useEditContext } from '@bodiless/core';
 import { withDesign, addClasses, addClassesIf } from '@bodiless/fclasses';
 
-/**
+import {
+  withBaseSubMenuStyles,
+  withBaseMenuStyles,
+  asSimpleSubMenu,
+  asRelative,
+} from './SimpleMenu.token';
+
+/*
  * Utility Styles
  * ===========================================
  */
-const isActive = () => useEditContext().isActive;
 const isNotActive = () => !useEditContext().isActive;
-
-const asVerticalSubMenu = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('flex-col'),
-  }),
-});
 
 const asStaticOnHover = withDesign({
   Wrapper: withDesign({
     WrapperItem: addClasses('hover:static'),
-  }),
-});
-
-const asRelative = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: addClasses('relative'),
   }),
 });
 
@@ -47,56 +41,13 @@ const asRelativeNotActive = withDesign({
   }),
 });
 
-const asExpandedOnActive = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: addClassesIf(isActive)('overflow-visible'),
-  }),
-});
-
 const asFullWidthSublist = withDesign({
   Wrapper: withDesign({
     List: addClasses('w-full'),
   }),
 });
 
-const asResponsiveSublist = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('w-content min-w-full'),
-  }),
-});
-
-/**
- * Base Menu Styles
- * ===========================================
- */
-const withBaseMenuStyles = withDesign({
-  Wrapper: addClasses('relative flex'),
-  Item: addClasses('overflow-hidden hover:overflow-visible'),
-});
-
-/**
- * Base Sub Menu Styles
- * ===========================================
- */
-const withBaseSubMenuStyles = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('flex absolute left-0'),
-  }),
-});
-
-/**
- * Simple Sub Menu Styles
- * ===========================================
- */
-const asSimpleSubMenu = flow(
-  asResponsiveSublist,
-  asVerticalSubMenu,
-  withBaseSubMenuStyles,
-  asExpandedOnActive,
-  asRelative,
-);
-
-/**
+/*
  * Touts Sub Menu Styles
  * ===========================================
  */
@@ -107,7 +58,7 @@ const asToutsSubMenu = flow(
   asRelativeNotActive,
 );
 
-/**
+/*
  * Columns Sub Menu Styles
  * ===========================================
  */
@@ -121,43 +72,25 @@ const asColumnSubMenu = flow(
   asRelativeNotActive,
 );
 
-/**
- * Simple Menu Sub Menu Styles
- * ===========================================
- */
-const asSimpleSubMenuStyles = withDesign({
-  SubMenu: asSimpleSubMenu,
-});
-
-/**
+/*
  * Mega Menu Sub Menu Styles
  * ===========================================
  */
-
 const asMegaMenuSubListStyles = withDesign({
   List: asSimpleSubMenu,
   Touts: asToutsSubMenu,
   Columns: asColumnSubMenu,
 });
 
-/**
- * Simple Menu Styles
- * ===========================================
- */
-export const withSimpleMenuDefaultStyles = flow(
-  withDesign({
-    Item: asSimpleSubMenuStyles,
-  }),
-  withBaseMenuStyles,
-);
-
-/**
+/*
  * Mega Menu Styles
  * ===========================================
  */
-export const withMegaMenuDefaultStyles = flow(
+const withMegaMenuDefaultStyles = flow(
   withDesign({
     Item: asMegaMenuSubListStyles,
   }),
   withBaseMenuStyles,
 );
+
+export default withMegaMenuDefaultStyles;

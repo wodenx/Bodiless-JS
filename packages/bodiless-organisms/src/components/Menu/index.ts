@@ -25,15 +25,13 @@ import {
   withMenuDesign as withSimpleMenuDesign,
 } from './SimpleMenu';
 
+import withSimpleMenuDefaultStyles from './SimpleMenu.token';
+import withMegaMenuDefaultStyles from './MegaMenu.token';
+
 export {
   asMenuTout,
   asMenuLink,
 } from './MenuTitles';
-
-export {
-  withSimpleMenuDefaultStyles,
-  withMegaMenuDefaultStyles,
-} from './MegaMenu.token';
 
 export {
   asMegaMenuBase,
@@ -46,4 +44,9 @@ export {
   asSimpleMenuBase,
   asSimpleMenu,
   withSimpleMenuDesign,
+};
+
+export {
+  withSimpleMenuDefaultStyles,
+  withMegaMenuDefaultStyles,
 };
