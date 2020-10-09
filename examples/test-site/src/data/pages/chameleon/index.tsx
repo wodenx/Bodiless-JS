@@ -41,13 +41,17 @@ const addPropsIf = (condition: () => boolean) => (newProps: any) => (C: Componen
   (props: any) => (condition() ? <C {...props} {...newProps} /> : <C {...props} />)
 );
 
+//
 const withBaseStyles = addClasses('border-8 py-5 w-1/6 text-center');
+
 const BaseComponent = withBaseStyles(Div);
+
 const chameleonDesign = {
   Red: addClasses('border-red-500 text-red-500'),
   Blue: addClasses('border-blue-500 text-blue-500'),
   Green: addClasses('border-green-500 text-green-500'),
 };
+
 const Chameleon = flow(
   asBodilessChameleon('basic-chameleon'),
   withDesign(chameleonDesign),
@@ -61,14 +65,16 @@ const BaseToggle = ({ isAvailable = false, ...rest }) => (
 
 const toggleDesign = {
   Available: flow(
-    addClasses('border-red-500 text-red-500'),
     addProps({ isAvailable: true })
   ),
 };
 
 const Toggle = flow(
-  asBodilessChameleon('toggle', undefined, () => ({ label: 'Avail' })),
+  asBodilessChameleon('basic-toggle', { component: 'Available' }, () => ({ label: 'Avail' })),
   withDesign(toggleDesign),
+  withDesign({
+    _default: addClasses('border-red-500 text-red-500'),
+  }),
 )(BaseToggle);
 
 
