@@ -3,13 +3,13 @@
 ### Table of Contents
 
 1. [Simple Menu](#simple-menu)
-  1. [Exported Simple Menu HOCs](#exported-simple-menu-hocs)
-  2. [Simple Menu Structure](#simple-menu-structure)
-  3. [Styling Simple Menu](#styling-simple-menu)
+   1. [Exported Simple Menu HOCs](#exported-simple-menu-hocs)
+   2. [Simple Menu Structure](#simple-menu-structure)
+   3. [Styling Simple Menu](#styling-simple-menu)
 2. [Mega Menu](#mega-menu)
-  1. [Exported Mega Menu HOCs](#exported-mega-menu-hocs)
-  2. [Mega Menu Structure](#mega-menu-structure)
-  3. [Styling Mega Menu](#styling-mega-menu)
+   1. [Exported Mega Menu HOCs](#exported-mega-menu-hocs)
+   2. [Mega Menu Structure](#mega-menu-structure)
+   3. [Styling Mega Menu](#styling-mega-menu)
 
 ## Simple Menu
 
