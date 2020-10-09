@@ -25,15 +25,20 @@ import withChameleonButton from './withChameleonButton';
 import applyChameleon from './applyChameleon';
 import withChameleonContext from './withChameleonContext';
 
+/**
+ * Ensures that sublist data is purged when sublists are removed.
+ *
+ * @param nodeKey Location of the child node that will be purged.
+ */
 const withDeleteNodeOnUnwrap = (
-  path: string,
+  nodeKey?: string,
 ) => <P extends object>(Component: ComponentType<P> | string) => {
   const WithDeleteOnUnwrap = (props: P) => {
     const { node } = useNode();
     const { unwrap, ...rest } = props as { unwrap?: () => void; };
     if (!unwrap) return <Component {...props} />;
     const unwrap$ = () => {
-      const node$ = path ? node.child(path) : node;
+      const node$ = nodeKey ? node.child(nodeKey) : node;
       node$.delete();
       if (unwrap) unwrap();
     };
