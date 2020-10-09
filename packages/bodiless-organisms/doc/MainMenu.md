@@ -2,7 +2,7 @@
 
 ### Table of Contents
 
- 1. [Simple Menu](#simple-menu)
+1. [Simple Menu](#simple-menu)
   1. [Exported Simple Menu HOCs](#exported-simple-menu-hocs)
   2. [Simple Menu Structure](#simple-menu-structure)
   3. [Styling Simple Menu](#styling-simple-menu)
