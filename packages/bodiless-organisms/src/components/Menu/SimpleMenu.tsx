@@ -16,7 +16,7 @@ import { flow } from 'lodash';
 import { observer } from 'mobx-react-lite';
 
 import {
-  withDesign, addClassesIf, Design, withoutProps,
+  withDesign, addClassesIf, Design,
 } from '@bodiless/fclasses';
 import {
   withSidecarNodes, WithNodeKeyProps,
@@ -65,9 +65,6 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
   asStylableList,
   withSubLists(1)({ SubMenu: asMenuSubList }),
-  withMenuDesign({
-    Item: withoutProps(['addItem', 'deleteItem', 'canDelete']),
-  }),
 );
 
 /**
@@ -92,5 +89,5 @@ const asBreadcrumbsClean = withMenuDesign({
 // });
 
 export {
-  asMenuBase, asBreadcrumbsClean, withMenuDesign,
+  asMenuBase, asBreadcrumbsClean, withMenuDesign, asMenuSubList,
 };

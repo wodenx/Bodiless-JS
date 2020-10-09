@@ -15,26 +15,15 @@
 import { flow } from 'lodash';
 import { observer } from 'mobx-react-lite';
 
-import {
-  withDesign, addClassesIf, withoutProps,
-} from '@bodiless/fclasses';
+import { withDesign, addClassesIf } from '@bodiless/fclasses';
 import { withSidecarNodes, WithNodeKeyProps } from '@bodiless/core';
 import {
-  asBreadcrumb, useBreadcrumbContext, asBodilessList, asSubList,
-  withDeleteNodeOnUnwrap, asChameleonSubList,
+  asBreadcrumb, useBreadcrumbContext, asBodilessList, asChameleonSubList,
 } from '@bodiless/components';
 
+import { asMenuSubList } from './SimpleMenu';
 import { asDefaultMenuLink } from './MenuTitles';
 import asStylableList from '../MainMenu/asStylableList';
-
-// First we build a basic list with the correct data structure.
-
-// Defines the basic sublist for all mubmenu types.
-const asMenuSubList = flow(
-  asSubList,
-  asStylableList,
-  withDeleteNodeOnUnwrap('sublist'),
-);
 
 /**
  * Applies a list design (or other HOC) recursively to all submenus.
@@ -89,9 +78,6 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
     Item: asChameleonSubList,
   }),
   withSubMenuDesign(asMenuSubList),
-  withMenuDesign({
-    Item: withoutProps(['addItem', 'deleteItem', 'canDelete']),
-  }),
 );
 
 // Now we create breaccrumbs

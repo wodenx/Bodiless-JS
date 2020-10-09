@@ -19,7 +19,7 @@ import React, { ComponentType, PropsWithChildren, FC } from 'react';
 import { flow, identity } from 'lodash';
 import {
   replaceWith, withDesign, asComponent, DesignableComponentsProps, designable, HOC,
-  Ul, Li,
+  Ul, Li, withoutProps,
 } from '@bodiless/fclasses';
 
 import withListButtons from './withListButtons';
@@ -89,6 +89,7 @@ const asBodilessList = (
   withListButtons,
   withDesign({
     Wrapper: replaceWith(asComponent(Component)),
+    Item: withoutProps(['addItem', 'deleteItem', 'canDelete']),
   }),
   withNodeKey(nodeKeys),
 )(Component);
