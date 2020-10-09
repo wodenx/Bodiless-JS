@@ -27,7 +27,10 @@ import {
  * Utility Styles
  * ===========================================
  */
-const isNotActive = () => !useEditContext().isActive;
+const isContextNotActive = () => {
+  const { isActive, isEdit } = useEditContext();
+  return isEdit ? !isActive : true;
+};
 
 const asStaticOnHover = withDesign({
   Wrapper: withDesign({
@@ -37,7 +40,7 @@ const asStaticOnHover = withDesign({
 
 const asRelativeNotActive = withDesign({
   Wrapper: withDesign({
-    WrapperItem: addClassesIf(isNotActive)('relative'),
+    WrapperItem: addClassesIf(isContextNotActive)('relative'),
   }),
 });
 

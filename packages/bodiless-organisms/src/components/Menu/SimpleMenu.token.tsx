@@ -20,7 +20,10 @@ import { withDesign, addClasses, addClassesIf } from '@bodiless/fclasses';
  * Utility Styles
  * ===========================================
  */
-const isActive = () => useEditContext().isActive;
+const isContextActive = () => {
+  const { isActive, isEdit } = useEditContext();
+  return isEdit && isActive;
+};
 
 const asVerticalSubMenu = withDesign({
   Wrapper: withDesign({
@@ -36,7 +39,7 @@ const asRelative = withDesign({
 
 const asExpandedOnActive = withDesign({
   Wrapper: withDesign({
-    WrapperItem: addClassesIf(isActive)('overflow-visible'),
+    WrapperItem: addClassesIf(isContextActive)('overflow-visible'),
   }),
 });
 
