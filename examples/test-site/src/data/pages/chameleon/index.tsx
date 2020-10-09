@@ -16,7 +16,7 @@ import React, { FC, HTMLProps, ComponentType } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  addClasses, H1 as H1$, H2 as H2$, withDesign, stylable, addProps, addClassesIf,
+  addClasses, H1 as H1$, H2 as H2$, withDesign, stylable, addProps, addClassesIf, Div, HOC,
 } from '@bodiless/fclasses';
 import { flow, flowRight } from 'lodash';
 import {
@@ -34,7 +34,6 @@ import Layout from '../../../components/Layout';
 const H1 = flow(addClasses('pt-5'), asHeader1)(H1$);
 const H2 = flow(addClasses('pt-5'), asHeader2)(H2$);
 
-const asBox = addClasses('border-8 py-5 w-1/6 text-center');
 
 const A = asBodilessLink('link')('a');
 
@@ -42,39 +41,43 @@ const addPropsIf = (condition: () => boolean) => (newProps: any) => (C: Componen
   (props: any) => (condition() ? <C {...props} {...newProps} /> : <C {...props} />)
 );
 
-const withBoxTitles = withDesign({
-  Red: withTitle('Red'),
-  Blue: withTitle('Blue'),
-  Green: withTitle('Green'),
-  _default: withTitle('No Color'),
-});
-
-const boxDesign = {
+const withBaseStyles = addClasses('border-8 py-5 w-1/6 text-center');
+const BaseComponent = withBaseStyles(Div);
+const chameleonDesign = {
   Red: addClasses('border-red-500 text-red-500'),
   Blue: addClasses('border-blue-500 text-blue-500'),
   Green: addClasses('border-green-500 text-green-500'),
 };
+const Chameleon = flow(
+  asBodilessChameleon('basic-chameleon'),
+  withDesign(chameleonDesign),
+)(BaseComponent);
 
-const Box$: FC<HTMLProps<HTMLDivElement>> = props => (
-  <div {...props}><A>Click me</A></div>
+const BaseToggle = ({ isAvailable = false, ...rest }) => (
+  <BaseComponent {...rest}>
+    {isAvailable ? 'Available Now!' : 'Call for availability'}
+  </BaseComponent>
 );
 
-const Box = flowRight(
-  withNodeKey('basic'),
-  withNode,
-  withBoxTitles,
-  withDesign(boxDesign),
-  asBodilessChameleon('basic-chameleon'), // , {}, useOverrides),
-  asBox,
-  stylable,
-)(Box$);
+const toggleDesign = {
+  Available: flow(
+    addClasses('border-red-500 text-red-500'),
+    addProps({ isAvailable: true })
+  ),
+};
 
+const Toggle = flow(
+  asBodilessChameleon('toggle', undefined, () => ({ label: 'Avail' })),
+  withDesign(toggleDesign),
+)(BaseToggle);
+
+
+/*
 const useIs = (key: String) => () => useChameleonContext().activeComponent === key;
 
 const BetterBox = flowRight(
   withNodeKey('chameleon-2'),
   withNode,
-  withBoxTitles,
   withChameleonContext('chameleon'),
   withChameleonButton(),
   withLocalContextMenu,
@@ -84,11 +87,7 @@ const BetterBox = flowRight(
   addClassesIf(useIs('Green'))('border-green-500 text-green-500'),
   asBox,
   stylable,
-)(Box$);
-
-const withToggleTitles = withDesign({
-  On: withTitle('On'),
-});
+)(ComponentBase);
 
 const withToggleDesign = withDesign({
   On: addProps({ on: true }),
@@ -107,7 +106,6 @@ const Toggle$: FC<HTMLProps<HTMLDivElement>&{ on: boolean }> = ({ on, ...rest })
 const Toggle = flowRight(
   withNodeKey('toggle'),
   withNode,
-  withToggleTitles,
   withToggleDesign,
   asBodilessChameleon('toggle-chameleon'),
   withLocalContextMenu,
@@ -121,7 +119,6 @@ const useIsOn = () => useChameleonContext().isOn;
 const BetterToggle = flowRight(
   withNodeKey('toggle-2'),
   withNode,
-  withToggleTitles,
   withChameleonContext('toggle'),
   withChameleonButton(),
   withLocalContextMenu,
@@ -130,18 +127,23 @@ const BetterToggle = flowRight(
   asBox,
   stylable,
 )(Toggle$);
+*/
 
 export default (props: any) => (
   <Page {...props}>
     <Layout>
       <H1>Chameleon</H1>
       <H2>Basic</H2>
-      <Box />
+      <Chameleon>Click Me</Chameleon>
+      <H2>Toggle</H2>
+      <Toggle />
+      {/*
       <BetterBox />
 
       <H2>Toggle</H2>
       <Toggle />
       <BetterToggle />
+      */}
     </Layout>
   </Page>
 );
