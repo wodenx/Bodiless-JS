@@ -21,8 +21,7 @@ import {
   asMenuLink, asMegaMenu,
 } from '@bodiless/organisms';
 import { asReadOnly } from '@bodiless/core';
-import { asEditable as withEditorSimple } from '@bodiless/components';
-// import { withEditorSimple } from '../Editors';
+import { withEditorSimple } from '../Editors';
 import withMegaMenuStyles, { withMenuToutStyles } from './MegaMenu.token';
 import { withToutEditors } from '../Tout';
 
