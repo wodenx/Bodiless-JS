@@ -63,7 +63,7 @@ const Tout: FC<DesignableProps<ToutComponents>> = ({ design }) => {
   );
 };
 
-const asBasicTout = withDesign({
+const asBasicTout = withDesign<ToutComponents>({
   Wrapper: addClasses('font-sans'),
   Title: addClasses('text-sm text-green'),
   Body: addClasses('my-10'),

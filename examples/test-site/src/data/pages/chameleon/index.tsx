@@ -22,12 +22,12 @@ import { flow, flowRight } from 'lodash';
 import {
   withContextActivator, withLocalContextMenu, withNodeKey, withNode,
 } from '@bodiless/core';
-
 import {
   asBodilessChameleon, useChameleonContext, withChameleonContext, withChameleonButton,
-} from '@bodiless/components/src/Chameleon';
+  asBodilessLink,
+} from '@bodiless/components';
 import { withTitle } from '@bodiless/layouts';
-import { asBodilessLink } from '@bodiless/components';
+
 import { asHeader1, asHeader2 } from '../../../components/Elements.token';
 import Layout from '../../../components/Layout';
 
