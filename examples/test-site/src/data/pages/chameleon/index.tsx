@@ -24,8 +24,8 @@ import {
 } from '@bodiless/core';
 
 import {
-  asBodilessChamelion, useChamelionContext, withChamelionContext, withChamelionButton,
-} from '@bodiless/components/src/Chamelion';
+  asBodilessChameleon, useChameleonContext, withChameleonContext, withChameleonButton,
+} from '@bodiless/components/src/Chameleon';
 import { withTitle } from '@bodiless/layouts';
 import { asBodilessLink } from '@bodiless/components';
 import { asHeader1, asHeader2 } from '../../../components/Elements.token';
@@ -64,19 +64,19 @@ const Box = flowRight(
   withNode,
   withBoxTitles,
   withDesign(boxDesign),
-  asBodilessChamelion('basic-chamelion'), // , {}, useOverrides),
+  asBodilessChameleon('basic-chameleon'), // , {}, useOverrides),
   asBox,
   stylable,
 )(Box$);
 
-const useIs = (key: String) => () => useChamelionContext().activeComponent === key;
+const useIs = (key: String) => () => useChameleonContext().activeComponent === key;
 
 const BetterBox = flowRight(
-  withNodeKey('chamelion-2'),
+  withNodeKey('chameleon-2'),
   withNode,
   withBoxTitles,
-  withChamelionContext('chamelion'),
-  withChamelionButton(),
+  withChameleonContext('chameleon'),
+  withChameleonButton(),
   withLocalContextMenu,
   withContextActivator('onClick'),
   addClassesIf(useIs('Red'))('border-red-500 text-red-500'),
@@ -109,21 +109,21 @@ const Toggle = flowRight(
   withNode,
   withToggleTitles,
   withToggleDesign,
-  asBodilessChamelion('toggle-chamelion'),
+  asBodilessChameleon('toggle-chameleon'),
   withLocalContextMenu,
   withContextActivator('onClick'),
   asBox,
   stylable,
 )(Toggle$);
 
-const useIsOn = () => useChamelionContext().isOn;
+const useIsOn = () => useChameleonContext().isOn;
 
 const BetterToggle = flowRight(
   withNodeKey('toggle-2'),
   withNode,
   withToggleTitles,
-  withChamelionContext('toggle'),
-  withChamelionButton(),
+  withChameleonContext('toggle'),
+  withChameleonButton(),
   withLocalContextMenu,
   withContextActivator('onClick'),
   addPropsIf(useIsOn)({ on: true }),
@@ -134,7 +134,7 @@ const BetterToggle = flowRight(
 export default (props: any) => (
   <Page {...props}>
     <Layout>
-      <H1>Chamelion</H1>
+      <H1>Chameleon</H1>
       <H2>Basic</H2>
       <Box />
       <BetterBox />

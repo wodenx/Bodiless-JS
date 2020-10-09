@@ -49,7 +49,7 @@ const withColumnSubMenuStyles = flow(
   withMegaMenuStyles,
 );
 
-const withChamelionSubMenuStyles = withDesign({
+const withChameleonSubMenuStyles = withDesign({
   Basic: withBasicSubMenuStyles,
   Touts: withToutSubMenuStyles,
   Columns: withColumnSubMenuStyles,
@@ -57,7 +57,7 @@ const withChamelionSubMenuStyles = withDesign({
 
 const withMenuStyles = flow(
   withDesign({
-    Item: withChamelionSubMenuStyles,
+    Item: withChameleonSubMenuStyles,
   }),
   asHorizontalMenu,
   withMenuListStyles,
@@ -65,7 +65,7 @@ const withMenuStyles = flow(
 );
 
 const withSimpleSubMenuStyles = withDesign({
-  Basic: withBasicSubMenuStyles,
+  SubMenu: withBasicSubMenuStyles,
 });
 
 export const withSimpleMenuStyles = flow(

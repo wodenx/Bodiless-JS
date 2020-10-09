@@ -1,55 +1,44 @@
 import { flow } from 'lodash';
 import {
-  asStylableList,
-} from '@bodiless/organisms';
-import {
-  addClasses, withDesign, replaceWith, A,
+  withDesign, addClasses, removeClasses,
 } from '@bodiless/fclasses';
 import {
-  asEditable, asSubList, withDeleteNodeOnUnwrap, asBodilessList,
-  withSubListDesign, asChamelionSubList,
+  asSubList, withDeleteNodeOnUnwrap, asBodilessList,
+  withSubListDesign, withSubLists,
 } from '@bodiless/components';
-import { WithNodeKeyProps } from '@bodiless/core';
 import { ComponentType } from 'react';
-import { asLink, asEditableLink } from '../../../components/Elements.token';
-
-/**
- * Defines the title for all list items.
- */
-export const withLinkTitle = withDesign({
-  Title: flow(
-    replaceWith(A),
-    asLink,
-    asEditableLink('link'),
-    asEditable('text', 'List Item'),
-  ),
-});
+import { withItemMargin, withSimpleTitle } from './SimpleListDemo';
 
 /**
  * Defines the all sublists
  */
-const asDemoSubList = flow(
+export const asToggledSubList = flow(
   asSubList,
   withDeleteNodeOnUnwrap,
-  asStylableList,
-);
-
-const withDemoSubListDesign = withSubListDesign(3);
-const withDemoSubLists = withDemoSubListDesign(asDemoSubList, asChamelionSubList);
-
-const asListDemo = (nodeKeys?: WithNodeKeyProps) => flow(
-  asBodilessList(nodeKeys),
-  asStylableList,
-  withDemoSubLists,
-  withDemoSubListDesign(withDesign({
-    Item: addClasses('pl-5'),
-  })),
 );
 
 const ListDemo = flow(
-  asListDemo(),
-  withDemoSubListDesign(withLinkTitle),
-  withLinkTitle,
+  asBodilessList(),
+  withSimpleTitle,
+  withSubLists(2)(asToggledSubList),
+  withSubListDesign(3)(flow(
+    withSimpleTitle,
+    withItemMargin,
+  )),
 )('ul') as ComponentType<any>;
 
-export default ListDemo;
+const withLessItemMargin = withDesign({
+  Item: flow(removeClasses('ml-5'), addClasses('ml-2')),
+});
+
+const withLessMarginOnInnerList = withDesign({
+  Item: withDesign({ // This item is a chameleon component
+    SubList: withDesign({ // It's "SubList" state design is the actual sublist.
+      Item: withDesign({
+        SubList: withLessItemMargin,
+      }),
+    }),
+  }),
+});
+
+export default withLessMarginOnInnerList(ListDemo);

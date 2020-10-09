@@ -12,53 +12,35 @@
  * limitations under the License.
  */
 
-import { flow, identity, flowRight } from 'lodash';
+import { flow } from 'lodash';
 
 import {
-  withDesign, addClassesIf,
+  withDesign, addClassesIf, Design,
 } from '@bodiless/fclasses';
 import {
   withSidecarNodes, WithNodeKeyProps,
 } from '@bodiless/core';
 import {
-  asBreadcrumb, useBreadcrumbContext, asBodilessList, asChamelionSubList,
+  asBreadcrumb, useBreadcrumbContext, asBodilessList,
+  withSubListDesign, withSubLists, asSubList, withDeleteNodeOnUnwrap,
 } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 
-import { asMenuLink } from './MenuTitles';
 import asStylableList from '../MainMenu/asStylableList';
-import { asMenuSubList } from './MegaMenu';
 
 import {
   asSubMenu, asMenu, withMenuItem, asMenuItem,
 } from './asMenu';
 
 /**
- * Applies a list design (or other HOC) recursively to all submenus.
- *
- * @param design The design object or HOC to be applied.
-*/
-const withSubMenuDesign = (design: any) => {
-  const withDesign$ = typeof design === 'function' ? design : withDesign(design);
-  return withDesign({
-    Item: withDesign({
-      Basic: withDesign$,
-    }),
-  });
-};
-
-/**
- * Applies a list design (or other HOC) to the main menu and all submenus.
- *
- * @param design The design object or HOC to be applied.
-*/
-const withMenuDesign = (design: any) => {
-  const withDesign$ = typeof design === 'function' ? design : withDesign(design);
-  return flow(
-    withSubMenuDesign(withDesign$),
-    withDesign$,
-  );
-};
+ * Creates a stylable sublist which deletes it's data when the last item is removed.
+ * Suitable for use for all menus.
+ */
+const asMenuSubList = flow(
+  asSubList,
+  asStylableList,
+  withDeleteNodeOnUnwrap,
+);
 
 /**
  * Bodiless HOC generator which creates the basic structure of the Mega Menu. The component
@@ -71,14 +53,22 @@ const withMenuDesign = (design: any) => {
  *
  * @return HOC which creates a basic mega menu list.
  */
-const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flowRight(
-  withSubMenuDesign(asMenuSubList),
-  withDesign({
-    Title: asMenuLink(() => identity),
-    Item: asChamelionSubList,
-  }),
-  asStylableList,
+const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
+  asStylableList,
+  withSubLists(1)({ SubMenu: asMenuSubList }),
+);
+
+/**
+ * Applies the specified design to the main list and all sublists.
+ *
+ * @param design
+ */
+const withMenuDesign = (design: Design<any>) => flow(
+  withSubListDesign(1)({
+    SubMenu: withDesign(design),
+  }),
+  withDesign(design),
 );
 
 // Defines basic sub menu when displayed as main menu
@@ -88,8 +78,8 @@ const asBasicSubMenu = flow(
 );
 
 // Applies above designs to the chameilion sublist
-const asChamelionSubMenu = withDesign({
-  Basic: asBasicSubMenu,
+const asChameleonSubMenu = withDesign({
+  SubMenu: asBasicSubMenu,
   _default: asMenuItem,
 });
 
@@ -100,11 +90,11 @@ const asChamelionSubMenu = withDesign({
  *
  * @return A clean (unstyled) site main menu.
  */
-const asMainMenuClean = flowRight(
-  asMenu,
+const asMainMenuClean = flow(
   withDesign({
-    Item: asChamelionSubMenu,
+    Item: asChameleonSubMenu,
   }),
+  asMenu,
 );
 
 /**
@@ -129,5 +119,5 @@ const asBreadcrumbsClean = withMenuDesign({
 // });
 
 export {
-  asMenuBase, asMainMenuClean, withMenuDesign, asBreadcrumbsClean,
+  asMenuBase, asMainMenuClean, asBreadcrumbsClean, withMenuDesign,
 };

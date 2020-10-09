@@ -12,19 +12,9 @@
  * limitations under the License.
  */
 
-import { flow } from 'lodash';
-import { asEditableList } from '@bodiless/components';
-import asMainSubMenu from './asMainSubMenu';
-import withMenuLinkTitle from './withMenuLinkTitle';
-import AsEditable from './types/AsEditable';
+import { Div } from '@bodiless/ui';
+import { addClasses } from '@bodiless/fclasses';
 
-/*
- * HOC, produces *editable* SubMenu
- */
-const asEditableMainSubMenu = (asEditable: AsEditable) => flow(
-  asEditableList,
-  asMainSubMenu,
-  withMenuLinkTitle(asEditable),
-);
+const TextSelectorWrapper = addClasses('bl-grid bl-bg-white bl-rounded bl-p-2')(Div);
 
-export default asEditableMainSubMenu;
+export default TextSelectorWrapper;

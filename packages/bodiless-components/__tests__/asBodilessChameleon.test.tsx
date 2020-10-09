@@ -24,10 +24,10 @@ import { flowRight, flow, identity } from 'lodash';
 import { withDesign, withoutProps } from '@bodiless/fclasses';
 
 import {
-  asBodilessChamelion, withChamelionComponentFormControls,
-  withChamelionContext, useChamelionContext,
-} from '../src/Chamelion';
-import { DEFAULT_KEY } from '../src/Chamelion/withChamelionContext';
+  asBodilessChameleon, withChameleonComponentFormControls,
+  withChameleonContext, useChameleonContext,
+} from '../src/Chameleon';
+import { DEFAULT_KEY } from '../src/Chameleon/withChameleonContext';
 
 const mockSetNode = jest.fn();
 // @ts-ignore Unused
@@ -76,14 +76,14 @@ const design = {
   _default: withProps({ 'data-test-default': true }),
 };
 
-const TestChamelion = flowRight(
+const TestChameleon = flowRight(
   withDesign(design),
-  asBodilessChamelion('chamelion'),
+  asBodilessChameleon('chameleon'),
   withoutProps('design'),
   withoutProps('wrap', 'unwrap'),
 )(TestComponent);
 
-describe('asBodilessChamelion', () => {
+describe('asBodilessChameleon', () => {
   let mockIsEdit: jest.SpyInstance<any, []>;
 
   beforeAll(() => {
@@ -99,7 +99,7 @@ describe('asBodilessChamelion', () => {
     mockGetNode.mockClear();
   });
 
-  describe('Chamelion  Button', () => {
+  describe('Chameleon  Button', () => {
     describe('Toggle Button', () => {
       const callHandler = (wrapper: ReactWrapper<any, any>) => {
         const { getMenuOptions } = wrapper.find(PageContextProvider).props();
@@ -112,21 +112,21 @@ describe('asBodilessChamelion', () => {
       it('Provides a toggle on button when toggled off', () => {
         const wrapper = mount((
           <MockNodeProvider data={{}}>
-            <TestChamelion />
+            <TestChameleon />
           </MockNodeProvider>
         ));
         callHandler(wrapper);
-        expect(mockSetNode).toBeCalledWith(['root', 'chamelion'], { component: 'A' });
+        expect(mockSetNode).toBeCalledWith(['root', 'chameleon'], { component: 'A' });
       });
 
       it('Provides a toggle off button when toggled on', () => {
         const wrapper = mount((
-          <MockNodeProvider data={{ root$chamelion: { component: 'A' } }}>
-            <TestChamelion />
+          <MockNodeProvider data={{ root$chameleon: { component: 'A' } }}>
+            <TestChameleon />
           </MockNodeProvider>
         ));
         callHandler(wrapper);
-        expect(mockSetNode).toBeCalledWith(['root', 'chamelion'], { component: null });
+        expect(mockSetNode).toBeCalledWith(['root', 'chameleon'], { component: null });
       });
     });
 
@@ -141,14 +141,14 @@ describe('asBodilessChamelion', () => {
         return Form;
       };
 
-      const TestChamelionExt = withDesign({
+      const TestChameleonExt = withDesign({
         B: flow(withProps({ 'data-test-b': true }), withTitle('B')),
-      })(TestChamelion);
+      })(TestChameleon);
 
       it('Provides the correct initial values', () => {
         const wrapper = mount((
-          <MockNodeProvider data={{ root$chamelion: { component: 'A' } }}>
-            <TestChamelionExt />
+          <MockNodeProvider data={{ root$chameleon: { component: 'A' } }}>
+            <TestChameleonExt />
           </MockNodeProvider>
         ));
         const Form = getForm(wrapper);
@@ -160,7 +160,7 @@ describe('asBodilessChamelion', () => {
       it('Provides the correct submit handlers', () => {
         const wrapper = mount((
           <MockNodeProvider data={{}}>
-            <TestChamelionExt />
+            <TestChameleonExt />
           </MockNodeProvider>
         ));
         const Form = getForm(wrapper);
@@ -169,30 +169,30 @@ describe('asBodilessChamelion', () => {
         expect(initialValues.component).toBeFalsy();
         const values = { component: 'A' };
         submitValues(values);
-        expect(mockSetNode).toBeCalledWith(['root', 'chamelion'], values);
+        expect(mockSetNode).toBeCalledWith(['root', 'chameleon'], values);
       });
 
       it('Provides the correct form components', () => {
         const wrapper = mount((
           <MockNodeProvider data={{}}>
-            <TestChamelionExt />
+            <TestChameleonExt />
           </MockNodeProvider>
         ));
         const Form = getForm(wrapper);
         const form = mount(<Form />);
         expect(form.find('input[value="A"]').prop('checked')).toBeFalsy();
         expect(form.find('input[value="B"]').prop('checked')).toBeFalsy();
-        expect(form.find('label[htmlFor="bl-component-form-chamelion-radio-A"]').text()).toBe('A');
-        expect(form.find('label[htmlFor="bl-component-form-chamelion-radio-B"]').text()).toBe('B');
+        expect(form.find('label[htmlFor="bl-component-form-chameleon-radio-A"]').text()).toBe('A');
+        expect(form.find('label[htmlFor="bl-component-form-chameleon-radio-B"]').text()).toBe('B');
       });
 
       it('Shows the default option when it has a title', () => {
-        const TestChamelionExt2 = withDesign({
+        const TestChameleonExt2 = withDesign({
           _default: withTitle('Default'),
-        })(TestChamelion);
+        })(TestChameleon);
         const wrapper = mount((
           <MockNodeProvider data={{}}>
-            <TestChamelionExt2 />
+            <TestChameleonExt2 />
           </MockNodeProvider>
         ));
         const Form = getForm(wrapper);
@@ -206,14 +206,14 @@ describe('asBodilessChamelion', () => {
   });
 
   it('Applies a design correctly depending on toggle state', () => {
-    const data = { root$chamelion: { component: 'A' } };
+    const data = { root$chameleon: { component: 'A' } };
     const Test: FC<any> = ({ data: data$ }) => (
       <MockNodeProvider data={data$}>
-        <TestChamelion />
+        <TestChameleon />
       </MockNodeProvider>
     );
     let wrapper = mount(<Test data={data} />);
-    expect(mockGetNode.mock.calls[0][0]).toEqual(['root', 'chamelion']);
+    expect(mockGetNode.mock.calls[0][0]).toEqual(['root', 'chameleon']);
     expect(wrapper.find('span#test').prop('data-test-a')).toBe(true);
     wrapper = mount(<Test data={{}} />);
     expect(wrapper.find('span#test').prop('data-test-a')).toBeUndefined();
@@ -222,12 +222,12 @@ describe('asBodilessChamelion', () => {
 
   it('Preserves the node path of the wrapped component', () => {
     const data = {
-      root$chamelion: { component: 'A' },
+      root$chameleon: { component: 'A' },
       root$component: { foo: 'bar' },
     };
     const Test: FC<any> = () => (
       <MockNodeProvider data={data}>
-        <TestChamelion nodeKey="cokponent" dataKey="foo" />
+        <TestChameleon nodeKey="cokponent" dataKey="foo" />
       </MockNodeProvider>
     );
     const wrapper = mount(<Test />);
@@ -237,40 +237,40 @@ describe('asBodilessChamelion', () => {
   describe('wrap and unwrap', () => {
     const PropsCatcher: FC = () => <></>;
 
-    const ChamelionPropsCatcher = flowRight(
+    const ChameleonPropsCatcher = flowRight(
       withDesign(design),
-      asBodilessChamelion('chamelion'),
+      asBodilessChameleon('chameleon'),
     )(PropsCatcher);
 
     it('Passes the correct unwrap prop when not in default state', () => {
       const wrapper = mount((
-        <MockNodeProvider data={{ root$chamelion: { component: 'A' } }}>
-          <ChamelionPropsCatcher />
+        <MockNodeProvider data={{ root$chameleon: { component: 'A' } }}>
+          <ChameleonPropsCatcher />
         </MockNodeProvider>
       ));
       const unwrap = wrapper.find(PropsCatcher).prop('unwrap') as Function;
       unwrap();
-      expect(mockSetNode).toBeCalledWith(['root', 'chamelion'], { component: null });
+      expect(mockSetNode).toBeCalledWith(['root', 'chameleon'], { component: null });
     });
 
     it('Does not pass an unwrap prop when in default state', () => {
       const wrapper = mount((
         <MockNodeProvider data={{}}>
-          <ChamelionPropsCatcher />
+          <ChameleonPropsCatcher />
         </MockNodeProvider>
       ));
       expect(wrapper.find(PropsCatcher).prop('unwrap')).toBeUndefined();
     });
   });
 
-  describe('withChamelionComponentFormControls', () => {
+  describe('withChameleonComponentFormControls', () => {
     const PropsCatcher: FC<any> = () => <></>;
     const PropsCatcherTest = flowRight(
       withDesign({
         On: withTitle('On'),
       }),
-      withChamelionContext('chamelion'),
-      withChamelionComponentFormControls,
+      withChameleonContext('chameleon'),
+      withChameleonComponentFormControls,
     )(PropsCatcher);
     it('Adds correct onSubmit when toggled off', () => {
       const wrapper = mount((
@@ -281,27 +281,27 @@ describe('asBodilessChamelion', () => {
       const { unwrap, onSubmit } = wrapper.find(PropsCatcher).props();
       expect(unwrap).toBeUndefined();
       onSubmit();
-      expect(mockSetNode).toBeCalledWith(['root', 'chamelion'], { component: 'On' });
+      expect(mockSetNode).toBeCalledWith(['root', 'chameleon'], { component: 'On' });
     });
     it('Adds correct unwrap when toggled on', () => {
       const wrapper = mount((
-        <MockNodeProvider data={{ root$chamelion: { component: 'On' } }}>
+        <MockNodeProvider data={{ root$chameleon: { component: 'On' } }}>
           <PropsCatcherTest />
         </MockNodeProvider>
       ));
       const { unwrap, onSubmit } = wrapper.find(PropsCatcher).props();
       expect(onSubmit).toBeUndefined();
       unwrap();
-      expect(mockSetNode).toBeCalledWith(['root', 'chamelion'], { component: null });
+      expect(mockSetNode).toBeCalledWith(['root', 'chameleon'], { component: null });
     });
     it('Preserves the node path of the wrapped component', () => {
       const data = {
-        root$chamelion: { component: 'A' },
+        root$chameleon: { component: 'A' },
         root$component: { foo: 'bar' },
       };
       const Test = flowRight(
-        withChamelionContext('chamelion'),
-        withChamelionComponentFormControls,
+        withChameleonContext('chameleon'),
+        withChameleonComponentFormControls,
       )(TestComponent) as any;
       const wrapper = mount((
         <MockNodeProvider data={data}>
@@ -312,15 +312,15 @@ describe('asBodilessChamelion', () => {
     });
   });
 
-  describe('withChamelionContext', () => {
+  describe('withChameleonContext', () => {
     it('Preserves the node path of the wrapped component', () => {
       const data = {
-        root$chamelion: { component: 'A' },
+        root$chameleon: { component: 'A' },
         root$component: { foo: 'bar' },
       };
       const Test: FC<any> = () => (
         <MockNodeProvider data={data}>
-          <TestChamelion nodeKey="cokponent" dataKey="foo" />
+          <TestChameleon nodeKey="cokponent" dataKey="foo" />
         </MockNodeProvider>
       );
       const wrapper = mount(<Test />);
@@ -336,7 +336,7 @@ describe('asBodilessChamelion', () => {
     it('Applies a design correctly', () => {
       const PropCatcher:any = () => null;
       const Test$ = () => {
-        const { selectableComponents } = useChamelionContext();
+        const { selectableComponents } = useChameleonContext();
         const map = Object.keys(selectableComponents).reduce((acc, key) => (
           // @ts-ignore
           { ...acc, [key]: selectableComponents[key].title }
@@ -345,7 +345,7 @@ describe('asBodilessChamelion', () => {
       };
       const Test = flowRight(
         withTestDesign,
-        withChamelionContext('chamelion'),
+        withChameleonContext('chameleon'),
       )(Test$);
       const wrapper = mount(<Test />);
       expect(wrapper.find(PropCatcher).prop('map'))

@@ -12,30 +12,73 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { ComponentType } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
+import { asBodilessList, asEditable } from '@bodiless/components';
+import {
+  withDesign, replaceWith, Div, addClasses, H1, H3,
+} from '@bodiless/fclasses';
+import { flow } from 'lodash';
 import Layout from '../../../components/Layout';
 // import { OuterList, OuterLinkList } from './OldListDemo';
-import DemoList from './ChamelionListDemo';
+import ChameleonListDemo from './ChameleonListDemo';
+import ListDemo from './ListDemo';
+import SimpleListDemo from './SimpleListDemo';
+import { asHeader1, asHeader3 } from '../../../components/Elements.token';
+
+const SuperSimpleList = flow(
+  asBodilessList('list'),
+  withDesign({
+    Title: flow(
+      replaceWith('span' as any as ComponentType<any>),
+      asEditable('text', 'Item'),
+    ),
+  }),
+)('ul');
+
+const Wrapper = addClasses('w-1/2 p-5')(Div);
+const Title = asHeader1(H1);
+const SectionHeader = asHeader3(H3);
 
 export default (props: any) => (
   <Page {...props}>
     <Layout>
-      <h1 className="text-3xl font-bold">Editable List Demo V2</h1>
+      <Title className="text-3xl font-bold">Editable List Demo V2</Title>
       <p className="pt-4">
-        The following are editable lists. Click on each item to display
-        a menu with available operations. The list allows up to 3 levels
-        of sublists.
-        The innermost list has reduced padding. The list on the left contains editable
-        items with red text.  The one on the right contains editable links.
+        The following are different kinds of editable lists. Click on an item in each list to
+        display a menu with available operations.
       </p>
-      <div className="flex pt-4">
-        <DemoList nodeKey="list3" />
-        {/*
-        <OuterList nodeKey="list1" className="w-1/2" data-list-element="outerlist" />
-        <OuterLinkList nodeKey="list2" className="w-1/2" data-list-element="outerlinklist" />
-        */}
+      <div className="flex flex-wrap pt-4">
+        <Wrapper>
+          <SectionHeader>Simple List</SectionHeader>
+          <p>This list has one level with editable but non linkable titles.</p>
+          <SuperSimpleList nodeKey="list0" />
+        </Wrapper>
+        <Wrapper>
+          <SectionHeader>Basic Compound List</SectionHeader>
+          <p>
+            This list has two levels of nested sublists.
+          </p>
+          <SimpleListDemo nodeKey="list3" />
+        </Wrapper>
+        <Wrapper>
+          <SectionHeader>Toggled Compound List</SectionHeader>
+          <p>
+            This list has up to 2 levels of nested sublists, which can be added or removed
+            by an editor. The innermost sublist has less padding.
+          </p>
+          <ListDemo nodeKey="list2" className="w-1/3" />
+        </Wrapper>
+        <Wrapper>
+          <SectionHeader>Chameleon Compound List</SectionHeader>
+          <p>
+            This list has up to 2 levels of nested sublists. The main list itself and
+            each sublist can be switched between bullets and numbers.  The titles in
+            the list are editable links.
+          </p>
+          <ChameleonListDemo nodeKey="list1" />
+        </Wrapper>
       </div>
     </Layout>
   </Page>

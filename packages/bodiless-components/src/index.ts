@@ -21,20 +21,13 @@ import Image, {
 } from './Image';
 import NodeViewer from './NodeViewer';
 import withLinkToggle from './LinkToggle';
-import List, { asTestableList } from './List_DEPRECATED';
+import List from './List_DEPRECATED';
 import asTaggableItem from './Taggable/asTaggableItem';
 import withListTitle from './List_DEPRECATED/withListTitle';
 import asEditableList from './List_DEPRECATED/asEditableList';
 import asBasicSublist from './List_DEPRECATED/asBasicSublist';
-import asBodilessList, {
-  asSubList, asTitledItem, withSubListDesign as withSimpleSubListDesign,
-} from './List/asBodilessList';
 import withSublist, { withBasicSublist } from './List_DEPRECATED/withSublist';
 import withDeleteSublistOnUnwrap from './List_DEPRECATED/withDeleteSublistOnUnwrap';
-import asChamelionSubList, {
-  withSubLists,
-  withSubListDesign,
-} from './List/asChamelionSubList';
 import {
   withMeta, withMetaStatic, withMetaHtml, withTitle,
 } from './Meta/Meta';
@@ -70,16 +63,8 @@ export {
   NodeViewer,
   withLinkToggle,
   List,
-  asBodilessList,
-  withSimpleSubListDesign,
-  asChamelionSubList,
-  withSubLists,
-  withSubListDesign,
-  asTitledItem,
-  asSubList,
   asEditableList,
   asBasicSublist,
-  asTestableList,
   withBasicSublist,
   withSublist,
   withDeleteSublistOnUnwrap,
@@ -115,10 +100,7 @@ export {
   useBreadcrumbContext,
 };
 
-export * from './Chamelion/index';
+export * from './Chameleon/index';
+export * from './List';
 
-export type {
-  FinalProps as ListProps,
-  ListDesignableComponents,
-} from './List/types';
 export type { MetaFormFieldType };

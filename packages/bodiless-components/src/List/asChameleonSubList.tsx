@@ -3,7 +3,7 @@ import { identity, flow } from 'lodash';
 import { withDesign, HOC, Design } from '@bodiless/fclasses';
 import { useEditContext, PageEditContextInterface } from '@bodiless/core';
 import { useCallback } from 'react';
-import { useChamelionContext, asBodilessChamelion } from '../Chamelion';
+import { useChameleonContext, asBodilessChameleon } from '../Chameleon';
 
 const hasChildSubList = (context: PageEditContextInterface): boolean => {
   const descendants = context.activeDescendants || [];
@@ -12,36 +12,36 @@ const hasChildSubList = (context: PageEditContextInterface): boolean => {
   return descendants.filter(c => c.type === 'sublist-toggle').length > 1;
 };
 
-const useChamelionOverrides = () => {
+const useChameleonOverrides = () => {
   const context = useEditContext();
-  const { isOn } = useChamelionContext();
+  const { isOn } = useChameleonContext();
   return {
     isHidden: useCallback(() => hasChildSubList(context), []),
     icon: isOn ? 'repeat' : 'playlist_add',
     label: 'Sub',
-    name: `chamelion-sublist-${v1()}`,
+    name: `chameleon-sublist-${v1()}`,
   };
 };
 
 const useToggleOverrides = () => {
-  const { isOn } = useChamelionContext();
+  const { isOn } = useChameleonContext();
   const context = useEditContext();
   return {
     isHidden: useCallback(() => isOn || hasChildSubList(context), [isOn]),
     icon: 'playlist_add',
     label: 'Sub',
-    name: `chamelion-sublist-${v1()}`,
+    name: `chameleon-sublist-${v1()}`,
   };
 };
 
 const useOverrides = () => {
-  const { selectableComponents } = useChamelionContext();
+  const { selectableComponents } = useChameleonContext();
   return Object.keys(selectableComponents).length > 1
-    ? useChamelionOverrides()
+    ? useChameleonOverrides()
     : useToggleOverrides();
 };
 
-const asChamelionSubList = asBodilessChamelion('cham-sublist', {}, useOverrides, { type: 'sublist-toggle' });
+const asChameleonSubList = asBodilessChameleon('cham-sublist', {}, useOverrides, { type: 'sublist-toggle' });
 
 const withSubListDesign$ = (depth: number) => (design: Design<any>, hoc: HOC = identity): HOC => (
   depth === 0 ? identity
@@ -64,12 +64,12 @@ const withSubListDesign = (depth: number) => (
   hoc: HOC = identity,
 ): HOC => (
   typeof withDesign$ === 'function'
-    ? withSubListDesign$(depth)({ On: withDesign$ }, hoc)
+    ? withSubListDesign$(depth)({ SubList: withDesign$ }, hoc)
     : withSubListDesign$(depth)(withDesign$, hoc)
 );
 
 /**
- * Attaches nested chamelion sublists of arbitrary depth to a list.
+ * Attaches nested chameleon sublists of arbitrary depth to a list.
  *
  * This returns a function which takes a sublist definition, either as a single HOC or a
  * design.  If a single HOC is provided, the effect is a single sublist type which can
@@ -80,7 +80,7 @@ const withSubListDesign = (depth: number) => (
  * @return An function accepting a sublist definition and returning an HOC which adds the sublists.
  */
 const withSubLists = (depth: number) => (asSubList$: HOC|Design<any>): HOC => (
-  withSubListDesign(depth)(asSubList$, asChamelionSubList)
+  withSubListDesign(depth)(asSubList$, asChameleonSubList)
 );
-export default asChamelionSubList;
+export default asChameleonSubList;
 export { withSubLists, withSubListDesign };

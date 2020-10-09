@@ -16,7 +16,7 @@ import { asMenuLink } from '@bodiless/organisms';
 import { addClasses, withDesign, stylable } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import { withTitle } from '@bodiless/layouts';
-import { asBodilessChamelion } from '@bodiless/components';
+import { asBodilessChameleon } from '@bodiless/components';
 import { withEditorSimple } from '../../../components/Editors';
 
 const startWithMenuLink = flow(
@@ -49,9 +49,9 @@ const design = {
   White: asWhite,
 };
 
-const asChamelionTitle = flow(
-  asBodilessChamelion('cham-component', { component: 'White' }),
+const asChameleonTitle = flow(
+  asBodilessChameleon('cham-component', { component: 'White' }),
   withDesign(design),
 );
 
-export default asChamelionTitle;
+export default asChameleonTitle;
