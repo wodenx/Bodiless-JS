@@ -12,144 +12,262 @@
  * limitations under the License.
  */
 
-import React, { FC, HTMLProps, ComponentType } from 'react';
+import React, { FC, useState, ComponentType } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  addClasses, H1 as H1$, H2 as H2$, withDesign, stylable, addProps, addClassesIf, Div, HOC,
+  addClasses, H1 as H1$, H2 as H2$, withDesign,
+  addProps, Div, removeClasses, HOC, replaceWith, withoutProps,
+  Section as Section$,
+  P,
 } from '@bodiless/fclasses';
-import { flow, flowRight } from 'lodash';
-import {
-  withContextActivator, withLocalContextMenu, withNodeKey, withNode,
-} from '@bodiless/core';
-import {
-  asBodilessChameleon, useChameleonContext, withChameleonContext, withChameleonButton,
-  asBodilessLink,
-} from '@bodiless/components';
-import { withTitle } from '@bodiless/layouts';
+import { flow } from 'lodash';
+import { observer } from 'mobx-react-lite';
 
+import {
+  asBodilessChameleon, withChameleonContext, withChameleonButton,
+  applyChameleon,
+  useChameleonContext,
+  withChameleonComponentFormControls,
+} from '@bodiless/components';
+
+import { useMenuOptionUI, asBodilessComponent, useEditContext } from '@bodiless/core';
 import { asHeader1, asHeader2 } from '../../../components/Elements.token';
 import Layout from '../../../components/Layout';
 
-const H1 = flow(addClasses('pt-5'), asHeader1)(H1$);
-const H2 = flow(addClasses('pt-5'), asHeader2)(H2$);
+/*
+ * Basic Chaemelion
+ */
 
+const BaseComponent = addClasses('border-8 py-5 text-center')(Div);
 
-const A = asBodilessLink('link')('a');
-
-const addPropsIf = (condition: () => boolean) => (newProps: any) => (C: ComponentType<any>) => (
-  (props: any) => (condition() ? <C {...props} {...newProps} /> : <C {...props} />)
-);
-
-//
-const withBaseStyles = addClasses('border-8 py-5 w-1/6 text-center');
-
-const BaseComponent = withBaseStyles(Div);
-
-const chameleonDesign = {
+const basicChameleonDesign = {
   Red: addClasses('border-red-500 text-red-500'),
   Blue: addClasses('border-blue-500 text-blue-500'),
   Green: addClasses('border-green-500 text-green-500'),
 };
 
-const Chameleon = flow(
-  asBodilessChameleon('basic-chameleon'),
-  withDesign(chameleonDesign),
+const BasicChameleon = flow(
+  asBodilessChameleon('basic-chameleon') as HOC,
+  withDesign(basicChameleonDesign) as HOC,
 )(BaseComponent);
 
-const BaseToggle = ({ isAvailable = false, ...rest }) => (
-  <BaseComponent {...rest}>
-    {isAvailable ? 'Available Now!' : 'Call for availability'}
-  </BaseComponent>
+/*
+ * Basic Toggle
+ */
+type AvailabilityProps = { isAvailable?: boolean };
+
+const BaseAvailability: FC<AvailabilityProps> = ({ isAvailable, ...rest }) => (
+  <Div {...rest}>
+    {isAvailable ? 'Available Now!' : 'Call for Availability'}
+  </Div>
 );
 
 const toggleDesign = {
   Available: flow(
-    addProps({ isAvailable: true })
+    addProps({ isAvailable: true }),
   ),
 };
 
-const Toggle = flow(
+const AvailabilityToggle = flow(
   asBodilessChameleon('basic-toggle', { component: 'Available' }, () => ({ label: 'Avail' })),
   withDesign(toggleDesign),
   withDesign({
-    _default: addClasses('border-red-500 text-red-500'),
+    _default: addClasses('text-red-500'),
   }),
-)(BaseToggle);
-
+)(BaseAvailability);
 
 /*
-const useIs = (key: String) => () => useChameleonContext().activeComponent === key;
+ * Compound Toggle
+ */
 
-const BetterBox = flowRight(
-  withNodeKey('chameleon-2'),
-  withNode,
-  withChameleonContext('chameleon'),
-  withChameleonButton(),
-  withLocalContextMenu,
-  withContextActivator('onClick'),
-  addClassesIf(useIs('Red'))('border-red-500 text-red-500'),
-  addClassesIf(useIs('Blue'))('border-blue-500 text-blue-500'),
-  addClassesIf(useIs('Green'))('border-green-500 text-green-500'),
-  asBox,
-  stylable,
-)(ComponentBase);
+const toggleVisibilityDesign = {
+  Available: removeClasses('invisible'),
+};
 
-const withToggleDesign = withDesign({
-  On: addProps({ on: true }),
-  _default: addProps({ on: false }),
+const VisibilityToggle = flow(
+  addClasses('invisible') as HOC,
+  applyChameleon as HOC,
+  withDesign(toggleVisibilityDesign) as HOC,
+)(BaseAvailability);
+
+const VisibilityTogglerapper = flow(
+  withChameleonButton(() => ({ label: 'Avail' })) as HOC,
+  withChameleonContext('decomposed-toggle') as HOC,
+  withDesign(toggleVisibilityDesign) as HOC,
+)(BaseComponent);
+
+const options = {
+  icon: 'shopping_cart',
+  name: 'enable-add-to-cart',
+  label: () => (useChameleonContext().isOn ? 'Config' : 'Enable'),
+  global: false,
+  local: true,
+  renderForm: ({ componentProps }) => {
+    const {
+      ComponentFormTitle, ComponentFormLabel, ComponentFormText, ComponentFormUnwrapButton,
+    } = useMenuOptionUI();
+    const { unwrap } = componentProps;
+    return (
+      <>
+        <ComponentFormTitle>Cart Configuration</ComponentFormTitle>
+        <ComponentFormLabel>
+          Product ID
+          <ComponentFormText field="productId" />
+        </ComponentFormLabel>
+        {unwrap && (
+          <ComponentFormUnwrapButton onClick={unwrap}>
+            Disable Cart
+          </ComponentFormUnwrapButton>
+        )}
+      </>
+    );
+  },
+};
+
+const addToCart = (id: string) => {
+  // @TODO: Wire this to your cart provider...
+  // eslint-disable-next-line no-alert
+  alert(`${id} added to cart`);
+};
+
+type AddToCartProps = { productId?: string };
+const AddToCartBase = observer(({ productId, ...rest }: AddToCartProps) => {
+  const onClick = !useEditContext().isEdit ? () => addToCart(productId) : undefined;
+  return (
+    <div {...rest}>
+      <button type="button" onClick={onClick}>Add to cart</button>
+    </div>
+  );
 });
 
-const Toggle$: FC<HTMLProps<HTMLDivElement>&{ on: boolean }> = ({ on, ...rest }) => (
-  <div {...rest}>
-    <A>
-      Toggle:
-      {on ? 'On' : 'Off'}
-    </A>
-  </div>
+const asAddToCart = asBodilessComponent(options);
+
+const toggleCartDesign = {
+  Available: replaceWith(AddToCartBase),
+};
+
+const AddToCartToggle = flow(
+  withoutProps('productId'),
+  applyChameleon,
+  withoutProps('unwrap'),
+  asAddToCart('product-id'),
+  withChameleonComponentFormControls,
+  withChameleonContext('add-to-cart'),
+  withDesign(toggleCartDesign),
+)(Div);
+
+const AvailabilityAccordion = ({ isAvailable, ...rest }) => {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <Div {...rest}>
+      <div>
+        <button type="button" onClick={() => setExpanded(e => !e)}>
+          {expanded ? <>&#9660;</> : <>&#9658;</>}
+          Availability
+        </button>
+      </div>
+      <div className={expanded ? '' : 'hidden'}>
+        {isAvailable ? 'In Stock!' : 'Call'}
+        a
+      </div>
+    </Div>
+  );
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const AvailabilityAccordionToggleDefective = flow(
+  asBodilessChameleon('basic-toggle', { component: 'Available' }, () => ({ label: 'Avail' })),
+  withDesign(toggleDesign),
+)(AvailabilityAccordion);
+
+const withChameleonAvailability = <P extends object>(Component: ComponentType<P>) => (props: P) => (
+  <Component {...props} isAvailable={useChameleonContext().isOn} />
 );
 
-const Toggle = flowRight(
-  withNodeKey('toggle'),
-  withNode,
-  withToggleDesign,
-  asBodilessChameleon('toggle-chameleon'),
-  withLocalContextMenu,
-  withContextActivator('onClick'),
-  asBox,
-  stylable,
-)(Toggle$);
+const AvailabilityAccordionToggle = flow(
+  withChameleonAvailability,
+  withChameleonButton(() => ({ label: 'Avail' })) as HOC,
+  withChameleonContext('accordion-toggle'),
+  withDesign(toggleDesign),
+)(AvailabilityAccordion);
 
-const useIsOn = () => useChameleonContext().isOn;
-
-const BetterToggle = flowRight(
-  withNodeKey('toggle-2'),
-  withNode,
-  withChameleonContext('toggle'),
-  withChameleonButton(),
-  withLocalContextMenu,
-  withContextActivator('onClick'),
-  addPropsIf(useIsOn)({ on: true }),
-  asBox,
-  stylable,
-)(Toggle$);
-*/
+const H1 = flow(addClasses('pt-5'), asHeader1)(H1$);
+const H2 = flow(addClasses('pt-5'), asHeader2)(H2$);
+const Description = addClasses('mt-2 text-sm italic')(P);
+const Example = addClasses('w-1/3 p-5')(Section$);
+const Examples = addClasses('flex flex-wrap')(Div);
 
 export default (props: any) => (
   <Page {...props}>
     <Layout>
       <H1>Chameleon</H1>
-      <H2>Basic</H2>
-      <Chameleon>Click Me</Chameleon>
-      <H2>Toggle</H2>
-      <Toggle />
-      {/*
-      <BetterBox />
-
-      <H2>Toggle</H2>
-      <Toggle />
-      <BetterToggle />
-      */}
+      <Examples>
+        <Example>
+          <H2>Basic</H2>
+          <BasicChameleon>
+            <div>Chameleons!</div>
+            <div>Available Now!</div>
+          </BasicChameleon>
+          <Description>
+            Click anywhere inside the box while in edit mode to reveal a local
+            context menu button which displays a form to choose a color for the box.
+          </Description>
+        </Example>
+        <Example>
+          <H2>Toggle</H2>
+          <BaseComponent>
+            <div>Chameleons!</div>
+            <AvailabilityToggle />
+          </BaseComponent>
+          <Description>
+            Click on the availability text while in edit mode to bring up
+            a toggle button which switches between &quot;Available Now!&quot; and
+            &quot;Call for Availability&quot;.
+          </Description>
+        </Example>
+        <Example>
+          <H2>Accordion Toggle</H2>
+          <BaseComponent>
+            <div>Chameleons!</div>
+            <AvailabilityAccordionToggle />
+          </BaseComponent>
+          <Description>
+            Here the availability status is behind an accordion.  Click on the
+            &quot;Availability&quot; text to open and close the accordion. In
+            edit mode this will also display a toggle button which allows you
+            to switch between &quot;In Stock&quot; and &quot;Call&quot;. Note
+            that the accordion state is preserved as you toggle back and forth.
+          </Description>
+        </Example>
+        <Example>
+          <H2>Visibility Toggle</H2>
+          <VisibilityTogglerapper>
+            <div>Chameleons!</div>
+            <VisibilityToggle isAvailable />
+          </VisibilityTogglerapper>
+          <Description>
+            This verson shows and hides &quot;Available Now&quot; based on the
+            state of the toggle.  You can click anywhere on the box to display
+            the toggle button.
+          </Description>
+        </Example>
+        <Example>
+          <H2>Component Form Toggle</H2>
+          <BaseComponent>
+            Chameleons!
+            <AddToCartToggle>Call for availability</AddToCartToggle>
+          </BaseComponent>
+          <Description>
+            Here, instead of toggling an availability message, you can toggle
+            an &quot;Add to cart&quot; button. The button requires configuration (a product ID).
+            Click on the text to bring up a button which adds the button if it not
+            present, or edits the configuration if it is. The button can be removed
+            by clicking &quot;Disable&quot; in the lower left corner of the
+            configuration form.
+          </Description>
+        </Example>
+      </Examples>
     </Layout>
   </Page>
 );
