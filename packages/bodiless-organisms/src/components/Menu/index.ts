@@ -23,8 +23,8 @@ import {
   withMenuDesign as withSimpleMenuDesign,
 } from './SimpleMenu';
 
-import asSimpleMenu from './SimpleMenu.token';
-import asMegaMenu from './MegaMenu.token';
+import asSimpleMenuTopNav from './SimpleMenu.token';
+import asMegaMenuTopNav from './MegaMenu.token';
 
 export {
   asMenuTout,
@@ -43,6 +43,6 @@ export {
 };
 
 export {
-  asSimpleMenu,
-  asMegaMenu,
+  asSimpleMenuTopNav,
+  asMegaMenuTopNav,
 };

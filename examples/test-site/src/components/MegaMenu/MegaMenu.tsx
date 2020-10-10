@@ -18,7 +18,7 @@ import {
 } from '@bodiless/fclasses';
 import {
   asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaMenuBreadcrumbs,
-  asMenuLink, asMegaMenu,
+  asMenuLink, asMegaMenuTopNav,
 } from '@bodiless/organisms';
 import { asReadOnly } from '@bodiless/core';
 import { withEditorSimple } from '../Editors';
@@ -61,7 +61,7 @@ const MegaMenu = flow(
     }),
   }),
   withMegaMenuStyles,
-  asMegaMenu,
+  asMegaMenuTopNav,
 )('ul');
 
 const MegaMenuList = flow(

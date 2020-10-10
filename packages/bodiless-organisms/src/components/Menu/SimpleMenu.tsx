@@ -26,7 +26,7 @@ import {
   withSubListDesign, withSubLists, asSubList, withDeleteNodeOnUnwrap,
 } from '@bodiless/components';
 
-import asStylableList from '../MainMenu/asStylableList';
+import asStylableList from './asStylableList';
 
 /**
  * Creates a stylable sublist which deletes it's data when the last item is removed.
@@ -43,12 +43,15 @@ const asMenuSubList = flow(
  *
  * @param design
  */
-const withMenuDesign = (design: Design<any>) => flow(
-  withSubListDesign(1)({
-    SubMenu: withDesign(design),
-  }),
-  withDesign(design),
-);
+const withMenuDesign = (design: Design<any>) => {
+  const withDesign$ = typeof design === 'function' ? design : withDesign(design);
+  return flow(
+    withSubListDesign(1)({
+      SubMenu: withDesign$,
+    }),
+    withDesign$,
+  );
+};
 
 /**
  * Bodiless HOC generator which creates the basic structure of the Mega Menu. The component

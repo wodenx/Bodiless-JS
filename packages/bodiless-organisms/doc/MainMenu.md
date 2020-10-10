@@ -18,7 +18,7 @@ There are several HOCs provided by `@bodiless/organisms` that can be used to bui
 
  - `asSimpleMenuBase` - A Bodiless HOC generator that creates a basic structure of the Simple Menu. It may serve as a base for various views on the Menu data, including a site's main menu, a burger menu, and breadcrumbs.
  - `withSimpleMenuDesign` - Applies the specified design to the main menu and all submenus.
- - `asSimpleMenu` - Applies base Simple Menu styles responsible for the menu layout and behavior.
+ - `asSimpleMenuTopNav` - Applies base Simple Top Menu styles responsible for the menu layout and behavior.
  - `asMenuLink` - A helper HOC to create an editable `MenuLink` which supports an Active Page via Design API.
 
 ### Simple Menu Structure
@@ -50,7 +50,7 @@ The code above will produce the unstyled version of Simple Menu.
 ```
 
 ### Styling Simple Menu
-Bodiless FClasses Design API may be used to style every piece of Simple menu. Basic Menu layout and SubMenu behavior classes are also provided by `asSimpleMenu` for convenience.
+Bodiless FClasses Design API may be used to style every piece of Simple menu. Basic Top Menu layout and SubMenu behavior classes are also provided by `asSimpleMenuTopNav` for convenience.
 ```js
 import { flow } from 'lodash';
 import { asEditable } from '@bodiless/components';
@@ -66,7 +66,7 @@ export const SimpleMenu = flow(
     Title: asMenuLink(withTitleEditor),
   }),
   withSimpleMenuStyles, // Apply custom menu styles
-  asSimpleMenu, // Apply Basic Menu layout and SubMenu behavior.
+  asSimpleMenuTopNav, // Apply Basic Top Menu layout and SubMenu behavior.
 )('ul');
 ```
 
@@ -138,7 +138,7 @@ There are several HOCs provided by `@bodiless/organisms` that can be used to bui
 
  - `asMegaMenuBase` - A Bodiless HOC generator that creates a basic structure of the Mega Menu. It may serve as a base for various views on the Menu data, including a site's main menu, a burger menu, and breadcrumbs.
  - `withMegaMenuDesign` - Applies the specified design to the main menu and all submenus.
- - `asMegaMenu` - Applies base Mega Menu styles responsible for the menu layout and behavior.
+ - `asMegaMenuTopNav` - Applies base Top Mega Menu styles responsible for the menu layout and behavior.
  - `asMenuLink` - A helper HOC to create an editable `MenuLink` which supports an Active Page via Design API.
  - `asMenuTout` - A helper HOC to convert a menu item into a Tout.
 
@@ -189,13 +189,13 @@ export const MegaMenu = flow(
 The code above will create an unstyled version of Mega Menu with the same structure as Simple Menu. The difference between Simple Menu and Mega Menu, in this case, is that the latter allows you to create multiple types of the submenus.
 
 ### Styling Mega Menu
-Bodiless FClasses Design API may be used to style every piece of Mega Menu. Basic Mega Menu layout and SubMenu behavior classes are also provided by `asMegaMenu` for convenience.
+Bodiless FClasses Design API may be used to style every piece of Mega Menu. Basic Mega Menu layout and SubMenu behavior classes are also provided by `asMegaMenuTopNav` for convenience.
 
 ```js
 import { flow } from 'lodash';
 import { asEditable } from '@bodiless/components';
 import {
-  asMenuLink, asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaMenu,
+  asMenuLink, asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaMenuTopNav,
 } from '@bodiless/organisms';
 
 import withMegaMenuStyles from './MegaMenu.token';
@@ -207,7 +207,7 @@ export const MegaMenu = flow(
   }),
   withToutsSubmenu,
   withMegaMenuStyles, // Apply custom Mega Menu styles
-  asMegaMenu, // Apply Basic Mega Menu layout and SubMenu behavior
+  asMegaMenuTopNav, // Apply Basic Top Mega Menu layout and SubMenu behavior
 )('ul');
 ```
 The styling principle for the Mega Menu is similar to the way you would style a Simple menu. Let's take a closer look at `MegaMenu.token.tsx` file with the Mega Menu custom styles.

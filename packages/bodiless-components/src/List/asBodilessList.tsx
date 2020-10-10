@@ -19,7 +19,7 @@ import React, { ComponentType, PropsWithChildren, FC } from 'react';
 import { flow, identity } from 'lodash';
 import {
   replaceWith, withDesign, asComponent, DesignableComponentsProps, designable, HOC,
-  Ul, Li, withoutProps,
+  withoutProps,
 } from '@bodiless/fclasses';
 
 import withListButtons from './withListButtons';
@@ -51,8 +51,8 @@ type SubListComponents = {
 };
 
 const startComponents: SubListComponents = {
-  WrapperItem: Li,
-  List: Ul,
+  WrapperItem: asComponent('li'),
+  List: asComponent('ul'),
 };
 
 type SubListProps = TitledItemProps & DesignableComponentsProps<SubListComponents>;

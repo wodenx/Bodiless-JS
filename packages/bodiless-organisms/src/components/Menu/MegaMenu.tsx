@@ -22,8 +22,7 @@ import {
 } from '@bodiless/components';
 
 import { asMenuSubList } from './SimpleMenu';
-import { asDefaultMenuLink } from './MenuTitles';
-import asStylableList from '../MainMenu/asStylableList';
+import asStylableList from './asStylableList';
 
 /**
  * Applies a list design (or other HOC) recursively to all submenus.
@@ -74,7 +73,6 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
   asStylableList,
   withDesign({
-    Title: asDefaultMenuLink,
     Item: asChameleonSubList,
   }),
   withSubMenuDesign(asMenuSubList),

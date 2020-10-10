@@ -89,11 +89,11 @@ const asMegaMenuSubListStyles = withDesign({
  * Mega Menu Styles
  * ===========================================
  */
-const asMegaMenu = flow(
+const asMegaMenuTopNav = flow(
   withDesign({
     Item: asMegaMenuSubListStyles,
   }),
   withBaseMenuStyles,
 );
 
-export default asMegaMenu;
+export default asMegaMenuTopNav;
