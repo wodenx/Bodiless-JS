@@ -13,14 +13,12 @@
  */
 
 import React, { ComponentType } from 'react';
+import { flowRight } from 'lodash';
 import {
-  ifEditable,
-  useNode,
-  MenuOptionsDefinition,
+  ifEditable, useNode, MenuOptionsDefinition, UseBodilessOverrides,
 } from '@bodiless/core';
 import type { WithNodeKeyProps } from '@bodiless/core';
-import { flowRight } from 'lodash';
-import { ChameleonData, UseOverrides, ChameleonButtonProps } from './types';
+import { ChameleonData, ChameleonButtonProps } from './types';
 import withChameleonButton from './withChameleonButton';
 import applyChameleon from './applyChameleon';
 import withChameleonContext from './withChameleonContext';
@@ -60,7 +58,7 @@ const withDeleteNodeOnUnwrap = (
 const asBodilessChameleon = (
   nodeKeys: WithNodeKeyProps,
   defaultData?: ChameleonData,
-  useOverrides?: UseOverrides,
+  useOverrides?: UseBodilessOverrides,
   contextProps?: Partial<MenuOptionsDefinition<ChameleonButtonProps>>,
 ) => flowRight(
   withChameleonContext(nodeKeys, defaultData),

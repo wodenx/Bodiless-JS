@@ -13,15 +13,13 @@
  */
 
 import React, { ComponentType } from 'react';
-import {
-  withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator, withLocalContextMenu,
-  MenuOptionsDefinition,
-} from '@bodiless/core';
-
 import { flowRight } from 'lodash';
 import {
-  ChameleonButtonProps, ChameleonData, UseOverrides,
-} from './types';
+  withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator, withLocalContextMenu,
+  MenuOptionsDefinition, EditButtonProps, UseBodilessOverrides,
+} from '@bodiless/core';
+
+import { ChameleonButtonProps, ChameleonData } from './types';
 import { useChameleonContext, DEFAULT_KEY } from './withChameleonContext';
 
 const useToggleButtonMenuOption = () => {
@@ -96,11 +94,11 @@ export const withUnwrap = <P extends object>(Component: ComponentType<P>) => {
  *
  * @return HOC which adds the menu button.
  */
-const withChameleonButton = <P extends object>(
-  useOverrides?: UseOverrides<P>,
+const withChameleonButton = <P extends object, D extends object>(
+  useOverrides?: UseBodilessOverrides<P, D>,
   contextProps?: Partial<MenuOptionsDefinition<P>>,
 ) => {
-  const useMenuOptions = (props: P) => {
+  const useMenuOptions = (props: P & EditButtonProps<D>) => {
     const { selectableComponents } = useChameleonContext();
     const overrides = useOverrides ? useOverrides(props) : {};
     const formTitle = typeof overrides !== 'undefined' ? overrides.formTitle : undefined;
