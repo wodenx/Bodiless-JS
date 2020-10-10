@@ -35,13 +35,14 @@ type BreadcrumbContextInterface = {
   isAncestorOf: (descendant?: BreadcrumbContextInterface) => boolean;
   spawn: (href: string) => BreadcrumbContextInterface;
   readonly isActive: boolean;
-  readonly hasLast: boolean;
+  readonly hasActive: boolean;
   activate: () => void;
 };
 
 type BreadcrumbStoreInterface = {
   setActiveItem: (item: BreadcrumbContextInterface) => void;
   isActive: (item: BreadcrumbContextInterface) => boolean;
+  hasActive: () => boolean;
 };
 
 class BreadcrumbStore implements BreadcrumbStoreInterface {
@@ -56,6 +57,10 @@ class BreadcrumbStore implements BreadcrumbStoreInterface {
 
   isActive(item: BreadcrumbContextInterface) {
     return item.isAncestorOf(this.activeItem);
+  }
+
+  hasActive() {
+    return this.activeItem === undefined;
   }
 }
 
@@ -100,11 +105,8 @@ export class BreadcrumbContext implements BreadcrumbContextInterface {
     return this.store.isActive(this);
   }
 
-  hasLast(path: string): boolean {
-    const activeItem = this.store.activeItem;
-    return activeItem !== undefined
-      // ToDo: made it more maintainable
-      && activeItem.url.pathname.replace(/\/$/, '') === path.replace(/\/$/, '');
+  get hasActive(): boolean {
+    return this.store.hasActive();
   }
 
   activate() {

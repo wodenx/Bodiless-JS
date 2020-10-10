@@ -48,7 +48,9 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "@types/uuid": "^3.4.4"
+    "@types/uuid": "^3.4.4",
+    "js-beautify": "1.13.0",
+    "@types/js-beautify": "^1.11.0"
   },
   "peerDependencies": {
     "react": "^16.8.4"

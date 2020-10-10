@@ -105,7 +105,7 @@ const asMainMenuClean = flow(
  * @return A clean (unstyled) site breadcrumb component.
  */
 const asBreadcrumbsClean = withMenuDesign({
-  Item: withSidecarNodes(asBreadcrumb('title$component')),
+  Item: withSidecarNodes(asBreadcrumb('link')),
   Title: flow(
     addClassesIf(() => !useBreadcrumbContext().isActive)('hidden'),
     observer,

@@ -31,8 +31,7 @@ describe('BreadcrumbContext', () => {
       expect(foo.isActive).toBeTruthy();
     });
 
-    it('Axctivates all ancestors', () => {
-      foo.activate();
+    it('Activates all ancestors', () => {
       foobarbing.activate();
       expect(foobarbing.isActive).toBeTruthy();
       expect(foobar.isActive).toBeTruthy();
@@ -52,6 +51,8 @@ describe('BreadcrumbContext', () => {
       foobar.activate();
       foo.activate();
       expect(foobar.isActive).toBeTruthy();
+      // ToDo: remove this case
+      expect(foobaz.isActive).toBeFalsy();
     });
   });
 
@@ -76,7 +77,7 @@ describe('BreadcrumbContext', () => {
     });
   });
   describe('isSubpathOf', () => {
-    it('Returns false when urls have difffeent domains', () => {
+    it('Returns false when urls have different domains', () => {
       const parent = new BreadcrumbContext('http://other.com/foo/bar');
       const child = new BreadcrumbContext('foo/bar/baz');
       expect(child.isSubpathOf(parent)).toBeFalsy();
