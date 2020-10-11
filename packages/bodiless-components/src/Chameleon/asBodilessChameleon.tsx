@@ -13,25 +13,31 @@
  */
 
 import React, { ComponentType } from 'react';
+import { flowRight } from 'lodash';
 import {
-  ifEditable,
-  useNode,
-  MenuOptionsDefinition,
+  ifEditable, useNode, MenuOptionsDefinition, UseBodilessOverrides,
 } from '@bodiless/core';
 import type { WithNodeKeyProps } from '@bodiless/core';
-import { flowRight } from 'lodash';
-import { ChameleonData, UseOverrides, ChameleonButtonProps } from './types';
+import { ChameleonData, ChameleonButtonProps } from './types';
 import withChameleonButton from './withChameleonButton';
 import applyChameleon from './applyChameleon';
 import withChameleonContext from './withChameleonContext';
 
-const withDeleteNodeOnUnwrap = <P extends object>(Component: ComponentType<P> | string) => {
+/**
+ * Ensures that sublist data is purged when sublists are removed.
+ *
+ * @param nodeKey Location of the child node that will be purged.
+ */
+const withDeleteNodeOnUnwrap = (
+  nodeKey?: string,
+) => <P extends object>(Component: ComponentType<P> | string) => {
   const WithDeleteOnUnwrap = (props: P) => {
     const { node } = useNode();
     const { unwrap, ...rest } = props as { unwrap?: () => void; };
     if (!unwrap) return <Component {...props} />;
     const unwrap$ = () => {
-      node.delete();
+      const node$ = nodeKey ? node.child(nodeKey) : node;
+      node$.delete();
       if (unwrap) unwrap();
     };
     return <Component {...rest as P} unwrap={unwrap$} />;
@@ -52,7 +58,7 @@ const withDeleteNodeOnUnwrap = <P extends object>(Component: ComponentType<P> | 
 const asBodilessChameleon = (
   nodeKeys: WithNodeKeyProps,
   defaultData?: ChameleonData,
-  useOverrides?: UseOverrides,
+  useOverrides?: UseBodilessOverrides,
   contextProps?: Partial<MenuOptionsDefinition<ChameleonButtonProps>>,
 ) => flowRight(
   withChameleonContext(nodeKeys, defaultData),

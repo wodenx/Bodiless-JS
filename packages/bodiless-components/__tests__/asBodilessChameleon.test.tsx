@@ -182,8 +182,8 @@ describe('asBodilessChameleon', () => {
         const form = mount(<Form />);
         expect(form.find('input[value="A"]').prop('checked')).toBeFalsy();
         expect(form.find('input[value="B"]').prop('checked')).toBeFalsy();
-        expect(form.find('label[htmlFor="bl-component-form-chameleon-radio-A"]').text()).toBe('A');
-        expect(form.find('label[htmlFor="bl-component-form-chameleon-radio-B"]').text()).toBe('B');
+        expect(form.find('label#bl-component-form-chameleon-radio-A').text()).toBe('A');
+        expect(form.find('label#bl-component-form-chameleon-radio-B').text()).toBe('B');
       });
 
       it('Shows the default option when it has a title', () => {

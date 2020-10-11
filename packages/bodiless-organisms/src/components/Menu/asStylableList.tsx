@@ -11,23 +11,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { flow } from 'lodash';
+import { withDesign, stylable } from '@bodiless/fclasses';
 
-.rc-menu-submenu.bl-mega-menu ul.rc-menu-sub {
-  display: flex;
-}
-.rc-menu-submenu.bl-mega-menu ul.rc-menu-hidden {
-  display: none;
-}
+/**
+ * HOC, that incorporate the design of given component (usually based on <List /> component)
+ * with rc-menu <Menu /> component
+ */
+const asStylableList = withDesign({
+  Wrapper: flow(
+    withDesign({
+      WrapperItem: stylable,
+      List: stylable,
+    }),
+    stylable,
+  ),
+  Item: stylable,
+  Title: stylable,
+});
 
-.rc-tooltip.bl-menu-tooltip.rc-tooltip-placement-bottomLeft {
-  padding: 0;
-  opacity: 1;
-}
-
-.rc-tooltip.bl-menu-tooltip.rc-tooltip-placement-bottomLeft .rc-tooltip-inner {
-  padding: 0;
-}
-
-.rc-tooltip.bl-menu-tooltip.rc-tooltip-placement-bottomLeft .rc-tooltip-arrow {
-  display: none;
-}
+export default asStylableList;

@@ -92,6 +92,7 @@ const withGreenCtaText = withDesign({
   ),
 });
 
+// @ts-ignore: Types of parameters are incompatible.
 const BasicTout = asBasicTout(Tout);
 const PinkTout = asPinkTout(BasicTout);
 // const StandardTout = asStandardTout(BasicTout);asSta
