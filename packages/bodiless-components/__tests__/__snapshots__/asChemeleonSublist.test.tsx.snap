@@ -2,13 +2,16 @@
 
 exports[`asChameleonSubList works 1`] = `
 <ul>
-  <li>
+  <li
+    data-bl-activator="true"
+  >
     <span>
       Top
     </span>
     <ul>
       <li
         class="list-disc ml-5"
+        data-bl-activator="true"
       >
         <span>
           Bulleted

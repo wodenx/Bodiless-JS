@@ -234,35 +234,6 @@ describe('asBodilessChameleon', () => {
     expect(wrapper.find('span#test').prop('data-node-value')).toBe('bar');
   });
 
-  describe('wrap and unwrap', () => {
-    const PropsCatcher: FC = () => <></>;
-
-    const ChameleonPropsCatcher = flowRight(
-      withDesign(design),
-      asBodilessChameleon('chameleon'),
-    )(PropsCatcher);
-
-    it('Passes the correct unwrap prop when not in default state', () => {
-      const wrapper = mount((
-        <MockNodeProvider data={{ root$chameleon: { component: 'A' } }}>
-          <ChameleonPropsCatcher />
-        </MockNodeProvider>
-      ));
-      const unwrap = wrapper.find(PropsCatcher).prop('unwrap') as Function;
-      unwrap();
-      expect(mockSetNode).toBeCalledWith(['root', 'chameleon'], { component: null });
-    });
-
-    it('Does not pass an unwrap prop when in default state', () => {
-      const wrapper = mount((
-        <MockNodeProvider data={{}}>
-          <ChameleonPropsCatcher />
-        </MockNodeProvider>
-      ));
-      expect(wrapper.find(PropsCatcher).prop('unwrap')).toBeUndefined();
-    });
-  });
-
   describe('withChameleonComponentFormControls', () => {
     const PropsCatcher: FC<any> = () => <></>;
     const PropsCatcherTest = flowRight(
