@@ -118,7 +118,7 @@ const withChameleonButton = <P extends object, D extends object>(
     withMenuOptions({ useMenuOptions, name: 'Chameleon', ...contextProps }),
     withContextActivator('onClick'),
     withLocalContextMenu,
-    withUnwrap,
+    // withUnwrap,
   );
 };
 

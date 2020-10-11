@@ -1,9 +1,9 @@
 import { v1 } from 'uuid';
 import { identity, flow } from 'lodash';
-import { withDesign, HOC, Design } from '@bodiless/fclasses';
+import { withDesign, HOC, Design, withoutProps } from '@bodiless/fclasses';
 import { useEditContext, PageEditContextInterface } from '@bodiless/core';
 import { useCallback } from 'react';
-import { useChameleonContext, asBodilessChameleon } from '../Chameleon';
+import { useChameleonContext, asBodilessChameleon, withChameleonContext, withChameleonComponentFormControls, applyChameleon, withChameleonButton } from '../Chameleon';
 
 const hasChildSubList = (context: PageEditContextInterface): boolean => {
   const descendants = context.activeDescendants || [];
@@ -43,7 +43,13 @@ const useOverrides = () => {
     : useToggleOverrides();
 };
 
-const asChameleonSubList = asBodilessChameleon('cham-sublist', {}, useOverrides, { type: 'sublist-toggle' });
+const asChameleonSubList = flow(
+  applyChameleon,
+  withoutProps('onSubmit'),
+  withChameleonComponentFormControls,
+  withChameleonButton(useOverrides),
+  withChameleonContext('cham-sublist'),
+);
 
 const withSubListDesign$ = (depth: number) => (design: Design<any>, hoc: HOC = identity): HOC => (
   depth === 0 ? identity
