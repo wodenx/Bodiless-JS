@@ -16,7 +16,7 @@ import React from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  addClasses, H1 as H1$, H2 as H2$, H3 as H3$, P, Ul,
+  addClasses, H1 as H1$, H2 as H2$, H3 as H3$, Ul, Div,
 } from '@bodiless/fclasses';
 import { observer } from 'mobx-react-lite';
 import { flow } from 'lodash';
@@ -50,8 +50,8 @@ const NodeTreePrinter = flow(observer, withNode)(NodeTreePrinter$);
 
 const H1 = flow(addClasses('pt-5'), asHeader1)(H1$);
 const H2 = flow(addClasses('pt-5'), asHeader2)(H2$);
-const H3 = flow(addClasses('pt-5'), asHeader3)(H3$);
-const Description = addClasses('text-sm mb-2 italic')(P);
+const H3 = asHeader3(H3$);
+const Description = addClasses('text-sm mb-2 italic')(Div);
 const DescList = addClasses('list-disc ml-5')(Ul);
 
 export default (props: any) => (
@@ -65,6 +65,7 @@ export default (props: any) => (
         as a simple list of links which render the same data as the top nav.
       </Description>
       <H2>Simple Menu</H2>
+      <SimpleMenu nodeKey="list2" />
       <Description>
         This is a simple menu with one level of submenu. Click on a menu item in edit mode
         to display a local context menu. &quot;Add&quot; and &quot;Delete&quot; buttons
@@ -74,19 +75,21 @@ export default (props: any) => (
         button allows you to create one level of submenu, which is a vertical list of
         menu items. Deleting the last item in a submenu also deletes the submenu.
       </Description>
-      <SimpleMenu nodeKey="list2" />
       <H3>Simple Menu as List</H3>
       <SimpleMenuList nodeKey="list2" />
       <H2>Mega Menu</H2>
+      <MegaMenu nodeKey="list1" className="w-full" />
       <Description>
-        This is a &quot;mega&quot; menu.
-        It extends the simlple menu so that the &quot;Sub&quot; button on each top level
-        menu item offers you a choice of three types of submenu:
+        <p>
+          This is a &quot;mega&quot; menu.
+          It extends the simlple menu so that the &quot;Sub&quot; button on each top level
+          menu item offers you a choice of three types of submenu:
+        </p>
         <DescList>
           <li>
             <strong>List:</strong>
             &nbsp;
-            Functions exactly as a simple menu&apos;s submenus.
+            functions exactly as a simple menu&apos;s submenus.
           </li>
           <li>
             <strong>Touts:</strong>
@@ -100,13 +103,14 @@ export default (props: any) => (
             You cannot Delete the last item in a column&apos;s submenu.
           </li>
         </DescList>
-        Once you have added a submenu, the &quot;Sub&quot; button allows you to swap
-        it out for a different type.
-        The data model for each type of submenu is the same, so that when you swap
-        the title and link are preserved (for touts, the title becomes the tout
-        title and the link becomes the CTA link).
+        <p>
+          Once you have added a submenu, the &quot;Sub&quot; button allows you to swap
+          it out for a different type.
+          The data model for each type of submenu is the same, so that when you swap
+          the title and link are preserved (for touts, the title becomes the tout
+          title and the link becomes the CTA link).
+        </p>
       </Description>
-      <MegaMenu nodeKey="list1" className="w-full" />
       <H3>Mega Menu as list</H3>
       <MegaMenuList nodeKey="list1" />
       {/*
