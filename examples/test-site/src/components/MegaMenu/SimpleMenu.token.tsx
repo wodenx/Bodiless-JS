@@ -20,8 +20,8 @@ import { withDesign, addClasses } from '@bodiless/fclasses';
  * ===========================================
  */
 const withBaseMenuStyles = withDesign({
-  Wrapper: addClasses('w-full bg-teal-600 text-white'),
-  Item: addClasses('py-1 px-3 hover:bg-teal-500 min-w-100 leading-loose text-sm'),
+  Wrapper: addClasses('w-full bg-teal-600 text-white max-h-menu-row'),
+  Item: addClasses('px-3 hover:bg-teal-500 min-w-100 leading-loose text-sm'),
 });
 
 /**
@@ -30,9 +30,9 @@ const withBaseMenuStyles = withDesign({
  */
 const withBaseSubMenuStyles = withDesign({
   Wrapper: withDesign({
-    List: addClasses('bg-teal-600 text-white my-1 z-10'),
+    List: addClasses('bg-teal-600 text-white z-10'),
   }),
-  Item: addClasses('py-1 px-3 hover:bg-teal-500 min-w-100 leading-loose text-sm'),
+  Item: addClasses('px-3 hover:bg-teal-500 min-w-100 leading-loose text-sm'),
 });
 
 /**
