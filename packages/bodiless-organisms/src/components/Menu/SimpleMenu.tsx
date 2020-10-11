@@ -16,7 +16,7 @@ import { flow } from 'lodash';
 import { observer } from 'mobx-react-lite';
 
 import {
-  withDesign, addClassesIf, Design,
+  withDesign, addClassesIf, Design, stylable,
 } from '@bodiless/fclasses';
 import {
   withSidecarNodes, WithNodeKeyProps,
@@ -35,6 +35,12 @@ import asStylableList from './asStylableList';
 const asMenuSubList = flow(
   asSubList,
   asStylableList,
+  withDesign({
+    Wrapper: withDesign({
+      WrapperItem: stylable,
+      List: stylable,
+    }),
+  }),
   withDeleteNodeOnUnwrap('sublist'),
 );
 

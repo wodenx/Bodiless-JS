@@ -11,7 +11,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { flow } from 'lodash';
 import { withDesign, stylable } from '@bodiless/fclasses';
 
 /**
@@ -19,13 +18,7 @@ import { withDesign, stylable } from '@bodiless/fclasses';
  * with rc-menu <Menu /> component
  */
 const asStylableList = withDesign({
-  Wrapper: flow(
-    withDesign({
-      WrapperItem: stylable,
-      List: stylable,
-    }),
-    stylable,
-  ),
+  Wrapper: stylable,
   Item: stylable,
   Title: stylable,
 });
