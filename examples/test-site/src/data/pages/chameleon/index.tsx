@@ -12,7 +12,9 @@
  * limitations under the License.
  */
 
-import React, { FC, useState, ComponentType } from 'react';
+import React, {
+  FC, useState, ComponentType, useCallback,
+} from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
@@ -97,6 +99,56 @@ const VisibilityTogglerapper = flow(
   withDesign(toggleVisibilityDesign) as HOC,
 )(BaseComponent);
 
+/*
+ * Component form toggle
+ */
+
+type AddToCartProps = { productId?: string };
+const AddToCartBase = observer(({ productId, ...rest }: AddToCartProps) => {
+  const { isEdit } = useEditContext();
+  const onClick = useCallback(() => {
+    // @TODO: Wire this to your cart provider...
+    // eslint-disable-next-line no-alert
+    alert(`${productId} added to cart`);
+  }, [productId]);
+  return (
+    <div {...rest}>
+      <button type="button" onClick={isEdit ? onClick : undefined}>Add to cart</button>
+    </div>
+  );
+});
+
+const addToCartButtonOptions = {
+  icon: 'shopping_cart',
+  name: 'enable-add-to-cart',
+  label: () => (useChameleonContext().isOn ? 'Config' : 'Enable'),
+  global: false,
+  local: true,
+  renderForm: ({ componentProps }) => {
+    const {
+      ComponentFormTitle, ComponentFormLabel, ComponentFormText, ComponentFormUnwrapButton,
+    } = useMenuOptionUI();
+    const { unwrap } = componentProps;
+    return (
+      <>
+        <ComponentFormTitle>Add-to-Cart Configuration</ComponentFormTitle>
+        <ComponentFormLabel>
+          Product ID
+          <ComponentFormText field="productId" />
+        </ComponentFormLabel>
+        {unwrap && (
+          <ComponentFormUnwrapButton onClick={unwrap}>
+            Disable Add-to-Cart
+          </ComponentFormUnwrapButton>
+        )}
+      </>
+    );
+  },
+};
+
+const asAddToCart = asBodilessComponent(addToCartButtonOptions);
+
+/*
 const options = {
   icon: 'shopping_cart',
   name: 'enable-add-to-cart',
@@ -142,6 +194,7 @@ const AddToCartBase = observer(({ productId, ...rest }: AddToCartProps) => {
 });
 
 const asAddToCart = asBodilessComponent(options);
+*/
 
 const toggleCartDesign = {
   Available: replaceWith(AddToCartBase),

@@ -1,9 +1,14 @@
 import { v1 } from 'uuid';
 import { identity, flow } from 'lodash';
-import { withDesign, HOC, Design, withoutProps } from '@bodiless/fclasses';
+import {
+  withDesign, HOC, Design, withoutProps,
+} from '@bodiless/fclasses';
 import { useEditContext, PageEditContextInterface } from '@bodiless/core';
 import { useCallback } from 'react';
-import { useChameleonContext, asBodilessChameleon, withChameleonContext, withChameleonComponentFormControls, applyChameleon, withChameleonButton } from '../Chameleon';
+import {
+  useChameleonContext, withChameleonContext,
+  withChameleonComponentFormControls, applyChameleon, withChameleonButton,
+} from '../Chameleon';
 
 const hasChildSubList = (context: PageEditContextInterface): boolean => {
   const descendants = context.activeDescendants || [];
