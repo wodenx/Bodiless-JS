@@ -17,14 +17,12 @@ import {
   withDesign, replaceWith, H2, addClasses, stylable, Li,
 } from '@bodiless/fclasses';
 import {
-  asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaMenu, asMegaMenuBreadcrumbs,
-  asMenuLink, withCustomBreadcrumbItem, asCustomBreadcrumbItem,
+  asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaMenuBreadcrumbs,
+  asMenuLink, asMegaMenuTopNav,
 } from '@bodiless/organisms';
-import { Fragment } from 'react';
 import { asReadOnly } from '@bodiless/core';
-import { asEditable as withEditorSimple } from '@bodiless/components';
-// import { withEditorSimple } from '../Editors';
-import withMenuStyles, { withMenuToutStyles } from './MegaMenu.token';
+import { withEditorSimple } from '../Editors';
+import withMegaMenuStyles, { withMenuToutStyles } from './MegaMenu.token';
 import { withToutEditors } from '../Tout';
 
 export const withTitleEditor = withEditorSimple('text', 'Menu Item');
@@ -55,7 +53,6 @@ const asMegaMenuBase$ = flow(
 
 const MegaMenu = flow(
   asMegaMenuBase$,
-  asMegaMenu,
   withDesign({
     Item: withDesign({
       Touts: withDesign({
@@ -63,8 +60,9 @@ const MegaMenu = flow(
       }),
     }),
   }),
-  withMenuStyles,
-)(Fragment);
+  withMegaMenuStyles,
+  asMegaMenuTopNav,
+)('ul');
 
 const MegaMenuList = flow(
   asMegaMenuBase$,

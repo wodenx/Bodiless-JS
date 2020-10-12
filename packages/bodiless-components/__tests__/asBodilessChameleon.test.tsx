@@ -182,8 +182,8 @@ describe('asBodilessChameleon', () => {
         const form = mount(<Form />);
         expect(form.find('input[value="A"]').prop('checked')).toBeFalsy();
         expect(form.find('input[value="B"]').prop('checked')).toBeFalsy();
-        expect(form.find('label[htmlFor="bl-component-form-chameleon-radio-A"]').text()).toBe('A');
-        expect(form.find('label[htmlFor="bl-component-form-chameleon-radio-B"]').text()).toBe('B');
+        expect(form.find('label#bl-component-form-chameleon-radio-A').text()).toBe('A');
+        expect(form.find('label#bl-component-form-chameleon-radio-B').text()).toBe('B');
       });
 
       it('Shows the default option when it has a title', () => {
@@ -232,35 +232,6 @@ describe('asBodilessChameleon', () => {
     );
     const wrapper = mount(<Test />);
     expect(wrapper.find('span#test').prop('data-node-value')).toBe('bar');
-  });
-
-  describe('wrap and unwrap', () => {
-    const PropsCatcher: FC = () => <></>;
-
-    const ChameleonPropsCatcher = flowRight(
-      withDesign(design),
-      asBodilessChameleon('chameleon'),
-    )(PropsCatcher);
-
-    it('Passes the correct unwrap prop when not in default state', () => {
-      const wrapper = mount((
-        <MockNodeProvider data={{ root$chameleon: { component: 'A' } }}>
-          <ChameleonPropsCatcher />
-        </MockNodeProvider>
-      ));
-      const unwrap = wrapper.find(PropsCatcher).prop('unwrap') as Function;
-      unwrap();
-      expect(mockSetNode).toBeCalledWith(['root', 'chameleon'], { component: null });
-    });
-
-    it('Does not pass an unwrap prop when in default state', () => {
-      const wrapper = mount((
-        <MockNodeProvider data={{}}>
-          <ChameleonPropsCatcher />
-        </MockNodeProvider>
-      ));
-      expect(wrapper.find(PropsCatcher).prop('unwrap')).toBeUndefined();
-    });
   });
 
   describe('withChameleonComponentFormControls', () => {

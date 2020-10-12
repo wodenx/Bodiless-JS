@@ -14,7 +14,6 @@
 
 import {
   asMenuBase as asMegaMenuBase,
-  asMainMenuClean as asMegaMenu,
   withMenuDesign as withMegaMenuDesign,
   asBreadcrumbsClean as asMegaMenuBreadcrumbs,
   withCustomBreadcrumbItem,
@@ -23,9 +22,11 @@ import {
 
 import {
   asMenuBase as asSimpleMenuBase,
-  asMainMenuClean as asSimpleMenu,
   withMenuDesign as withSimpleMenuDesign,
 } from './SimpleMenu';
+
+import asSimpleMenuTopNav from './SimpleMenu.token';
+import asMegaMenuTopNav from './MegaMenu.token';
 
 export {
   asMenuTout,
@@ -34,7 +35,6 @@ export {
 
 export {
   asMegaMenuBase,
-  asMegaMenu,
   withMegaMenuDesign,
   asMegaMenuBreadcrumbs,
   asCustomBreadcrumbItem,
@@ -43,6 +43,10 @@ export {
 
 export {
   asSimpleMenuBase,
-  asSimpleMenu,
   withSimpleMenuDesign,
+};
+
+export {
+  asSimpleMenuTopNav,
+  asMegaMenuTopNav,
 };

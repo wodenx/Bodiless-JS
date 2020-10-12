@@ -12,24 +12,25 @@
  * limitations under the License.
  */
 
-import { Fragment, ComponentType } from 'react';
-import { addClasses } from '@bodiless/fclasses';
+import { ComponentType } from 'react';
 import { flow } from 'lodash';
+
+import { addClasses } from '@bodiless/fclasses';
 import {
-  asMenuLink, asSimpleMenuBase, withSimpleMenuDesign,
-  asSimpleMenu,
+  asMenuLink, asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenuTopNav,
 } from '@bodiless/organisms';
-import { withSimpleMenuStyles } from './MegaMenu.token';
+
 import { withTitleEditor } from './MegaMenu';
+import withSimpleMenuStyles from './SimpleMenu.token';
 
 export const SimpleMenu = flow(
   asSimpleMenuBase(),
   withSimpleMenuDesign({
     Title: asMenuLink(withTitleEditor),
   }),
-  asSimpleMenu,
   withSimpleMenuStyles,
-)(Fragment);
+  asSimpleMenuTopNav,
+)('ul');
 
 export const SimpleMenuList = flow(
   asSimpleMenuBase(),

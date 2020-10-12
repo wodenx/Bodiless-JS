@@ -12,38 +12,17 @@
  * limitations under the License.
  */
 
-import React, { ComponentType } from 'react';
-import { flow, flowRight } from 'lodash';
-
-import {
-  withDesign, addClassesIf
-} from '@bodiless/fclasses';
-import { withSidecarNodes, WithNodeKeyProps, useNode, withChild } from '@bodiless/core';
-import {
-  asBreadcrumb, useBreadcrumbContext, asBodilessList, asSubList,
-  withDeleteNodeOnUnwrap, asChameleonSubList,
-} from '@bodiless/components';
+import { flow } from 'lodash';
 import { observer } from 'mobx-react-lite';
 
-import { asDefaultMenuTout, asDefaultMenuLink } from './MenuTitles';
-import asStylableList from '../MainMenu/asStylableList';
-
+import { withDesign, addClassesIf } from '@bodiless/fclasses';
+import { withSidecarNodes, WithNodeKeyProps } from '@bodiless/core';
 import {
-  asSubMenu, asMenuItemGroup, asMenu, withMenuItem, asMenuItem,
-} from './asMenu';
+  asBreadcrumb, useBreadcrumbContext, asBodilessList, asChameleonSubList,
+} from '@bodiless/components';
 
-// First we build a basic list with the correct data structure.
-
-// Defines the basic sublist for all mubmenu types.
-const asMenuSubList = flow(
-  asSubList,
-  withDeleteNodeOnUnwrap,
-  asStylableList,
-  // @TODO: Should we be providing titles at all? It will almost always be overridden at site level.
-  withDesign({
-    Title: asDefaultMenuLink,
-  }),
-);
+import { asMenuSubList } from './SimpleMenu';
+import asStylableList from './asStylableList';
 
 /**
  * Applies a list design (or other HOC) recursively to all submenus.
@@ -54,7 +33,7 @@ const withSubMenuDesign = (design: any) => {
   const withDesign$ = typeof design === 'function' ? design : withDesign(design);
   return withDesign({
     Item: withDesign({
-      Basic: withDesign$,
+      List: withDesign$,
       Touts: withDesign$,
       Columns: flow(
         withDesign$,
@@ -94,61 +73,12 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
   asStylableList,
   withDesign({
-    Title: asDefaultMenuLink,
     Item: asChameleonSubList,
   }),
   withSubMenuDesign(asMenuSubList),
 );
 
-// Next we replace basic list elements with rc-menu elements to create a menu.
-
-// Applies above designs to the chameilion sublist
-const asChameleonSubMenu = withDesign({
-  Basic: flowRight(
-    withMenuItem,
-    asSubMenu,
-  ),
-  Touts: flowRight(
-    withDesign({
-      Title: asDefaultMenuTout,
-    }),
-    withMenuItem,
-    asSubMenu,
-  ),
-  Columns: flowRight(
-    withDesign({
-      Item: asMenuItemGroup,
-    }),
-    asSubMenu,
-  ),
-  _default: asMenuItem,
-});
-
-/**
- * HOC which can be applied to a base menu to make it into a sites main menu.
- *
- * @param A base menu component created via asMenuBase()
- *
- * @return A clean (unstyled) site main menu.
- */
-const asMainMenuClean = flowRight(
-  asMenu,
-  withDesign({
-    Item: asChameleonSubMenu,
-  }),
-);
-
-// Now we create breadcrumbs
-
-const asCustomBreadcrumbItem = (Component: ComponentType<any>) => {
-  const AsCustomBreadcrumbItem = observer((props: any) => {
-    const context = useBreadcrumbContext();
-    return !context.hasActive ? <Component {...props} /> : <></>
-  });
-  AsCustomBreadcrumbItem.displayName = "AsCustomBreadcrumbItem";
-  return AsCustomBreadcrumbItem;
-}
-const withCustomBreadcrumbItem = (CustomBreadcrumbItem: ComponentType<any>) => withChild(CustomBreadcrumbItem);
+// Now we create breaccrumbs
 
 /**
  * HOC which can be applied to a base menu to make it into a site's breadcrumbs
@@ -172,6 +102,5 @@ const asBreadcrumbsClean = withMenuDesign({
 // });
 
 export {
-  asMenuSubList, asMenuBase, asMainMenuClean, withMenuDesign, asBreadcrumbsClean,
-  withCustomBreadcrumbItem, asCustomBreadcrumbItem,
+  asMenuSubList, asMenuBase, withMenuDesign, asBreadcrumbsClean,
 };

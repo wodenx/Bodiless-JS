@@ -13,84 +13,87 @@
  */
 
 import { flow } from 'lodash';
-import { asToutHorizontal } from '@bodiless/organisms';
-import { withDesign, addClasses } from '@bodiless/fclasses';
-
-import { asToutWithPaddings, asToutDefaultStyle } from '../Tout/token';
+import { useEditContext } from '@bodiless/core';
+import { withDesign, addClasses, addClassesIf } from '@bodiless/fclasses';
 
 import {
-  asSimpleSubMenu,
-  withBaseMenuStyles,
   withBaseSubMenuStyles,
+  withBaseMenuStyles,
+  asSimpleSubMenu,
+  asRelative,
 } from './SimpleMenu.token';
 
-/**
+/*
+ * Utility Styles
+ * ===========================================
+ */
+const isContextNotActive = () => {
+  const { isActive, isEdit } = useEditContext();
+  return isEdit ? !isActive : true;
+};
+
+const asStaticOnHover = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: addClasses('hover:static'),
+  }),
+});
+
+const asRelativeNotActive = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: addClassesIf(isContextNotActive)('relative'),
+  }),
+});
+
+const asFullWidthSublist = withDesign({
+  Wrapper: withDesign({
+    List: addClasses('w-full'),
+  }),
+});
+
+/*
  * Touts Sub Menu Styles
  * ===========================================
  */
-const withMenuToutStyles = flow(
-  asToutWithPaddings,
-  asToutDefaultStyle,
-  asToutHorizontal,
-);
-
-const withToutStyles = withDesign({
-  Item: addClasses('w-1/3'),
-});
-
 const asToutsSubMenu = flow(
-  withToutStyles,
+  asFullWidthSublist,
+  asStaticOnHover,
   withBaseSubMenuStyles,
+  asRelativeNotActive,
 );
 
-/**
+/*
  * Columns Sub Menu Styles
  * ===========================================
  */
-const withColumnHoverEffect = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: addClasses('hover:bg-teal-600'),
-  }),
-  Item: addClasses('hover:bg-teal-500'),
-});
-
-const withColumnStyles = flow(
-  withDesign({
-    Item: addClasses('pr-2 pl-5 min-w-100'),
-  }),
-  withColumnHoverEffect,
-);
-
 const asColumnSubMenu = flow(
   withDesign({
-    Item: withColumnStyles,
+    Item: asRelative,
   }),
+  asFullWidthSublist,
+  asStaticOnHover,
   withBaseSubMenuStyles,
+  asRelativeNotActive,
 );
 
-/**
+/*
  * Mega Menu Sub Menu Styles
  * ===========================================
  */
-
 const asMegaMenuSubListStyles = withDesign({
   List: asSimpleSubMenu,
   Touts: asToutsSubMenu,
   Columns: asColumnSubMenu,
 });
 
-/**
+/*
  * Mega Menu Styles
  * ===========================================
  */
-const withMegaMenuStyles = flow(
+const asMegaMenuTopNav = flow(
   withDesign({
     Item: asMegaMenuSubListStyles,
   }),
   withBaseMenuStyles,
 );
 
-export default withMegaMenuStyles;
-export {
-  withMenuToutStyles,
-};
+export default asMegaMenuTopNav;
