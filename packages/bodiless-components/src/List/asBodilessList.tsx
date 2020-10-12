@@ -121,4 +121,4 @@ const withSimpleSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
 );
 
 export default asBodilessList;
-export { asSubList, asTitledItem, withSimpleSubListDesign };
+export { asSubList, withSimpleSubListDesign };
