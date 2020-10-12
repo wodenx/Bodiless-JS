@@ -25,8 +25,6 @@ import { withChameleonComponentFormControls, applyChameleon, withChameleonContex
 const SafeFragment = withOnlyProps('key', 'children')(Fragment);
 const Span = withoutProps('')('span');
 
-// type HOC<P = any, Q = any> = (Component: ComponentType<P>|string) => ComponentType<Q>;
-
 const withBodilessLinkToggle = (asEditableLink: HOC) => flowRight(
   withDesign({
     _default: flowRight(

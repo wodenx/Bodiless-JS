@@ -148,54 +148,6 @@ const addToCartButtonOptions = {
 
 const asAddToCart = asBodilessComponent(addToCartButtonOptions);
 
-/*
-const options = {
-  icon: 'shopping_cart',
-  name: 'enable-add-to-cart',
-  label: () => (useChameleonContext().isOn ? 'Config' : 'Enable'),
-  global: false,
-  local: true,
-  renderForm: ({ componentProps }) => {
-    const {
-      ComponentFormTitle, ComponentFormLabel, ComponentFormText, ComponentFormUnwrapButton,
-    } = useMenuOptionUI();
-    const { unwrap } = componentProps;
-    return (
-      <>
-        <ComponentFormTitle>Cart Configuration</ComponentFormTitle>
-        <ComponentFormLabel>
-          Product ID
-          <ComponentFormText field="productId" />
-        </ComponentFormLabel>
-        {unwrap && (
-          <ComponentFormUnwrapButton onClick={unwrap}>
-            Disable Cart
-          </ComponentFormUnwrapButton>
-        )}
-      </>
-    );
-  },
-};
-
-const addToCart = (id: string) => {
-  // @TODO: Wire this to your cart provider...
-  // eslint-disable-next-line no-alert
-  alert(`${id} added to cart`);
-};
-
-type AddToCartProps = { productId?: string };
-const AddToCartBase = observer(({ productId, ...rest }: AddToCartProps) => {
-  const onClick = !useEditContext().isEdit ? () => addToCart(productId) : undefined;
-  return (
-    <div {...rest}>
-      <button type="button" onClick={onClick}>Add to cart</button>
-    </div>
-  );
-});
-
-const asAddToCart = asBodilessComponent(options);
-*/
-
 const toggleCartDesign = {
   Available: replaceWith(AddToCartBase),
 };

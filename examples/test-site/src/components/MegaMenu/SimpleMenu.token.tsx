@@ -20,7 +20,7 @@ import { withDesign, addClasses } from '@bodiless/fclasses';
  * ===========================================
  */
 const withBaseMenuStyles = withDesign({
-  Wrapper: addClasses('w-full bg-teal-600 text-white max-h-menu-row'),
+  Wrapper: addClasses('w-full bg-teal-600 text-white'),
   Item: addClasses('px-3 hover:bg-teal-500 min-w-100 leading-loose text-sm'),
 });
 
