@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`withBreadcrumbStore allows a react component to consume breadcrumb trail 1`] = `"<ul><li><a href=\\"/products\\">Products</a></li><li><a href=\\"/products/productA\\">ProductA</a></li></ul>"`;
+
+exports[`withBreadcrumbStore rerendes react component when breadcrumb trail changes 1`] = `"<ul><li><a href=\\"/products\\">ProductsUpdated</a></li><li><a href=\\"/products/productA\\">ProductA</a></li></ul>"`;

@@ -13,7 +13,7 @@
  */
 
 import React, {
-  createContext, useContext, ComponentType, useEffect,
+  createContext, useContext, ComponentType, useEffect, useRef,
 } from 'react';
 import { observable, action } from 'mobx';
 import {
@@ -52,6 +52,7 @@ class BreadcrumbStore implements BreadcrumbStoreInterface {
     if (this.activeItem && item.isAncestorOf(this.activeItem)) {
       return;
     }
+    console.log('BreadcrumbStore changing activeItem from', this.activeItem?.url.pathname, 'into', item.url.pathname)
     this.activeItem = item;
   }
 
@@ -88,13 +89,16 @@ export class BreadcrumbContext implements BreadcrumbContextInterface {
 
   isAncestorOf(descendant?: BreadcrumbContextInterface) {
     if (!descendant || descendant.url.host !== this.url.host) return false;
+    let result = false;
     for (let current: BreadcrumbContextInterface|undefined = descendant;
       current;
       current = current.parent
     ) {
-      if (current === this) return true;
+      //console.log('isAncestorOf', 'current', current.url.pathname, 'this', this?.url.pathname, current === this)
+      if (current === this) { result = true; break; };
     }
-    return false;
+    //console.log('isAncestorOf', 'this', this.url.pathname, 'descendant', descendant?.url.pathname, result)
+    return result;
   }
 
   spawn(path: string): BreadcrumbContextInterface {
@@ -122,9 +126,14 @@ export const BreadcrumbContextProvider = breadcrumbContext.Provider;
 const withBreadcrumbContext = <P extends object>(Component: ComponentType<P>) => {
   const WithBreadcrumbContext = observer((props: P) => {
     const { node } = useNode<LinkData>();
+    console.log('WithBreadcrumbContext reading data from', node.path.join('$'))
     const current = useBreadcrumbContext();
-    // @TODO: What should we do if link has no href?
-    const next = current.spawn(node.data.href || '/');
+    const nextRef = useRef<BreadcrumbContextInterface>();
+    if (nextRef.current === undefined) {
+      // @TODO: What should we do if link has no href?
+      nextRef.current = current.spawn(node.data.href || '/');
+    }
+    const next = nextRef.current;
     const page = new BreadcrumbContext(node.pagePath);
     useEffect(() => {
       if (page.isSubpathOf(next)) {

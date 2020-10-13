@@ -192,4 +192,21 @@ describe('asBreadcrumb', () => {
     expect(wrapper.find('span#outer').text()).toBe('inactive');
     expect(wrapper.find('span#inner').text()).toBe('active');
   });
+
+  it('Keeps active state after rerendering', () => {
+    const Item = flow(
+      asBreadcrumb(),
+      withPagePath('/foo/bar', { href: '/foo/bar' }),
+    )(Fragment);
+    const Test = () => (
+      <Item>
+        <Consumer id="item" />
+      </Item>
+    );
+    const wrapper = mount(<Test />);
+    expect(wrapper.find('span#item').text()).toBe('active');
+    // force a re-render
+    wrapper.setProps({});
+    expect(wrapper.find('span#item').text()).toBe('active');
+  });
 });

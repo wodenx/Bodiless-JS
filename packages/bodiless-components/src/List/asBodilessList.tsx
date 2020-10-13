@@ -48,11 +48,13 @@ const asTitledItem = <P extends TitledItemProps>(Item: ComponentType<P>) => {
 type SubListComponents = {
   WrapperItem: ComponentType<any>,
   List: ComponentType<any>,
+  SubListTitleWrapper: ComponentType<any>,
 };
 
 const startComponents: SubListComponents = {
   WrapperItem: asComponent('li'),
   List: asComponent('ul'),
+  SubListTitleWrapper: React.Fragment,
 };
 
 type SubListProps = TitledItemProps & DesignableComponentsProps<SubListComponents>;
@@ -60,10 +62,10 @@ type SubListProps = TitledItemProps & DesignableComponentsProps<SubListComponent
 const SubList$: FC<SubListProps> = ({
   title, children, components, ...rest
 }) => {
-  const { WrapperItem, List } = components;
+  const { WrapperItem, List, SubListTitleWrapper } = components;
   return (
     <WrapperItem {...rest}>
-      {title}
+      <SubListTitleWrapper>{title}</SubListTitleWrapper>
       <List>
         {children}
       </List>

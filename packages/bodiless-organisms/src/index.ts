@@ -97,3 +97,8 @@ export {
 } from './components/Carousel';
 
 export * from './components/Menu';
+
+export {
+  asBreadcrumbListItem,
+  withBreadcrumbCustomItems,
+} from './components/ListBreadcrumb';

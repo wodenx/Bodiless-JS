@@ -54,9 +54,6 @@ const HeaderClean: FC<Props> = ({ components }) => {
       <Container>
         <SiteLogoReturn />
       </Container>
-      <MenuContainer>
-        <Menu />
-      </MenuContainer>
     </Wrapper>
   );
 };

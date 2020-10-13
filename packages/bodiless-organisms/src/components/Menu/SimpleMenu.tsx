@@ -12,21 +12,29 @@
  * limitations under the License.
  */
 
-import { flow } from 'lodash';
-import { observer } from 'mobx-react-lite';
+import { flow, identity } from 'lodash';
 
 import {
-  withDesign, addClassesIf, Design, stylable,
+  withDesign,
+  Design,
+  stylable,
 } from '@bodiless/fclasses';
 import {
-  withSidecarNodes, WithNodeKeyProps,
+  WithNodeKeyProps,
 } from '@bodiless/core';
 import {
-  asBreadcrumb, useBreadcrumbContext, asBodilessList,
+  asBodilessList,
   withSubListDesign, withSubLists, asSubList, withDeleteNodeOnUnwrap,
 } from '@bodiless/components';
 
 import asStylableList from './asStylableList';
+
+import {
+  asBreadcrumbListItem,
+  asBreadcrumbSubList,
+  withBreadcrumbCustomItems,
+  withBreadcrumbSeparator,
+} from '../ListBreadcrumb';
 
 /**
  * Creates a stylable sublist which deletes it's data when the last item is removed.
@@ -83,13 +91,74 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
  *
  * @return A clean (unstyled) site breadcrumb component.
  */
-const asBreadcrumbsClean = withMenuDesign({
-  Item: withSidecarNodes(asBreadcrumb('link')),
-  Title: flow(
-    addClassesIf(() => !useBreadcrumbContext().isActive)('hidden'),
-    observer,
-  ),
-});
+const asBreadcrumbsClean = (nodeKeys?: WithNodeKeyProps) => flow(
+  withMenuDesign({
+    Item: flow(
+      asBreadcrumbListItem(nodeKeys),
+      withDesign({
+        SubMenu: asBreadcrumbSubList,
+      }),
+    ),
+  }),
+  withDesign({
+    Wrapper: withBreadcrumbCustomItems,
+  }),
+  withMenuDesign({
+    Item: withDesign({
+      SubMenu: withDesign ({
+        Wrapper: withDesign({
+          SubListTitleWrapper: withBreadcrumbSeparator,
+        }),
+      })
+    })
+  })
+);
+
+const withBreadcrumbDesign = ({
+  StartingTrail: StartingTrailDesign,
+  Title: TitleDesign,
+  Item: ItemDesign,
+  Separator: SeparatorDesign,
+  FinalTrail: FinalTrailDesign,
+}: any) => flow(
+  TitleDesign ? withMenuDesign({ Title: TitleDesign }) : identity,
+  ItemDesign ? withMenuDesign({ Item: ItemDesign }) : identity,
+  ItemDesign ? withMenuDesign({
+    Item: withDesign({
+      SubMenu: withDesign ({
+        Wrapper: withDesign({
+          SubListTitleWrapper: ItemDesign,
+        }),
+      })
+    })
+  }) : identity,
+  StartingTrailDesign ? withDesign({
+    Wrapper: withDesign({
+      StartingTrail: StartingTrailDesign,
+    }),
+  }) : identity,
+  FinalTrailDesign ? withDesign({
+    Wrapper: withDesign({
+      FinalTrail: FinalTrailDesign,
+    }),
+  }) : identity,
+  SeparatorDesign ? withDesign({
+    Wrapper: withDesign({
+      Separator: SeparatorDesign,
+    }),
+  }) : identity,
+  SeparatorDesign ? withMenuDesign({
+    Item: withDesign({
+      SubMenu: withDesign ({
+        Wrapper: withDesign({
+          SubListTitleWrapper: withDesign({
+            Separator: SeparatorDesign,
+          }),
+        }),
+      })
+    })
+  }) : identity,
+);
 
 // @TODO Add a similar HOC for BurgerMenu, something like:
 // const asMegaMenuClean = withMenuDesign({
@@ -99,4 +168,5 @@ const asBreadcrumbsClean = withMenuDesign({
 
 export {
   asMenuBase, asBreadcrumbsClean, withMenuDesign, asMenuSubList,
+  withBreadcrumbDesign,
 };

@@ -12,118 +12,180 @@
  * limitations under the License.
  */
 
-import React, { ComponentType} from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
+import { withDefaultContent } from '@bodiless/core';
+import { asBodilessLink, } from '@bodiless/components';
 import {
-  withDefaultContent,
-  DefaultContentNode,
-  NodeProvider,
-  useNode,
-} from '@bodiless/core';
-import {
-  asBodilessList,
-  asBodilessLink,
-  asSubList,
-  withSimpleSubListDesign,
-} from '@bodiless/components';
-import { withDesign, replaceWith, A } from '@bodiless/fclasses';
-import { flowRight } from 'lodash';
+  withDesign,
+  replaceWith,
+  addProps,
+} from '@bodiless/fclasses';
+import { flowRight, identity } from 'lodash';
+// ToDo: remove this
 import { html_beautify } from 'js-beautify';
 
-import { asBreadcrumbsClean } from '../src/components/Menu/SimpleMenu';
+import {
+  asMenuBase,
+  asBreadcrumbsClean,
+  withMenuDesign,
+  withBreadcrumbDesign,
+} from '../src/components/Menu/SimpleMenu';
 
-const withSubList = withDesign({
-  Item: flowRight(
-    withDesign({
-      Title: replaceWith(
-        asBodilessLink('link')(A)
-      ),
-    }),
-    asSubList,
-  ),
-});
+const { DefaultContentNode } = require('@bodiless/core');
 
-class MockedContentNode extends DefaultContentNode<object> {
-  
-  _pagePath: string = '/';
-
-  static createNode(baseNode: DefaultContentNode<object>, pagePath: string) {
-    const mockedNode = new DefaultContentNode(
-      baseNode.getActions(),
-      baseNode.getGetters(),
-      baseNode.path,
-    ) as MockedContentNode;
-    mockedNode.setPagePath(pagePath);
-    return mockedNode;
-  }
-
-  public setPagePath(pagePath: string) {
-    this._pagePath = pagePath
-  }
-
-  get pagePath() {
-    return this.pagePath;
-  }
-
-}
-
-const withPagePath = (pagePath: string) => (Component: ComponentType<any>) => {
-  const MockNodeProvider: ComponentType<any> = props => {
-    const { node } = useNode();
-    const mockedNode = MockedContentNode.createNode((node as DefaultContentNode<object>), pagePath);
-    return (
-      <NodeProvider node={mockedNode}>
-        <Component {...props} />
-      </NodeProvider>
-    );
-  };
-  return MockNodeProvider;
+const setPagePath = (pagePath: string) => {
+  Object.defineProperty(DefaultContentNode.prototype, 'pagePath', {
+    value: pagePath,
+    writable: false
+  });
 };
 
-const TestList = flowRight(
-  withPagePath('/products/productA'),
-  withDefaultContent({
-    testList: {
-      "items": [
-        "home",
-        "products",
-      ],
-    },
-    testList$home$link: {
-      'href': '/'
-    },
-    testList$products$link: {
-      'href': '/products'
-    },
-    testList$products$sublist: {
-      "items": [
-        "productA",
-        "productB",
-      ],
-    },
-    testList$products$sublist$productA$link: {
-      'href': '/products/productA'
-    },
-    testList$products$sublist$productB$link: {
-      'href': '/products/productB'
-    },
-  }),
-  withDesign({
+const createBreadcrumbComponent = ({
+  content = {},
+}) => flowRight(
+  asBreadcrumbsClean('link'),
+  withDefaultContent(content),
+  withMenuDesign({
     Title: replaceWith(
-      asBodilessLink('link')(A)
+      asBodilessLink('link')('a')
     ),
   }),
-  withSubList,
-  asBodilessList('testList')
+  asMenuBase('testMenu'),
 )('ul');
 
-const TestBreadCrumb = asBreadcrumbsClean(TestList);
 
 describe('asBreadcrumbsClean', () => {
-  it('executes', () => {
-    const wrapper = mount(<TestBreadCrumb />);
-    console.log(wrapper.debug());
+  it('creates breadcrumbs for basic 1-level menu', () => {
+    setPagePath('/products');
+    const Breadcrumb = createBreadcrumbComponent({
+      content: {
+        testMenu: {
+          "items": [
+            "home",
+            "products",
+            "articles",
+          ],
+        },
+        testMenu$home$link: {
+          'href': '/'
+        },
+        testMenu$products$link: {
+          'href': '/products'
+        },
+        testMenu$articles$link: {
+          'href': '/articles'
+        },
+      }      
+    });
+    const wrapper = mount(<Breadcrumb />);
+    expect(wrapper.html()).toMatchSnapshot();
+  });
+  it ('creates breadcrumbs for basic 2-level menu', () => {
+    setPagePath('/products/productA');
+    const Breadcrumb = createBreadcrumbComponent({
+      content: {
+        testMenu: {
+          "items": [
+            "home",
+            "products",
+            "articles",
+          ],
+        },
+        testMenu$home$link: {
+          'href': '/'
+        },
+        testMenu$products$link: {
+          'href': '/products'
+        },
+        testMenu$products$sublist: {
+          "items": [
+            "productA",
+            "productB",
+          ],
+        },
+        "testMenu$products$cham-sublist": {
+          "component": "SubMenu"
+        },
+        testMenu$products$sublist$productA$link: {
+          'href': '/products/productA'
+        },
+        testMenu$products$sublist$productB$link: {
+          'href': '/products/productB'
+        },
+        testMenu$articles$link: {
+          'href': '/articles'
+        },
+        testMenu$articles$sublist: {
+          "items": [
+            "articleA",
+          ],
+        },
+        testMenu$articles$sublist$articleA$link: {
+          'href': '/articles/articleA'
+        },
+      }
+    });
+    const wrapper = mount(<Breadcrumb />);
     console.log(html_beautify(wrapper.html()));
-    expect(1).toBe(1);
+    expect(wrapper.html()).toMatchSnapshot();
+  });
+});
+
+describe('withBreadcrumbDesign', () => {
+  it('allows designing breadcrumb components', () => {
+    setPagePath('/products/productA');
+    const Breadcrumb = createBreadcrumbComponent({
+      content: {
+        testMenu: {
+          "items": [
+            "home",
+            "products",
+            "articles",
+          ],
+        },
+        testMenu$home$link: {
+          'href': '/'
+        },
+        testMenu$products$link: {
+          'href': '/products'
+        },
+        testMenu$products$sublist: {
+          "items": [
+            "productA",
+            "productB",
+          ],
+        },
+        "testMenu$products$cham-sublist": {
+          "component": "SubMenu"
+        },
+        testMenu$products$sublist$productA$link: {
+          'href': '/products/productA'
+        },
+        testMenu$products$sublist$productB$link: {
+          'href': '/products/productB'
+        },
+        testMenu$articles$link: {
+          'href': '/articles'
+        },
+        testMenu$articles$sublist: {
+          "items": [
+            "articleA",
+          ],
+        },
+        testMenu$articles$sublist$articleA$link: {
+          'href': '/articles/articleA'
+        },
+      }
+    });
+    const DesignedBreadcrumb = flowRight(
+      withBreadcrumbDesign({
+        Title: addProps({ className: 'breadcrumb-title'}),
+        Item: addProps({ className: 'breadcrumb-item'}),
+      }),
+    )(Breadcrumb);
+    const wrapper = mount(<DesignedBreadcrumb />);
+    console.log(html_beautify(wrapper.html()));
+    expect(wrapper.html()).toMatchSnapshot();
   });
 });

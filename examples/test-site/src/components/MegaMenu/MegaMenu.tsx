@@ -84,7 +84,7 @@ const asInline = withDesign({
 const CustomBreadcrumbItem = flow(
   withEditorSimple('custom-item', 'Enter item'),
   addClasses('inline pl-5'),
-  asCustomBreadcrumbItem,
+  //asCustomBreadcrumbItem,
 )(Li);
 
 const MegaMenuBreadcrumbs = flow(
@@ -97,7 +97,7 @@ const MegaMenuBreadcrumbs = flow(
   withDesign({
     Item: asReadOnly,
   }),
-  withCustomBreadcrumbItem(CustomBreadcrumbItem),
+  //withCustomBreadcrumbItem(CustomBreadcrumbItem),
 )('ul');
 
 export default MegaMenu;

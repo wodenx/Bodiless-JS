@@ -16,13 +16,15 @@ import {
   asMenuBase as asMegaMenuBase,
   withMenuDesign as withMegaMenuDesign,
   asBreadcrumbsClean as asMegaMenuBreadcrumbs,
-  withCustomBreadcrumbItem,
-  asCustomBreadcrumbItem,
+  //withCustomBreadcrumbItem,
+  //asCustomBreadcrumbItem,
 } from './MegaMenu';
 
 import {
   asMenuBase as asSimpleMenuBase,
   withMenuDesign as withSimpleMenuDesign,
+  asBreadcrumbsClean as asSimpleMenuBreadcrumbs,
+  withBreadcrumbDesign as withMenuBreadcrumbDesign,
 } from './SimpleMenu';
 
 import asSimpleMenuTopNav from './SimpleMenu.token';
@@ -37,13 +39,13 @@ export {
   asMegaMenuBase,
   withMegaMenuDesign,
   asMegaMenuBreadcrumbs,
-  asCustomBreadcrumbItem,
-  withCustomBreadcrumbItem,
 };
 
 export {
   asSimpleMenuBase,
   withSimpleMenuDesign,
+  asSimpleMenuBreadcrumbs,
+  withMenuBreadcrumbDesign,
 };
 
 export {
