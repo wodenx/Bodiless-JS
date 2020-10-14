@@ -12,37 +12,40 @@
  * limitations under the License.
  */
 
-import { ComponentType } from 'react';
 import { flow } from 'lodash';
-
 import { addClasses } from '@bodiless/fclasses';
+import { asStatic } from '@bodiless/core';
 import {
-  asMenuLink, asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenuTopNav,
+  asMenuLink, asSimpleMenuBase, withSimpleMenuDesign,
+  asBurgerMenuClean,
 } from '@bodiless/organisms';
 
-import { withTitleEditor } from './MegaMenu';
-import withSimpleMenuStyles from './SimpleMenu.token';
+import { asEditable } from '@bodiless/components';
 
-const SimpleMenu = flow(
+// import { withTitleEditor } from './MegaMenu';
+import withBurgerMenuStyles from './BurgerMenu.token';
+
+const withTitleEditor = asEditable('text', 'Menu Item');
+
+const BurgerMenu = flow(
   asSimpleMenuBase(),
   withSimpleMenuDesign({
     Title: asMenuLink(withTitleEditor),
   }),
-  withSimpleMenuStyles,
-  asSimpleMenuTopNav,
-)('ul') as ComponentType<any>;
+  asBurgerMenuClean,
+  withBurgerMenuStyles,
+  asStatic,
+)('ul');
 
-const SimpleMenuList = flow(
+const BurgerMenuList = flow(
   asSimpleMenuBase(),
   withSimpleMenuDesign({
     Title: asMenuLink(withTitleEditor),
-  }),
-  withSimpleMenuDesign({
     Item: addClasses('pl-5'),
   }),
-)('ul') as ComponentType<any>;
+)('ul');
 
-export default SimpleMenu;
+export default BurgerMenu;
 export {
-  SimpleMenuList,
+  BurgerMenuList,
 };

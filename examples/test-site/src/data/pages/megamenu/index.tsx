@@ -26,7 +26,8 @@ import {
 
 import Layout from '../../../components/Layout';
 import MegaMenu, { MegaMenuList } from '../../../components/MegaMenu/MegaMenu';
-import { SimpleMenu, SimpleMenuList } from '../../../components/MegaMenu/SimpleMenu';
+import SimpleMenu, { SimpleMenuList } from '../../../components/MegaMenu/SimpleMenu';
+import BurgerMenu, { BurgerMenuList } from '../../../components/MegaMenu/BurgerMenu';
 import { asHeader2, asHeader3, asHeader1 } from '../../../components/Elements.token';
 
 const NodeTreePrinter$ = () => {
@@ -61,9 +62,18 @@ export default (props: any) => (
     <Layout>
       <H1>Menu V2</H1>
       <Description>
-        This page showcases two types of manus.  Each menu is shown as a top nav and also
+        This page showcases two types of menus.  Each menu is shown as a top nav and also
         as a simple list of links which render the same data as the top nav.
       </Description>
+
+      <H2>Burger Menu</H2>
+      <BurgerMenu className="w-1/4" nodeKey="burger-menu" />
+      <Description>
+        This is a simple Burger Menu...
+      </Description>
+      <H3>Burger Menu as List</H3>
+      <BurgerMenuList nodeKey="burger-menu" />
+
       <H2>Simple Menu</H2>
       <SimpleMenu nodeKey="list2" />
       <Description>
@@ -77,6 +87,7 @@ export default (props: any) => (
       </Description>
       <H3>Simple Menu as List</H3>
       <SimpleMenuList nodeKey="list2" />
+
       <H2>Mega Menu</H2>
       <MegaMenu nodeKey="list1" className="w-full" />
       <Description>

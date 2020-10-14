@@ -23,6 +23,10 @@ import {
   withMenuDesign as withSimpleMenuDesign,
 } from './SimpleMenu';
 
+import {
+  asBurgerMenuClean,
+} from './BurgerMenu';
+
 import asSimpleMenuTopNav from './SimpleMenu.token';
 import asMegaMenuTopNav from './MegaMenu.token';
 
@@ -40,6 +44,10 @@ export {
 export {
   asSimpleMenuBase,
   withSimpleMenuDesign,
+};
+
+export {
+  asBurgerMenuClean,
 };
 
 export {

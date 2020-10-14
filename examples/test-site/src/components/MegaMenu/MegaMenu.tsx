@@ -25,7 +25,7 @@ import { withEditorSimple } from '../Editors';
 import withMegaMenuStyles, { withMenuToutStyles } from './MegaMenu.token';
 import { withToutEditors } from '../Tout';
 
-export const withTitleEditor = withEditorSimple('text', 'Menu Item');
+const withTitleEditor = withEditorSimple('text', 'Menu Item');
 
 // Customize the tout editors so the node keys match
 const withMenuToutEditors = flow(
@@ -92,4 +92,4 @@ const MegaMenuBreadcrumbs = flow(
 )('ul');
 
 export default MegaMenu;
-export { MegaMenuBreadcrumbs, MegaMenuList };
+export { MegaMenuBreadcrumbs, MegaMenuList, withTitleEditor };
