@@ -56,7 +56,8 @@ const withColumnHoverEffect = withDesign({
 
 const withColumnStyles = flow(
   withDesign({
-    Item: addClasses('pr-2 pl-5 min-w-100'),
+    Item: addClasses('min-w-100'),
+    Title: addClasses('block w-full px-3 pl-5'),
   }),
   withColumnHoverEffect,
 );
