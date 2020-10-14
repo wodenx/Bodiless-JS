@@ -1,0 +1,247 @@
+{
+	"info": {
+		"_postman_id": "804a8221-d7f1-4df4-875b-f0bd55f7ed74",
+		"name": "Api gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Navigation - main menu",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api-key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/content/v1/imodium/au/en/navigation/main-menu",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"content",
+						"v1",
+						"imodium",
+						"au",
+						"en",
+						"navigation",
+						"main-menu"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Taco - home",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api-key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/content/v1/imodium/au/en/taco-list/home-sections",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"content",
+						"v1",
+						"imodium",
+						"au",
+						"en",
+						"taco-list",
+						"home-sections"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Carousel",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api-key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/content/v1/imodium/au/en/carousel/home",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"content",
+						"v1",
+						"imodium",
+						"au",
+						"en",
+						"carousel",
+						"home"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Navigation - global footer",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api-key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/content/v1/imodium/au/en/navigation/global-footer",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"content",
+						"v1",
+						"imodium",
+						"au",
+						"en",
+						"navigation",
+						"global-footer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Block Content - Privacy Policy",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api-key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/content/v1/imodium/au/en/block-content/service-privacy-policy",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"content",
+						"v1",
+						"imodium",
+						"au",
+						"en",
+						"block-content",
+						"service-privacy-policy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SideBar - causes-of-diarrhoea",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api-key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/content/v1/imodium/au/en/sidebar/causes-of-diarrhoea",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"content",
+						"v1",
+						"imodium",
+						"au",
+						"en",
+						"sidebar",
+						"causes-of-diarrhoea"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Taco - homepage product",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api-key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/content/v1/imodium/au/en/taco-list/homepage-product\n",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"content",
+						"v1",
+						"imodium",
+						"au",
+						"en",
+						"taco-list",
+						"homepage-product\n"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "cc290519-9597-4971-839a-c97e2aeeb2f7",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "816f0436-53cb-4592-8d4d-78729cb786aa",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "04ba69af-6aa5-4026-846f-2b7155a41b17",
+			"key": "host",
+			"value": "https://cx9d95owmh.execute-api.ap-southeast-1.amazonaws.com/dev"
+		},
+		{
+			"id": "e9c48a89-820a-4c8f-b182-7bd861e91d75",
+			"key": "api-key",
+			"value": "***",
+		}
+	],
+	"protocolProfileBehavior": {}
+}

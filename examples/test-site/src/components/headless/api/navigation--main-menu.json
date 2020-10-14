@@ -1,0 +1,245 @@
+{
+    "requestId": "a6f0a563-f1b7-42db-9677-097c429cc494",
+    "code": 200,
+    "message": "Success",
+    "data": [
+        {
+            "title": "Home",
+            "link": {
+                "path": "/",
+                "external": true
+            },
+            "children": []
+        },
+        {
+            "title": "Causes of Diarrhoea",
+            "link": {
+                "path": "/common-causes-frequent-diarrhoea",
+                "external": false
+            },
+            "children": [
+                {
+                    "title": "Understanding Diarrhoea",
+                    "link": {
+                        "path": "/causes-of-frequent-diarrhoea/understanding-diarrhoea",
+                        "external": false
+                    },
+                    "children": []
+                },
+                {
+                    "title": "Stress and Anxiety",
+                    "link": {
+                        "path": "/causes-of-frequent-diarrhoea/stress-and-anxiety",
+                        "external": false
+                    },
+                    "children": []
+                },
+                {
+                    "title": "Food Allergies & Intolerance",
+                    "link": {
+                        "path": "/causes-of-frequent-diarrhoea/food-allergies",
+                        "external": false
+                    },
+                    "children": []
+                },
+                {
+                    "title": "Eating Habits",
+                    "link": {
+                        "path": "/causes-of-frequent-diarrhoea/eating-habits-diet-tips",
+                        "external": false
+                    },
+                    "children": []
+                },
+                {
+                    "title": "Menstruation",
+                    "link": {
+                        "path": "/causes-of-frequent-diarrhoea/menstruation",
+                        "external": false
+                    },
+                    "children": []
+                },
+                {
+                    "title": "Stomach Infection",
+                    "link": {
+                        "path": "/causes-of-frequent-diarrhoea/stomach-infection",
+                        "external": false
+                    },
+                    "children": []
+                }
+            ]
+        },
+        {
+            "title": "Types of Diarrhoea",
+            "link": {
+                "path": "/types-of-diarrhoea",
+                "external": false
+            },
+            "children": [
+                {
+                    "title": "Children and Diarrhoea",
+                    "link": {
+                        "path": "/types-of-diarrhoea/children",
+                        "external": false
+                    },
+                    "children": []
+                },
+                {
+                    "title": "Gastroenteritis (gastro)",
+                    "link": {
+                        "path": "/types-of-diarrhoea/gastroenteritis",
+                        "external": false
+                    },
+                    "children": []
+                },
+                {
+                    "title": "Diarrhoea During Pregnancy",
+                    "link": {
+                        "path": "/types-of-diarrhoea/pregnancy",
+                        "external": false
+                    },
+                    "children": []
+                },
+                {
+                    "title": "Frequent Diarrhoea",
+                    "link": {
+                        "path": "/types-of-diarrhoea/frequent",
+                        "external": false
+                    },
+                    "children": []
+                },
+                {
+                    "title": "Travellers' Diarrhoea",
+                    "link": {
+                        "path": "/types-of-diarrhoea/travellers",
+                        "external": false
+                    },
+                    "children": []
+                }
+            ]
+        },
+        {
+            "title": "Treatment of Diarrhoea",
+            "link": {
+                "path": "/treatment",
+                "external": false
+            },
+            "children": [
+                {
+                    "title": "Why Treat Diarrhoea",
+                    "link": {
+                        "path": "/treatment/why-treat-diarrhoea",
+                        "external": false
+                    },
+                    "children": []
+                },
+                {
+                    "title": "How to Treat Diarrhoea",
+                    "link": {
+                        "path": "/treatment/how-to-treat-diarrhoea",
+                        "external": false
+                    },
+                    "children": []
+                },
+                {
+                    "title": "Advice - Food",
+                    "link": {
+                        "path": "/treatment/healthy-food",
+                        "external": false
+                    },
+                    "children": []
+                },
+                {
+                    "title": "Advice - Mood",
+                    "link": {
+                        "path": "/treatment/mood",
+                        "external": false
+                    },
+                    "children": []
+                },
+                {
+                    "title": "Advice - Movement",
+                    "link": {
+                        "path": "/treatment/movement",
+                        "external": false
+                    },
+                    "children": []
+                }
+            ]
+        },
+        {
+            "title": "IMODIUM® Products",
+            "link": {
+                "path": "/imodium-products",
+                "external": false
+            },
+            "children": [
+                {
+                    "title": "How IMODIUM® Products Work",
+                    "link": {
+                        "path": "/treatment/how-imodium-works",
+                        "external": false
+                    },
+                    "children": [
+                        {
+                            "title": "IMODIUM Heritage",
+                            "link": {
+                                "path": "/products/imodium-heritage",
+                                "external": false
+                            },
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "title": "Which IMODIUM® Product is Right for Me?",
+                    "link": {
+                        "path": "/products/imodium-products",
+                        "external": false
+                    },
+                    "children": [
+                        {
+                            "title": "IMODIUM® Zapid®",
+                            "link": {
+                                "path": "/products/imodium-zapid",
+                                "external": false
+                            },
+                            "children": []
+                        },
+                        {
+                            "title": "IMODIUM® Capsules",
+                            "link": {
+                                "path": "/products/imodium-original",
+                                "external": false
+                            },
+                            "children": []
+                        },
+                        {
+                            "title": "IMODIUM® Advanced",
+                            "link": {
+                                "path": "/products/imodium-advanced",
+                                "external": false
+                            },
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "title": "Where To Buy IMODIUM®",
+                    "link": {
+                        "path": "/imodium-products/where-to-buy-diarrhoea-relief-products",
+                        "external": false
+                    },
+                    "children": []
+                }
+            ]
+        },
+        {
+            "title": "FAQ: Ask IMODIUM®",
+            "link": {
+                "path": "/diarrhoea-faq",
+                "external": false
+            },
+            "children": []
+        }
+    ]
+}

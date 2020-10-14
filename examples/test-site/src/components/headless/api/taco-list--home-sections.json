@@ -1,0 +1,43 @@
+{
+    "requestId": "5555f1b0-c981-45da-89f0-ccd15526b1e2",
+    "code": 200,
+    "message": "Success",
+    "data": [
+        {
+            "title": "Ask IMODIUM®",
+            "summary": "Get quick answers to common questions and advice on key diarrhoea related\ntopics.",
+            "link": {
+                "href": "/diarrhoea-faq",
+                "title": "IMODIUM® answers",
+                "target": false
+            },
+            "image": {
+                "src": "https://con-apac-pilotimodium-au-en.jnjapacb17d6-dev3.jjc-devops.com/sites/pilotimodium_au/files/ask-imodium-related-tout-image.png"
+            }
+        },
+        {
+            "title": "Get your life back in rhythm - Sep 30th",
+            "summary": "Be in harmony with your digestive health and well-being. Live in tune, live in\nrhythm.",
+            "link": {
+                "href": "/causes-of-frequent-diarrhoea/understanding-diarrhoea",
+                "title": "Understanding Diarrhoea",
+                "target": false
+            },
+            "image": {
+                "src": "https://con-apac-pilotimodium-au-en.jnjapacb17d6-dev3.jjc-devops.com/sites/pilotimodium_au/files/get-your-life-back-tout-image.jpg"
+            }
+        },
+        {
+            "title": "Which IMODIUM® product is right for me?",
+            "summary": "Not everyone’s situation is the same, so we’ve designed a range of products to\nsuit your needs. Find the right one for you.",
+            "link": {
+                "href": "/products/imodium-products",
+                "title": "IMODIUM® range",
+                "target": false
+            },
+            "image": {
+                "src": "https://con-apac-pilotimodium-au-en.jnjapacb17d6-dev3.jjc-devops.com/sites/pilotimodium_au/files/tout_1.9_0.jpg"
+            }
+        }
+    ]
+}

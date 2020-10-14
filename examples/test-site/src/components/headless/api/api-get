@@ -1,0 +1,1 @@
+curl -H "x-api-key: $HEADLESS_API_KEY" https://cx9d95owmh.execute-api.ap-southeast-1.amazonaws.com/dev/content/v1/imodium/au/en/$1

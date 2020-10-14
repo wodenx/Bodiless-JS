@@ -7,6 +7,17 @@ require('dotenv').config({
 });
 
 const SITEURL = process.env.SITE_URL;
+const API_BASE_URL = 'https://cx9d95owmh.execute-api.ap-southeast-1.amazonaws.com/dev/content/v1/imodium/au/en';
+
+const apiResource = (name, path) => ({
+  url: `${API_BASE_URL}/${path}`,
+  method: 'get',
+  headers: {
+    'x-api-key': process.env.HEADLESS_API_KEY,
+  },
+  name,
+  entityLevel: 'data',
+});
 
 // Gatsby plugins list.
 const plugins = [
@@ -14,22 +25,8 @@ const plugins = [
     resolve: 'gatsby-source-apiserver',
     options: {
       entitiesArray: [
-        {
-          url: 'https://ghn3btyvqf.execute-api.ap-southeast-1.amazonaws.com/dev/v1/content/imodium/au/en/navigation/main-menu',
-          method: 'get',
-          headers: {
-            'x-api-key': process.env.HEADLESS_API_KEY,
-          },
-          name: 'nav',
-        },
-        {
-          url: 'https://ghn3btyvqf.execute-api.ap-southeast-1.amazonaws.com/dev/v1/content/imodium/au/en/taco-list/home-sections',
-          method: 'get',
-          headers: {
-            'x-api-key': process.env.HEADLESS_API_KEY,
-          },
-          name: 'tacos',
-        },
+        apiResource('nav', 'navigation/main-menu'),
+        apiResource('tacos', 'taco-list/home-sections'),
       ],
     },
   },

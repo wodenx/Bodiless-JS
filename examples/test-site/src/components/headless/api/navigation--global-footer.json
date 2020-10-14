@@ -1,0 +1,47 @@
+{
+    "requestId": "5697f76b-4b8f-4bb5-b107-edd246cbe9eb",
+    "code": 200,
+    "message": "Success",
+    "data": [
+        {
+            "title": "FAQ",
+            "link": {
+                "path": "/diarrhoea-faq",
+                "external": false
+            },
+            "children": []
+        },
+        {
+            "title": "Legal Notice",
+            "link": {
+                "path": "/legal-notice",
+                "external": false
+            },
+            "children": []
+        },
+        {
+            "title": "Privacy Policy",
+            "link": {
+                "path": "/privacy-policy",
+                "external": false
+            },
+            "children": []
+        },
+        {
+            "title": "Sitemap",
+            "link": {
+                "path": "/sitemap",
+                "external": false
+            },
+            "children": []
+        },
+        {
+            "title": "Where to Buy",
+            "link": {
+                "path": "/imodium-products/where-to-buy-diarrhoea-relief-products",
+                "external": false
+            },
+            "children": []
+        }
+    ]
+}

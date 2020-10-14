@@ -71,7 +71,6 @@ const useDefaultContent = () => {
           node {
             link {
               external
-              has_children
               path
             }
             title

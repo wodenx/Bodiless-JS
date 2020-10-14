@@ -1,0 +1,37 @@
+{
+    "requestId": "0e1728f3-8934-4d92-aaa9-e277b6502f34",
+    "code": 200,
+    "message": "Success",
+    "data": [
+        {
+            "type": "element",
+            "tagName": "p",
+            "attributes": [],
+            "children": [
+                {
+                    "type": "text",
+                    "content": "This medicine may not be right for you. Read the label before purchase. Follow the directions for use. If symptoms persist, talk to your health professional."
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "content": "\n"
+        },
+        {
+            "type": "element",
+            "tagName": "p",
+            "attributes": [],
+            "children": [
+                {
+                    "type": "text",
+                    "content": "This site is published by Johnson &amp; Johnson Pacific Pty. Limited which is solely responsible for its contents. It is intended for visitors from Australia only. See our Legal Terms of Use and Privacy policy. Last Modified 01/05/2019. © Johnson &amp; Johnson Pacific Pty. Limited 2019. All rights reserved. ® Trademark."
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "content": "\n"
+        }
+    ]
+}
