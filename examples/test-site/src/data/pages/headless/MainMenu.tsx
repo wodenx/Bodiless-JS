@@ -47,7 +47,7 @@ const translateItems = (items: CMenuItem[], prefix: string = '') => {
     ids.add(`${id}`);
     const itemPath = `${prefix}$${id}`;
     const hasLink = Boolean(item.link && item.link.path.trim().length);
-    const hasChildren = Boolean(item.link && item.link.has_children);
+    const hasChildren = Boolean(item.children && item.children.length > 0);
     return {
       ...acc,
       [`${itemPath}$title$text`]: { text: item.title },
