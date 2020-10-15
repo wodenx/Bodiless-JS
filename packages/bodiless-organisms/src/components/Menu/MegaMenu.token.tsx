@@ -18,8 +18,9 @@ import {
   withDesign, addClasses, addClassesIf, removeClassesIf,
 } from '@bodiless/fclasses';
 
+import { isMenuOpen } from './MenuContext';
 import {
-  withBaseSubMenuStyles, withBaseMenuStyles, asSimpleSubMenu, asRelative, isMenuOpen,
+  withBaseSubMenuStyles, withBaseMenuStyles, asSimpleSubMenu, asRelative,
 } from './SimpleMenu.token';
 
 /*

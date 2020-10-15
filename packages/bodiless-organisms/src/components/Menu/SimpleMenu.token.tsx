@@ -18,6 +18,7 @@ import {
   withDesign, addClasses, addClassesIf, removeClassesIf,
 } from '@bodiless/fclasses';
 
+import { isMenuOpen } from './MenuContext';
 /*
  * Utility Styles
  * ===========================================
@@ -25,16 +26,6 @@ import {
 const isContextActive = () => {
   const { isActive, isEdit } = useEditContext();
   return isEdit && isActive;
-};
-
-const isMenuOpen = () => {
-  const { activeContext } = useEditContext();
-
-  if (activeContext && activeContext.parent) {
-    return activeContext.id !== activeContext.parent.id;
-  }
-
-  return false;
 };
 
 const asVerticalSubMenu = withDesign({
