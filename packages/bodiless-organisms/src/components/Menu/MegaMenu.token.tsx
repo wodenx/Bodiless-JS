@@ -14,13 +14,12 @@
 
 import { flow } from 'lodash';
 import { useEditContext } from '@bodiless/core';
-import { withDesign, addClasses, addClassesIf } from '@bodiless/fclasses';
+import {
+  withDesign, addClasses, addClassesIf, removeClassesIf,
+} from '@bodiless/fclasses';
 
 import {
-  withBaseSubMenuStyles,
-  withBaseMenuStyles,
-  asSimpleSubMenu,
-  asRelative,
+  withBaseSubMenuStyles, withBaseMenuStyles, asSimpleSubMenu, asRelative, isMenuOpen,
 } from './SimpleMenu.token';
 
 /*
@@ -34,7 +33,10 @@ const isContextNotActive = () => {
 
 const asStaticOnHover = withDesign({
   Wrapper: withDesign({
-    WrapperItem: addClasses('hover:static'),
+    WrapperItem: flow(
+      addClasses('hover:static'),
+      removeClassesIf(isMenuOpen)('hover:static'),
+    ),
   }),
 });
 
