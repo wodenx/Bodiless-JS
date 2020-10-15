@@ -19,31 +19,31 @@ import { observer } from 'mobx-react-lite';
 import { PageContextProvider, useEditContext, useUUID } from '@bodiless/core';
 
 type MenuContextType = {
-  isSubmenuOpened: boolean,
-  setSubmenuOpened: React.Dispatch<React.SetStateAction<boolean>>,
+  isSubmenuOpen: boolean,
+  setSubmenuOpen: React.Dispatch<React.SetStateAction<boolean>>,
 };
 
 const MenuContext = createContext<MenuContextType>({
-  isSubmenuOpened: false,
-  setSubmenuOpened: () => null,
+  isSubmenuOpen: false,
+  setSubmenuOpen: () => null,
 });
 
 const useMenuContext = () => useContext(MenuContext);
 
 // Used for conditional fClasses.
-const isMenuOpen = () => useMenuContext().isSubmenuOpened;
-const isMenuClosed = () => !useMenuContext().isSubmenuOpened;
+const isMenuOpen = () => useMenuContext().isSubmenuOpen;
+const isMenuClosed = () => !useMenuContext().isSubmenuOpen;
 
 const MenuProvider: FC = observer(({ children }) => {
   const { isActive } = useEditContext();
-  const [isSubmenuOpened, setSubmenuOpened] = useState<boolean>(false);
+  const [isSubmenuOpen, setSubmenuOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    setSubmenuOpened(isActive);
+    setSubmenuOpen(isActive);
   }, [isActive]);
 
   return (
-    <MenuContext.Provider value={{ isSubmenuOpened, setSubmenuOpened }}>
+    <MenuContext.Provider value={{ isSubmenuOpen, setSubmenuOpen }}>
       { children }
     </MenuContext.Provider>
   );
