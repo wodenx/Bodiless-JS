@@ -33,8 +33,8 @@ const withBaseSubMenuStyles = withDesign({
   Wrapper: withDesign({
     List: addClasses('bg-teal-600 text-white z-10'),
   }),
-  Item: addClasses('hover:bg-teal-500 min-w-100 leading-loose text-sm'),
-  Title: addClasses('block w-full px-3'),
+  Item: addClasses('min-w-100 leading-loose text-sm'),
+  Title: addClasses('hover:bg-teal-500 block w-full px-3'),
 });
 
 /**

@@ -47,19 +47,11 @@ const asToutsSubMenu = flow(
  * Columns Sub Menu Styles
  * ===========================================
  */
-const withColumnHoverEffect = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: addClasses('hover:bg-teal-600'),
-  }),
-  Item: addClasses('hover:bg-teal-500'),
-});
-
 const withColumnStyles = flow(
   withDesign({
-    Item: addClasses('min-w-100'),
-    Title: addClasses('block w-full px-3 pl-5'),
+    Item: addClasses('hover:bg-teal-500 min-w-100'),
+    Title: addClasses('hover:bg-teal-500 block w-full px-3 pl-5'),
   }),
-  withColumnHoverEffect,
 );
 
 const asColumnSubMenu = flow(
