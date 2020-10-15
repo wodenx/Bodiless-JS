@@ -31,8 +31,12 @@ const MenuContext = createContext<MenuContextType>({
 const useMenuContext = () => useContext(MenuContext);
 
 // Used for conditional fClasses.
-const isMenuOpen = () => useMenuContext().isSubmenuOpen;
-const isMenuClosed = () => !useMenuContext().isSubmenuOpen;
+const isMenuOpen = () => {
+  const { isEdit } = useEditContext();
+  const { isSubmenuOpen } = useMenuContext();
+
+  return isEdit ? isSubmenuOpen : false;
+};
 
 const MenuProvider: FC = observer(({ children }) => {
   const { isActive } = useEditContext();
@@ -64,5 +68,4 @@ export {
   MenuProvider,
   useMenuContext,
   isMenuOpen,
-  isMenuClosed,
 };

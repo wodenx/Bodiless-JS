@@ -64,11 +64,11 @@ const withHoverStyles = withDesign({
 });
 
 const withBaseMenuStyles = flow(
+  withHoverStyles,
   withDesign({
     Wrapper: addClasses('relative flex'),
     Item: addClasses('overflow-hidden'),
   }),
-  withHoverStyles,
 );
 
 /*
