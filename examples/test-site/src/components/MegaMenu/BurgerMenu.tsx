@@ -13,29 +13,37 @@
  */
 
 import { flow } from 'lodash';
-import { addClasses } from '@bodiless/fclasses';
+import { withDesign, replaceWith, addClasses } from '@bodiless/fclasses';
 import { asStatic } from '@bodiless/core';
 import {
   asMenuLink, asSimpleMenuBase, withSimpleMenuDesign,
-  asBurgerMenuClean,
+  withAccordionSubmenu, SimpleBurgerMenuClean,
 } from '@bodiless/organisms';
-
 import { asEditable } from '@bodiless/components';
 
 // import { withTitleEditor } from './MegaMenu';
-import withBurgerMenuStyles from './BurgerMenu.token';
+import Logo from '../Layout/logo';
+import withBurgerMenuStyles, { asBurgerMenu } from './BurgerMenu.token';
 
 const withTitleEditor = asEditable('text', 'Menu Item');
 
-const BurgerMenu = flow(
+const BurgerMenuBody = flow(
   asSimpleMenuBase(),
+  withAccordionSubmenu,
   withSimpleMenuDesign({
     Title: asMenuLink(withTitleEditor),
   }),
-  asBurgerMenuClean,
   withBurgerMenuStyles,
   asStatic,
 )('ul');
+
+const BurgerMenu = flow(
+  withDesign({
+    Header: replaceWith(Logo),
+    Body: replaceWith(BurgerMenuBody),
+  }),
+  asBurgerMenu,
+)(SimpleBurgerMenuClean);
 
 const BurgerMenuList = flow(
   asSimpleMenuBase(),

@@ -13,9 +13,11 @@
  */
 
 import {
-  WithNodeKeyProps, withNodeKey, useNode, NodeProvider, WithNodeProps,
+  WithNodeKeyProps, withNodeKey, useNode, NodeProvider, WithNodeProps, withOnlyProps,
 } from '@bodiless/core';
-import React, { ComponentType, PropsWithChildren, FC } from 'react';
+import React, {
+  Fragment, ComponentType, PropsWithChildren, FC,
+} from 'react';
 import { flow, identity } from 'lodash';
 import {
   replaceWith, withDesign, asComponent, DesignableComponentsProps, designable, HOC,
@@ -48,11 +50,13 @@ const asTitledItem = <P extends TitledItemProps>(Item: ComponentType<P>) => {
 type SubListComponents = {
   WrapperItem: ComponentType<any>,
   List: ComponentType<any>,
+  Title: ComponentType<any>
 };
 
 const startComponents: SubListComponents = {
   WrapperItem: asComponent('li'),
   List: asComponent('ul'),
+  Title: withOnlyProps('key', 'children')(Fragment),
 };
 
 type SubListProps = TitledItemProps & DesignableComponentsProps<SubListComponents>;
@@ -60,10 +64,10 @@ type SubListProps = TitledItemProps & DesignableComponentsProps<SubListComponent
 const SubList$: FC<SubListProps> = ({
   title, children, components, ...rest
 }) => {
-  const { WrapperItem, List } = components;
+  const { WrapperItem, List, Title } = components;
   return (
     <WrapperItem {...rest}>
-      {title}
+      <Title>{title}</Title>
       <List>
         {children}
       </List>

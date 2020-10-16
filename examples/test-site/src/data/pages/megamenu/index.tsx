@@ -66,8 +66,8 @@ export default (props: any) => (
         as a simple list of links which render the same data as the top nav.
       </Description>
 
-      <H2>Burger Menu</H2>
-      <BurgerMenu className="w-1/4" nodeKey="burger-menu" />
+      <H2>Simple Burger Menu</H2>
+      <BurgerMenu nodeKey="burger-menu" />
       <Description>
         This is a simple Burger Menu...
       </Description>

@@ -12,38 +12,60 @@
  * limitations under the License.
  */
 
-import { flow } from 'lodash';
-import { withDesign, addClasses } from '@bodiless/fclasses';
+import React, { FC, ComponentType } from 'react';
+import { slide } from 'react-burger-menu';
+import {
+  Div, withDesign, stylable, designable, DesignableComponentsProps,
+} from '@bodiless/fclasses';
 
-// import {
-//   asAccordionWrapper,
-//   asAccodionTitle,
-//   asAccordionBody,
-// } from '../Accordion';
+import { asAccordionWrapper, asAccodionTitle, asAccordionBody } from '../Accordion';
 
-// import { withMenuDesign } from './SimpleMenu';
+type BurgerMenuComponents = {
+  Wrapper: ComponentType<any>,
+  Header: ComponentType<any>,
+  Menu: ComponentType<any>,
+  Body: ComponentType<any>,
+};
 
-const asBurgerMenuTitle = withDesign({
-  Item: addClasses('ACCORDION_WRAPPER'),
-  Title: addClasses('ACCORDION_TITLE'),
-});
+type BurgerMenuProps = DesignableComponentsProps<BurgerMenuComponents>;
 
-const withBurgerMenuBody = withDesign({
+const burgerMenuComponents: BurgerMenuComponents = {
+  Wrapper: Div,
+  Menu: stylable(slide),
+  Body: Div,
+  Header: Div,
+};
+
+const BurgerMenuBase: FC<BurgerMenuProps> = ({ components, ...rest }) => {
+  const {
+    Wrapper, Menu, Body, Header,
+  } = components;
+
+  return (
+    <Wrapper>
+      <Menu>
+        <Header />
+        <Body {...rest} />
+      </Menu>
+    </Wrapper>
+  );
+};
+
+const BurgerMenuClean = designable(burgerMenuComponents)(BurgerMenuBase);
+
+const withAccordionSubmenu = withDesign({
   Item: withDesign({
     SubMenu: withDesign({
       Wrapper: withDesign({
-        List: addClasses('ACCORDION_BODY'),
+        List: asAccordionBody,
+        Title: asAccodionTitle,
+        WrapperItem: asAccordionWrapper,
       }),
     }),
   }),
 });
 
-const asBurgerMenuClean = flow(
-  asBurgerMenuTitle,
-  withBurgerMenuBody,
-);
-
-export default asBurgerMenuClean;
+export default BurgerMenuClean;
 export {
-  asBurgerMenuClean,
+  withAccordionSubmenu,
 };

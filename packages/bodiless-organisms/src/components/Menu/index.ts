@@ -23,9 +23,7 @@ import {
   withMenuDesign as withSimpleMenuDesign,
 } from './SimpleMenu';
 
-import {
-  asBurgerMenuClean,
-} from './BurgerMenu';
+import BurgerMenuClean, { withAccordionSubmenu } from './BurgerMenu';
 
 import asSimpleMenuTopNav from './SimpleMenu.token';
 import asMegaMenuTopNav from './MegaMenu.token';
@@ -47,7 +45,8 @@ export {
 };
 
 export {
-  asBurgerMenuClean,
+  BurgerMenuClean as SimpleBurgerMenuClean,
+  withAccordionSubmenu,
 };
 
 export {

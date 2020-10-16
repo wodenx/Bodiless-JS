@@ -13,14 +13,16 @@
  */
 
 import { flow } from 'lodash';
-import { withDesign, addClasses } from '@bodiless/fclasses';
+import { withDesign, addClasses, addProps } from '@bodiless/fclasses';
+
+import { asDefaultLogoStyle } from '../Layout/token';
 
 /**
  * Base Menu Styles
  * ===========================================
  */
 const withBaseBurgerMenuStyles = withDesign({
-  Wrapper: addClasses('BURGER_WRAPPER'),
+  Wrapper: addClasses('p-3 BURGER_WRAPPER'),
   Item: addClasses('BURGER_ITEM'),
   Title: addClasses('BURGER_TITLE'),
 });
@@ -34,12 +36,25 @@ const withBaseBurgerSubMenuStyles = withDesign({
     List: addClasses('BURGER_SUB_LIST'),
     WrapperItem: addClasses('BURGER_SUB_WRAPPER_ITEM'),
   }),
-  Item: addClasses('BURGER_SUB_ITEM'),
+  Item: addClasses('pl-3 BURGER_SUB_ITEM'),
   Title: addClasses('BURGER_SUB_TITLE'),
 });
 
 const asSimpleBurgerSubMenuStyles = withDesign({
   SubMenu: withBaseBurgerSubMenuStyles,
+});
+
+const asBurgerMenu = withDesign({
+  Wrapper: addClasses('bg-teal-600 py-1'),
+  Header: flow(
+    asDefaultLogoStyle,
+    withDesign({ SiteReturn: addClasses('bg-teal-600') }),
+  ),
+  Menu: flow(
+    addClasses('bg-gray-300'),
+    addProps({ noOverlay: true, width: '100%', right: true }),
+  ),
+  // Body: addClasses('p-3 text-black'),
 });
 
 /**
@@ -54,3 +69,6 @@ const withBurgerMenuStyles = flow(
 );
 
 export default withBurgerMenuStyles;
+export {
+  asBurgerMenu,
+};
