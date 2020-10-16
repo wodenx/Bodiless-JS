@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import React, { ComponentType, useEffect } from 'react';
+import React, { ComponentType } from 'react';
 import { flowRight } from 'lodash';
 import {
   withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator, withLocalContextMenu,
@@ -37,18 +37,13 @@ const useToggleButtonMenuOption = () => {
 
 const useSwapButtonMenuOption = (formTitle: string = 'Choose a component') => {
   const { selectableComponents, activeComponent, setActiveComponent } = useChameleonContext();
-  const renderForm = ({ formApi }: any) => {
+  const renderForm = () => {
     const {
       ComponentFormLabel,
       ComponentFormRadioGroup,
       ComponentFormRadio,
       ComponentFormTitle,
     } = useMenuOptionUI();
-
-    useEffect(() => {
-      // Select first component by default
-      formApi.setValue('component', Object.keys(selectableComponents)[0]);
-    }, []);
 
     const radios = Object.getOwnPropertyNames(selectableComponents).map(name => (
       <ComponentFormLabel id={`bl-component-form-chameleon-radio-${name}`} key={name}>
@@ -67,7 +62,11 @@ const useSwapButtonMenuOption = (formTitle: string = 'Choose a component') => {
     );
   };
   const render = useContextMenuForm({
-    initialValues: { component: activeComponent === DEFAULT_KEY ? null : activeComponent },
+    initialValues: {
+      component: activeComponent === DEFAULT_KEY
+        ? Object.keys(selectableComponents)[0]
+        : activeComponent,
+    },
     submitValues: (d: ChameleonData) => setActiveComponent(d.component || null),
     renderForm,
   });
