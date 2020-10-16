@@ -26,7 +26,7 @@ const withMenuContext = <P extends Object>(
 const useIsMenuOpen = () => {
   // Move up the context tree to see if we find an active menu context.
   for (let context = useEditContext(); context; context = context.parent!) {
-    if (context.type === 'menu' && context.isActive) return true;
+    if (context.isEdit && context.type === 'menu' && context.isActive) return true;
   }
 
   return false;
