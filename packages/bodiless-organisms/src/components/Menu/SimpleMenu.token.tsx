@@ -18,7 +18,7 @@ import {
   withDesign, addClasses, addClassesIf, removeClassesIf,
 } from '@bodiless/fclasses';
 
-import { isMenuOpen } from './MenuContext';
+import { useIsMenuOpen } from './withMenuContext';
 /*
  * Utility Styles
  * ===========================================
@@ -59,7 +59,7 @@ const asResponsiveSublist = withDesign({
 const withHoverStyles = withDesign({
   Item: flow(
     addClasses('hover:overflow-visible'),
-    removeClassesIf(isMenuOpen)('hover:overflow-visible'),
+    removeClassesIf(useIsMenuOpen)('hover:overflow-visible'),
   ),
 });
 
@@ -118,5 +118,4 @@ export {
   withBaseMenuStyles,
   asSimpleSubMenu,
   asRelative,
-  isMenuOpen,
 };

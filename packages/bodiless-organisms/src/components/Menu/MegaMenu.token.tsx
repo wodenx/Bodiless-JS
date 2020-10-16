@@ -18,7 +18,7 @@ import {
   withDesign, addClasses, addClassesIf, removeClassesIf,
 } from '@bodiless/fclasses';
 
-import { isMenuOpen } from './MenuContext';
+import { useIsMenuOpen } from './withMenuContext';
 import {
   withBaseSubMenuStyles, withBaseMenuStyles, asSimpleSubMenu, asRelative,
 } from './SimpleMenu.token';
@@ -36,7 +36,7 @@ const asStaticOnHover = withDesign({
   Wrapper: withDesign({
     WrapperItem: flow(
       addClasses('hover:static'),
-      removeClassesIf(isMenuOpen)('hover:static'),
+      removeClassesIf(useIsMenuOpen)('hover:static'),
     ),
   }),
 });

@@ -27,7 +27,7 @@ import {
 } from '@bodiless/components';
 
 import asStylableList from './asStylableList';
-import withMenuContext from './MenuContext';
+import withMenuContext from './withMenuContext';
 
 /**
  * Creates a stylable sublist which deletes it's data when the last item is removed.

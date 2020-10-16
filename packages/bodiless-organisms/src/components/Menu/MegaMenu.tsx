@@ -23,7 +23,7 @@ import {
 
 import { asMenuSubList } from './SimpleMenu';
 import asStylableList from './asStylableList';
-import withMenuContext from './MenuContext';
+import withMenuContext from './withMenuContext';
 
 /**
  * Applies a list design (or other HOC) recursively to all submenus.
