@@ -13,10 +13,9 @@
  */
 
 import { flow } from 'lodash';
-import { asToutHorizontal } from '@bodiless/organisms';
 import { withDesign, addClasses } from '@bodiless/fclasses';
 
-import { asToutWithPaddings, asToutDefaultStyle } from '../Tout/token';
+import { asToutWithPaddings, asToutDefaultStyle, asToutHorizontal } from '../Tout/token';
 
 import {
   asSimpleSubMenu,

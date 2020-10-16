@@ -12,25 +12,17 @@
  * limitations under the License.
  */
 
-import { Fragment } from 'react';
-import {
-  withSidecarNodes,
-  ifReadOnly, ifEditable, withOnlyProps,
-} from '@bodiless/core';
+import { withSidecarNodes } from '@bodiless/core';
 import { flowRight, identity } from 'lodash';
 import { replaceWith, withoutProps, withDesign } from '@bodiless/fclasses';
 import type { HOC } from '@bodiless/fclasses';
 import { withChameleonComponentFormControls, applyChameleon, withChameleonContext } from './Chameleon';
 
-const SafeFragment = withOnlyProps('key', 'children')(Fragment);
-const Span = withoutProps('')('span');
+const Div = withoutProps('')('div');
 
 const withBodilessLinkToggle = (asEditableLink: HOC) => flowRight(
   withDesign({
-    _default: flowRight(
-      ifEditable(replaceWith(Span)),
-      ifReadOnly(replaceWith(SafeFragment)),
-    ),
+    _default: replaceWith(Div),
     Link: identity,
   }),
   withChameleonContext('link-toggle'),

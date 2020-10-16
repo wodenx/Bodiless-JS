@@ -23,13 +23,13 @@ import {
 import { asReadOnly } from '@bodiless/core';
 import { withEditorSimple } from '../Editors';
 import withMegaMenuStyles, { withMenuToutStyles } from './MegaMenu.token';
-import { withToutEditors } from '../Tout';
+import { asEditableTout } from '../Tout';
 
 export const withTitleEditor = withEditorSimple('text', 'Menu Item');
 
 // Customize the tout editors so the node keys match
 const withMenuToutEditors = flow(
-  withToutEditors,
+  asEditableTout,
   withDesign({
     Title: flow(
       replaceWith(H2),
