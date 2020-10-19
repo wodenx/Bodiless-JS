@@ -16,6 +16,7 @@ import React, { ComponentType } from 'react';
 import { observable, action, computed } from 'mobx';
 
 type BreadcrumbItemTitle = {
+  // ToDo: Remove it, there is no need to store it here
   data: string | object;
   nodePath: string;
 };
@@ -30,7 +31,7 @@ type BreadcrumbItemSettings = {
   link: BreadcrumbItemLink;
   store: BreadcrumbStoreInterface;
 };
-interface BreadcrumbItemInterface {
+export interface BreadcrumbItemInterface {
   setTitle: (title: BreadcrumbItemTitle) => void,
   setLink: (link: BreadcrumbItemLink) => void,
   getUUID: () => string,
@@ -134,7 +135,7 @@ interface BreadcrumbStoreInterface {
 };
 
 export class BreadcrumbStore implements BreadcrumbStoreInterface {
-  private items: Map<string, BreadcrumbItemInterface> = new Map<string, BreadcrumbItemInterface>();
+  @observable private items: Map<string, BreadcrumbItemInterface> = new Map<string, BreadcrumbItemInterface>();
   @observable private activeItem?: BreadcrumbItemInterface = undefined;
   private pagePath: string;
 
@@ -146,7 +147,7 @@ export class BreadcrumbStore implements BreadcrumbStoreInterface {
     this.activeItem = item;
   }
 
-  setItem(item: BreadcrumbItemInterface) {
+  @action setItem(item: BreadcrumbItemInterface) {
     if (
       item.isSubpathOf(this.pagePath) 
       && (!this.activeItem || this.activeItem.isSubpathOf(item))

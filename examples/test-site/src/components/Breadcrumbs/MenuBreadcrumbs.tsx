@@ -15,14 +15,13 @@
 import React from 'react';
 import { flow } from 'lodash';
 import { asReadOnly, withSidecarNodes} from '@bodiless/core';
-import { asEditable } from '@bodiless/components'; 
+import { asEditable, asBodilessLink } from '@bodiless/components'; 
 import {
   addClasses,
   addProps,
   withDesign,
   replaceWith,
-  Span,
-  Li,
+  A,
 } from '@bodiless/fclasses';
 import {
   asSimpleMenuBase,
@@ -31,45 +30,43 @@ import {
   withMenuBreadcrumbDesign,
   withSimpleMenuDesign,
   asBreadcrumbListItem,
+  withBreadcrumb,
 } from '@bodiless/organisms';
 
-import { withTitleEditor } from '../MegaMenu/MegaMenu';
+import { EditorSimple } from '../Editors';
 
 const STARTING_TRAIL_NODE_KEY = 'startingTrail';
 
 const MenuBreadcrumbs = flow(
   asSimpleMenuBase(),
-  withSimpleMenuDesign({
-    Title: asMenuLink(withTitleEditor),
-  }),
-  asSimpleMenuBreadcrumbs('title$link'),
-  withSimpleMenuDesign({
-    Wrapper: addClasses('inline-flex'),
-  }),
-  withMenuBreadcrumbDesign({
-    Item: flow(
-      addClasses('inline'),
-      asReadOnly,
-    ),
-    Title: addClasses('test-title'),
+  asSimpleMenuBreadcrumbs,
+  withBreadcrumb,
+  withDesign({
+    StartingTrail: addProps({ label: 'starting-trail' }),
     Separator: flow(
       replaceWith(() => <span className="mx-1">{'>'}</span>),
       addClasses('separator'),
     ),
-    FinalTrail: withDesign({
-      Item: addProps({ label: 'final' }),
-    }),
+    BreadcrumbWrapper: addClasses('inline-flex'),
+    BreadcrumbItem: addProps({ label: 'item' }),
+    BreadcrumbLink: flow(
+      replaceWith(
+        flow(
+          withSidecarNodes(
+            asBodilessLink(),
+          ),
+        )(A),
+      ),
+    ),
+    BreadcrumbTitle: flow(
+      replaceWith(EditorSimple),
+    ),
+    FinalTrail: addProps({ label: 'final-trail' }),
   }),
 )('ul');
 
-const withEditableStartingTrail = withMenuBreadcrumbDesign({
-  StartingTrail: withDesign({
-     Item: replaceWith(
-      withSidecarNodes(
-        asEditable(STARTING_TRAIL_NODE_KEY, 'Enter Item'),
-      )(Span),
-    ),
-  }),
+const withEditableStartingTrail = withDesign({
+  StartingTrail: asEditable(STARTING_TRAIL_NODE_KEY, 'Enter Item'),
 });
 
 export {

@@ -13,12 +13,11 @@
  */
 
 import { flow } from 'lodash';
-import { observer } from 'mobx-react-lite';
 
-import { withDesign, addClassesIf } from '@bodiless/fclasses';
-import { withSidecarNodes, WithNodeKeyProps } from '@bodiless/core';
+import { withDesign } from '@bodiless/fclasses';
+import { WithNodeKeyProps } from '@bodiless/core';
 import {
-  asBreadcrumb, useBreadcrumbContext, asBodilessList, asChameleonSubList,
+  asBodilessList, asChameleonSubList,
 } from '@bodiless/components';
 
 import { asMenuSubList } from './SimpleMenu';
@@ -80,21 +79,6 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
 
 // Now we create breaccrumbs
 
-/**
- * HOC which can be applied to a base menu to make it into a site's breadcrumbs
- *
- * @param A base menu component created via asMenuBase()
- *
- * @return A clean (unstyled) site breadcrumb component.
- */
-const asBreadcrumbsClean = withMenuDesign({
-  Item: withSidecarNodes(asBreadcrumb('title$link')),
-  Title: flow(
-    addClassesIf(() => !useBreadcrumbContext().isActive)('hidden'),
-    observer,
-  ),
-});
-
 // @TODO Add a similar HOC for BurgerMenu, something like:
 // const asMegaMenuClean = withMenuDesign({
 //   WrapperItem: asAccodionTitle,
@@ -102,5 +86,5 @@ const asBreadcrumbsClean = withMenuDesign({
 // });
 
 export {
-  asMenuSubList, asMenuBase, withMenuDesign, asBreadcrumbsClean,
+  asMenuSubList, asMenuBase, withMenuDesign,
 };

@@ -17,7 +17,7 @@ import React, {
   useEffect,
   ComponentType,
 } from 'react';
-import { flow, identity } from 'lodash';
+import { flow } from 'lodash';
 
 import {
   withDesign,
@@ -25,16 +25,20 @@ import {
   asComponent,
   withOnlyProps,
   extendDesignable,
-  designable,
   Li,
   Span,
+  Ul,
+  A,
 } from '@bodiless/fclasses';
-import {  withSidecarNodes, WithNodeKeyProps } from '@bodiless/core';
+import { WithNodeKeyProps, useNode } from '@bodiless/core';
 import {
   asBreadcrumb,
-  useIsActiveBreadcrumb,
   withSimpleSubListDesign,
-  useBreadcrumbContext,
+} from '@bodiless/components';
+import {
+  BreadcrumbStoreProvider,
+  BreadcrumbStore,
+  useBreadcrumbStore,
 } from '@bodiless/components';
 
 type Settings = {
@@ -42,33 +46,7 @@ type Settings = {
   depth?: number;
 }
 
-/**
- * HOC which is used to hide a list item with inactive breadcrumb
- * wait until component is mounted, so that children are rendered
- * hide the component if breadcrumb is not active
- * @param Component 
- */
-const withHiddenInactiveBreadcrumbsItem = (Component: ComponentType<any>) => {
-  const WithHiddenInactiveBreadcrumbsItem = (props: any) => {
-    const [ mounted, setMounted ] = useState(false);
-    const isActive = useIsActiveBreadcrumb();
-    useEffect(() => {
-      setMounted(true);
-    }, []);
-    const props$1 = {
-      ...props,
-      className: !isActive || !mounted ? 'hidden' : '',
-    }
-    return !isActive && mounted ? <></> : (<Component {...props$1} />)
-  }
-  WithHiddenInactiveBreadcrumbsItem.displayName = 'WithHiddenInactiveBreadcrumbsItem';
-  return WithHiddenInactiveBreadcrumbsItem;
-}
-
-const asBreadcrumbListItem = (nodeKeys?: WithNodeKeyProps) => withSidecarNodes(
-  asBreadcrumb(nodeKeys),
-  withHiddenInactiveBreadcrumbsItem,
-);
+const asBreadcrumbListItem = asBreadcrumb;
 
 const asBreadcrumbSubList = withDesign({
   Wrapper: withDesign({
@@ -96,125 +74,103 @@ const asBreadcrumbSubList = withDesign({
  * @return A clean (unstyled) site breadcrumb component.
  */
 const asBreadcrumbsClean = ({ nodeKeys = 'link', depth = 1 }: Settings) => flow(
-  /*withDesign({
-    Item: flow(
-      withBreadcrumbSeparator,
-      withDesign({
-        Separator: replaceWith(() => <div id="parentSeparator" />),
-      }),
-      withDesign({
-        Item: flow(
-          withBreadcrumbSeparator,
-          withDesign({
-            Separator: replaceWith(() => <div id="parentSeparator2" />),
-          }),
-        ),
-      }),
-    ),
-  }),*/
   withSimpleSubListDesign(depth)(flow(
-    asBreadcrumbListItem(nodeKeys),
-    asBreadcrumbSubList,
+    asBreadcrumb,
   )),
 );
 
-
-// ToDo: remediate types
-const withBreadcrumbSeparator = (Component: ComponentType<any>) => {
-  const WithBreadcrumbSeparator = (props: any) => {
-    const { components, ...rest } = props;
-    const { Separator } = components;
-    const isActiveBreadcrumb = useIsActiveBreadcrumb();
-    return (
-      <>
-        <Component {...rest} />
-        { isActiveBreadcrumb &&  <Separator /> }
-      </>
-    );
-  }
-  WithBreadcrumbSeparator.displayName = 'WithBreadcrumbSeparator';
-  const extendDesignable$ = extendDesignable(({Separator, ...rest}: any) => rest);
-  return extendDesignable$({ Separator: asComponent('span') })(WithBreadcrumbSeparator);
-}
-
-const TrailItem = (props: any) => {
+const BreadcrumbsClean = (props: any) => {
   const { components } = props;
-  const { Wrapper, Item } = components;
-  return (
-    <Wrapper>
-      <Item />
-    </Wrapper>
-  )
-}
-const DesignableTrailItem = designable({
-  Wrapper: Li,
-  Item: Span,
-})(TrailItem);
-
-
-// ToDo: remediate types
-const withBreadcrumbCustomItems = (Component: ComponentType<any>) => {
-  const WithBreadcrumbCustomItems = (props: any) => {
-    const { components, children, ...rest } = props;
-    const { StartingTrail, Separator, FinalTrail, } = components;
-    const breadcrumbContext = useBreadcrumbContext();
-    console.log('hey from withBreadcrumbCustomItems');
-    console.log(breadcrumbContext.hasActive)
+  const {
+    StartingTrail,
+    Separator,
+    BreadcrumbWrapper,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbTitle,
+    FinalTrail,
+  } = components;
+  const store = useBreadcrumbStore();
+  const breadcrumbTrail = store?.breadcrumbTrail || [];
+  const { node } = useNode();
+  const basePath = node.path;
+  console.log(breadcrumbTrail);
+  // @ts-ignore
+  const items = breadcrumbTrail.map(item => {
+    // ToDo make relative path logic reusable 
+    const linkNodePath = item.getLink().nodePath.replace(`${basePath}$`, '');
+    const titleNodePath = item.getTitle().nodePath.replace(`${basePath}$`, '');
+    console.log('linkNodePath', linkNodePath);
+    console.log('titleNodePath', titleNodePath);
     return (
-      <Component {...rest}>
-        <StartingTrail />
-        { StartingTrail && <Separator /> }
-        {children}
-        { FinalTrail && !breadcrumbContext.hasActive  && <Separator /> }
-        { !breadcrumbContext.hasActive && <FinalTrail /> }
-      </Component>
+      <BreadcrumbItem key={item.getUUID()}>
+        <BreadcrumbLink nodeKey={linkNodePath}>
+          <BreadcrumbTitle nodeKey={titleNodePath} />
+        </BreadcrumbLink>
+      </BreadcrumbItem>
     );
-  }
-  WithBreadcrumbCustomItems.displayName = 'withBreadcrumbCustomItems';
-  const extendDesignable$ = extendDesignable(({
-    StartingTrail, Separator, FinalTrail, ...rest
-  }: any) => rest);
-  return extendDesignable$({
-    StartingTrail: DesignableTrailItem,
-    Separator: asComponent('span'),
-    FinalTrail: DesignableTrailItem,
-  })(WithBreadcrumbCustomItems);
+  // @ts-ignore
+  }).reduce((prev, curr) => [prev, <Separator/>, curr]);
+  return (
+    <BreadcrumbWrapper>
+      { StartingTrail &&
+        <>
+          <BreadcrumbItem>
+            <StartingTrail />
+          </BreadcrumbItem>
+          <Separator />
+        </>
+      }
+      {items}
+      { FinalTrail &&
+        <BreadcrumbItem>
+          <FinalTrail />
+        </BreadcrumbItem>
+      }
+    </BreadcrumbWrapper>
+  );
+};
+
+const designableBreadcrumb = extendDesignable((
+  {
+    StartingTrail,
+    Separator,
+    BreadcrumbWrapper,
+    BreadcrumbLink,
+    BreadcrumbItem,
+    BreadcrumbTitle,
+    FinalTrail,
+    ...rest
+}: any) => rest);
+
+const DesignableBreadcrumbsClean = designableBreadcrumb({
+  StartingTrail: React.Fragment,
+  Separator: asComponent(Span),
+  BreadcrumbWrapper: asComponent(Ul),
+  BreadcrumbItem: asComponent(Li),
+  BreadcrumbLink: asComponent(A),
+  BreadcrumbTitle: asComponent(Span),
+  FinalTrail: React.Fragment,
+})(BreadcrumbsClean);
+
+const withBreadcrumb = (Component: ComponentType<any>) => (props: any) => {
+  const { node } = useNode();
+  const { pagePath } = node;
+  const store = new BreadcrumbStore(pagePath);
+  return (
+    <BreadcrumbStoreProvider store={store}>
+      <Component {...props}/>
+      <DesignableBreadcrumbsClean {...props} />
+    </BreadcrumbStoreProvider>
+  );
 }
-
-/*const withBreadcrumbSeparatorDesign = withSimpleSubListDesign(2)(withDesign({
-  Item: flowRight(
-    withBreadcrumbSeparator
-  ),
-}))*/
-
-const defaultDepth = 3;
-
-const withBreadcrumbDesign = ({ Title: TitleDesign, Item: ItemDesign, Separator: SeparatorDesign }: any) => flow(
-  TitleDesign ? flow(
-    // @ts-ignore ToDo: resolve types
-    withSimpleSubListDesign(defaultDepth)(withDesign({ Title: TitleDesign })),
-    withDesign({ Title: TitleDesign }),
-  ) : identity,
-  ItemDesign ?
-    withSimpleSubListDesign(defaultDepth)(flow(
-      withDesign({ Item: ItemDesign }),
-      withDesign({
-        Wrapper: withDesign({
-          SubListTitleWrapper: ItemDesign,
-        }),
-      }),
-    ),
-  ) : identity,
-);
 
 export default asBreadcrumbsClean;
 export {
-  withHiddenInactiveBreadcrumbsItem,
-  withBreadcrumbSeparator,
   asBreadcrumbListItem,
   asBreadcrumbSubList,
-  withBreadcrumbDesign,
-  withBreadcrumbCustomItems,
+  DesignableBreadcrumbsClean,
+  withBreadcrumb,
 };
 
 

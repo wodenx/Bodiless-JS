@@ -72,33 +72,5 @@ const MegaMenuList = flow(
   asReadOnly,
 )('ul');
 
-// Styles for breadcrumbs.
-const asInline = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: flow(stylable, addClasses('inline pl-5')),
-    List: flow(stylable, addClasses('inline')),
-  }),
-  Item: addClasses('inline pl-5'),
-});
-
-const CustomBreadcrumbItem = flow(
-  withEditorSimple('custom-item', 'Enter item'),
-  addClasses('inline pl-5'),
-  //asCustomBreadcrumbItem,
-)(Li);
-
-const MegaMenuBreadcrumbs = flow(
-  asMegaMenuBase(),
-  withMegaMenuDesign({
-    Title: asMenuLink(withTitleEditor),
-  }),
-  asMegaMenuBreadcrumbs,
-  withMegaMenuDesign(asInline),
-  withDesign({
-    Item: asReadOnly,
-  }),
-  //withCustomBreadcrumbItem(CustomBreadcrumbItem),
-)('ul');
-
 export default MegaMenu;
-export { MegaMenuBreadcrumbs, MegaMenuList };
+export { MegaMenuList };

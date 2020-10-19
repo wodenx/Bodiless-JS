@@ -100,5 +100,5 @@ export * from './components/Menu';
 
 export {
   asBreadcrumbListItem,
-  withBreadcrumbCustomItems,
+  withBreadcrumb,
 } from './components/ListBreadcrumb';

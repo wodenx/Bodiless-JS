@@ -13,6 +13,7 @@
  */
 
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { v4 } from 'uuid';
 import {
   BreadcrumbItem,
@@ -22,7 +23,7 @@ import {
 } from '../src/Breadcrumb/BreadcrumbStore';
 import { useContext } from 'react';
 import { mount } from 'enzyme';
-import { wrap } from 'lodash';
+import { observer } from 'mobx-react-lite';
 
 describe('BreadcrumbItem', () => {
   describe('isSubpathOf', () => {
@@ -386,9 +387,8 @@ describe('withBreadcrumbStore', () => {
     });
     store.setItem(homeItem);
     store.setItem(productsItem);
-    store.setItem(productAItem);
     store.setItem(articlesItem);
-    const BreadcrumbTrailComponent = (props: any) => {
+    const BreadcrumbTrailComponent = observer((props: any) => {
       const store$1 = useBreadcrumbStore();
       const breadcrumbTrail = store$1?.breadcrumbTrail || [];
       const items = breadcrumbTrail.map(item => <li key={item.getUUID()}>
@@ -396,7 +396,7 @@ describe('withBreadcrumbStore', () => {
       </li>
       );
       return <ul>{items}</ul>;
-    };
+    });
     const wrapper = mount(
       <BreadcrumbStoreProvider store={store}>
         <BreadcrumbTrailComponent />
@@ -406,6 +406,7 @@ describe('withBreadcrumbStore', () => {
       ...productsItem.getTitle(),
       data: 'ProductsUpdated'
     });
+    store.setItem(productAItem);
     expect(wrapper.html()).toMatchSnapshot();
   });
 });

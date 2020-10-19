@@ -13,139 +13,54 @@
  */
 
 import React, {
-  createContext, useContext, ComponentType, useEffect, useRef,
+  createContext, useContext, ComponentType, useRef,
 } from 'react';
-import { observable, action } from 'mobx';
 import {
-  useNode, WithNodeKeyProps, withNode, withNodeKey, ifToggledOn, ifToggledOff,
+  useNode,
 } from '@bodiless/core';
-import { flow } from 'lodash';
-import { observer } from 'mobx-react-lite';
-
-const DEFAULT_URL_BASE = 'http://host';
+import { v4 } from 'uuid';
+import {
+  useBreadcrumbStore,
+  BreadcrumbItem,
+  BreadcrumbItemInterface,
+} from './Breadcrumb/BreadcrumbStore';
 
 type LinkData = {
   href: string,
 };
 
-type BreadcrumbContextInterface = {
-  readonly url: URL;
-  readonly parent?: BreadcrumbContextInterface;
-  isSubpathOf: (parent?: BreadcrumbContextInterface) => boolean;
-  isAncestorOf: (descendant?: BreadcrumbContextInterface) => boolean;
-  spawn: (href: string) => BreadcrumbContextInterface;
-  readonly isActive: boolean;
-  readonly hasActive: boolean;
-  activate: () => void;
-};
-
-type BreadcrumbStoreInterface = {
-  setActiveItem: (item: BreadcrumbContextInterface) => void;
-  isActive: (item: BreadcrumbContextInterface) => boolean;
-  hasActive: () => boolean;
-};
-
-class BreadcrumbStore implements BreadcrumbStoreInterface {
-  @observable activeItem: BreadcrumbContextInterface | undefined = undefined;
-
-  @action setActiveItem(item: BreadcrumbContextInterface) {
-    if (this.activeItem && item.isAncestorOf(this.activeItem)) {
-      return;
-    }
-    console.log('BreadcrumbStore changing activeItem from', this.activeItem?.url.pathname, 'into', item.url.pathname)
-    this.activeItem = item;
-  }
-
-  isActive(item: BreadcrumbContextInterface) {
-    return item.isAncestorOf(this.activeItem);
-  }
-
-  hasActive() {
-    return this.activeItem === undefined;
-  }
-}
-
-const defaultStore = new BreadcrumbStore();
-
-export class BreadcrumbContext implements BreadcrumbContextInterface {
-  protected store: BreadcrumbStoreInterface = defaultStore;
-
-  readonly url: URL;
-
-  readonly parent: BreadcrumbContextInterface|undefined;
-
-  constructor(href: string = '/', parent?: BreadcrumbContextInterface) {
-    const base = typeof window === 'undefined'
-      ? DEFAULT_URL_BASE
-      : `${window.location.protocol}//${window.location.host}`;
-    this.url = new URL(href, base);
-    this.parent = parent;
-  }
-
-  isSubpathOf(parent?: BreadcrumbContextInterface) {
-    if (!parent || parent.url.host !== this.url.host) return false;
-    return new RegExp(`^${parent.url.pathname}`).test(this.url.pathname);
-  }
-
-  isAncestorOf(descendant?: BreadcrumbContextInterface) {
-    if (!descendant || descendant.url.host !== this.url.host) return false;
-    let result = false;
-    for (let current: BreadcrumbContextInterface|undefined = descendant;
-      current;
-      current = current.parent
-    ) {
-      //console.log('isAncestorOf', 'current', current.url.pathname, 'this', this?.url.pathname, current === this)
-      if (current === this) { result = true; break; };
-    }
-    //console.log('isAncestorOf', 'this', this.url.pathname, 'descendant', descendant?.url.pathname, result)
-    return result;
-  }
-
-  spawn(path: string): BreadcrumbContextInterface {
-    return new BreadcrumbContext(path, this);
-  }
-
-  get isActive(): boolean {
-    return this.store.isActive(this);
-  }
-
-  get hasActive(): boolean {
-    return this.store.hasActive();
-  }
-
-  activate() {
-    this.store.setActiveItem(this);
-  }
-}
-
-const breadcrumbContext = createContext<BreadcrumbContextInterface>(new BreadcrumbContext());
+const breadcrumbContext = createContext<BreadcrumbItemInterface | undefined>(undefined);
 
 export const useBreadcrumbContext = () => useContext(breadcrumbContext);
 export const BreadcrumbContextProvider = breadcrumbContext.Provider;
 
 const withBreadcrumbContext = <P extends object>(Component: ComponentType<P>) => {
-  const WithBreadcrumbContext = observer((props: P) => {
+  const WithBreadcrumbContext = (props: P) => {
     const { node } = useNode<LinkData>();
-    console.log('WithBreadcrumbContext reading data from', node.path.join('$'))
+    const contextUuidRef = useRef(v4());
+    const store = useBreadcrumbStore();
+    if (store === undefined) return <Component {...props} />;
     const current = useBreadcrumbContext();
-    const nextRef = useRef<BreadcrumbContextInterface>();
-    if (nextRef.current === undefined) {
-      // @TODO: What should we do if link has no href?
-      nextRef.current = current.spawn(node.data.href || '/');
-    }
-    const next = nextRef.current;
-    const page = new BreadcrumbContext(node.pagePath);
-    useEffect(() => {
-      if (page.isSubpathOf(next)) {
-        next.activate();
-      }
-    }, [node.data.href]);
+    const item = new BreadcrumbItem({
+      uuid: contextUuidRef.current,
+      title: {
+        data: node.getChildData('title$text'),
+        nodePath: [...node.path, 'title$text'].join('$'),
+      },
+      link: {
+        data: node.getChildData<LinkData>('title$link').href,
+        nodePath: [...node.path, 'title$link'].join('$'),
+      },
+      parent: current,
+      store,
+    });
+    store.setItem(item);
     return (
-      <BreadcrumbContextProvider value={next}>
+      <BreadcrumbContextProvider value={item}>
         <Component {...props} />
       </BreadcrumbContextProvider>
     );
-  });
+  };
   return WithBreadcrumbContext;
 };
 
@@ -162,16 +77,6 @@ const withBreadcrumbContext = <P extends object>(Component: ComponentType<P>) =>
  *
  * @return An HOC which defines the wrapped component as a breadcrumb.
  */
-const asBreadcrumb = (nodeKeys?: WithNodeKeyProps) => flow(
-  withBreadcrumbContext,
-  withNode,
-  withNodeKey(nodeKeys),
-);
-
-export const useIsActiveBreadcrumb = () => useBreadcrumbContext().isActive;
-
-export const ifActiveBreadcrumb = ifToggledOn(useIsActiveBreadcrumb);
-
-export const ifNotActiveBreadcrumb = ifToggledOff(useIsActiveBreadcrumb);
+const asBreadcrumb = withBreadcrumbContext;
 
 export default asBreadcrumb;

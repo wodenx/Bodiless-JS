@@ -31,9 +31,6 @@ import asStylableList from './asStylableList';
 
 import {
   asBreadcrumbListItem,
-  asBreadcrumbSubList,
-  withBreadcrumbCustomItems,
-  withBreadcrumbSeparator,
 } from '../ListBreadcrumb';
 
 /**
@@ -91,27 +88,10 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
  *
  * @return A clean (unstyled) site breadcrumb component.
  */
-const asBreadcrumbsClean = (nodeKeys?: WithNodeKeyProps) => flow(
+const asBreadcrumbsClean = flow(
   withMenuDesign({
-    Item: flow(
-      asBreadcrumbListItem(nodeKeys),
-      withDesign({
-        SubMenu: asBreadcrumbSubList,
-      }),
-    ),
+    Item: asBreadcrumbListItem,
   }),
-  withDesign({
-    Wrapper: withBreadcrumbCustomItems,
-  }),
-  withMenuDesign({
-    Item: withDesign({
-      SubMenu: withDesign ({
-        Wrapper: withDesign({
-          SubListTitleWrapper: withBreadcrumbSeparator,
-        }),
-      })
-    })
-  })
 );
 
 const withBreadcrumbDesign = ({

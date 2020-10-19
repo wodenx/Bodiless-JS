@@ -49,12 +49,7 @@ import {
   ifViewportIs,
   ifViewportIsNot,
 } from './withResponsiveToggle';
-import asBreadcrumb, {
-  ifActiveBreadcrumb,
-  ifNotActiveBreadcrumb,
-  useBreadcrumbContext,
-  useIsActiveBreadcrumb,
-} from './asBreadcrumb';
+import asBreadcrumb, { useBreadcrumbContext } from './asBreadcrumb';
 import withBodilessLinkToggle from './withBodilessLinkToggle';
 
 export {
@@ -102,13 +97,12 @@ export {
   withMetaForm,
   withMetaSnippet,
   asBreadcrumb,
-  ifActiveBreadcrumb,
-  ifNotActiveBreadcrumb,
   useBreadcrumbContext,
-  useIsActiveBreadcrumb,
 };
 
 export * from './Chameleon/index';
 export * from './List';
+
+export * from './Breadcrumb/BreadcrumbStore';
 
 export type { MetaFormFieldType };
