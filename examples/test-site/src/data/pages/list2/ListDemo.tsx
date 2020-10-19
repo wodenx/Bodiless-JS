@@ -14,7 +14,7 @@ import { withItemMargin, withSimpleTitle } from './SimpleListDemo';
  */
 export const asToggledSubList = flow(
   asSubList,
-  withDeleteNodeOnUnwrap(),
+  withDeleteNodeOnUnwrap('sublist'),
 );
 
 const ListDemo = flow(

@@ -17,16 +17,16 @@ import { flow } from 'lodash';
 
 import { addClasses } from '@bodiless/fclasses';
 import {
-  asMenuLink, asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenuTopNav,
+  asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenuTopNav,
 } from '@bodiless/organisms';
 
-import { withTitleEditor } from './MegaMenu';
+import { asMenuTitle } from './MegaMenu';
 import withSimpleMenuStyles from './SimpleMenu.token';
 
 export const SimpleMenu = flow(
   asSimpleMenuBase(),
   withSimpleMenuDesign({
-    Title: asMenuLink(withTitleEditor),
+    Title: asMenuTitle,
   }),
   withSimpleMenuStyles,
   asSimpleMenuTopNav,
@@ -35,7 +35,7 @@ export const SimpleMenu = flow(
 export const SimpleMenuList = flow(
   asSimpleMenuBase(),
   withSimpleMenuDesign({
-    Title: asMenuLink(withTitleEditor),
+    Title: asMenuTitle,
   }),
   withSimpleMenuDesign({
     Item: addClasses('pl-5'),

@@ -44,6 +44,7 @@ const useSwapButtonMenuOption = (formTitle: string = 'Choose a component') => {
       ComponentFormRadio,
       ComponentFormTitle,
     } = useMenuOptionUI();
+
     const radios = Object.getOwnPropertyNames(selectableComponents).map(name => (
       <ComponentFormLabel id={`bl-component-form-chameleon-radio-${name}`} key={name}>
         <ComponentFormRadio value={name} />
@@ -61,7 +62,11 @@ const useSwapButtonMenuOption = (formTitle: string = 'Choose a component') => {
     );
   };
   const render = useContextMenuForm({
-    initialValues: { component: activeComponent === DEFAULT_KEY ? null : activeComponent },
+    initialValues: {
+      component: activeComponent === DEFAULT_KEY
+        ? Object.keys(selectableComponents)[0]
+        : activeComponent,
+    },
     submitValues: (d: ChameleonData) => setActiveComponent(d.component || null),
     renderForm,
   });

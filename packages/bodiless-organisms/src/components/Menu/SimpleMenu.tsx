@@ -27,6 +27,7 @@ import {
 } from '@bodiless/components';
 
 import asStylableList from './asStylableList';
+import withMenuContext from './withMenuContext';
 
 /**
  * Creates a stylable sublist which deletes it's data when the last item is removed.
@@ -74,6 +75,7 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
   asStylableList,
   withSubLists(1)({ SubMenu: asMenuSubList }),
+  withMenuContext,
 );
 
 /**
