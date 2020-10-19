@@ -36,8 +36,6 @@ const SimpleMenuList = flow(
   asSimpleMenuBase(),
   withSimpleMenuDesign({
     Title: asMenuLink(withTitleEditor),
-  }),
-  withSimpleMenuDesign({
     Item: addClasses('pl-5'),
   }),
 )('ul') as ComponentType<any>;

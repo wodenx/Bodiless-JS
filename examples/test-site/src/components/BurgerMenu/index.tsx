@@ -12,17 +12,15 @@
  * limitations under the License.
  */
 
-import { withDesign } from '@bodiless/fclasses';
+import BurgerMenu from './BurgerMenu';
+import SimpleBurgerMenu, { SimpleBurgerMenuList, SimpleBurgerMenuAccordion } from './SimpleBurgerMenu';
+import MegaBurgerMenu, { MegaBurgerMenuList } from './MegaBurgerMenu';
 
-import { withSimpleMenuDesign } from '../Menu';
-import { asAccordionWrapper, asAccodionTitle, asAccordionBody } from '../Accordion';
-
-const asSimpleBurgerMenu = withSimpleMenuDesign({
-  Wrapper: withDesign({
-    List: asAccordionBody,
-    Title: asAccodionTitle,
-    WrapperItem: asAccordionWrapper,
-  }),
-});
-
-export default asSimpleBurgerMenu;
+export {
+  BurgerMenu,
+  SimpleBurgerMenu,
+  SimpleBurgerMenuList,
+  SimpleBurgerMenuAccordion,
+  MegaBurgerMenu,
+  MegaBurgerMenuList,
+};

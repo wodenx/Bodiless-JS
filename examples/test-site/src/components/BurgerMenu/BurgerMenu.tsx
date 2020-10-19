@@ -12,17 +12,18 @@
  * limitations under the License.
  */
 
-import { withDesign } from '@bodiless/fclasses';
+import { flow } from 'lodash';
+import { withDesign, replaceWith } from '@bodiless/fclasses';
+import { SimpleBurgerMenuClean } from '@bodiless/organisms';
 
-import { withSimpleMenuDesign } from '../Menu';
-import { asAccordionWrapper, asAccodionTitle, asAccordionBody } from '../Accordion';
+import Logo from '../Layout/logo';
+import withBurgerMenuStyles from './BurgerMenu.token';
 
-const asSimpleBurgerMenu = withSimpleMenuDesign({
-  Wrapper: withDesign({
-    List: asAccordionBody,
-    Title: asAccodionTitle,
-    WrapperItem: asAccordionWrapper,
+const BurgerMenu = flow(
+  withDesign({
+    Header: replaceWith(Logo),
   }),
-});
+  withBurgerMenuStyles,
+)(SimpleBurgerMenuClean);
 
-export default asSimpleBurgerMenu;
+export default BurgerMenu;

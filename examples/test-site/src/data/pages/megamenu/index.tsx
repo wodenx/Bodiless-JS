@@ -27,8 +27,12 @@ import {
 import Layout from '../../../components/Layout';
 import MegaMenu, { MegaMenuList } from '../../../components/MegaMenu/MegaMenu';
 import SimpleMenu, { SimpleMenuList } from '../../../components/MegaMenu/SimpleMenu';
-import BurgerMenu, { BurgerMenuList, BurgerMenuAccordion } from '../../../components/MegaMenu/BurgerMenu';
 import { asHeader2, asHeader3, asHeader1 } from '../../../components/Elements.token';
+
+import {
+  SimpleBurgerMenu, SimpleBurgerMenuList, SimpleBurgerMenuAccordion,
+  MegaBurgerMenu, MegaBurgerMenuList,
+} from '../../../components/BurgerMenu';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -66,17 +70,26 @@ export default (props: any) => (
         as a simple list of links which render the same data as the top nav.
       </Description>
 
-      <H2>Simple Burger Menu</H2>
-      <BurgerMenu nodeKey="burger-menu" />
+      <H2>Burger Simple Menu</H2>
+      <SimpleBurgerMenu nodeKey="burger-menu" />
       <Description>
         This is a simple Burger Menu...
       </Description>
 
       <H3>Burger Menu as Accordion</H3>
-      <BurgerMenuAccordion className="w-1/3 mb-3" nodeKey="burger-menu" />
+      <SimpleBurgerMenuAccordion className="w-1/3 mb-3" nodeKey="burger-menu" />
 
       <H3>Burger Menu as List</H3>
-      <BurgerMenuList nodeKey="burger-menu" />
+      <SimpleBurgerMenuList nodeKey="burger-menu" />
+
+      <H2>Burger Mega Menu</H2>
+      <MegaBurgerMenu nodeKey="burger-mega-menu" />
+      <Description>
+        This is a Burger Mega Menu...
+      </Description>
+
+      <H3>Burger Mega Menu as List</H3>
+      <MegaBurgerMenuList nodeKey="burger-mega-menu" />
 
       <H2>Simple Menu</H2>
       <SimpleMenu nodeKey="list2" />

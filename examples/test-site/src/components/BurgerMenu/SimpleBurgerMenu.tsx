@@ -15,58 +15,56 @@
 import { flow } from 'lodash';
 import { withDesign, replaceWith, addClasses } from '@bodiless/fclasses';
 import { asStatic } from '@bodiless/core';
-import {
-  asMenuLink, asSimpleMenuBase, withSimpleMenuDesign,
-  asSimpleBurgerMenu, SimpleBurgerMenuClean,
-} from '@bodiless/organisms';
 import { asEditable } from '@bodiless/components';
+import {
+  asMenuLink, asSimpleMenuBase, withSimpleMenuDesign, asSimpleBurgerMenu,
+} from '@bodiless/organisms';
 
-// import { withTitleEditor } from './MegaMenu';
-import Logo from '../Layout/logo';
-import withBurgerMenuStyles, { asBurgerMenu, withBurgerMenuDebugStyles } from './BurgerMenu.token';
+import BurgerMenu from './BurgerMenu';
+import withSimpleBurgerMenuStyles, { withBurgerMenuDebugStyles } from './SimpleBurgerMenu.token';
 
 const withTitleEditor = asEditable('text', 'Menu Item');
+const BurgerMenuTitle = asMenuLink(withTitleEditor);
 
 const BurgerMenuBody = flow(
   asSimpleMenuBase(),
   asSimpleBurgerMenu,
   withSimpleMenuDesign({
-    Title: asMenuLink(withTitleEditor),
+    Title: BurgerMenuTitle,
   }),
-  withBurgerMenuStyles,
+  withSimpleBurgerMenuStyles,
   asStatic,
 )('ul');
 
-const BurgerMenu = flow(
+const SimpleBurgerMenu = flow(
   withDesign({
-    Header: replaceWith(Logo),
     Body: replaceWith(BurgerMenuBody),
   }),
-  asBurgerMenu,
-)(SimpleBurgerMenuClean);
+)(BurgerMenu);
 
-const BurgerMenuList = flow(
+const SimpleBurgerMenuList = flow(
   asSimpleMenuBase(),
   withSimpleMenuDesign({
-    Title: asMenuLink(withTitleEditor),
+    Title: BurgerMenuTitle,
     Item: addClasses('pl-5'),
   }),
   withBurgerMenuDebugStyles,
 )('ul');
 
-const BurgerMenuAccordion = flow(
+const SimpleBurgerMenuAccordion = flow(
   asSimpleMenuBase(),
   asSimpleBurgerMenu,
   withSimpleMenuDesign({
-    Title: asMenuLink(withTitleEditor),
+    Title: BurgerMenuTitle,
     Item: addClasses('pl-5'),
   }),
   withBurgerMenuDebugStyles,
   asStatic,
 )('ul');
 
-export default BurgerMenu;
+export default SimpleBurgerMenu;
 export {
-  BurgerMenuList,
-  BurgerMenuAccordion,
+  BurgerMenuTitle,
+  SimpleBurgerMenuList,
+  SimpleBurgerMenuAccordion,
 };

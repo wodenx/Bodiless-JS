@@ -14,9 +14,11 @@
 
 import BurgerMenuClean from './BurgerMenuClean';
 import asSimpleBurgerMenu from './asSimpleBurgerMenu';
+import asMegaBurgerMenu from './asMegaBurgerMenu';
 
 export {
   // @todo Rename once original BurgerMenuClean is cleared
   BurgerMenuClean as SimpleBurgerMenuClean,
   asSimpleBurgerMenu,
+  asMegaBurgerMenu,
 };

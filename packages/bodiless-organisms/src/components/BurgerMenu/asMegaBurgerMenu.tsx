@@ -14,10 +14,10 @@
 
 import { withDesign } from '@bodiless/fclasses';
 
-import { withSimpleMenuDesign } from '../Menu';
+import { withMegaMenuDesign } from '../Menu';
 import { asAccordionWrapper, asAccodionTitle, asAccordionBody } from '../Accordion';
 
-const asSimpleBurgerMenu = withSimpleMenuDesign({
+const asMegaBurgerMenu = withMegaMenuDesign({
   Wrapper: withDesign({
     List: asAccordionBody,
     Title: asAccodionTitle,
@@ -25,4 +25,4 @@ const asSimpleBurgerMenu = withSimpleMenuDesign({
   }),
 });
 
-export default asSimpleBurgerMenu;
+export default asMegaBurgerMenu;
