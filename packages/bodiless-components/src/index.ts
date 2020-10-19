@@ -49,7 +49,8 @@ import {
   ifViewportIs,
   ifViewportIsNot,
 } from './withResponsiveToggle';
-import asBreadcrumb, { useBreadcrumbContext } from './asBreadcrumb';
+import asBreadcrumb, { useBreadcrumbContext } from './Breadcrumb/asBreadcrumb';
+import type { BreadcrumbSettings } from './Breadcrumb/asBreadcrumb';
 import withBodilessLinkToggle from './withBodilessLinkToggle';
 
 export {
@@ -106,3 +107,4 @@ export * from './List';
 export * from './Breadcrumb/BreadcrumbStore';
 
 export type { MetaFormFieldType };
+export type { BreadcrumbSettings };

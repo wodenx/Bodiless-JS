@@ -12,12 +12,15 @@
  * limitations under the License.
  */
 
-import { flow, identity } from 'lodash';
+import React from 'react';
+import { flow } from 'lodash';
 
 import {
   withDesign,
   Design,
   stylable,
+  replaceWith,
+  withOnlyProps,
 } from '@bodiless/fclasses';
 import {
   WithNodeKeyProps,
@@ -26,11 +29,13 @@ import {
   asBodilessList,
   withSubListDesign, withSubLists, asSubList, withDeleteNodeOnUnwrap,
 } from '@bodiless/components';
+import type { BreadcrumbSettings }  from '@bodiless/components'
 
 import asStylableList from './asStylableList';
 
 import {
   asBreadcrumbListItem,
+  withBreadcrumbProvider,
 } from '../ListBreadcrumb';
 
 /**
@@ -88,56 +93,15 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
  *
  * @return A clean (unstyled) site breadcrumb component.
  */
-const asBreadcrumbsClean = flow(
+const asBreadcrumbsClean = (settings: BreadcrumbSettings) => flow(
   withMenuDesign({
-    Item: asBreadcrumbListItem,
+    //Wrapper: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+    Item: flow(
+      //replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+      asBreadcrumbListItem(settings),
+    ),
   }),
-);
-
-const withBreadcrumbDesign = ({
-  StartingTrail: StartingTrailDesign,
-  Title: TitleDesign,
-  Item: ItemDesign,
-  Separator: SeparatorDesign,
-  FinalTrail: FinalTrailDesign,
-}: any) => flow(
-  TitleDesign ? withMenuDesign({ Title: TitleDesign }) : identity,
-  ItemDesign ? withMenuDesign({ Item: ItemDesign }) : identity,
-  ItemDesign ? withMenuDesign({
-    Item: withDesign({
-      SubMenu: withDesign ({
-        Wrapper: withDesign({
-          SubListTitleWrapper: ItemDesign,
-        }),
-      })
-    })
-  }) : identity,
-  StartingTrailDesign ? withDesign({
-    Wrapper: withDesign({
-      StartingTrail: StartingTrailDesign,
-    }),
-  }) : identity,
-  FinalTrailDesign ? withDesign({
-    Wrapper: withDesign({
-      FinalTrail: FinalTrailDesign,
-    }),
-  }) : identity,
-  SeparatorDesign ? withDesign({
-    Wrapper: withDesign({
-      Separator: SeparatorDesign,
-    }),
-  }) : identity,
-  SeparatorDesign ? withMenuDesign({
-    Item: withDesign({
-      SubMenu: withDesign ({
-        Wrapper: withDesign({
-          SubListTitleWrapper: withDesign({
-            Separator: SeparatorDesign,
-          }),
-        }),
-      })
-    })
-  }) : identity,
+  withBreadcrumbProvider,
 );
 
 // @TODO Add a similar HOC for BurgerMenu, something like:
@@ -148,5 +112,4 @@ const withBreadcrumbDesign = ({
 
 export {
   asMenuBase, asBreadcrumbsClean, withMenuDesign, asMenuSubList,
-  withBreadcrumbDesign,
 };

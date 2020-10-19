@@ -23,7 +23,7 @@ import {
   useBreadcrumbStore,
   BreadcrumbItem,
   BreadcrumbItemInterface,
-} from './Breadcrumb/BreadcrumbStore';
+} from './BreadcrumbStore';
 
 type LinkData = {
   href: string,
@@ -34,34 +34,9 @@ const breadcrumbContext = createContext<BreadcrumbItemInterface | undefined>(und
 export const useBreadcrumbContext = () => useContext(breadcrumbContext);
 export const BreadcrumbContextProvider = breadcrumbContext.Provider;
 
-const withBreadcrumbContext = <P extends object>(Component: ComponentType<P>) => {
-  const WithBreadcrumbContext = (props: P) => {
-    const { node } = useNode<LinkData>();
-    const contextUuidRef = useRef(v4());
-    const store = useBreadcrumbStore();
-    if (store === undefined) return <Component {...props} />;
-    const current = useBreadcrumbContext();
-    const item = new BreadcrumbItem({
-      uuid: contextUuidRef.current,
-      title: {
-        data: node.getChildData('title$text'),
-        nodePath: [...node.path, 'title$text'].join('$'),
-      },
-      link: {
-        data: node.getChildData<LinkData>('title$link').href,
-        nodePath: [...node.path, 'title$link'].join('$'),
-      },
-      parent: current,
-      store,
-    });
-    store.setItem(item);
-    return (
-      <BreadcrumbContextProvider value={item}>
-        <Component {...props} />
-      </BreadcrumbContextProvider>
-    );
-  };
-  return WithBreadcrumbContext;
+export type BreadcrumbSettings = {
+  linkNodeKey: string,
+  titleNodeKey: string,
 };
 
 /**
@@ -77,6 +52,39 @@ const withBreadcrumbContext = <P extends object>(Component: ComponentType<P>) =>
  *
  * @return An HOC which defines the wrapped component as a breadcrumb.
  */
-const asBreadcrumb = withBreadcrumbContext;
+const asBreadcrumb = ({
+  linkNodeKey,
+  titleNodeKey,
+}: BreadcrumbSettings) => 
+  <P extends object>(Component: ComponentType<P>) => {
+  const AsBreadcrumb = (props: P) => {
+    const { node } = useNode<LinkData>();
+    const contextUuidRef = useRef(v4());
+    const store = useBreadcrumbStore();
+    if (store === undefined) return <Component {...props} />;
+    const current = useBreadcrumbContext();
+    const item = new BreadcrumbItem({
+      uuid: contextUuidRef.current,
+      title: {
+        data: node.getChildData(titleNodeKey),
+        nodePath: [...node.path, titleNodeKey].join('$'),
+      },
+      link: {
+        data: node.getChildData<LinkData>(linkNodeKey).href,
+        nodePath: [...node.path, linkNodeKey].join('$'),
+      },
+      parent: current,
+      store,
+    });
+    store.setItem(item);
+    return (
+      <BreadcrumbContextProvider value={item}>
+        <Component {...props} />
+      </BreadcrumbContextProvider>
+    );
+  };
+  AsBreadcrumb.displayName = 'AsBreadcrumb';
+  return AsBreadcrumb;
+};
 
 export default asBreadcrumb;

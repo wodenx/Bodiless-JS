@@ -16,37 +16,58 @@ import React from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  addClasses, H1 as H1$, H2 as H2$, H3 as H3$, Ul, Div, withDesign,
-  A,
-  replaceWith, addProps,
+  addClasses, H1 as H1$, H2 as H2$, withDesign, replaceWith,
 } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 
-import Layout from '../../../components/Layout';
+import { default as BaseLayout } from '../../../components/Layout';
 import { SimpleMenu } from '../../../components/MegaMenu/SimpleMenu';
 import {
   MenuBreadcrumbs,
   withEditableStartingTrail,
+  withStartingTrailIcon,
+  withNonLinkableItems,
+  withEditableFinalTrail,
+  withBoldedFinalTrail,
+  withVerticalBarSeparator,
+  withSlashSeparator,
 } from '../../../components/Breadcrumbs/MenuBreadcrumbs';
-import { asHeader2, asHeader3, asHeader1 } from '../../../components/Elements.token';
+import { asHeader2, asHeader1 } from '../../../components/Elements.token';
 
-const TestBreadcrumb = withEditableStartingTrail(MenuBreadcrumbs);
+const BreadcrumbWithEditableStartingTrail = withEditableStartingTrail(MenuBreadcrumbs);
+const BreadcrumbWithStartingTrailIcon = withStartingTrailIcon(MenuBreadcrumbs);
+const BreadcrumbWithNonLinkableItems = withNonLinkableItems(MenuBreadcrumbs);
+const BreadcrumbWithBoldableFinalItem = flow(
+  withEditableFinalTrail,
+  withBoldedFinalTrail,
+)(MenuBreadcrumbs);
+const BreadcrumbWithVerticalBarSeparator = withVerticalBarSeparator(MenuBreadcrumbs);
+const BreadcrumbWithSlashSeparator = withSlashSeparator(MenuBreadcrumbs);
 
 const H1 = flow(addClasses('pt-5'), asHeader1)(H1$);
 const H2 = flow(addClasses('pt-5'), asHeader2)(H2$);
-const H3 = asHeader3(H3$);
-const Description = addClasses('text-sm mb-2 italic')(Div);
+
+const Layout = withDesign({
+  Title: replaceWith((props: any) => <H1 {...props}>Breadcrumb Demo</H1>),
+})(BaseLayout);
 
 export default (props: any) => (
   <Page {...props}>
-    {/*
-      */}
     <Layout>
-      <H1>Breadcrumb Demo</H1>
       <H2>Simple Menu</H2>
       <SimpleMenu nodeKey="list2" />
-      <H2>Breadcrumbs</H2>
-      <TestBreadcrumb nodeKey="list2" className="my-2" />
+      <H2>Breadcrumbs with editable starting trail</H2>
+      <BreadcrumbWithEditableStartingTrail nodeKey="list2" className="my-2" />
+      <H2>Breadcrumbs with starting trail icon</H2>
+      <BreadcrumbWithStartingTrailIcon nodeKey="list2" className="my-2" />
+      <H2>Breadcrumbs with non-linkable items</H2>
+      <BreadcrumbWithNonLinkableItems nodeKey="list2" className="my-2" />
+      <H2>Breadcrumbs with boldable final trail item</H2>
+      <BreadcrumbWithBoldableFinalItem nodeKey="list2" className="my-2" />
+      <H2>Breadcrumbs with vertical bar separator</H2>
+      <BreadcrumbWithVerticalBarSeparator nodeKey="list2" className="my-2" />
+      <H2>Breadcrumbs with slash separator</H2>
+      <BreadcrumbWithSlashSeparator nodeKey="list2" className="my-2" />
     </Layout>
   </Page>
 );

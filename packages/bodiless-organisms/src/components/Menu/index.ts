@@ -21,7 +21,6 @@ import {
   asMenuBase as asSimpleMenuBase,
   withMenuDesign as withSimpleMenuDesign,
   asBreadcrumbsClean as asSimpleMenuBreadcrumbs,
-  withBreadcrumbDesign as withMenuBreadcrumbDesign,
 } from './SimpleMenu';
 
 import asSimpleMenuTopNav from './SimpleMenu.token';
@@ -41,7 +40,6 @@ export {
   asSimpleMenuBase,
   withSimpleMenuDesign,
   asSimpleMenuBreadcrumbs,
-  withMenuBreadcrumbDesign,
 };
 
 export {

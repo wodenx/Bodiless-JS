@@ -12,75 +12,52 @@
  * limitations under the License.
  */
 
-import React, {
-  useState,
-  useEffect,
-  ComponentType,
-} from 'react';
+import React, { ComponentType, HTMLProps } from 'react';
 import { flow } from 'lodash';
 
+import { useNode } from '@bodiless/core';
+import type { WithNodeKeys } from '@bodiless/core';
 import {
-  withDesign,
-  replaceWith,
   asComponent,
-  withOnlyProps,
   extendDesignable,
   Li,
   Span,
   Ul,
   A,
+  DesignableComponents,
 } from '@bodiless/fclasses';
-import { WithNodeKeyProps, useNode } from '@bodiless/core';
+import type { Design, DesignableComponentsProps } from '@bodiless/fclasses';
 import {
   asBreadcrumb,
   withSimpleSubListDesign,
-} from '@bodiless/components';
-import {
   BreadcrumbStoreProvider,
   BreadcrumbStore,
   useBreadcrumbStore,
+  BreadcrumbItemInterface,
 } from '@bodiless/components';
+import type { BreadcrumbSettings as BaseBreadcrumbSettings } from '@bodiless/components'
+import { observer } from 'mobx-react-lite';
 
-type Settings = {
-  nodeKeys?: WithNodeKeyProps;
+type BreadcrumbSettings = BaseBreadcrumbSettings & {
   depth?: number;
-}
+};
+
+type BreadCrumbComponents = {
+  StartingTrail: ComponentType<HTMLProps<HTMLSpanElement>> | null,
+  Separator: ComponentType<HTMLProps<HTMLSpanElement>>,
+  BreadcrumbWrapper: ComponentType<HTMLProps<HTMLUListElement>>,
+  BreadcrumbItem: ComponentType<HTMLProps<HTMLLIElement>>,
+  BreadcrumbLink: ComponentType<HTMLProps<HTMLAnchorElement> & WithNodeKeys>,
+  BreadcrumbTitle: ComponentType<HTMLProps<HTMLSpanElement> & WithNodeKeys>,
+  FinalTrail: ComponentType<HTMLProps<HTMLSpanElement>> | null,
+};
+
+type BreadcrumbProps = DesignableComponentsProps<BreadCrumbComponents>;
 
 const asBreadcrumbListItem = asBreadcrumb;
 
-const asBreadcrumbSubList = withDesign({
-  Wrapper: withDesign({
-    List: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
-    WrapperItem: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
-    SubListTitleWrapper: replaceWith((props: any) => {
-      const [ mounted, setMounted ] = useState(false);
-      useEffect(() => {
-        setMounted(true);
-      }, []);
-      const props$1 = {
-        ...props,
-        className: !mounted ? 'hidden' : '',
-      }
-      return <Li {...props$1} />;
-    }),
-  }),
-});
-
-/**
- * HOC which can be applied to a base list to make it into a site's breadcrumbs
- *
- * @param A base list component created via asBodilessList()
- *
- * @return A clean (unstyled) site breadcrumb component.
- */
-const asBreadcrumbsClean = ({ nodeKeys = 'link', depth = 1 }: Settings) => flow(
-  withSimpleSubListDesign(depth)(flow(
-    asBreadcrumb,
-  )),
-);
-
-const BreadcrumbsClean = (props: any) => {
-  const { components } = props;
+const CleanBreadcrumbs = observer((props: BreadcrumbProps) => {
+  const { components, nodeCollection } = props;
   const {
     StartingTrail,
     Separator,
@@ -91,45 +68,54 @@ const BreadcrumbsClean = (props: any) => {
     FinalTrail,
   } = components;
   const store = useBreadcrumbStore();
-  const breadcrumbTrail = store?.breadcrumbTrail || [];
-  const { node } = useNode();
-  const basePath = node.path;
+  if (store === undefined) return <></>;
+  const breadcrumbTrail = store.breadcrumbTrail;
+  console.log('ListBreadcrumb');
+  console.log(store.export());
+  console.log('breadcrumbtrail');
   console.log(breadcrumbTrail);
-  // @ts-ignore
-  const items = breadcrumbTrail.map(item => {
+  const { node } = useNode(nodeCollection);
+  const basePath = node.path;
+  const items = breadcrumbTrail.map<React.ReactNode>((item: BreadcrumbItemInterface) => {
     // ToDo make relative path logic reusable 
     const linkNodePath = item.getLink().nodePath.replace(`${basePath}$`, '');
     const titleNodePath = item.getTitle().nodePath.replace(`${basePath}$`, '');
-    console.log('linkNodePath', linkNodePath);
-    console.log('titleNodePath', titleNodePath);
     return (
       <BreadcrumbItem key={item.getUUID()}>
-        <BreadcrumbLink nodeKey={linkNodePath}>
-          <BreadcrumbTitle nodeKey={titleNodePath} />
+        <BreadcrumbLink nodeKey={linkNodePath} nodeCollection={nodeCollection}>
+          <BreadcrumbTitle nodeKey={titleNodePath} nodeCollection={nodeCollection} />
         </BreadcrumbLink>
       </BreadcrumbItem>
     );
-  // @ts-ignore
-  }).reduce((prev, curr) => [prev, <Separator/>, curr]);
+  });
+  // join elements by separator
+  const items$1 = items.length > 1 ? items.reduce((
+    prev,
+    curr,
+    index,
+  ) => [prev, <Separator key={`item${index}`}/>, curr]) : items;
   return (
     <BreadcrumbWrapper>
       { StartingTrail &&
         <>
-          <BreadcrumbItem>
+          <BreadcrumbItem key="startingTrail">
             <StartingTrail />
           </BreadcrumbItem>
-          <Separator />
+          <Separator key="startingTrailSeparator" />
         </>
       }
-      {items}
-      { FinalTrail &&
-        <BreadcrumbItem>
-          <FinalTrail />
-        </BreadcrumbItem>
+      {items$1}
+      { FinalTrail && !store.hasLastItem() &&
+        <>
+          <Separator key="finalTrailSeparator" />
+          <BreadcrumbItem key="finalTrail">
+            <FinalTrail />
+          </BreadcrumbItem>
+        </>
       }
     </BreadcrumbWrapper>
   );
-};
+});
 
 const designableBreadcrumb = extendDesignable((
   {
@@ -141,36 +127,50 @@ const designableBreadcrumb = extendDesignable((
     BreadcrumbTitle,
     FinalTrail,
     ...rest
+// ToDo: improve types
 }: any) => rest);
 
-const DesignableBreadcrumbsClean = designableBreadcrumb({
-  StartingTrail: React.Fragment,
+const DesignableCleanBreadcrumbs = designableBreadcrumb({
+  StartingTrail: null,
   Separator: asComponent(Span),
   BreadcrumbWrapper: asComponent(Ul),
   BreadcrumbItem: asComponent(Li),
   BreadcrumbLink: asComponent(A),
   BreadcrumbTitle: asComponent(Span),
-  FinalTrail: React.Fragment,
-})(BreadcrumbsClean);
+  FinalTrail: null,
+})(CleanBreadcrumbs);
 
-const withBreadcrumb = (Component: ComponentType<any>) => (props: any) => {
+const withBreadcrumbProvider = (Component: ComponentType<any>) => (props: any) => {
   const { node } = useNode();
   const { pagePath } = node;
   const store = new BreadcrumbStore(pagePath);
   return (
     <BreadcrumbStoreProvider store={store}>
       <Component {...props}/>
-      <DesignableBreadcrumbsClean {...props} />
+      <DesignableCleanBreadcrumbs {...props} />
     </BreadcrumbStoreProvider>
   );
 }
 
-export default asBreadcrumbsClean;
+/**
+ * HOC which can be applied to a base list to make it into a site's breadcrumbs
+ *
+ * @param A base list component created via asBodilessList()
+ *
+ * @return A clean (unstyled) site breadcrumb component.
+ */
+const asBreadcrumbsClean = ({ depth = 1, ...rest }: BreadcrumbSettings) => flow(
+  withSimpleSubListDesign(depth)(flow(
+    asBreadcrumbListItem(rest),
+  )),
+  withBreadcrumbProvider,
+);
+
 export {
+  asBreadcrumbsClean,
   asBreadcrumbListItem,
-  asBreadcrumbSubList,
-  DesignableBreadcrumbsClean,
-  withBreadcrumb,
+  DesignableCleanBreadcrumbs,
+  withBreadcrumbProvider,
 };
 
 

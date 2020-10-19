@@ -38,6 +38,7 @@ export interface BreadcrumbItemInterface {
   getTitle: () => BreadcrumbItemTitle;
   getLink: () => BreadcrumbItemLink;
   isSubpathOf: (item: BreadcrumbItemInterface | string) => boolean;
+  hasPath: (item: BreadcrumbItemInterface | string) => boolean;
   isAncestorOf: (item: BreadcrumbItemInterface) => boolean;
   isDescendantOf: (item: BreadcrumbItemInterface) => boolean;
   getAncestors: () => BreadcrumbItemInterface[];
@@ -45,6 +46,15 @@ export interface BreadcrumbItemInterface {
 };
 
 const DEFAULT_URL_BASE = 'http://host';
+
+const withoutTrailingSlash = (str: string) => str.replace(/\/$/, '');
+
+const isChildOf = (child: string, parent: string) => {
+  if (child === parent) return false;
+  const childTokens = child.split('/').filter(i => i.length);
+  const parentTokens = parent.split('/').filter(i => i.length);
+  return parentTokens.every((t, i) => childTokens[i] === t);
+}
 
 export class BreadcrumbItem {
   uuid: string;
@@ -74,7 +84,17 @@ export class BreadcrumbItem {
     const itemURL = typeof item === 'string' ? new URL(item, base) : new URL(item.getLink().data, base);
     const thisURL = new URL(this.getLink().data, base);
     if (itemURL.host !== thisURL.host) return false;
-    return new RegExp(`^${thisURL.pathname}`).test(itemURL.pathname);
+    return isChildOf(itemURL.pathname, thisURL.pathname);
+  }
+
+  hasPath(item: BreadcrumbItemInterface | string) {
+    const base = typeof window === 'undefined'
+      ? DEFAULT_URL_BASE
+      : `${window.location.protocol}//${window.location.host}`;
+    const itemURL = typeof item === 'string' ? new URL(item, base) : new URL(item.getLink().data, base);
+    const thisURL = new URL(this.getLink().data, base);
+    if (itemURL.host !== thisURL.host) return false;
+    return withoutTrailingSlash(thisURL.pathname) === withoutTrailingSlash(itemURL.pathname);
   }
 
   isDescendantOf(item: BreadcrumbItemInterface) {
@@ -132,6 +152,7 @@ interface BreadcrumbStoreInterface {
   getPagePath: () => string;
   breadcrumbTrail: BreadcrumbItemInterface[];
   export: () => BreadcrumbItemInterface[];
+  hasLastItem: () => boolean;
 };
 
 export class BreadcrumbStore implements BreadcrumbStoreInterface {
@@ -144,6 +165,7 @@ export class BreadcrumbStore implements BreadcrumbStoreInterface {
   }
 
   @action private setActiveItem(item: BreadcrumbItemInterface) {
+    console.log('setActiveItem into', item.getLink().data, item.getTitle().nodePath);
     this.activeItem = item;
   }
 
@@ -177,6 +199,10 @@ export class BreadcrumbStore implements BreadcrumbStoreInterface {
 
   export() {
     return Array.from(this.items.values());
+  }
+
+  hasLastItem() {
+    return this.activeItem !== undefined && this.activeItem.hasPath(this.pagePath);
   }
 }
 

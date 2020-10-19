@@ -21,7 +21,6 @@ import {
   useBreadcrumbStore,
   BreadcrumbStoreProvider,
 } from '../src/Breadcrumb/BreadcrumbStore';
-import { useContext } from 'react';
 import { mount } from 'enzyme';
 import { observer } from 'mobx-react-lite';
 
@@ -41,7 +40,31 @@ describe('BreadcrumbItem', () => {
         store: new BreadcrumbStore('/'),
       });
       expect(breadcrumbItem.isSubpathOf('/products/productA')).toBeTruthy();
+      expect(breadcrumbItem.isSubpathOf('/products')).toBeFalsy();
+      expect(breadcrumbItem.isSubpathOf('/products?query=param')).toBeFalsy();
+      expect(breadcrumbItem.isSubpathOf('/products2')).toBeFalsy();
       expect(breadcrumbItem.isSubpathOf('/articles/productA')).toBeFalsy();
+    });
+  });
+  describe('hasPath', () => {
+    it('works for internal links', () => {
+      const breadcrumbItem = new BreadcrumbItem({
+        uuid: v4(),
+        title: {
+          data: 'Products',
+          nodePath: 'title',
+        },
+        link: {
+          data: '/products',
+          nodePath: 'link',
+        },
+        store: new BreadcrumbStore('/products'),
+      });
+      expect(breadcrumbItem.hasPath('/products')).toBeTruthy();
+      expect(breadcrumbItem.hasPath('/products?query=value')).toBeTruthy();
+      expect(breadcrumbItem.hasPath('/products/')).toBeTruthy();
+      expect(breadcrumbItem.hasPath('/articles/')).toBeFalsy();
+      expect(breadcrumbItem.hasPath('/products2')).toBeFalsy();
     });
   });
 });

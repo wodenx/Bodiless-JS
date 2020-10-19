@@ -25,7 +25,7 @@ export type DesignElement<P> = (c: ComponentType<P> | string) => ComponentType<P
  * This is the type to use for the components prop of a component with a fluid design.
  */
 export type DesignableComponents = {
-  [key: string]: ComponentType<any>,
+  [key: string]: ComponentType<any> | null,
 };
 
 /**
@@ -135,7 +135,12 @@ export const applyDesign = <C extends DesignableComponents> (
       if (!design) return { ...components } as C;
       return Object.keys(unNamedComponents).reduce(
         (acc, name) => (
-          { ...acc, [name]: withDisplayName(name)(unNamedComponents[name] as ComponentType) }
+          {
+            ...acc,
+            [name]: unNamedComponents[name] !== null
+              ? withDisplayName(name)(unNamedComponents[name] as ComponentType)
+              : unNamedComponents[name],
+          }
         ),
         {},
       );
