@@ -16,7 +16,7 @@ import {
   asEditableBurgerSubMenu,
   BurgerMenuClean,
   withBurgerSubmenu,
-} from './components/BurgerMenu';
+} from './components/BurgerMenu_DEPRECATED';
 
 export {
   SingleAccordion,
@@ -97,3 +97,4 @@ export {
 } from './components/Carousel';
 
 export * from './components/Menu';
+export * from './components/BurgerMenu';

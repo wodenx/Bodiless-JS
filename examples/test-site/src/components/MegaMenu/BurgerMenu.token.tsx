@@ -18,13 +18,45 @@ import { withDesign, addClasses, addProps } from '@bodiless/fclasses';
 import { asDefaultLogoStyle } from '../Layout/token';
 
 /**
- * Base Menu Styles
+ * DEBUG Burger Menu Styles
+ * ===========================================
+ */
+const withBaseMenuDebugStyles = withDesign({
+  Wrapper: addClasses('BURGER_WRAPPER'),
+  Item: addClasses('BURGER_ITEM'),
+  Title: addClasses('BURGER_TITLE'),
+});
+
+const withBaseSubMenuDebugStyles = withDesign({
+  Wrapper: withDesign({
+    List: addClasses('ACCORDION_BODY'),
+    Title: withDesign({
+      Label: addClasses('ACCORDION_LABEL'),
+    }),
+    WrapperItem: addClasses('ACCORDION_WRAPPER'),
+  }),
+  Item: addClasses('BURGER_SUB_ITEM'),
+  Title: addClasses('BURGER_SUB_TITLE'),
+});
+
+const asSimpleSubMenuDebugStyles = withDesign({
+  SubMenu: withBaseSubMenuDebugStyles,
+});
+
+const withBurgerMenuDebugStyles = flow(
+  withDesign({
+    Item: asSimpleSubMenuDebugStyles,
+  }),
+  withBaseMenuDebugStyles,
+);
+
+
+/**
+ * Base Burger Menu Styles
  * ===========================================
  */
 const withBaseBurgerMenuStyles = withDesign({
-  Wrapper: addClasses('p-3 BURGER_WRAPPER'),
-  Item: addClasses('BURGER_ITEM'),
-  Title: addClasses('BURGER_TITLE'),
+  Wrapper: addClasses('p-3'),
 });
 
 /**
@@ -33,17 +65,21 @@ const withBaseBurgerMenuStyles = withDesign({
  */
 const withBaseBurgerSubMenuStyles = withDesign({
   Wrapper: withDesign({
-    List: addClasses('BURGER_SUB_LIST'),
-    WrapperItem: addClasses('BURGER_SUB_WRAPPER_ITEM'),
+    Title: withDesign({
+      Label: addClasses('font-bold'),
+    }),
   }),
-  Item: addClasses('pl-3 BURGER_SUB_ITEM'),
-  Title: addClasses('BURGER_SUB_TITLE'),
+  Item: addClasses('pl-3'),
 });
 
 const asSimpleBurgerSubMenuStyles = withDesign({
   SubMenu: withBaseBurgerSubMenuStyles,
 });
 
+/**
+ * Burger Menu Wrapper Styles
+ * ===========================================
+ */
 const asBurgerMenu = withDesign({
   Wrapper: addClasses('bg-teal-600 py-1'),
   Header: flow(
@@ -71,4 +107,5 @@ const withBurgerMenuStyles = flow(
 export default withBurgerMenuStyles;
 export {
   asBurgerMenu,
+  withBurgerMenuDebugStyles,
 };

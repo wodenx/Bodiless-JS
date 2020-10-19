@@ -12,37 +12,11 @@
  * limitations under the License.
  */
 
-import {
-  asMenuBase as asMegaMenuBase,
-  withMenuDesign as withMegaMenuDesign,
-  asBreadcrumbsClean as asMegaMenuBreadcrumbs,
-} from './MegaMenu';
-
-import {
-  asMenuBase as asSimpleMenuBase,
-  withMenuDesign as withSimpleMenuDesign,
-} from './SimpleMenu';
-
-import asSimpleMenuTopNav from './SimpleMenu.token';
-import asMegaMenuTopNav from './MegaMenu.token';
+import BurgerMenuClean from './BurgerMenuClean';
+import asSimpleBurgerMenu from './asSimpleBurgerMenu';
 
 export {
-  asMenuTout,
-  asMenuLink,
-} from './MenuTitles';
-
-export {
-  asMegaMenuBase,
-  withMegaMenuDesign,
-  asMegaMenuBreadcrumbs,
-};
-
-export {
-  asSimpleMenuBase,
-  withSimpleMenuDesign,
-};
-
-export {
-  asSimpleMenuTopNav,
-  asMegaMenuTopNav,
+  // @todo Rename once original BurgerMenuClean is cleared
+  BurgerMenuClean as SimpleBurgerMenuClean,
+  asSimpleBurgerMenu,
 };

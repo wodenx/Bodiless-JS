@@ -27,7 +27,7 @@ import {
 import Layout from '../../../components/Layout';
 import MegaMenu, { MegaMenuList } from '../../../components/MegaMenu/MegaMenu';
 import SimpleMenu, { SimpleMenuList } from '../../../components/MegaMenu/SimpleMenu';
-import BurgerMenu, { BurgerMenuList } from '../../../components/MegaMenu/BurgerMenu';
+import BurgerMenu, { BurgerMenuList, BurgerMenuAccordion } from '../../../components/MegaMenu/BurgerMenu';
 import { asHeader2, asHeader3, asHeader1 } from '../../../components/Elements.token';
 
 const NodeTreePrinter$ = () => {
@@ -71,6 +71,10 @@ export default (props: any) => (
       <Description>
         This is a simple Burger Menu...
       </Description>
+
+      <H3>Burger Menu as Accordion</H3>
+      <BurgerMenuAccordion className="w-1/3 mb-3" nodeKey="burger-menu" />
+
       <H3>Burger Menu as List</H3>
       <BurgerMenuList nodeKey="burger-menu" />
 

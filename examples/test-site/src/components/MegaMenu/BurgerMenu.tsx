@@ -17,19 +17,19 @@ import { withDesign, replaceWith, addClasses } from '@bodiless/fclasses';
 import { asStatic } from '@bodiless/core';
 import {
   asMenuLink, asSimpleMenuBase, withSimpleMenuDesign,
-  withAccordionSubmenu, SimpleBurgerMenuClean,
+  asSimpleBurgerMenu, SimpleBurgerMenuClean,
 } from '@bodiless/organisms';
 import { asEditable } from '@bodiless/components';
 
 // import { withTitleEditor } from './MegaMenu';
 import Logo from '../Layout/logo';
-import withBurgerMenuStyles, { asBurgerMenu } from './BurgerMenu.token';
+import withBurgerMenuStyles, { asBurgerMenu, withBurgerMenuDebugStyles } from './BurgerMenu.token';
 
 const withTitleEditor = asEditable('text', 'Menu Item');
 
 const BurgerMenuBody = flow(
   asSimpleMenuBase(),
-  withAccordionSubmenu,
+  asSimpleBurgerMenu,
   withSimpleMenuDesign({
     Title: asMenuLink(withTitleEditor),
   }),
@@ -51,9 +51,22 @@ const BurgerMenuList = flow(
     Title: asMenuLink(withTitleEditor),
     Item: addClasses('pl-5'),
   }),
+  withBurgerMenuDebugStyles,
+)('ul');
+
+const BurgerMenuAccordion = flow(
+  asSimpleMenuBase(),
+  asSimpleBurgerMenu,
+  withSimpleMenuDesign({
+    Title: asMenuLink(withTitleEditor),
+    Item: addClasses('pl-5'),
+  }),
+  withBurgerMenuDebugStyles,
+  asStatic,
 )('ul');
 
 export default BurgerMenu;
 export {
   BurgerMenuList,
+  BurgerMenuAccordion,
 };

@@ -1,5 +1,5 @@
 /**
- * Copyright Â© 2019 Johnson & Johnson
+ * Copyright © 2020 Johnson & Johnson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,52 +12,43 @@
  * limitations under the License.
  */
 
-import React, {
-  FunctionComponent as FC,
-  ComponentType,
-  HTMLProps,
-} from 'react';
+import React, { FC, ComponentType } from 'react';
 import { slide } from 'react-burger-menu';
 import {
-  designable,
-  DesignableComponentsProps,
-  stylable,
-  Div,
+  Div, stylable, designable, DesignableComponentsProps,
 } from '@bodiless/fclasses';
 
 type BurgerMenuComponents = {
   Wrapper: ComponentType<any>,
-  Slide: ComponentType<any>,
   Header: ComponentType<any>,
+  Menu: ComponentType<any>,
   Body: ComponentType<any>,
 };
 
+type BurgerMenuProps = DesignableComponentsProps<BurgerMenuComponents>;
+
 const burgerMenuComponents: BurgerMenuComponents = {
   Wrapper: Div,
-  Slide: stylable(slide),
+  Menu: stylable(slide),
   Body: Div,
   Header: Div,
 };
 
-type Props = DesignableComponentsProps<BurgerMenuComponents> & HTMLProps<HTMLElement>;
-
-const BurgerMenuBase: FC<Props> = ({ components, ...rest }) => {
+const BurgerMenuBase: FC<BurgerMenuProps> = ({ components, ...rest }) => {
   const {
-    Wrapper,
-    Slide,
-    Body,
-    Header,
+    Wrapper, Menu, Body, Header,
   } = components;
+
   return (
     <Wrapper>
-      <Slide>
+      <Menu>
         <Header />
         <Body {...rest} />
-      </Slide>
+      </Menu>
     </Wrapper>
   );
 };
 
-const BurgerMenuClean = designable(burgerMenuComponents)(BurgerMenuBase) as ComponentType<Props>;
+const BurgerMenuClean = designable(burgerMenuComponents)(BurgerMenuBase);
 
 export default BurgerMenuClean;
