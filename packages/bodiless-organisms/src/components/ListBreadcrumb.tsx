@@ -16,7 +16,7 @@ import React, { ComponentType, HTMLProps } from 'react';
 import { flow } from 'lodash';
 
 import { useNode } from '@bodiless/core';
-import type { WithNodeKeys } from '@bodiless/core';
+import type { WithNodeKeyProps, WithNodeProps } from '@bodiless/core';
 import {
   asComponent,
   extendDesignable,
@@ -47,12 +47,13 @@ type BreadCrumbComponents = {
   Separator: ComponentType<HTMLProps<HTMLSpanElement>>,
   BreadcrumbWrapper: ComponentType<HTMLProps<HTMLUListElement>>,
   BreadcrumbItem: ComponentType<HTMLProps<HTMLLIElement>>,
-  BreadcrumbLink: ComponentType<HTMLProps<HTMLAnchorElement> & WithNodeKeys>,
-  BreadcrumbTitle: ComponentType<HTMLProps<HTMLSpanElement> & WithNodeKeys>,
+  BreadcrumbLink: ComponentType<HTMLProps<HTMLAnchorElement> & WithNodeKeyProps>,
+  BreadcrumbTitle: ComponentType<HTMLProps<HTMLSpanElement> & WithNodeKeyProps>,
   FinalTrail: ComponentType<HTMLProps<HTMLSpanElement>> | null,
 };
 
-type BreadcrumbProps = DesignableComponentsProps<BreadCrumbComponents>;
+// @ts-ignore StartingTrail, FinalTrail is incompatible with index signature
+type BreadcrumbProps = DesignableComponentsProps<BreadCrumbComponents> & WithNodeProps;
 
 const asBreadcrumbListItem = asBreadcrumb;
 
@@ -70,10 +71,6 @@ const CleanBreadcrumbs = observer((props: BreadcrumbProps) => {
   const store = useBreadcrumbStore();
   if (store === undefined) return <></>;
   const breadcrumbTrail = store.breadcrumbTrail;
-  console.log('ListBreadcrumb');
-  console.log(store.export());
-  console.log('breadcrumbtrail');
-  console.log(breadcrumbTrail);
   const { node } = useNode(nodeCollection);
   const basePath = node.path;
   const items = breadcrumbTrail.map<React.ReactNode>((item: BreadcrumbItemInterface) => {
@@ -131,13 +128,16 @@ const designableBreadcrumb = extendDesignable((
 }: any) => rest);
 
 const DesignableCleanBreadcrumbs = designableBreadcrumb({
+  // @ts-ignore Type 'null' is not assignable to type 'ComponentType<any>'
   StartingTrail: null,
   Separator: asComponent(Span),
   BreadcrumbWrapper: asComponent(Ul),
   BreadcrumbItem: asComponent(Li),
   BreadcrumbLink: asComponent(A),
   BreadcrumbTitle: asComponent(Span),
+  // @ts-ignore Type 'null' is not assignable to type 'ComponentType<any>'
   FinalTrail: null,
+// @ts-ignore ToDo: resolve type
 })(CleanBreadcrumbs);
 
 const withBreadcrumbProvider = (Component: ComponentType<any>) => (props: any) => {

@@ -25,7 +25,7 @@ export type DesignElement<P> = (c: ComponentType<P> | string) => ComponentType<P
  * This is the type to use for the components prop of a component with a fluid design.
  */
 export type DesignableComponents = {
-  [key: string]: ComponentType<any> | null,
+  [key: string]: ComponentType<any>,
 };
 
 /**

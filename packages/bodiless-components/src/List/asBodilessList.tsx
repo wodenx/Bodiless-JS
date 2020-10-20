@@ -51,7 +51,7 @@ type SubListComponents = {
 };
 
 const startComponents: SubListComponents = {
-  WrapperItem: asComponent('li'),
+  WrapperItem: asComponent('ol'),
   List: asComponent('ul'),
 };
 

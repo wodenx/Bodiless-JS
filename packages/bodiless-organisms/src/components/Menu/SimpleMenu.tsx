@@ -21,6 +21,8 @@ import {
   stylable,
   replaceWith,
   withOnlyProps,
+  asComponent,
+  addClasses,
 } from '@bodiless/fclasses';
 import {
   WithNodeKeyProps,
@@ -87,6 +89,32 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
 );
 
 /**
+ * HOC that can be applied to a menu based component
+ * it renders all list and sublist items
+ * but produces no markup
+ */
+const withEmptyMenuMarkup = flow(
+  withDesign({
+    Item: withDesign({
+      SubMenu: withDesign({
+        Item: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+      }),
+    }),
+  }),
+  withMenuDesign({
+    Wrapper: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+  }),
+  withMenuDesign({
+    Wrapper: withDesign({
+      WrapperItem: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+    }),
+  }),
+  withSubListDesign(1)({
+    _default: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+  }),
+);
+
+/**
  * HOC which can be applied to a base menu to make it into a site's breadcrumbs
  *
  * @param A base menu component created via asMenuBase()
@@ -94,10 +122,9 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
  * @return A clean (unstyled) site breadcrumb component.
  */
 const asBreadcrumbsClean = (settings: BreadcrumbSettings) => flow(
+  withEmptyMenuMarkup,
   withMenuDesign({
-    //Wrapper: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
     Item: flow(
-      //replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
       asBreadcrumbListItem(settings),
     ),
   }),

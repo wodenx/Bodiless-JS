@@ -20,6 +20,7 @@ import {
   withDesign,
   replaceWith,
   addProps,
+  addClasses,
 } from '@bodiless/fclasses';
 import { flowRight, identity } from 'lodash';
 // ToDo: remove this
@@ -29,7 +30,6 @@ import {
   asMenuBase,
   asBreadcrumbsClean,
   withMenuDesign,
-  withBreadcrumbDesign,
 } from '../src/components/Menu/SimpleMenu';
 
 const { DefaultContentNode } = require('@bodiless/core');
@@ -44,13 +44,19 @@ const setPagePath = (pagePath: string) => {
 const createBreadcrumbComponent = ({
   content = {},
 }) => flowRight(
-  asBreadcrumbsClean('link'),
-  withDefaultContent(content),
+  withDesign({
+    Item: addClasses('testItemClass'),
+  }),
   withMenuDesign({
     Title: replaceWith(
       asBodilessLink('link')('a')
     ),
   }),
+  asBreadcrumbsClean({
+    linkNodeKey: 'title$link',
+    titleNodeKey: 'title$text',
+  }),
+  withDefaultContent(content),
   asMenuBase('testMenu'),
 )('ul');
 
@@ -127,64 +133,6 @@ describe('asBreadcrumbsClean', () => {
       }
     });
     const wrapper = mount(<Breadcrumb />);
-    console.log(html_beautify(wrapper.html()));
-    expect(wrapper.html()).toMatchSnapshot();
-  });
-});
-
-describe('withBreadcrumbDesign', () => {
-  it('allows designing breadcrumb components', () => {
-    setPagePath('/products/productA');
-    const Breadcrumb = createBreadcrumbComponent({
-      content: {
-        testMenu: {
-          "items": [
-            "home",
-            "products",
-            "articles",
-          ],
-        },
-        testMenu$home$link: {
-          'href': '/'
-        },
-        testMenu$products$link: {
-          'href': '/products'
-        },
-        testMenu$products$sublist: {
-          "items": [
-            "productA",
-            "productB",
-          ],
-        },
-        "testMenu$products$cham-sublist": {
-          "component": "SubMenu"
-        },
-        testMenu$products$sublist$productA$link: {
-          'href': '/products/productA'
-        },
-        testMenu$products$sublist$productB$link: {
-          'href': '/products/productB'
-        },
-        testMenu$articles$link: {
-          'href': '/articles'
-        },
-        testMenu$articles$sublist: {
-          "items": [
-            "articleA",
-          ],
-        },
-        testMenu$articles$sublist$articleA$link: {
-          'href': '/articles/articleA'
-        },
-      }
-    });
-    const DesignedBreadcrumb = flowRight(
-      withBreadcrumbDesign({
-        Title: addProps({ className: 'breadcrumb-title'}),
-        Item: addProps({ className: 'breadcrumb-item'}),
-      }),
-    )(Breadcrumb);
-    const wrapper = mount(<DesignedBreadcrumb />);
     console.log(html_beautify(wrapper.html()));
     expect(wrapper.html()).toMatchSnapshot();
   });

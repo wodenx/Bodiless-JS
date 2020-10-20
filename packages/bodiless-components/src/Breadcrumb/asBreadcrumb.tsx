@@ -24,6 +24,7 @@ import {
   BreadcrumbItem,
   BreadcrumbItemInterface,
 } from './BreadcrumbStore';
+import { observer } from 'mobx-react-lite';
 
 type LinkData = {
   href: string,
@@ -57,7 +58,7 @@ const asBreadcrumb = ({
   titleNodeKey,
 }: BreadcrumbSettings) => 
   <P extends object>(Component: ComponentType<P>) => {
-  const AsBreadcrumb = (props: P) => {
+  const AsBreadcrumb = observer((props: P) => {
     const { node } = useNode<LinkData>();
     const contextUuidRef = useRef(v4());
     const store = useBreadcrumbStore();
@@ -82,7 +83,7 @@ const asBreadcrumb = ({
         <Component {...props} />
       </BreadcrumbContextProvider>
     );
-  };
+  });
   AsBreadcrumb.displayName = 'AsBreadcrumb';
   return AsBreadcrumb;
 };
