@@ -53,7 +53,6 @@ export type ContentNode<D> = {
   child<E extends object>(path: string): ContentNode<E>;
   peer<E extends object>(path: Path): ContentNode<E>;
   hasError: () => boolean;
-  getChildData<E extends object>(path: string): E;
 };
 
 export class DefaultContentNode<D extends object> implements ContentNode<D> {
@@ -82,11 +81,6 @@ export class DefaultContentNode<D extends object> implements ContentNode<D> {
   get data() {
     const { getNode } = this.getters;
     return getNode(this.path) as D;
-  }
-  
-  getChildData<E extends object>(path: string) {
-    const { getNode } = this.getters;
-    return getNode([...this.path, path]) as E;
   }
 
   get pagePath() {

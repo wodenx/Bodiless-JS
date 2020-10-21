@@ -59,7 +59,9 @@ const asBreadcrumb = ({
 }: BreadcrumbSettings) => 
   <P extends object>(Component: ComponentType<P>) => {
   const AsBreadcrumb = observer((props: P) => {
-    const { node } = useNode<LinkData>();
+    const { node } = useNode();
+    const titleNode = node.child<object>(titleNodeKey);
+    const linkNode = node.child<LinkData>(linkNodeKey);
     const contextUuidRef = useRef(v4());
     const store = useBreadcrumbStore();
     if (store === undefined) return <Component {...props} />;
@@ -67,11 +69,11 @@ const asBreadcrumb = ({
     const item = new BreadcrumbItem({
       uuid: contextUuidRef.current,
       title: {
-        data: node.getChildData(titleNodeKey),
+        data: titleNode.data,
         nodePath: [...node.path, titleNodeKey].join('$'),
       },
       link: {
-        data: node.getChildData<LinkData>(linkNodeKey).href,
+        data: linkNode.data.href,
         nodePath: [...node.path, linkNodeKey].join('$'),
       },
       parent: current,
