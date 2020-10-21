@@ -84,7 +84,6 @@ const asBreadcrumb = ({
       </BreadcrumbContextProvider>
     );
   });
-  AsBreadcrumb.displayName = 'AsBreadcrumb';
   return AsBreadcrumb;
 };
 
