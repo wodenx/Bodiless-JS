@@ -56,7 +56,7 @@ type BreadcrumbProps = DesignableComponentsProps<BreadCrumbComponents> & WithNod
 
 const asBreadcrumbListItem = asBreadcrumb;
 
-const CleanBreadcrumbs = observer((props: BreadcrumbProps) => {
+const BreadcrumbsClean$ = observer((props: BreadcrumbProps) => {
   const { components, nodeCollection } = props;
   const {
     StartingTrail,
@@ -126,7 +126,7 @@ const designableBreadcrumb = extendDesignable((
 // ToDo: improve types
 }: any) => rest);
 
-const DesignableCleanBreadcrumbs = designableBreadcrumb({
+const BreadcrumbsClean = designableBreadcrumb({
   // @ts-ignore Type 'null' is not assignable to type 'ComponentType<any>'
   StartingTrail: null,
   Separator: asComponent(Span),
@@ -137,7 +137,7 @@ const DesignableCleanBreadcrumbs = designableBreadcrumb({
   // @ts-ignore Type 'null' is not assignable to type 'ComponentType<any>'
   FinalTrail: null,
 // @ts-ignore ToDo: resolve type
-})(CleanBreadcrumbs);
+})(BreadcrumbsClean$);
 
 const withBreadcrumbStore = (Component: ComponentType<any>) => {
   const WithBreadcrumbStore = (props: any) => {
@@ -147,7 +147,7 @@ const withBreadcrumbStore = (Component: ComponentType<any>) => {
     return (
       <BreadcrumbStoreProvider store={store}>
         <Component {...props}/>
-        <DesignableCleanBreadcrumbs {...props} />
+        <BreadcrumbsClean {...props} />
       </BreadcrumbStoreProvider>
     );
   }
@@ -171,7 +171,7 @@ const asBreadcrumbsClean = ({ depth = 1, ...rest }: BreadcrumbSettings) => flow(
 export {
   asBreadcrumbsClean,
   asBreadcrumbListItem,
-  DesignableCleanBreadcrumbs,
+  BreadcrumbsClean,
   withBreadcrumbStore,
 };
 
