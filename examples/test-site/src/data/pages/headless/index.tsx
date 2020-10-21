@@ -25,6 +25,7 @@ import { asHeader2, asHeader1 } from '../../../components/Elements.token';
 
 import MainMenu, { MenuContent } from './MainMenu';
 import TacoContainer, { TacoContent } from './TacoList';
+import ProductTacoContainer from './ProductTacoList';
 import { NodeTreePrinter } from './DataPrinter';
 
 const H1 = flow(addClasses('pt-5'), asHeader1)(H1$);
@@ -36,6 +37,7 @@ export default (props: any) => (
       <H1>Headless Home Page</H1>
       <MainMenu />
       <TacoContainer />
+      <ProductTacoContainer />
       <H2>Taco Data</H2>
       <div className="overflow-x-scroll">
         <NodeTreePrinter nodeKey="tacos-1" title="Local Data" />

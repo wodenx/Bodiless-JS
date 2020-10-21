@@ -27,6 +27,7 @@ const plugins = [
       entitiesArray: [
         apiResource('nav', 'navigation/main-menu'),
         apiResource('tacos', 'taco-list/home-sections'),
+        apiResource('productTacos', 'taco-list/homepage-product'),
       ],
     },
   },

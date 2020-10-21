@@ -80,15 +80,16 @@ type CTaco = {
   link: CTacoLink,
   image: CTacoImage,
 };
-type CTacoNode = {
+export type CTacoNode = {
   node: CTaco,
 };
 
-const baseItem = {
+const baseNormalItem = {
   wrapperProps: {
     className: 'lg:w-1/3',
   },
-  type: 'ToutVerticalWithTitleBodyWithCTA',
+  // type: 'ToutVerticalWithTitleBodyWithCTA',
+  type: 'HeadlessTout',
 };
 
 const plainTextToSlate = (text: string) => ({
@@ -117,7 +118,7 @@ const plainTextToSlate = (text: string) => ({
   },
 });
 
-const translateItems = (items: CTaco[], prefix = '') => {
+export const translateItems = (items: CTaco[], prefix = '', baseItem = baseNormalItem) => {
   const entries = items.reduce<any>((acc, item, index) => ({
     ...acc,
     [`${prefix}$${index}$image`]: item.image,
@@ -134,7 +135,7 @@ const translateItems = (items: CTaco[], prefix = '') => {
 
 const useTacoListData = () => {
   const data = useStaticQuery(graphql`
-    query MyQuery {
+    query TacoQuery {
       allTacos {
         edges {
           node {

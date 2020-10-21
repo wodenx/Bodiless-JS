@@ -35,7 +35,7 @@ const useMenuOptions = (menuOptionWithNodeKey?: MenuOptionWithNodeKey) => () => 
     {
       icon: 'undo',
       name: 'Reset',
-      label: 'Undo',
+      label: 'Reset',
       handler: () => nodeKeysToDelete.forEach(key => node.delete(key)),
       local: true,
       global: false,
