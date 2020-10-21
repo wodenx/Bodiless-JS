@@ -4,7 +4,7 @@ import {
   withDefaultContent, withNodeKey,
 } from '@bodiless/core';
 import { useStaticQuery, graphql } from 'gatsby';
-import { flow, omit } from 'lodash';
+import { flow } from 'lodash';
 import { SimpleMenu } from '../../../components/MegaMenu/SimpleMenu';
 import { DefaultContentPrinter } from './DataPrinter';
 
