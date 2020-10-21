@@ -18,27 +18,18 @@ import { withSidecarNodes, asReadOnly} from '@bodiless/core';
 import { asEditable, asBodilessLink } from '@bodiless/components'; 
 import {
   addClasses,
-  addProps,
   withDesign,
   replaceWith,
   A,
   Span,
-  withOnlyProps,
 } from '@bodiless/fclasses';
 import {
   asSimpleMenuBase,
   asSimpleMenuBreadcrumbs,
 } from '@bodiless/organisms';
 
-import { asBold } from '../Elements.token'; 
+import { withArrowSeparator } from './MenuBreadcrumbs.token';
 import { EditorSimple } from '../Editors';
-
-const STARTING_TRAIL_NODE_KEY = 'startingTrail';
-const FINAL_TRAIL_NODE_KEY = 'finalTrail';
-
-const withSeparator = (separator: string) => addProps({
-  children: separator,
-});
 
 const withMenuBreadcrumbSchema = withDesign({
   Separator: replaceWith(Span),
@@ -56,13 +47,15 @@ const withMenuBreadcrumbSchema = withDesign({
   ),
 });
 
-const withMenuBreadcrumbsStyles = withDesign({
-  Separator: flow(
-    withSeparator('>'),
-    addClasses('mx-1'),
-  ),
-  BreadcrumbWrapper: addClasses('inline-flex'),
-});
+const withMenuBreadcrumbsStyles = flow(
+  withDesign({
+    Separator: flow(
+      addClasses('mx-1'),
+    ),
+    BreadcrumbWrapper: addClasses('inline-flex'),
+  }),
+  withArrowSeparator,
+);
 
 const MenuBreadcrumbs = flow(
   asSimpleMenuBase(),
@@ -74,50 +67,6 @@ const MenuBreadcrumbs = flow(
   withMenuBreadcrumbsStyles,
 )('ul');
 
-const withEditableStartingTrail = withDesign({
-  StartingTrail: asEditable(STARTING_TRAIL_NODE_KEY, 'Enter Item'),
-});
-
-const withStartingTrailIcon = withDesign({
-  StartingTrail: flow(
-    replaceWith((props: HTMLProps<HTMLSpanElement>) => <Span {...props}>home</Span>),
-    addClasses('material-icons'),
-  ),
-});
-
-const withNonLinkableItems = withDesign({
-  BreadcrumbLink: flow(
-    replaceWith(React.Fragment),
-    withOnlyProps('key', 'children'),    
-  ),
-});
-
-const withEditableFinalTrail = withDesign({
-  FinalTrail: flow(
-    replaceWith(Span),
-    asEditable(FINAL_TRAIL_NODE_KEY, 'Enter Item')
-  ),
-});
-
-const withBoldedFinalTrail = withDesign({
-  FinalTrail: asBold,
-});
-
-const withVerticalBarSeparator = withDesign({
-  Separator: withSeparator('|'),
-});
-
-const withSlashSeparator = withDesign({
-  Separator: withSeparator('/'),
-});
-
 export {
   MenuBreadcrumbs,
-  withEditableStartingTrail,
-  withStartingTrailIcon,
-  withNonLinkableItems,
-  withEditableFinalTrail,
-  withBoldedFinalTrail,
-  withVerticalBarSeparator,
-  withSlashSeparator,
 };

@@ -20,10 +20,10 @@ import {
 } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 
-import { default as BaseLayout } from '../../../components/Layout';
+import Layout from '../../../components/Layout';
 import { SimpleMenu } from '../../../components/MegaMenu/SimpleMenu';
+import { MenuBreadcrumbs } from '../../../components/Breadcrumbs/MenuBreadcrumbs';
 import {
-  MenuBreadcrumbs,
   withEditableStartingTrail,
   withStartingTrailIcon,
   withNonLinkableItems,
@@ -31,14 +31,20 @@ import {
   withBoldedFinalTrail,
   withVerticalBarSeparator,
   withSlashSeparator,
-} from '../../../components/Breadcrumbs/MenuBreadcrumbs';
+} from '../../../components/Breadcrumbs/MenuBreadcrumbs.token';
 import { asHeader2, asHeader1 } from '../../../components/Elements.token';
 
-const BreadcrumbWithEditableStartingTrail = withEditableStartingTrail(MenuBreadcrumbs);
+const STARTING_TRAIL_NODE_KEY = 'startingTrail';
+const FINAL_TRAIL_NODE_KEY = 'finalTrail';
+
+const BreadcrumbWithEditableStartingTrail = withEditableStartingTrail(
+  STARTING_TRAIL_NODE_KEY,
+  'Enter Item',
+)(MenuBreadcrumbs);
 const BreadcrumbWithStartingTrailIcon = withStartingTrailIcon(MenuBreadcrumbs);
 const BreadcrumbWithNonLinkableItems = withNonLinkableItems(MenuBreadcrumbs);
 const BreadcrumbWithBoldableFinalItem = flow(
-  withEditableFinalTrail,
+  withEditableFinalTrail(FINAL_TRAIL_NODE_KEY, 'Enter Item'),
   withBoldedFinalTrail,
 )(MenuBreadcrumbs);
 const BreadcrumbWithVerticalBarSeparator = withVerticalBarSeparator(MenuBreadcrumbs);
@@ -47,13 +53,10 @@ const BreadcrumbWithSlashSeparator = withSlashSeparator(MenuBreadcrumbs);
 const H1 = flow(addClasses('pt-5'), asHeader1)(H1$);
 const H2 = flow(addClasses('pt-5'), asHeader2)(H2$);
 
-const Layout = withDesign({
-  Title: replaceWith((props: any) => <H1 {...props}>Breadcrumb Demo</H1>),
-})(BaseLayout);
-
 export default (props: any) => (
   <Page {...props}>
     <Layout>
+      <H1>Breadcrumb Demo</H1>
       <H2>Simple Menu</H2>
       <SimpleMenu nodeKey="list2" />
       <H2>Breadcrumbs with editable starting trail</H2>
