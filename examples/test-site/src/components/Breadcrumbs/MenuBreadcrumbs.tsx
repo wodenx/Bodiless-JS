@@ -36,14 +36,12 @@ import { EditorSimple } from '../Editors';
 const STARTING_TRAIL_NODE_KEY = 'startingTrail';
 const FINAL_TRAIL_NODE_KEY = 'finalTrail';
 
-type SeparatorProps = HTMLProps<HTMLSpanElement> & { separator : string};
-const Separator = (props: SeparatorProps) => {
-  const { separator, ...rest } = props;
-  return <Span {...rest}>{separator}</Span>
-}
+const withSeparator = (separator: string) => addProps({
+  children: separator,
+});
 
-const withMenuBreadcrumbsDesign = withDesign({
-  Separator: replaceWith(Separator),
+const withMenuBreadcrumbSchema = withDesign({
+  Separator: replaceWith(Span),
   BreadcrumbLink: flow(
     replaceWith(
       withSidecarNodes(
@@ -60,9 +58,7 @@ const withMenuBreadcrumbsDesign = withDesign({
 
 const withMenuBreadcrumbsStyles = withDesign({
   Separator: flow(
-    addProps({
-      separator: '>',
-    }),
+    withSeparator('>'),
     addClasses('mx-1'),
   ),
   BreadcrumbWrapper: addClasses('inline-flex'),
@@ -74,7 +70,7 @@ const MenuBreadcrumbs = flow(
     linkNodeKey: 'title$link',
     titleNodeKey: 'title$text',
   }),
-  withMenuBreadcrumbsDesign,
+  withMenuBreadcrumbSchema,
   withMenuBreadcrumbsStyles,
 )('ul');
 
@@ -108,15 +104,11 @@ const withBoldedFinalTrail = withDesign({
 });
 
 const withVerticalBarSeparator = withDesign({
-  Separator: addProps({
-    separator: '|',
-  }),
+  Separator: withSeparator('|'),
 });
 
 const withSlashSeparator = withDesign({
-  Separator: addProps({
-    separator: '/',
-  }),
+  Separator: withSeparator('/'),
 });
 
 export {
