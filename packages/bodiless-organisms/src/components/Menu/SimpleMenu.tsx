@@ -37,7 +37,7 @@ import asStylableList from './asStylableList';
 
 import {
   asBreadcrumbListItem,
-  withBreadcrumbProvider,
+  withBreadcrumbStore,
 } from '../ListBreadcrumb';
 
 /**
@@ -128,7 +128,7 @@ const asBreadcrumbsClean = (settings: BreadcrumbSettings) => flow(
       asBreadcrumbListItem(settings),
     ),
   }),
-  withBreadcrumbProvider,
+  withBreadcrumbStore,
 );
 
 // @TODO Add a similar HOC for BurgerMenu, something like:

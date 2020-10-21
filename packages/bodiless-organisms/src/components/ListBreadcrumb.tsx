@@ -24,9 +24,8 @@ import {
   Span,
   Ul,
   A,
-  DesignableComponents,
 } from '@bodiless/fclasses';
-import type { Design, DesignableComponentsProps } from '@bodiless/fclasses';
+import type { DesignableComponentsProps } from '@bodiless/fclasses';
 import {
   asBreadcrumb,
   withSimpleSubListDesign,
@@ -140,16 +139,19 @@ const DesignableCleanBreadcrumbs = designableBreadcrumb({
 // @ts-ignore ToDo: resolve type
 })(CleanBreadcrumbs);
 
-const withBreadcrumbProvider = (Component: ComponentType<any>) => (props: any) => {
-  const { node } = useNode();
-  const { pagePath } = node;
-  const store = new BreadcrumbStore(pagePath);
-  return (
-    <BreadcrumbStoreProvider store={store}>
-      <Component {...props}/>
-      <DesignableCleanBreadcrumbs {...props} />
-    </BreadcrumbStoreProvider>
-  );
+const withBreadcrumbStore = (Component: ComponentType<any>) => {
+  const WithBreadcrumbStore = (props: any) => {
+    const { node } = useNode();
+    const { pagePath } = node;
+    const store = new BreadcrumbStore(pagePath);
+    return (
+      <BreadcrumbStoreProvider store={store}>
+        <Component {...props}/>
+        <DesignableCleanBreadcrumbs {...props} />
+      </BreadcrumbStoreProvider>
+    );
+  }
+  return WithBreadcrumbStore;
 }
 
 /**
@@ -163,14 +165,14 @@ const asBreadcrumbsClean = ({ depth = 1, ...rest }: BreadcrumbSettings) => flow(
   withSimpleSubListDesign(depth)(flow(
     asBreadcrumbListItem(rest),
   )),
-  withBreadcrumbProvider,
+  withBreadcrumbStore,
 );
 
 export {
   asBreadcrumbsClean,
   asBreadcrumbListItem,
   DesignableCleanBreadcrumbs,
-  withBreadcrumbProvider,
+  withBreadcrumbStore,
 };
 
 
