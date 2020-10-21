@@ -15,7 +15,13 @@
 import { flow } from 'lodash';
 import { withDesign, addClasses } from '@bodiless/fclasses';
 
-import { asToutWithPaddings, asToutDefaultStyle, asToutHorizontal } from '../Tout/token';
+import {
+  asToutWithPaddings,
+  asToutDefaultStyle,
+  asToutHorizontal,
+  asToutTextWhite,
+  asToutFullHeight,
+} from '../Tout/token';
 
 import {
   asSimpleSubMenu,
@@ -28,6 +34,8 @@ import {
  * ===========================================
  */
 const withMenuToutStyles = flow(
+  asToutTextWhite,
+  asToutFullHeight,
   asToutWithPaddings,
   asToutDefaultStyle,
   asToutHorizontal,

@@ -62,6 +62,14 @@ const asToutWithPaddings = withDesign({
   Wrapper: asBlockItem,
 });
 
+const asToutTextWhite = withDesign({
+  ContentWrapper: addClasses('text-white'),
+});
+
+const asToutFullHeight = withDesign({
+  Wrapper: addClasses('h-full'),
+});
+
 export {
   asToutHorizontal,
   asToutVertical,
@@ -73,4 +81,6 @@ export {
   asToutOverlayCta,
   asToutNoBodyNoTitle,
   asToutWithPaddings,
+  asToutTextWhite,
+  asToutFullHeight,
 };
