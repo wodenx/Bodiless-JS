@@ -35,7 +35,19 @@ describe('withTokensFromProps', () => {
     expect(wrapper.find('span#test').prop('data-token2')).toBeUndefined();
   });
 
-  it.only('Re-renders other props when they change', () => {
+  it('updates tokens when regenerate prop is supplied', () => {
+    const token1 = createTestToken('data-token1');
+    const token2 = createTestToken('data-token2');
+    const Test = withTokensFromProps<HTMLProps<HTMLSpanElement>>('span');
+    const wrapper = mount(<Test tokens={[token1]} id="test" />);
+    expect(wrapper.find('span#test').prop('data-token1')).toBeDefined();
+    wrapper.setProps({ tokens: [token2], regenerate: true });
+    wrapper.update();
+    expect(wrapper.find('span#test').prop('data-token1')).toBeUndefined();
+    expect(wrapper.find('span#test').prop('data-token2')).toBeDefined();
+  });
+
+  it('Re-renders other props when they change', () => {
     const token1 = createTestToken('data-token1');
     const Test = withTokensFromProps<HTMLProps<HTMLSpanElement>>('span');
     const wrapper = mount(<Test tokens={[token1]} id="test" className="foo" />);
