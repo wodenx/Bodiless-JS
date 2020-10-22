@@ -52,6 +52,7 @@ const H1 = flow(addClasses('pt-5'), asHeader1)(H1$);
 const H2 = flow(addClasses('pt-5'), asHeader2)(H2$);
 const H3 = asHeader3(H3$);
 const Description = addClasses('text-sm mb-2 italic')(Div);
+const DataPreviewContainer = addClasses('overflow-scroll')(Div);
 const DescList = addClasses('list-disc ml-5')(Ul);
 
 export default (props: any) => (
@@ -61,7 +62,7 @@ export default (props: any) => (
     <Layout>
       <H1>Menu V2</H1>
       <Description>
-        This page showcases two types of manus.  Each menu is shown as a top nav and also
+        This page showcases two types of menus.  Each menu is shown as a top nav and also
         as a simple list of links which render the same data as the top nav.
       </Description>
       <H2>Simple Menu</H2>
@@ -117,11 +118,13 @@ export default (props: any) => (
       <H3>Mega Menu Breadcrumbs</H3>
       <MegaMenuBreadcrumbs nodeKey="list1" />
       */}
-      <H2>Data</H2>
-      <H3>Simple Menu Data</H3>
-      <NodeTreePrinter nodeKey="list2" />
-      <H3>Mega Menu Data</H3>
-      <NodeTreePrinter nodeKey="list1" />
+      <DataPreviewContainer>
+        <H2>Data</H2>
+        <H3>Simple Menu Data</H3>
+        <NodeTreePrinter nodeKey="list2" />
+        <H3>Mega Menu Data</H3>
+        <NodeTreePrinter nodeKey="list1" />
+      </DataPreviewContainer>
     </Layout>
   </Page>
 );

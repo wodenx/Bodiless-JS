@@ -20,7 +20,6 @@ import {
   asToutDefaultStyle,
   asToutHorizontal,
   asToutTextWhite,
-  asToutFullHeight,
 } from '../Tout/token';
 
 import {
@@ -35,7 +34,6 @@ import {
  */
 const withMenuToutStyles = flow(
   asToutTextWhite,
-  asToutFullHeight,
   asToutWithPaddings,
   asToutDefaultStyle,
   asToutHorizontal,

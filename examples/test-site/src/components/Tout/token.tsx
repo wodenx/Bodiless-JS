@@ -66,10 +66,6 @@ const asToutTextWhite = withDesign({
   ContentWrapper: addClasses('text-white'),
 });
 
-const asToutFullHeight = withDesign({
-  Wrapper: addClasses('h-full'),
-});
-
 export {
   asToutHorizontal,
   asToutVertical,
@@ -82,5 +78,4 @@ export {
   asToutNoBodyNoTitle,
   asToutWithPaddings,
   asToutTextWhite,
-  asToutFullHeight,
 };
