@@ -20,7 +20,7 @@ import {
   asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaMenuBreadcrumbs,
   asMenuLink, asMegaMenuTopNav,
 } from '@bodiless/organisms';
-import { asReadOnly } from '@bodiless/core';
+import { asStatic } from '@bodiless/core';
 import { withEditorSimple } from '../Editors';
 import withMegaMenuStyles, { withMenuToutStyles } from './MegaMenu.token';
 import { asEditableTout } from '../Tout';
@@ -75,7 +75,7 @@ const MegaMenuList = flow(
   withMegaMenuDesign({
     Item: addClasses('pl-5'),
   }),
-  asReadOnly,
+  asStatic,
 )('ul');
 
 // Styles for breadcrumbs.
@@ -94,7 +94,7 @@ const MegaMenuBreadcrumbs = flow(
   }),
   asMegaMenuBreadcrumbs,
   withMegaMenuDesign(asInline),
-  asReadOnly,
+  asStatic,
 )('ul');
 
 export default MegaMenu;

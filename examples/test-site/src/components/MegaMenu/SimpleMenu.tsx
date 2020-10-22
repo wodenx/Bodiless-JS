@@ -14,8 +14,8 @@
 
 import { ComponentType } from 'react';
 import { flow } from 'lodash';
-
 import { addClasses } from '@bodiless/fclasses';
+import { asStatic } from '@bodiless/core';
 import {
   asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenuTopNav,
 } from '@bodiless/organisms';
@@ -36,8 +36,7 @@ export const SimpleMenuList = flow(
   asSimpleMenuBase(),
   withSimpleMenuDesign({
     Title: asMenuTitle,
-  }),
-  withSimpleMenuDesign({
     Item: addClasses('pl-5'),
   }),
+  asStatic,
 )('ul') as ComponentType<any>;
