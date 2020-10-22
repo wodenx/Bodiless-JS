@@ -17,7 +17,6 @@ import { flow } from 'lodash';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { H1, withTokensFromProps, addProps } from '@bodiless/fclasses';
 import { ToutClean } from '@bodiless/organisms';
-import { withRandomKey } from '@bodiless/fclasses/src/withTokensFromProps';
 import { asToutDefaultStyle, asToutHorizontal, asToutVertical } from '../../../components/Tout/token';
 import Layout from '../../../components/Layout';
 import { asHeader1 } from '../../../components/Elements.token';
@@ -28,7 +27,6 @@ import * as availableTokens from '../../../components/Tout/token';
 const DemoTout = flow(
   asEditableTout,
   withTokensFromProps,
-  // withRandomKey,
 )(ToutClean);
 
 const DemoTokenSelectorTout = flow(
@@ -36,6 +34,7 @@ const DemoTokenSelectorTout = flow(
   addProps({ availableTokens }),
 )(DemoTout);
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ToutOrientationToggle = ({ nodeKey }: any) => {
   const [orientationVertical, setOrientationVertical] = useState(true);
   const tokens = orientationVertical

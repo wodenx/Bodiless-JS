@@ -10,7 +10,6 @@ import { flowRight, pick } from 'lodash';
 import { v4 } from 'uuid';
 import type { Token } from './TokenMap';
 import TokenMap from './TokenMap';
-import { withRandomKey } from '@bodiless/fclasses/src/withTokensFromProps';
 
 type Tokens = {
   [key: string]: Token,
@@ -70,8 +69,8 @@ const withKeyFromData = (C: any) => (p: any) => {
   // Necessary to apply the tokens selected by the editor, since
   // they are only applied at mount.
   const { componentData } = p;
+  // @TODO Replace this with a hash
   const key = JSON.stringify(componentData);
-  console.log(key);
   return <C {...p} key={key} />;
 };
 
