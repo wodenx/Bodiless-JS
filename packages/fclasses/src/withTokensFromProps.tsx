@@ -12,7 +12,6 @@ const withTokensFromProps = <P extends object>(Component: ComponentOrTag<P>) => 
   class WithTokensFromProps extends React.Component<P & TokensProps<P>> {
     Component: ComponentOrTag<P>;
 
-
     constructor(props: P & TokensProps<P>) {
       super(props);
       const { tokens } = props;
@@ -30,6 +29,6 @@ const withTokensFromProps = <P extends object>(Component: ComponentOrTag<P>) => 
 export const withRandomKey = <P extends object>(Component: ComponentOrTag<P>) => {
   const WithRandomKey = (props: P) => <Component {...props} key={v4()} />;
   return WithRandomKey;
-}
+};
 
 export default withTokensFromProps;
