@@ -97,3 +97,20 @@ export {
 } from './components/Carousel';
 
 export * from './components/Menu';
+
+export { default as Embed } from './components/Embed';
+export {
+  asResponsive21By9Embed,
+  asResponsive16By9Embed,
+  asResponsive4By3Embed,
+  asResponsive1By1Embed,
+} from './components/Embed.tokens';
+
+export {
+  asBaseResponsiveIframe,
+  asResponsiveIframe,
+} from './components/ResponsiveIframe';
+export {
+  asBaseResponsiveYouTube,
+  asResponsiveYouTube,
+} from './components/ResponsiveYouTube';
