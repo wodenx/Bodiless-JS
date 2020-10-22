@@ -1,7 +1,8 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import type { HTMLProps } from 'react';
-import withTokensFromProps from '../src/withTokensFromProps';
+import { flow } from 'lodash';
+import withTokensFromProps, { withRandomKey } from '../src/withTokensFromProps';
 import type { ComponentOrTag } from '../src/withTokensFromProps';
 
 describe('withTokensFromProps', () => {
@@ -18,7 +19,6 @@ describe('withTokensFromProps', () => {
     const token2 = createTestToken('data-token2');
     const Test = withTokensFromProps<HTMLProps<HTMLSpanElement>>('span');
     const wrapper = mount(<Test tokens={[token1, token2]} id="test" />);
-    console.log(wrapper.debug());
     expect(wrapper.find('span#test').prop('data-token1')).toBeDefined();
     expect(wrapper.find('span#test').prop('data-token2')).toBeDefined();
   });
@@ -35,14 +35,16 @@ describe('withTokensFromProps', () => {
     expect(wrapper.find('span#test').prop('data-token2')).toBeUndefined();
   });
 
-  it('updates tokens when regenerate prop is supplied', () => {
+  it('updates tokens when wrapped in withRandomKey', () => {
     const token1 = createTestToken('data-token1');
     const token2 = createTestToken('data-token2');
-    const Test = withTokensFromProps<HTMLProps<HTMLSpanElement>>('span');
+    const Test = flow(
+      withTokensFromProps,
+      withRandomKey,
+    )<HTMLProps<HTMLSpanElement>>('span');
     const wrapper = mount(<Test tokens={[token1]} id="test" />);
     expect(wrapper.find('span#test').prop('data-token1')).toBeDefined();
-    wrapper.setProps({ tokens: [token2], regenerate: true });
-    wrapper.update();
+    wrapper.setProps({ tokens: [token2] });
     expect(wrapper.find('span#test').prop('data-token1')).toBeUndefined();
     expect(wrapper.find('span#test').prop('data-token2')).toBeDefined();
   });

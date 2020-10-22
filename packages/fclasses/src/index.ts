@@ -23,6 +23,8 @@ import type {
   StylableProps,
 } from './FClasses';
 
+import withTokensFromProps from './withTokensFromProps';
+
 import addProps from './addProps';
 import {
   asComponent,
@@ -69,6 +71,7 @@ export {
   asComponent,
   addClassesIf,
   removeClassesIf,
+  withTokensFromProps,
 };
 
 export type {
