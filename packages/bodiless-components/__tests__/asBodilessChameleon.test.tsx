@@ -166,7 +166,7 @@ describe('asBodilessChameleon', () => {
         const Form = getForm(wrapper);
         const form = shallow(<Form />);
         const { initialValues, submitValues } = form.childAt(0).props();
-        expect(initialValues.component).toBeFalsy();
+        expect(initialValues.component).toBeTruthy();
         const values = { component: 'A' };
         submitValues(values);
         expect(mockSetNode).toBeCalledWith(['root', 'chameleon'], values);
@@ -180,7 +180,8 @@ describe('asBodilessChameleon', () => {
         ));
         const Form = getForm(wrapper);
         const form = mount(<Form />);
-        expect(form.find('input[value="A"]').prop('checked')).toBeFalsy();
+        // First component is selected by default
+        expect(form.find('input[value="A"]').prop('checked')).toBeTruthy();
         expect(form.find('input[value="B"]').prop('checked')).toBeFalsy();
         expect(form.find('label#bl-component-form-chameleon-radio-A').text()).toBe('A');
         expect(form.find('label#bl-component-form-chameleon-radio-B').text()).toBe('B');

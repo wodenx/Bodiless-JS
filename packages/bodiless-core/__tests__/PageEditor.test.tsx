@@ -85,7 +85,8 @@ describe('PageEditor', () => {
     expect(itemRendered).toBeCalledTimes(2);
     wrapper.find('div[aria-label="Edit"]').simulate('click');
     expect(menuRendered).toBeCalledTimes(2);
-    expect(itemRendered).toBeCalledTimes(2);
+    // Clicking on Edit button currently re-activates the root context
+    expect(itemRendered).toBeCalledTimes(4);
     menuRendered.mockClear();
   });
 });

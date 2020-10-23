@@ -119,7 +119,10 @@ const asBodilessComponent = <P extends object, D extends object>(options: Option
     useOverrides?: UseBodilessOverrides<P, D>,
   ) => {
     const {
-      activateEvent = 'onClick', Wrapper, defaultData: defaultDataOption = {}, ...rest
+      activateEvent = 'onClick',
+      Wrapper,
+      defaultData: defaultDataOption = {},
+      ...rest
     } = options;
     const editButtonOptions = useOverrides
       ? (props: P & EditButtonProps<D>) => ({ ...rest, ...useOverrides(props) })
