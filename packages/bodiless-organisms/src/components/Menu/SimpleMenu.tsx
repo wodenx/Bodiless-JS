@@ -37,7 +37,7 @@ import {
  * Suitable for use for all menus.
  */
 const asMenuSubList = flow(
-  asSubList,
+  asSubList(),
   asStylableList,
   withDeleteNodeOnUnwrap,
 );
