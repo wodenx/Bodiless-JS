@@ -18,6 +18,6 @@ export {
 
 export type {
   FinalProps as ListProps,
-  ItemProps as ListTitleProps,
+  ItemProps as ListItemProps,
   ListDesignableComponents,
 } from './types';
