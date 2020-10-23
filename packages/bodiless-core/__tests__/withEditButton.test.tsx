@@ -18,10 +18,10 @@ import React, {
 import { shallow, mount } from 'enzyme';
 import { Text } from 'informed';
 import { observer } from 'mobx-react-lite';
+import { omit } from 'lodash';
 import withEditButton from '../src/withEditButton';
 import { useEditContext } from '../src/hooks';
 import ContextMenuItem from '../src/components/ContextMenuItem';
-import { omit } from 'lodash';
 
 type Props = HTMLProps<HTMLDivElement>;
 type Data = {
