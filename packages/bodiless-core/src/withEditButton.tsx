@@ -131,7 +131,7 @@ const withEditButton = <P extends object, D extends object>(
     && options.useCompoundForm !== undefined
     && options.useCompoundForm();
   const withMenuOptions$ = isCompoundForm
-    ? withCompoundForm({ 
+    ? withCompoundForm({
       useMenuOptions: createMenuOptionHook(options),
       name: `Edit ${options.name}`,
     })
