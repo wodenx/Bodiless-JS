@@ -67,7 +67,7 @@ const withMenuDesign = (design: any) => {
  * a site's main menu, a burger menu and breadcrumbs.
  *
  * @param nodeKeys The optional nodekeys specifying where the data should be stored.
- 
+
  * @return HOC which creates a basic mega menu list.
  */
 const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(

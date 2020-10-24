@@ -40,13 +40,13 @@ export const withToutEditors = flow(
   withDesign({
     Image: asEditableImage('image'),
     ImageLink: withSidecarNodes(
-      asEditableLink('link'),
+      asEditableLink('link', undefined, () => ({ label: 'Link' })),
     ),
     Title: withEditorSimple('title', 'Tout Title Text'),
     Link: flow(
       withEditorSimple('ctatext', 'CTA'),
       withSidecarNodes(
-        asEditableLink('link'),
+        asEditableLink('link', undefined, () => ({ groupLabel: 'CTA', label: 'Link' })),
       ),
       ifEditable(asNonDraggable),
     ),

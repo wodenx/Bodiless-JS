@@ -35,7 +35,8 @@ type Props = HTMLProps<HTMLAnchorElement> & {
 const options: BodilessOptions<Props, Data> = {
   icon: 'link',
   name: 'Link',
-  label: 'Link',
+  label: 'Edit',
+  groupLabel: 'Link',
   groupMerge: 'merge',
   renderForm: ({ componentProps: { unwrap }, closeForm }) => {
     const {
@@ -82,12 +83,18 @@ const withHrefTransformer = (Component : ComponentType<Props>) => {
   return TransformedHref;
 };
 
-export const asBodilessLink: AsBodiless<Props, Data> = (nodeKeys?) => flowRight(
+export type AsBodilessLink = AsBodiless<Props, Data>;
+
+export const asBodilessLink: AsBodilessLink = (
+  nodeKeys,
+  defaultData,
+  useOverrides,
+) => flowRight(
   // Prevent following the link in edit mode
   ifEditable(
     withExtendHandler('onClick', () => (e: MouseEvent) => e.preventDefault()),
   ),
-  asBodilessComponent<Props, Data>(options)(nodeKeys),
+  asBodilessComponent<Props, Data>(options)(nodeKeys, defaultData, useOverrides),
   withoutProps(['unwrap']),
   withHrefTransformer,
 );
