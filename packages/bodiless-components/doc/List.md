@@ -251,6 +251,14 @@ const List = flow(
   )),
 )('ul');
 ```
+This is useful if your list is a piece of a larger component which you are extending
+via the design API.
+
+#### Default Data
+
+Similarly, you can specify default data for the list as a second parameter (NOT YET IMPLEMENTED).
+
+#### Overrides
 
 Finally, let's turn the top-level list itself into a chameleon which can switch between
 bulleted and numbered:
