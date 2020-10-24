@@ -127,6 +127,7 @@ export type TMenuOption = {
    * A reference to the page edit context instance which is providing this button.
    */
   context?: PageEditContextInterface;
+  formTitle?: string;
 };
 
 export type ButtonVariantProps = HTMLProps<HTMLDivElement> & {

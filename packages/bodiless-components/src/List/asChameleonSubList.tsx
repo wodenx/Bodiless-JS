@@ -1,8 +1,13 @@
 import { v1 } from 'uuid';
 import { identity, flow } from 'lodash';
-import { withDesign, HOC, Design } from '@bodiless/fclasses';
-import { EditButtonOptions } from '@bodiless/core';
-import { useChameleonContext, asBodilessChameleon } from '../Chameleon';
+import type { EditButtonOptions } from '@bodiless/core';
+import {
+  withDesign, HOC, Design, withoutProps,
+} from '@bodiless/fclasses';
+import {
+  useChameleonContext, withChameleonContext,
+  withChameleonComponentFormControls, applyChameleon, withChameleonButton,
+} from '../Chameleon';
 
 const useChameleonOverrides = ():Partial<EditButtonOptions<any, any>> => {
   const { isOn } = useChameleonContext();
@@ -13,6 +18,7 @@ const useChameleonOverrides = ():Partial<EditButtonOptions<any, any>> => {
     groupMerge: 'merge-up',
     // label: isOn ? 'Swap' : 'Add',
     // groupLabel: 'Sublist',
+    formTitle: 'Sublist',
   };
 };
 
@@ -26,6 +32,7 @@ const useToggleOverrides = ():Partial<EditButtonOptions<any, any>> => {
     groupMerge: 'merge-up',
     // label: 'Add',
     // groupLabel: 'Sublist',
+    formTitle: 'Sublist',
   };
 };
 
@@ -36,10 +43,12 @@ const useOverrides = () => {
     : useToggleOverrides();
 };
 
-const asChameleonSubList = asBodilessChameleon(
-  'cham-sublist',
-  {},
-  useOverrides,
+const asChameleonSubList = flow(
+  applyChameleon,
+  withoutProps('onSubmit'),
+  withChameleonComponentFormControls,
+  withChameleonButton(useOverrides),
+  withChameleonContext('cham-sublist'),
 );
 
 const withSubListDesign$ = (depth: number) => (design: Design<any>, hoc: HOC = identity): HOC => (

@@ -11,23 +11,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { flow } from 'lodash';
+import {
+  withTitle,
+  withDesc,
+} from '@bodiless/layouts';
+import {
+  varyDesign,
+  replaceWith,
+  withDesign,
+} from '@bodiless/fclasses';
 
-.rc-menu-submenu.bl-mega-menu ul.rc-menu-sub {
-  display: flex;
-}
-.rc-menu-submenu.bl-mega-menu ul.rc-menu-hidden {
-  display: none;
-}
+import { DefaultReponsive16By9YouTube } from '../YouTube';
+import { withType } from './Categories';
 
-.rc-tooltip.bl-menu-tooltip.rc-tooltip-placement-bottomLeft {
-  padding: 0;
-  opacity: 1;
-}
+const youtubeVariation = {
+  YouTube: flow(
+    replaceWith(DefaultReponsive16By9YouTube),
+    withType('YouTube')(),
+    withTitle('YouTube'),
+    withDesc('Responsive 16:9 YouTube.'),
+  ),
+};
 
-.rc-tooltip.bl-menu-tooltip.rc-tooltip-placement-bottomLeft .rc-tooltip-inner {
-  padding: 0;
-}
-
-.rc-tooltip.bl-menu-tooltip.rc-tooltip-placement-bottomLeft .rc-tooltip-arrow {
-  display: none;
-}
+export default withDesign(varyDesign(
+  youtubeVariation,
+)());

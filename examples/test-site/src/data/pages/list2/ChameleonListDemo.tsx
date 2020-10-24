@@ -6,6 +6,7 @@ import {
   asBodilessList,
   withSubListDesign, withSubLists, asBodilessChameleon, asEditable,
 } from '@bodiless/components';
+import { withNode } from '@bodiless/core';
 import { asLink, asEditableLink } from '../../../components/Elements.token';
 import { asToggledSubList } from './ListDemo';
 import { withItemMargin } from './SimpleListDemo';
@@ -60,6 +61,7 @@ const List = flow(
     Bulleted: asBulletedList,
     Numbered: asNumberedList,
   }),
+  withNode,
 )('ul');
 
 export default List;

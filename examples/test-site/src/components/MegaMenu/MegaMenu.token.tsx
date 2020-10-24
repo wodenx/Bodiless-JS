@@ -13,74 +13,82 @@
  */
 
 import { flow } from 'lodash';
-import { asHorizontalSubMenu, asHorizontalMenu, asToutHorizontal } from '@bodiless/organisms';
-import { withDesign, addProps, addClasses } from '@bodiless/fclasses';
-import { withMenuSublistStyles, withMenuListStyles } from '../Menus/token';
-import { asExceptMobile } from '../Elements.token';
-import './megamenu.css';
-import { asToutWithPaddings, asToutDefaultStyle } from '../Tout/token';
+import { withDesign, addClasses } from '@bodiless/fclasses';
 
-const withMegaMenuStyles = withDesign({
-  // @TODO: We add the class here to style rc-menu. Maybe can use design API if we ditch rc-menu.
-  Wrapper: addProps({ popupClassName: 'container bl-mega-menu' }),
-  // @TODO: What's the best starting width? They will shrink to fit if there are more.
-  Item: addClasses('w-1/3'),
-});
+import {
+  asToutWithPaddings,
+  asToutDefaultStyle,
+  asToutHorizontal,
+  asToutTextWhite,
+} from '../Tout/token';
 
-const withColumnStyles = flow(
-  withMenuSublistStyles,
-);
+import {
+  asSimpleSubMenu,
+  withBaseMenuStyles,
+  withBaseSubMenuStyles,
+} from './SimpleMenu.token';
 
-const withBasicSubMenuStyles = flow(
-  asHorizontalSubMenu,
-  withMenuSublistStyles,
-);
-
-const withToutSubMenuStyles = flow(
-  withBasicSubMenuStyles,
-  withMegaMenuStyles,
-);
-
-const withColumnSubMenuStyles = flow(
-  withDesign({
-    Item: withColumnStyles,
-  }),
-  withBasicSubMenuStyles,
-  withMegaMenuStyles,
-);
-
-const withChameleonSubMenuStyles = withDesign({
-  Basic: withBasicSubMenuStyles,
-  Touts: withToutSubMenuStyles,
-  Columns: withColumnSubMenuStyles,
-});
-
-const withMenuStyles = flow(
-  withDesign({
-    Item: withChameleonSubMenuStyles,
-  }),
-  asHorizontalMenu,
-  withMenuListStyles,
-  asExceptMobile,
-);
-
-const withSimpleSubMenuStyles = withDesign({
-  SubMenu: withBasicSubMenuStyles,
-});
-
-export const withSimpleMenuStyles = flow(
-  withDesign({
-    Item: withSimpleSubMenuStyles,
-  }),
-  asHorizontalMenu,
-  withMenuListStyles,
-  asExceptMobile,
-);
-
-export const withMenuToutStyles = flow(
+/**
+ * Touts Sub Menu Styles
+ * ===========================================
+ */
+const withMenuToutStyles = flow(
+  asToutTextWhite,
   asToutWithPaddings,
   asToutDefaultStyle,
   asToutHorizontal,
 );
 
-export default withMenuStyles;
+const withToutStyles = withDesign({
+  Item: addClasses('w-1/3'),
+});
+
+const asToutsSubMenu = flow(
+  withToutStyles,
+  withBaseSubMenuStyles,
+);
+
+/**
+ * Columns Sub Menu Styles
+ * ===========================================
+ */
+const withColumnStyles = flow(
+  withDesign({
+    Item: addClasses('hover:bg-teal-500 min-w-100'),
+    Title: addClasses('hover:bg-teal-500 block w-full px-3 pl-5'),
+  }),
+);
+
+const asColumnSubMenu = flow(
+  withDesign({
+    Item: withColumnStyles,
+  }),
+  withBaseSubMenuStyles,
+);
+
+/**
+ * Mega Menu Sub Menu Styles
+ * ===========================================
+ */
+
+const asMegaMenuSubListStyles = withDesign({
+  List: asSimpleSubMenu,
+  Touts: asToutsSubMenu,
+  Columns: asColumnSubMenu,
+});
+
+/**
+ * Mega Menu Styles
+ * ===========================================
+ */
+const withMegaMenuStyles = flow(
+  withDesign({
+    Item: asMegaMenuSubListStyles,
+  }),
+  withBaseMenuStyles,
+);
+
+export default withMegaMenuStyles;
+export {
+  withMenuToutStyles,
+};

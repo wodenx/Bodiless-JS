@@ -44,4 +44,16 @@ export type EditButtonOptions<P, D> = Omit<TMenuOption, 'handler'> & {
    * If omitted, will use the button label.
    */
   groupLabel?: string,
+  formTitle?: string,
+  /**
+  * An optional function that determines if the created menu option displays "compound form".
+  * If the function returns true, then "compound form" is displayed.
+  * Otherwise, standard form is displayed.
+  * Default is to display standard form.
+  */
+  useCompoundForm?: () => boolean,
 } & EditDataHandler<D>;
+
+export type UseBodilessOverrides<P = any, D = any> = (
+  props: P & EditButtonProps<D>,
+) => Partial<EditButtonOptions<P, D>>;

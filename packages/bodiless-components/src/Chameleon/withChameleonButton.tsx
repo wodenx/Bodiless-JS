@@ -13,16 +13,14 @@
  */
 
 import React, { ComponentType } from 'react';
-import {
-  withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator, withLocalContextMenu,
-  TMenuOption,
-} from '@bodiless/core';
-
 import { flowRight } from 'lodash';
 import { v1 } from 'uuid';
 import {
-  ChameleonButtonProps, ChameleonData, UseOverrides,
-} from './types';
+  withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator, withLocalContextMenu,
+  TMenuOption, EditButtonProps, UseBodilessOverrides,
+} from '@bodiless/core';
+
+import type { ChameleonButtonProps, ChameleonData } from './types';
 import { useChameleonContext, DEFAULT_KEY } from './withChameleonContext';
 
 const useToggleButtonMenuOption = () => {
@@ -38,7 +36,7 @@ const useToggleButtonMenuOption = () => {
   };
 };
 
-const useSwapButtonMenuOption = () => {
+const useSwapButtonMenuOption = (formTitle: string = 'Choose a component') => {
   const { selectableComponents, activeComponent, setActiveComponent } = useChameleonContext();
   const renderForm = () => {
     const {
@@ -47,16 +45,17 @@ const useSwapButtonMenuOption = () => {
       ComponentFormRadio,
       ComponentFormTitle,
     } = useMenuOptionUI();
+
     const radios = Object.getOwnPropertyNames(selectableComponents).map(name => (
-      <ComponentFormLabel key={name} htmlFor={`bl-component-form-chameleon-radio-${name}`}>
-        <ComponentFormRadio value={name} id={`bl-comonent-form-chameleon-radio-${name}`} />
+      <ComponentFormLabel id={`bl-component-form-chameleon-radio-${name}`} key={name}>
+        <ComponentFormRadio value={name} />
         {/* @ts-ignore */}
         {selectableComponents[name].title || name}
       </ComponentFormLabel>
     ));
     return (
       <>
-        <ComponentFormTitle>Choose a component</ComponentFormTitle>
+        <ComponentFormTitle>{formTitle}</ComponentFormTitle>
         <ComponentFormRadioGroup field="component">
           {radios}
         </ComponentFormRadioGroup>
@@ -64,7 +63,11 @@ const useSwapButtonMenuOption = () => {
     );
   };
   const render = useContextMenuForm({
-    initialValues: { component: activeComponent === DEFAULT_KEY ? null : activeComponent },
+    initialValues: {
+      component: activeComponent === DEFAULT_KEY
+        ? Object.keys(selectableComponents)[0]
+        : activeComponent,
+    },
     submitValues: (d: ChameleonData) => setActiveComponent(d.component || null),
     renderForm,
   });
@@ -97,11 +100,13 @@ export const withUnwrap = <P extends object>(Component: ComponentType<P>) => {
  *
  * @return HOC which adds the menu button.
  */
-const withChameleonButton = <P extends object>(
-  useOverrides?: UseOverrides<P>,
+const withChameleonButton = <P extends object, D extends object>(
+  useOverrides?: UseBodilessOverrides<P, D>,
 ) => {
-  const useMenuOptions = (props: P):TMenuOption[] => {
+  const useMenuOptions = (props: P & EditButtonProps<D>) => {
     const { selectableComponents } = useChameleonContext();
+    const overrides = useOverrides ? useOverrides(props) : {};
+    const formTitle = typeof overrides !== 'undefined' ? overrides.formTitle : undefined;
     const extMenuOptions = Object.keys(selectableComponents).length > 1
       ? useSwapButtonMenuOption
       : useToggleButtonMenuOption;
@@ -111,9 +116,8 @@ const withChameleonButton = <P extends object>(
       group: `${name}-group`,
       global: false,
       local: true,
-      ...extMenuOptions(),
+      ...extMenuOptions(formTitle),
     };
-    const overrides = useOverrides ? useOverrides(props) : {};
     // if useOverrides returns undefined, it means not to provide the button.
     if (overrides === undefined) return [];
     const { groupMerge, groupLabel, ...overrides$ } = overrides;
@@ -134,7 +138,7 @@ const withChameleonButton = <P extends object>(
     withMenuOptions({ useMenuOptions, name: 'Chamelion' }),
     withContextActivator('onClick'),
     withLocalContextMenu,
-    withUnwrap,
+    // withUnwrap,
   );
 };
 

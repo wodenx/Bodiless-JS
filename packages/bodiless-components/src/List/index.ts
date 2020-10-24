@@ -1,5 +1,5 @@
 import asBodilessList, {
-  asSubList, asTitledItem, withSimpleSubListDesign,
+  asSubList, withSimpleSubListDesign,
 } from './asBodilessList';
 
 import asChameleonSubList, { withSubLists, withSubListDesign } from './asChameleonSubList';
@@ -10,7 +10,6 @@ export {
   asBodilessList,
   asSubList,
   asChameleonSubList,
-  asTitledItem,
   withSimpleSubListDesign,
   withSubLists,
   withSubListDesign,
@@ -19,5 +18,6 @@ export {
 
 export type {
   FinalProps as ListProps,
+  ItemProps as ListItemProps,
   ListDesignableComponents,
 } from './types';

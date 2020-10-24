@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import type { EditButtonProps, EditButtonOptions } from '@bodiless/core';
+import type { EditButtonProps } from '@bodiless/core';
 import {
   DesignableComponentsProps,
   DesignableComponents,
@@ -34,4 +34,3 @@ export type ChameleonState = {
 export type ChameleonProps =
   EditButtonProps<ChameleonData> & DesignableComponentsProps<ChameleonComponents>;
 export type ChameleonButtonProps = ChameleonProps & EditButtonProps<ChameleonData>;
-export type UseOverrides<P = any> = (props: P) => Partial<EditButtonOptions<P, ChameleonData>>;

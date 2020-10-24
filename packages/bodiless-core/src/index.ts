@@ -31,6 +31,7 @@ import withEditButton, { useEditFormProps } from './withEditButton';
 import useContextMenuForm, { contextMenuForm, ContextMenuForm } from './contextMenuForm';
 import withCompoundForm, { useRegisterSnippet } from './withCompoundForm';
 import withEditFormSnippet from './withEditFormSnippet';
+import type { Options as EditFormSnippetOptions } from './withEditFormSnippet';
 import withData from './withData';
 import NodeProvider, { useNode, useNodeDataHandlers } from './NodeProvider';
 import { DefaultContentNode } from './ContentNode';
@@ -48,7 +49,7 @@ import { ifToggledOff, ifToggledOn, withFlowToggle } from './withFlowToggle';
 import { ifEditable, ifReadOnly, useEditToggle } from './withEditToggle';
 import type { ContextMenuFormProps, IContextMenuItemProps, TMenuOption } from './Types/ContextMenuTypes';
 import type { PageEditContextInterface } from './PageEditContext/types';
-import type { EditButtonOptions, EditButtonProps } from './Types/EditButtonTypes';
+import type { EditButtonOptions, EditButtonProps, UseBodilessOverrides } from './Types/EditButtonTypes';
 import type { TMenuOptionGetter, MenuOptionsDefinition } from './Types/PageContextProviderTypes';
 import type { WithNodeProps, WithNodeKeyProps } from './Types/NodeTypes';
 import type { TOverlaySettings } from './Types/PageOverlayTypes';
@@ -146,6 +147,7 @@ export type {
   WithNodeProps,
   WithNodeKeyProps,
   EditButtonOptions,
+  UseBodilessOverrides,
   EditButtonProps,
   TOverlaySettings,
   ContextMenuFormProps,
@@ -153,6 +155,7 @@ export type {
   AsBodiless,
   FormSnippet,
   MenuOptionsDefinition,
+  EditFormSnippetOptions,
 };
 
 export type Bodiless<P, Q> = (C: ComponentType<P> | string) => ComponentType<Q>;

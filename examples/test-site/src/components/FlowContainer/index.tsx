@@ -19,6 +19,8 @@ import withContentfulTouts from './withContentfulTouts';
 import withRichTextVariations from './withRichTextVariations';
 import withSingleAccordionVariations from './withSingleAccordionVariations';
 import withImageVariations from './withImageVariations';
+import withIframeVariations from './withIframeVariations';
+import withYouTubeVariations from './withYouTubeVariations';
 
 import { asFlowContainerWithMargins } from './token';
 import withListVariations from './withListVariations';
@@ -32,6 +34,8 @@ const FlowContainerDefault = flow(
   withContentfulTouts,
   withSingleAccordionVariations,
   withListVariations,
+  withIframeVariations,
+  withYouTubeVariations,
   asFlowContainerWithMargins,
   withMandatoryCategories(['Orientation', 'Type']),
 )(FlowContainer);

@@ -88,20 +88,14 @@ const useMenuOptions = (useOverrides: UseListOverrides = () => ({})) => (props: 
  */
 const withListButtons = (useOverrides?: UseListOverrides) => ifEditable(
   withFinalDesign({
-    Item: withMenuOptions({
-      useMenuOptions: useMenuOptions(useOverrides),
-      name: 'List Item',
-      type: 'list-item',
-    }),
-    // @TODO: These are here bc of rc-menu.  If possible, they should go on the item,
-    // not the title, but rc-menu items don't accept click events, and can't be
-    // wrapped without breaking things.
-    Title: flow(
+    Item: flow(
       withContextActivator('onClick'),
       withLocalContextMenu,
-      // @TODO: Fix this: We need to add an empty context here so that we don't end up with 2 local
-      // menus associated with the same context when using the chameleon button.
-      withMenuOptions({ useMenuOptions: () => [], name: 'List Item Title ' }),
+      withMenuOptions({
+        useMenuOptions: useMenuOptions(useOverrides),
+        name: 'List Item',
+        type: 'list-item',
+      }),
     ),
   }),
 );

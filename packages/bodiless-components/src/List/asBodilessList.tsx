@@ -19,6 +19,7 @@ import React, { ComponentType, PropsWithChildren, FC } from 'react';
 import { flow, identity } from 'lodash';
 import {
   replaceWith, withDesign, asComponent, DesignableComponentsProps, designable, HOC,
+  withoutProps,
 } from '@bodiless/fclasses';
 
 import withListButtons from './withListButtons';
@@ -91,6 +92,7 @@ const asBodilessList = <P extends object>(
     withListButtons(useOverrides),
     withDesign({
       Wrapper: replaceWith(asComponent(Component)),
+      Item: withoutProps(['addItem', 'deleteItem', 'canDelete']),
     }),
     withNodeKey(nodeKeys),
   )(Component);
@@ -122,4 +124,4 @@ const withSimpleSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
 );
 
 export default asBodilessList;
-export { asSubList, asTitledItem, withSimpleSubListDesign };
+export { asSubList, withSimpleSubListDesign };

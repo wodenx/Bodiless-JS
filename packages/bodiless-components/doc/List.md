@@ -140,7 +140,7 @@ import { withDeleteNodeOnUnwrap, withSubLists, withSubListDesign } from '@bodile
 
 const asToggledSubList = flow(
   asSubList(),
-  withDeleteNodeOnUnwrap,
+  withDeleteNodeOnUnwrap(),
 );
 
 const List = flow(
@@ -159,7 +159,7 @@ Here we introduce three new helper functions:
 - `withSubListDesign` is similar to `withSimpleSubListDesign` which we used above, but adapted
   to the structure of a list with optional sublists (we'll explore that structure below).
 - `withSubLists` recursively replaces list items with toggled or "chameleon" sublists.
-- `withDeleteNodeOnUnwrap` - ensures that sublist data are purged when sublists are removed.
+- `withDeleteNodeOnUnwrap(nodeKey?)` - ensures that sublist data are purged when sublists are removed. Accepts an optional `nodeKey` param that determines what child node will be purged.
 
 ### Structure of a toggled sublist
 
@@ -261,8 +261,14 @@ bulleted and numbered:
     Bulleted: asBulletedList,
     Numbered: asNumberedList,
   }),
+  withNode,
 )('ul');
 ```
+
+Note - we need to add `withNode` here to ensure that the list (and it's chameleon) will
+receive their own node. Without it, the list would attempt to store data at the root
+node, which would conflict with other elements on the page.
+
 ## Advanced Topics
 
 ### Optional Parameters
