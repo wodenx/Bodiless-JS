@@ -40,8 +40,8 @@ export type Props = HTMLProps<HTMLIFrameElement>;
 const options: BodilessOptions<Props, Data> = {
   icon: 'settings',
   groupLabel: 'IFrame',
-  label: 'Config',
-  name: 'Edit',
+  label: 'Settings',
+  name: 'iframe-settings',
   global: false,
   local: true,
   Wrapper: 'div',
