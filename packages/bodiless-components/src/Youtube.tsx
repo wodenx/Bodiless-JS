@@ -50,6 +50,7 @@ export type Props = Pick<IframeProps, Exclude<keyof IframeProps, 'src'>>;
 export const editButtonOptions: EditButtonOptions<Props, Data> = {
   icon: 'settings',
   label: 'Settings',
+  groupLabel: 'YouTube',
   name: 'Edit',
   renderForm: ({ ui: formUi }) => {
     const { ComponentFormTitle, ComponentFormLabel, ComponentFormText } = getUI(formUi);

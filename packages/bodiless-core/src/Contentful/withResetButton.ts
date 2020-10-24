@@ -35,7 +35,7 @@ const useMenuOptions = (menuOptionWithNodeKey?: MenuOptionWithNodeKey) => () => 
     {
       icon: 'undo',
       name: 'reset-default-content',
-      label: 'Undo',
+      label: 'Default',
       handler: () => nodeKeysToDelete.forEach(key => node.delete(key)),
       local: true,
       global: false,
@@ -44,8 +44,7 @@ const useMenuOptions = (menuOptionWithNodeKey?: MenuOptionWithNodeKey) => () => 
     },
     {
       name: 'reset-default-content-group',
-      label: 'Undo',
-      handler: () => nodeKeysToDelete.forEach(key => node.delete(key)),
+      label: 'Content',
       local: true,
       global: false,
       Component: 'group',

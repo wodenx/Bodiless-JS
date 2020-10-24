@@ -54,7 +54,8 @@ const List = flow(
     withItemMargin,
     withLinkTitle,
   )),
-  asBodilessChameleon('cham-list', { component: 'Bulleted' }),
+  asBodilessChameleon('cham-list', { component: 'Bulleted' },
+    () => ({ groupLabel: 'List', label: 'Format' })),
   withDesign({
     Bulleted: asBulletedList,
     Numbered: asNumberedList,
