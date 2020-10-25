@@ -14,22 +14,24 @@
 
 import { flow } from 'lodash';
 import {
-  withDesign, replaceWith, H2, addClasses, stylable, Li,
-} from '@bodiless/fclasses';
-import {
   asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaMenuBreadcrumbs,
-  asMenuLink, asMegaMenuTopNav,
 } from '@bodiless/organisms';
-import { asReadOnly } from '@bodiless/core';
+import { asStatic } from '@bodiless/core';
 import { withEditorSimple } from '../Editors';
 import withMegaMenuStyles, { withMenuToutStyles } from './MegaMenu.token';
-import { withToutEditors } from '../Tout';
+import { asEditableTout } from '../Tout';
 
-export const withTitleEditor = withEditorSimple('text', 'Menu Item');
+const withTitleEditor = withEditorSimple('text', 'Menu Item');
+const asMenuTitle = flow(
+  asMenuLink(withTitleEditor),
+  withDesign({
+    _default: replaceWith(Div),
+  }),
+);
 
 // Customize the tout editors so the node keys match
 const withMenuToutEditors = flow(
-  withToutEditors,
+  asEditableTout,
   withDesign({
     Title: flow(
       replaceWith(H2),
@@ -47,7 +49,7 @@ const asMenuTout$ = flow(
 const asMegaMenuBase$ = flow(
   asMegaMenuBase(),
   withMegaMenuDesign({
-    Title: asMenuLink(withTitleEditor),
+    Title: asMenuTitle,
   }),
 );
 
@@ -69,8 +71,27 @@ const MegaMenuList = flow(
   withMegaMenuDesign({
     Item: addClasses('pl-5'),
   }),
-  asReadOnly,
+  asStatic,
+)('ul');
+
+// Styles for breadcrumbs.
+const asInline = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: flow(stylable, addClasses('inline pl-5')),
+    List: flow(stylable, addClasses('inline')),
+  }),
+  Item: addClasses('inline pl-5'),
+});
+
+const MegaMenuBreadcrumbs = flow(
+  asMegaMenuBase(),
+  withMegaMenuDesign({
+    Title: asMenuTitle,
+  }),
+  asMegaMenuBreadcrumbs,
+  withMegaMenuDesign(asInline),
+  asStatic,
 )('ul');
 
 export default MegaMenu;
-export { MegaMenuList };
+export { MegaMenuBreadcrumbs, MegaMenuList, asMenuTitle };

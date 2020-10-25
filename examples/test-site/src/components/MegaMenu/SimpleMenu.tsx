@@ -14,19 +14,19 @@
 
 import { ComponentType } from 'react';
 import { flow } from 'lodash';
-
 import { addClasses } from '@bodiless/fclasses';
+import { asStatic } from '@bodiless/core';
 import {
-  asMenuLink, asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenuTopNav,
+  asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenuTopNav,
 } from '@bodiless/organisms';
 
-import { withTitleEditor } from './MegaMenu';
+import { asMenuTitle } from './MegaMenu';
 import withSimpleMenuStyles from './SimpleMenu.token';
 
 export const SimpleMenu = flow(
   asSimpleMenuBase(),
   withSimpleMenuDesign({
-    Title: asMenuLink(withTitleEditor),
+    Title: asMenuTitle,
   }),
   withSimpleMenuStyles,
   asSimpleMenuTopNav,
@@ -35,9 +35,8 @@ export const SimpleMenu = flow(
 export const SimpleMenuList = flow(
   asSimpleMenuBase(),
   withSimpleMenuDesign({
-    Title: asMenuLink(withTitleEditor),
-  }),
-  withSimpleMenuDesign({
+    Title: asMenuTitle,
     Item: addClasses('pl-5'),
   }),
+  asStatic,
 )('ul') as ComponentType<any>;

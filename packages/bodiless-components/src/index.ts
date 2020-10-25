@@ -39,7 +39,28 @@ import { withToggle, withToggleTo, withToggleButton } from './Toggle';
 import withEditPlaceholder from './Placeholder';
 import { TagButtonProps, withTagButton, useTagsAccessors } from './TagButton';
 import withFilterByTags from './withFilterByTags';
-import Youtube, { asBodilessYoutube } from './Youtube';
+import asBodilessIframe, {
+  asBaseBodilessIframe,
+  withoutPointerEvents,
+  withIframeFormHeader,
+  withIframeFormHeightSnippet,
+  withIframeFormSrcSnippet,
+  useIframeBodilessOptions,
+} from './Iframe';
+import YouTube, {
+  asBaseBodilessYouTube,
+  asBodilessYouTube,
+  withYouTubeFormHeader,
+  withYouTubePlayerSettings,
+  withYouTubeFormSrcSnippet,
+  withYouTubePlayerTransformer,
+  useYouTubePlayerAPI,
+  withYouTubePlayerAPI,
+  ifYouTubePlayerAPILoaded,
+  ifNotYouTubePlayerAPILoaded,
+  YouTubePlayerAPIProvider,
+} from './YouTube';
+import type { YouTubePlayerSettings } from './YouTube';
 import PageDimensionsProvider, {
   usePageDimensionsContext,
   withPageDimensionsContext,
@@ -85,8 +106,25 @@ export {
   asTaggableItem,
   withFilterByTags,
   useTagsAccessors,
-  asBodilessYoutube,
-  Youtube,
+  asBaseBodilessIframe,
+  asBodilessIframe,
+  withoutPointerEvents,
+  withIframeFormHeader,
+  withIframeFormHeightSnippet,
+  withIframeFormSrcSnippet,
+  useIframeBodilessOptions,
+  asBaseBodilessYouTube,
+  asBodilessYouTube,
+  withYouTubePlayerSettings,
+  withYouTubePlayerTransformer,
+  withYouTubeFormSrcSnippet,
+  withYouTubeFormHeader,
+  useYouTubePlayerAPI,
+  withYouTubePlayerAPI,
+  ifYouTubePlayerAPILoaded,
+  ifNotYouTubePlayerAPILoaded,
+  YouTubePlayerAPIProvider,
+  YouTube,
   PageDimensionsProvider,
   usePageDimensionsContext,
   withPageDimensionsContext,
@@ -102,5 +140,5 @@ export * from './List';
 
 export * from './Breadcrumb';
 
-export type { MetaFormFieldType };
 export type { BreadcrumbSettings } from './Breadcrumb';
+export type { MetaFormFieldType, YouTubePlayerSettings };

@@ -14,8 +14,11 @@
 
 import { flow } from 'lodash';
 import { useEditContext } from '@bodiless/core';
-import { withDesign, addClasses, addClassesIf } from '@bodiless/fclasses';
+import {
+  withDesign, addClasses, addClassesIf, removeClassesIf,
+} from '@bodiless/fclasses';
 
+import { useIsMenuOpen } from './withMenuContext';
 /*
  * Utility Styles
  * ===========================================
@@ -53,10 +56,20 @@ const asResponsiveSublist = withDesign({
  * Base Menu Styles
  * ===========================================
  */
-const withBaseMenuStyles = withDesign({
-  Wrapper: addClasses('relative flex'),
-  Item: addClasses('overflow-hidden hover:overflow-visible'),
+const withHoverStyles = withDesign({
+  Item: flow(
+    addClasses('hover:overflow-visible'),
+    removeClassesIf(useIsMenuOpen)('hover:overflow-visible'),
+  ),
 });
+
+const withBaseMenuStyles = flow(
+  withHoverStyles,
+  withDesign({
+    Wrapper: addClasses('relative flex'),
+    Item: addClasses('overflow-hidden'),
+  }),
+);
 
 /*
  * Base Sub Menu Styles

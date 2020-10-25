@@ -22,6 +22,7 @@ import {
 
 import { asMenuSubList } from './SimpleMenu';
 import asStylableList from './asStylableList';
+import withMenuContext from './withMenuContext';
 
 /**
  * Applies a list design (or other HOC) recursively to all submenus.
@@ -75,6 +76,7 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
     Item: asChameleonSubList,
   }),
   withSubMenuDesign(asMenuSubList),
+  withMenuContext,
 );
 
 // Now we create breaccrumbs

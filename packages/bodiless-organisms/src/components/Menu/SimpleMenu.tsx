@@ -34,6 +34,7 @@ import {
 import type { BreadcrumbSettings }  from '@bodiless/components'
 
 import asStylableList from './asStylableList';
+import withMenuContext from './withMenuContext';
 
 import {
   asBreadcrumbListItem,
@@ -86,6 +87,7 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   asBodilessList(nodeKeys),
   asStylableList,
   withSubLists(1)({ SubMenu: asMenuSubList }),
+  withMenuContext,
 );
 
 /**
