@@ -2,6 +2,4 @@
 
 exports[`asBreadcrumbsClean creates breadcrumbs for basic 1-level menu 1`] = `"<ul><li data-bl-activator=\\"true\\"><a href=\\"/products\\"></a></li></ul>"`;
 
-exports[`asBreadcrumbsClean creates breadcrumbs for basic 2-level menu 1`] = `"<ul><li><a href=\\"/products\\"></a></li><li><a href=\\"/products/productA\\"></a></li></ul>"`;
-
-exports[`withBreadcrumbDesign allows designing breadcrumb components 1`] = `"<ul><li><a href=\\"/products\\" class=\\"breadcrumb-title\\"></a></li><li design=\\"[object Object]\\"><a href=\\"/products/productA\\"></a></li></ul>"`;
+exports[`asBreadcrumbsClean creates breadcrumbs for basic 2-level menu 1`] = `"<ul><li><a href=\\"/products\\"></a></li><span></span><li><a href=\\"/products/productA\\"></a></li></ul>"`;

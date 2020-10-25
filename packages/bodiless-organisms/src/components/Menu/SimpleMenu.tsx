@@ -21,8 +21,6 @@ import {
   stylable,
   replaceWith,
   withOnlyProps,
-  asComponent,
-  addClasses,
 } from '@bodiless/fclasses';
 import {
   WithNodeKeyProps,
@@ -30,16 +28,12 @@ import {
 import {
   asBodilessList,
   withSubListDesign, withSubLists, asSubList, withDeleteNodeOnUnwrap,
+  asBreadcrumb, withBreadcrumb,
 } from '@bodiless/components';
-import type { BreadcrumbSettings }  from '@bodiless/components'
+import type { BreadcrumbSettings } from '@bodiless/components';
 
 import asStylableList from './asStylableList';
 import withMenuContext from './withMenuContext';
-
-import {
-  asBreadcrumbListItem,
-  withBreadcrumbStore,
-} from '../ListBreadcrumb';
 
 /**
  * Creates a stylable sublist which deletes it's data when the last item is removed.
@@ -127,10 +121,10 @@ const asBreadcrumbsClean = (settings: BreadcrumbSettings) => flow(
   withEmptyMenuMarkup,
   withMenuDesign({
     Item: flow(
-      asBreadcrumbListItem(settings),
+      asBreadcrumb(settings),
     ),
   }),
-  withBreadcrumbStore,
+  withBreadcrumb,
 );
 
 // @TODO Add a similar HOC for BurgerMenu, something like:

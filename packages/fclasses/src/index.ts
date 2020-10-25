@@ -44,7 +44,9 @@ import type {
   DesignableComponentsProps,
   DesignableComponents,
 } from './Design';
-import { flowIf, hasProp, withoutProps, withOnlyProps } from './hoc-util';
+import {
+  flowIf, hasProp, withoutProps, withOnlyProps,
+} from './hoc-util';
 
 export * from './StyledHTML';
 

@@ -18,13 +18,26 @@ export {
 } from './asBreadcrumb';
 
 export type {
-  BreadcrumbSettings
+  BreadcrumbSettings,
 } from './asBreadcrumb';
 
 export {
-  BreadcrumbItemInterface,
   BreadcrumbItem,
   BreadcrumbStore,
-  BreadcrumbStoreProvider,
+} from './BreadcrumbStore';
+
+export type {
+  BreadcrumbItemType,
+} from './BreadcrumbStore';
+
+export {
+  BreadcrumbClean,
+  Breadcrumb,
+} from './Breadcrumb';
+
+export {
   useBreadcrumbStore,
-} from './BreadcrumbStore';;
+  BreadcrumbStoreProvider,
+} from './BreadcrumbStoreProvider';
+
+export { default as withBreadcrumb } from './withBreadcrumb';

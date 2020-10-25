@@ -14,7 +14,10 @@
 
 import React from 'react';
 import { flow } from 'lodash';
-import { Div, designable, addClasses, replaceWith } from '@bodiless/fclasses';
+import {
+  Div, designable, addClasses, replaceWith,
+} from '@bodiless/fclasses';
+import { useNode, withNodeKey, ifToggledOn } from '@bodiless/core';
 import Header from './header';
 import Footer from './footer';
 import SeoHelmet from './meta';
@@ -22,8 +25,7 @@ import SiteGTMHelmetEvent from './GTM';
 import { asPageContainer, asYMargin } from '../Elements.token';
 import { asSiteHeader, asSiteFooter } from './token';
 
-import { MenuBreadcrumbs } from '../Breadcrumbs/MenuBreadcrumbs'
-import { useNode, withNodeKey, ifToggledOn } from '@bodiless/core';
+import MenuBreadcrumbs from '../Breadcrumbs/MenuBreadcrumbs';
 
 const SiteHeader = asSiteHeader(Header);
 const SiteFooter = asSiteFooter(Footer);
@@ -47,7 +49,7 @@ const BaseLayout = ({ children, components }) => {
       <SiteFooter />
     </>
   );
-}
+};
 
 const isHomePage = () => useNode().node.pagePath === '/';
 

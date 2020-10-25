@@ -140,5 +140,4 @@ export * from './List';
 
 export * from './Breadcrumb';
 
-export type { BreadcrumbSettings } from './Breadcrumb';
 export type { MetaFormFieldType, YouTubePlayerSettings };

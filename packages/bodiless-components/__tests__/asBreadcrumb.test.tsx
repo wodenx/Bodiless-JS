@@ -17,7 +17,11 @@ import React, { ComponentType, FC, Fragment } from 'react';
 import { observer } from 'mobx-react-lite';
 import { flow } from 'lodash';
 import { mount } from 'enzyme';
-import asBreadcrumb, { BreadcrumbContext, useBreadcrumbContext } from '../src/asBreadcrumb';
+import {
+  asBreadcrumb,
+  BreadcrumbContext,
+  useBreadcrumbContext,
+} from '../src/Breadcrumb';
 
 describe('BreadcrumbContext', () => {
   describe('activate', () => {

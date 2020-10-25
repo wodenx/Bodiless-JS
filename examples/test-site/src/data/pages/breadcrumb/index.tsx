@@ -16,13 +16,13 @@ import React from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  addClasses, H1 as H1$, H2 as H2$, withDesign, replaceWith,
+  addClasses, H1 as H1$, H2 as H2$,
 } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 
 import Layout from '../../../components/Layout';
 import { SimpleMenu } from '../../../components/MegaMenu/SimpleMenu';
-import { MenuBreadcrumbs } from '../../../components/Breadcrumbs/MenuBreadcrumbs';
+import MenuBreadcrumbs from '../../../components/Breadcrumbs/MenuBreadcrumbs';
 import {
   withEditableStartingTrail,
   withStartingTrailIcon,

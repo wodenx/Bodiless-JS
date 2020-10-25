@@ -12,24 +12,24 @@
  * limitations under the License.
  */
 
-import React, { HTMLProps } from 'react';
 import { flow } from 'lodash';
-import { withSidecarNodes, asReadOnly} from '@bodiless/core';
-import { asEditable, asBodilessLink } from '@bodiless/components'; 
+import { withSidecarNodes, asReadOnly } from '@bodiless/core';
+import { asBodilessLink } from '@bodiless/components';
 import {
   addClasses,
   withDesign,
   replaceWith,
   A,
   Span,
+  Ul,
 } from '@bodiless/fclasses';
+import { withRichtextPlainSerializer } from '@bodiless/richtext';
 import {
   asSimpleMenuBase,
   asSimpleMenuBreadcrumbs,
 } from '@bodiless/organisms';
 
 import { withArrowSeparator } from './MenuBreadcrumbs.token';
-import { EditorSimple } from '../Editors';
 
 const withMenuBreadcrumbSchema = withDesign({
   Separator: replaceWith(Span),
@@ -37,13 +37,13 @@ const withMenuBreadcrumbSchema = withDesign({
     replaceWith(
       withSidecarNodes(
         asBodilessLink(),
-      )(A)
+      )(A),
     ),
     asReadOnly,
   ),
   BreadcrumbTitle: flow(
-    replaceWith(EditorSimple),
-    asReadOnly,
+    replaceWith(Span),
+    withRichtextPlainSerializer,
   ),
 });
 
@@ -52,7 +52,10 @@ const withMenuBreadcrumbsStyles = flow(
     Separator: flow(
       addClasses('mx-1'),
     ),
-    BreadcrumbWrapper: addClasses('inline-flex'),
+    BreadcrumbWrapper: flow(
+      replaceWith(Ul),
+      addClasses('inline-flex'),
+    ),
   }),
   withArrowSeparator,
 );
@@ -67,6 +70,4 @@ const MenuBreadcrumbs = flow(
   withMenuBreadcrumbsStyles,
 )('ul');
 
-export {
-  MenuBreadcrumbs,
-};
+export default MenuBreadcrumbs;

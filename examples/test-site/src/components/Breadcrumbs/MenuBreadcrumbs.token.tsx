@@ -14,7 +14,7 @@
 
 import React, { HTMLProps } from 'react';
 import { flow } from 'lodash';
-import type { WithNodeKeyProps } from '@bodiless/core'; 
+import type { WithNodeKeyProps } from '@bodiless/core';
 import {
   addClasses,
   addProps,
@@ -24,11 +24,11 @@ import {
   withOnlyProps,
 } from '@bodiless/fclasses';
 
-import { asBold, asEditable } from '../Elements.token'; 
+import { asBold, asEditable } from '../Elements.token';
 
 const withEditableStartingTrail = (
   nodeKeys?: WithNodeKeyProps,
-  placeholder?: string
+  placeholder?: string,
 ) => withDesign({
   StartingTrail: asEditable(nodeKeys, placeholder),
 });
@@ -43,13 +43,13 @@ const withStartingTrailIcon = withDesign({
 const withNonLinkableItems = withDesign({
   BreadcrumbLink: flow(
     replaceWith(React.Fragment),
-    withOnlyProps('key', 'children'),    
+    withOnlyProps('key', 'children'),
   ),
 });
 
 const withEditableFinalTrail = (
   nodeKeys?: WithNodeKeyProps,
-  placeholder?: string
+  placeholder?: string,
 ) => withDesign({
   FinalTrail: asEditable(nodeKeys, placeholder),
 });

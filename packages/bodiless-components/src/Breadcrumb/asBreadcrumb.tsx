@@ -15,22 +15,18 @@
 import React, {
   createContext, useContext, ComponentType, useRef,
 } from 'react';
-import {
-  useNode,
-} from '@bodiless/core';
+import { useNode } from '@bodiless/core';
 import { v4 } from 'uuid';
-import {
-  useBreadcrumbStore,
-  BreadcrumbItem,
-  BreadcrumbItemInterface,
-} from './BreadcrumbStore';
 import { observer } from 'mobx-react-lite';
+import { BreadcrumbItem } from './BreadcrumbStore';
+import type { BreadcrumbItemType } from './BreadcrumbStore';
+import { useBreadcrumbStore } from './BreadcrumbStoreProvider';
 
 type LinkData = {
   href: string,
 };
 
-const breadcrumbContext = createContext<BreadcrumbItemInterface | undefined>(undefined);
+const breadcrumbContext = createContext<BreadcrumbItemType | undefined>(undefined);
 
 export const useBreadcrumbContext = () => useContext(breadcrumbContext);
 export const BreadcrumbContextProvider = breadcrumbContext.Provider;
@@ -56,8 +52,7 @@ export type BreadcrumbSettings = {
 const asBreadcrumb = ({
   linkNodeKey,
   titleNodeKey,
-}: BreadcrumbSettings) => 
-  <P extends object>(Component: ComponentType<P>) => {
+}: BreadcrumbSettings) => <P extends object>(Component: ComponentType<P>) => {
   const AsBreadcrumb = observer((props: P) => {
     const { node } = useNode();
     const titleNode = node.child<object>(titleNodeKey);

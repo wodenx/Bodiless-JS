@@ -12,17 +12,11 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { act } from 'react-dom/test-utils';
 import { v4 } from 'uuid';
 import {
   BreadcrumbItem,
   BreadcrumbStore,
-  useBreadcrumbStore,
-  BreadcrumbStoreProvider,
-} from '../src/Breadcrumb/BreadcrumbStore';
-import { mount } from 'enzyme';
-import { observer } from 'mobx-react-lite';
+} from '../../src/Breadcrumb/BreadcrumbStore';
 
 describe('BreadcrumbItem', () => {
   describe('isSubpathOf', () => {
@@ -72,30 +66,30 @@ describe('BreadcrumbItem', () => {
 describe('BreadcrumbStore', () => {
   describe('setItem', () => {
     it('allows updating an existing item in the store', () => {
-    const pagePath = '/home';
-    const store = new BreadcrumbStore(pagePath);
-    const breadcrumbItem = new BreadcrumbItem({
-      uuid: v4(),
-      title: {
-        data: 'title1',
-        nodePath: 'title1&path',
-      },
-      link: {
-        data: '/link1',
-        nodePath: 'link1$path',
-      },
-      store,
-    });
-    const item = store.setItem(breadcrumbItem);
-    item.setTitle({
-      ...item.getTitle(),
-      data: 'title2',
-    });
-    store.setItem(item);
-    const breadcrumb = store.export();
-    expect(breadcrumb.length).toBe(1);
-    expect(breadcrumb[0]?.getTitle().data).toBe('title2')
-    expect(breadcrumb[0]?.getLink().data).toBe('/link1')
+      const pagePath = '/home';
+      const store = new BreadcrumbStore(pagePath);
+      const breadcrumbItem = new BreadcrumbItem({
+        uuid: v4(),
+        title: {
+          data: 'title1',
+          nodePath: 'title1&path',
+        },
+        link: {
+          data: '/link1',
+          nodePath: 'link1$path',
+        },
+        store,
+      });
+      const item = store.setItem(breadcrumbItem);
+      item.setTitle({
+        ...item.title,
+        data: 'title2',
+      });
+      store.setItem(item);
+      const breadcrumb = store.export();
+      expect(breadcrumb.length).toBe(1);
+      expect(breadcrumb[0]?.title.data).toBe('title2');
+      expect(breadcrumb[0]?.link.data).toBe('/link1');
     });
   });
 
@@ -117,9 +111,9 @@ describe('BreadcrumbStore', () => {
       });
       const item = store.setItem(breadcrumbItem);
       expect(store.export().length).toBe(1);
-      store.deleteItem(item.getUUID());
+      store.deleteItem(item.uuid);
       expect(store.export().length).toBe(0);
-    });  
+    });
   });
 
   describe('breadcrumbTrail', () => {
@@ -150,11 +144,11 @@ describe('BreadcrumbStore', () => {
           },
         },
       ];
-      breadcrumbItems.map(item => store.setItem(new BreadcrumbItem({...item, store})));
+      breadcrumbItems.map(item => store.setItem(new BreadcrumbItem({ ...item, store })));
       const breadcrumb = store.breadcrumbTrail;
       expect(breadcrumb.length).toBe(1);
-      expect(breadcrumb[0]?.getTitle().data).toBe('Products');
-      expect(breadcrumb[0]?.getLink().data).toBe('/products');
+      expect(breadcrumb[0]?.title.data).toBe('Products');
+      expect(breadcrumb[0]?.link.data).toBe('/products');
     });
     it('builds and returns breadcrumb for 2-level list', () => {
       const pagePath = '/products/productA';
@@ -214,10 +208,10 @@ describe('BreadcrumbStore', () => {
       store.setItem(articlesItem);
       const breadcrumb = store.breadcrumbTrail;
       expect(breadcrumb.length).toBe(2);
-      expect(breadcrumb[0]?.getTitle().data).toBe('Products');
-      expect(breadcrumb[0]?.getLink().data).toBe('/products');
-      expect(breadcrumb[1]?.getTitle().data).toBe('ProductA');
-      expect(breadcrumb[1]?.getLink().data).toBe('/products/productA');
+      expect(breadcrumb[0]?.title.data).toBe('Products');
+      expect(breadcrumb[0]?.link.data).toBe('/products');
+      expect(breadcrumb[1]?.title.data).toBe('ProductA');
+      expect(breadcrumb[1]?.link.data).toBe('/products/productA');
     });
     it('builds and returns breadcrumb for 2-level list with inactive leaves', () => {
       const pagePath = '/products';
@@ -277,13 +271,13 @@ describe('BreadcrumbStore', () => {
       store.setItem(articlesItem);
       const breadcrumb = store.breadcrumbTrail;
       expect(breadcrumb.length).toBe(1);
-      expect(breadcrumb[0]?.getTitle().data).toBe('Products');
-      expect(breadcrumb[0]?.getLink().data).toBe('/products');
+      expect(breadcrumb[0]?.title.data).toBe('Products');
+      expect(breadcrumb[0]?.link.data).toBe('/products');
     });
   });
 });
 
-describe('withBreadcrumbStore', () => {
+/* describe('withBreadcrumbStore', () => {
   it('allows a react component to consume breadcrumb trail', () => {
     const pagePath = '/products/productA';
     const store = new BreadcrumbStore(pagePath);
@@ -343,16 +337,17 @@ describe('withBreadcrumbStore', () => {
     const BreadcrumbTrailComponent = (props: any) => {
       const store$1 = useBreadcrumbStore();
       const breadcrumbTrail = store$1?.breadcrumbTrail || [];
-      const items = breadcrumbTrail.map(item => <li key={item.getUUID()}>
-        <a href={item.getLink().data}>{item.getTitle().data}</a>
-      </li>
-      );
+      const items = breadcrumbTrail.map(item => (
+        <li key={item.uuid}>
+          <a href={item.link.data}>{item.title.data}</a>
+        </li>
+      ));
       return <ul>{items}</ul>;
     };
     const wrapper = mount(
       <BreadcrumbStoreProvider store={store}>
         <BreadcrumbTrailComponent />
-      </BreadcrumbStoreProvider>
+      </BreadcrumbStoreProvider>,
     );
     expect(wrapper.html()).toMatchSnapshot();
   });
@@ -414,22 +409,24 @@ describe('withBreadcrumbStore', () => {
     const BreadcrumbTrailComponent = observer((props: any) => {
       const store$1 = useBreadcrumbStore();
       const breadcrumbTrail = store$1?.breadcrumbTrail || [];
-      const items = breadcrumbTrail.map(item => <li key={item.getUUID()}>
-        <a href={item.getLink().data}>{item.getTitle().data}</a>
-      </li>
-      );
+      const items = breadcrumbTrail.map(item => (
+        <li key={item.uuid}>
+          <a href={item.link.data}>{item.title.data}</a>
+        </li>
+      ));
       return <ul>{items}</ul>;
     });
     const wrapper = mount(
       <BreadcrumbStoreProvider store={store}>
         <BreadcrumbTrailComponent />
-      </BreadcrumbStoreProvider>
+      </BreadcrumbStoreProvider>,
     );
     productsItem.setTitle({
-      ...productsItem.getTitle(),
-      data: 'ProductsUpdated'
+      ...productsItem.title,
+      data: 'ProductsUpdated',
     });
     store.setItem(productAItem);
     expect(wrapper.html()).toMatchSnapshot();
   });
 });
+*/
