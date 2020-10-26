@@ -3,8 +3,8 @@ import {
   useMenuOptionUI, WithNodeKeyProps, withNodeKey, withNode, ifEditable,
   withLocalContextMenu, withContextActivator, withEditButton, withNodeDataHandlers,
   EditButtonProps,
-  withActivatorWrapper,
   EditButtonOptions,
+  UseBodilessOverrides,
 } from '@bodiless/core';
 import { ComponentOrTag, TokensProps } from '@bodiless/fclasses/lib/withTokensFromProps';
 import { flowRight, pick } from 'lodash';
@@ -35,15 +35,15 @@ const submitValueHandler = (data: { [field: string]: boolean }) => ({
   ), [] as string[]),
 });
 
-const useCheckboxes = (map: TokenMap<any>) => map.names.map(name => {
-  const { ComponentFormLabel, ComponentFormCheckBox } = useMenuOptionUI();
-  return (
-    <ComponentFormLabel>
-      <ComponentFormCheckBox field={name} />
-      {name}
-    </ComponentFormLabel>
-  );
-});
+// const useCheckboxes = (map: TokenMap<any>) => map.names.map(name => {
+//   const { ComponentFormLabel, ComponentFormCheckBox } = useMenuOptionUI();
+//   return (
+//     <ComponentFormLabel>
+//       <ComponentFormCheckBox field={name} />
+//       {name}
+//     </ComponentFormLabel>
+//   );
+// });
 
 const useCategoryCheckboxes = (map: TokenMap<any>) => {
   const { ComponentFormLabel, ComponentFormCheckBox } = useMenuOptionUI();
@@ -60,12 +60,14 @@ const useCategoryCheckboxes = (map: TokenMap<any>) => {
   ));
 };
 
-const useEditButtonOptions = <P extends object>(props: P & TokenSelectorProps<P>): EditButtonOptions<any, any> => {
+const useEditButtonOptions = (
+  useOverrides: UseBodilessOverrides<any, any> = () => ({}),
+) => <P extends object>(props: P & TokenSelectorProps<P>): EditButtonOptions<any, any> => {
   const { availableTokens } = props;
   const map = new TokenMap<P>();
   map.add(availableTokens);
   const renderForm = () => {
-    const { ComponentFormTitle, ComponentFormLabel } = useMenuOptionUI();
+    const { ComponentFormTitle } = useMenuOptionUI();
     return (
       <>
         <ComponentFormTitle>Tokens</ComponentFormTitle>
@@ -73,10 +75,12 @@ const useEditButtonOptions = <P extends object>(props: P & TokenSelectorProps<P>
       </>
     );
   };
-  return {
+  const defaults: EditButtonOptions<any, any> = {
     icon: 'construction',
     name: `token-selector-${v4()}`,
-    label: 'Tokens',
+    groupLabel: 'Tokens',
+    label: 'Choose',
+    groupMerge: 'merge',
     activateContext: false,
     global: false,
     local: true,
@@ -84,6 +88,7 @@ const useEditButtonOptions = <P extends object>(props: P & TokenSelectorProps<P>
     initialValueHandler,
     submitValueHandler,
   };
+  return { ...defaults, ...useOverrides(props) };
 };
 
 const withTokensFromData = <P extends TokensProps<P>>(Component: ComponentOrTag<P>) => {
@@ -111,14 +116,15 @@ const withKeyFromData = (C: any) => (p: any) => {
 const withTokenSelector = (
   nodeKey?: WithNodeKeyProps,
   defaultData?: TokenSelectorData,
+  useOverrides?: UseBodilessOverrides<any, any>,
 ) => flowRight(
   withNodeKey(nodeKey),
   withNode,
   withNodeDataHandlers(defaultData),
   ifEditable(
-    withEditButton(useEditButtonOptions),
+    withEditButton(useEditButtonOptions(useOverrides)),
     withContextActivator('onClick'),
-    withActivatorWrapper('onClick', 'div'),
+    // withActivatorWrapper('onClick', 'div'),
     withLocalContextMenu,
   ),
   withKeyFromData,

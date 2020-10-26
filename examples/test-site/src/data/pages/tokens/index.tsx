@@ -11,42 +11,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
+import React from 'react';
 import { graphql } from 'gatsby';
 import { flow } from 'lodash';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
-import { H1, withTokensFromProps, addProps } from '@bodiless/fclasses';
+import {
+  H1, withTokensFromProps, addProps, withDesign,
+} from '@bodiless/fclasses';
 import { ToutClean } from '@bodiless/organisms';
-import { asToutDefaultStyle, asToutHorizontal, asToutVertical } from '../../../components/Tout/token';
 import Layout from '../../../components/Layout';
 import { asHeader1 } from '../../../components/Elements.token';
 import { asEditableTout } from '../../../components/Tout';
 import withTokenSelector from './withTokenSelector';
 import * as availableTokens from '../../../components/Tout/token';
-
-const DemoTout = flow(
-  asEditableTout,
-  withTokensFromProps,
-)(ToutClean);
+import withTypographySelector from './TypographySelector';
 
 const DemoTokenSelectorTout = flow(
-  withTokenSelector('selector'),
+  asEditableTout,
+  withDesign({
+    Title: withTypographySelector('title-selector', undefined, () => ({ groupLabel: 'Title' })),
+    Body: withTypographySelector('body-selector', undefined, () => ({ groupLabel: 'Body' })),
+    // Link: withTypographySelector('link-selector', undefined, () => ({ groupLabel: 'CTA' })),
+  }),
+  withTokensFromProps,
+  withTokenSelector('selector', undefined, () => ({ groupLabel: 'Tout', groupMerge: 'none' })),
   addProps({ availableTokens }),
-)(DemoTout);
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ToutOrientationToggle = ({ nodeKey }: any) => {
-  const [orientationVertical, setOrientationVertical] = useState(true);
-  const tokens = orientationVertical
-    ? [asToutDefaultStyle, asToutHorizontal]
-    : [asToutDefaultStyle, asToutVertical];
-  return (
-    <>
-      <button type="button" onClick={() => setOrientationVertical(o => !o)}>[Toggle Tout Orientation]</button>
-      <DemoTout nodeKey={nodeKey} tokens={tokens} />
-    </>
-  );
-};
+)(ToutClean);
 
 const PageTitle = asHeader1(H1);
 export default (props: any) => (
