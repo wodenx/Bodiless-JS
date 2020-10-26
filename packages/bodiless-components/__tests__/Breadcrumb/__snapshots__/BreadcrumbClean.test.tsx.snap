@@ -1,9 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`BreadcrumbClean allows adding starting trail using design api 1`] = `"<ul><li><span class=\\"starting-trail\\"></span></li><span></span></ul>"`;
+exports[`BreadcrumbClean allows adding starting trail and design it using design api 1`] = `"<ul><li><span aria-label=\\"starting-trail\\"></span></li></ul>"`;
 
 exports[`BreadcrumbClean allows designing separator using design api 1`] = `"<ul><li><a href=\\"linkNodeKey1\\"><span aria-label=\\"titleNodeKey1\\"></span></a></li><span class=\\"separator\\"></span><li><a href=\\"linkNodeKey1\\"><span aria-label=\\"titleNodeKey1\\"></span></a></li></ul>"`;
 
 exports[`BreadcrumbClean allows passing items as a prop 1`] = `"<ul><li><a href=\\"linkNodeKey1\\"><span aria-label=\\"titleNodeKey1\\"></span></a></li><span></span><li><a href=\\"linkNodeKey1\\"><span aria-label=\\"titleNodeKey1\\"></span></a></li></ul>"`;
+
+exports[`BreadcrumbClean does not render separator after last item when final trail is not set 1`] = `"<ul><li><a href=\\"linkNodeKey1\\"><span aria-label=\\"titleNodeKey1\\"></span></a></li></ul>"`;
 
 exports[`BreadcrumbClean renders as empty unordered list by default 1`] = `"<ul></ul>"`;

@@ -33,6 +33,10 @@ export type {
 export {
   BreadcrumbClean,
   Breadcrumb,
+  withBreadcrumbStartingTrail,
+  withoutBreadcrumbStartingTrail,
+  withBreadcrumbFinalTrail,
+  withoutBreadcrumbFinalTrail,
 } from './Breadcrumb';
 
 export {

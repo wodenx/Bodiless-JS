@@ -42,6 +42,7 @@ export type BreadcrumbItemType = {
   hasPath: (item: BreadcrumbItemType | string) => boolean;
   isAncestorOf: (item: BreadcrumbItemType) => boolean;
   isDescendantOf: (item: BreadcrumbItemType) => boolean;
+  isEqual: (item: BreadcrumbItemType | string) => boolean;
   getAncestors: () => BreadcrumbItemType[];
   parent: BreadcrumbItemType | undefined;
 };
@@ -115,6 +116,11 @@ export class BreadcrumbItem implements BreadcrumbItemType {
     return isDescendant;
   }
 
+  isEqual(item: BreadcrumbItemType | string) {
+    const uuid = typeof item === 'string' ? item : item.uuid;
+    return uuid === this._uuid;
+  }
+
   getAncestors() {
     const ancestors = [];
     for (let current = this._parent;
@@ -153,7 +159,7 @@ export class BreadcrumbItem implements BreadcrumbItemType {
 
 export type BreadcrumbStoreType = {
   setItem: (item: BreadcrumbItemType) => BreadcrumbItemType | undefined;
-  deleteItem: (item: BreadcrumbItemType) => boolean;
+  deleteItem: (item: BreadcrumbItemType | string) => boolean;
   getPagePath: () => string;
   breadcrumbTrail: BreadcrumbItemType[];
   export: () => BreadcrumbItemType[];
@@ -172,24 +178,43 @@ export class BreadcrumbStore implements BreadcrumbStoreType {
     this.pagePath = pagePath;
   }
 
-  @action private setActiveItem(item: BreadcrumbItemType) {
+  @action private setActiveItem(item: BreadcrumbItemType | undefined) {
     this.activeItem = item;
   }
 
+  private isNewActive(item: BreadcrumbItemType) {
+    return (item.hasPath(this.pagePath) || item.isSubpathOf(this.pagePath))
+      && (!this.activeItem || this.activeItem.isSubpathOf(item));
+  }
+
+  private updateActive() {
+    this.setActiveItem(undefined);
+    this.items.forEach((item: BreadcrumbItemType) => {
+      if (this.isNewActive(item)) this.setActiveItem(item);
+    });
+  }
+
+  private isActiveItemPathChanged(item: BreadcrumbItemType) {
+    return this.activeItem !== undefined
+      && this.activeItem.isEqual(item)
+      && !this.activeItem.hasPath(item);
+  }
+
   @action setItem(item: BreadcrumbItemType) {
-    if (
-      (item.hasPath(this.pagePath) || item.isSubpathOf(this.pagePath))
-      && (!this.activeItem || this.activeItem.isSubpathOf(item))
-    ) {
-      this.setActiveItem(item);
-    }
     this.items.set(item.uuid, item);
+    if (this.isActiveItemPathChanged(item)) this.updateActive();
+    if (this.isNewActive(item)) this.setActiveItem(item);
     return item;
   }
 
-  deleteItem(item: BreadcrumbItemType | string) {
+  @action deleteItem(item: BreadcrumbItemType | string) {
     const uuid = typeof item === 'string' ? item : item.uuid;
-    return this.items.delete(uuid);
+    const result = this.items.delete(uuid);
+    if (
+      this.activeItem !== undefined
+      && this.activeItem.isEqual(item)
+    ) this.updateActive();
+    return result;
   }
 
   getPagePath() {

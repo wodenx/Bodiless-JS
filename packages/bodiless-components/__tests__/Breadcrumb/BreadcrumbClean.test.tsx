@@ -15,10 +15,14 @@
 import React, { ComponentType } from 'react';
 import { mount } from 'enzyme';
 import {
-  withDesign, asComponent, addProps, replaceWith, withoutProps,
+  withDesign, addProps, withoutProps,
 } from '@bodiless/fclasses';
 import { flowRight } from 'lodash';
-import { BreadcrumbClean } from '../../src/Breadcrumb';
+import {
+  BreadcrumbClean,
+  withBreadcrumbStartingTrail,
+  withoutBreadcrumbFinalTrail,
+} from '../../src/Breadcrumb';
 
 const withAttrRename = (oldAttr: string, newAttr: string) => (Component: ComponentType) => {
   const WithAttrRename = (props: any) => {
@@ -34,21 +38,18 @@ const withAttrRename = (oldAttr: string, newAttr: string) => (Component: Compone
 
 describe('BreadcrumbClean', () => {
   it('renders as empty unordered list by default', () => {
-    // @ts-ignore
     const wrapper = mount(<BreadcrumbClean />);
     expect(wrapper.html()).toMatchSnapshot();
   });
-  it('allows adding starting trail using design api', () => {
-    const Breadcrumb = withDesign({
-      StartingTrail: flowRight(
-        addProps({
-          className: 'starting-trail',
+  it('allows adding starting trail and design it using design api', () => {
+    const Breadcrumb = flowRight(
+      withDesign({
+        StartingTrail: addProps({
+          'aria-label': 'starting-trail',
         }),
-        replaceWith(asComponent('span')),
-      ),
-    // @ts-ignore
-    })(BreadcrumbClean);
-    // @ts-ignore
+      }),
+      withBreadcrumbStartingTrail,
+    )(BreadcrumbClean);
     const wrapper = mount(<Breadcrumb />);
     expect(wrapper.html()).toMatchSnapshot();
   });
@@ -82,9 +83,7 @@ describe('BreadcrumbClean', () => {
         withAttrRename('nodeKey', 'aria-label'),
         withoutProps('nodeCollection'),
       ),
-    // @ts-ignore
     })(BreadcrumbClean);
-    // @ts-ignore
     const wrapper = mount(<Breadcrumb items={items} />);
     expect(wrapper.html()).toMatchSnapshot();
   });
@@ -109,21 +108,49 @@ describe('BreadcrumbClean', () => {
         },
       },
     ];
-    const Breadcrumb = withDesign({
-      BreadcrumbLink: flowRight(
-        withAttrRename('nodeKey', 'href'),
-        withoutProps('nodeCollection'),
-      ),
-      BreadcrumbTitle: flowRight(
-        withAttrRename('nodeKey', 'aria-label'),
-        withoutProps('nodeCollection'),
-      ),
-      Separator: addProps({
-        className: 'separator',
+    const Breadcrumb = flowRight(
+      withDesign({
+        BreadcrumbLink: flowRight(
+          withAttrRename('nodeKey', 'href'),
+          withoutProps('nodeCollection'),
+        ),
+        BreadcrumbTitle: flowRight(
+          withAttrRename('nodeKey', 'aria-label'),
+          withoutProps('nodeCollection'),
+        ),
+        Separator: addProps({
+          className: 'separator',
+        }),
       }),
-    // @ts-ignore
-    })(BreadcrumbClean);
-    // @ts-ignore
+    )(BreadcrumbClean);
+    const wrapper = mount(<Breadcrumb items={items} />);
+    expect(wrapper.html()).toMatchSnapshot();
+  });
+  it('does not render separator after last item when final trail is not set', () => {
+    const items = [
+      {
+        uuid: Math.random(),
+        link: {
+          nodeKey: 'linkNodeKey1',
+        },
+        title: {
+          nodeKey: 'titleNodeKey1',
+        },
+      },
+    ];
+    const Breadcrumb = flowRight(
+      withDesign({
+        BreadcrumbLink: flowRight(
+          withAttrRename('nodeKey', 'href'),
+          withoutProps('nodeCollection'),
+        ),
+        BreadcrumbTitle: flowRight(
+          withAttrRename('nodeKey', 'aria-label'),
+          withoutProps('nodeCollection'),
+        ),
+      }),
+      withoutBreadcrumbFinalTrail,
+    )(BreadcrumbClean);
     const wrapper = mount(<Breadcrumb items={items} />);
     expect(wrapper.html()).toMatchSnapshot();
   });

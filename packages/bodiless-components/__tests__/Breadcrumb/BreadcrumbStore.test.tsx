@@ -274,6 +274,105 @@ describe('BreadcrumbStore', () => {
       expect(breadcrumb[0]?.title.data).toBe('Products');
       expect(breadcrumb[0]?.link.data).toBe('/products');
     });
+    it('is updated when active item link is changed to inactive', () => {
+      const pagePath = '/products';
+      const store = new BreadcrumbStore(pagePath);
+      const productsItem = new BreadcrumbItem({
+        uuid: v4(),
+        title: {
+          data: 'Products',
+          nodePath: 'title',
+        },
+        link: {
+          data: '/products',
+          nodePath: 'link',
+        },
+        store,
+      });
+      store.setItem(productsItem);
+      const breadcrumb = store.breadcrumbTrail;
+      expect(breadcrumb.length).toBe(1);
+      expect(breadcrumb[0]?.title.data).toBe('Products');
+      expect(breadcrumb[0]?.link.data).toBe('/products');
+      const productsItem$1 = new BreadcrumbItem({
+        uuid: productsItem.uuid,
+        title: productsItem.title,
+        link: {
+          data: '/articles',
+          nodePath: 'link',
+        },
+        store,
+      });
+      store.setItem(productsItem$1);
+      expect(store.breadcrumbTrail.length).toBe(0);
+    });
+    it('is updated when active item link is changed to inactive and then changed back to active', () => {
+      const pagePath = '/products';
+      const store = new BreadcrumbStore(pagePath);
+      const productsItem = new BreadcrumbItem({
+        uuid: v4(),
+        title: {
+          data: 'Products',
+          nodePath: 'title',
+        },
+        link: {
+          data: '/products',
+          nodePath: 'link',
+        },
+        store,
+      });
+      store.setItem(productsItem);
+      const breadcrumb = store.breadcrumbTrail;
+      expect(breadcrumb.length).toBe(1);
+      expect(breadcrumb[0]?.title.data).toBe('Products');
+      expect(breadcrumb[0]?.link.data).toBe('/products');
+      const productsItem$1 = new BreadcrumbItem({
+        uuid: productsItem.uuid,
+        title: productsItem.title,
+        link: {
+          data: '/articles',
+          nodePath: 'link',
+        },
+        store,
+      });
+      store.setItem(productsItem$1);
+      expect(store.breadcrumbTrail.length).toBe(0);
+      const productsItem$2 = new BreadcrumbItem({
+        uuid: productsItem.uuid,
+        title: productsItem.title,
+        link: {
+          data: '/products',
+          nodePath: 'link',
+        },
+        store,
+      });
+      store.setItem(productsItem$2);
+      expect(store.breadcrumbTrail.length).toBe(1);
+      expect(breadcrumb[0]?.link.data).toBe('/products');
+    });
+    it('is updated when active item is deleted', () => {
+      const pagePath = '/products';
+      const store = new BreadcrumbStore(pagePath);
+      const productsItem = new BreadcrumbItem({
+        uuid: v4(),
+        title: {
+          data: 'Products',
+          nodePath: 'title',
+        },
+        link: {
+          data: '/products',
+          nodePath: 'link',
+        },
+        store,
+      });
+      store.setItem(productsItem);
+      const breadcrumb = store.breadcrumbTrail;
+      expect(breadcrumb.length).toBe(1);
+      expect(breadcrumb[0]?.title.data).toBe('Products');
+      expect(breadcrumb[0]?.link.data).toBe('/products');
+      store.deleteItem(productsItem.uuid);
+      expect(store.breadcrumbTrail.length).toBe(0);
+    });
   });
 });
 

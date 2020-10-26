@@ -13,7 +13,7 @@
  */
 
 import React, {
-  createContext, useContext, ComponentType, useRef,
+  createContext, useContext, ComponentType, useRef, useEffect,
 } from 'react';
 import { useNode } from '@bodiless/core';
 import { v4 } from 'uuid';
@@ -75,6 +75,10 @@ const asBreadcrumb = ({
       store,
     });
     store.setItem(item);
+    // deleting item from store on unmount
+    useEffect(() => () => {
+      store.deleteItem(contextUuidRef.current);
+    }, []);
     return (
       <BreadcrumbContextProvider value={item}>
         <Component {...props} />

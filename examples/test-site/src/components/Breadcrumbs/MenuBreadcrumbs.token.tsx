@@ -16,6 +16,10 @@ import React, { HTMLProps } from 'react';
 import { flow } from 'lodash';
 import type { WithNodeKeyProps } from '@bodiless/core';
 import {
+  withBreadcrumbStartingTrail,
+  withBreadcrumbFinalTrail,
+} from '@bodiless/components';
+import {
   addClasses,
   addProps,
   withDesign,
@@ -29,16 +33,22 @@ import { asBold, asEditable } from '../Elements.token';
 const withEditableStartingTrail = (
   nodeKeys?: WithNodeKeyProps,
   placeholder?: string,
-) => withDesign({
-  StartingTrail: asEditable(nodeKeys, placeholder),
-});
+) => flow(
+  withBreadcrumbStartingTrail,
+  withDesign({
+    StartingTrail: asEditable(nodeKeys, placeholder),
+  }),
+);
 
-const withStartingTrailIcon = withDesign({
-  StartingTrail: flow(
-    replaceWith((props: HTMLProps<HTMLSpanElement>) => <Span {...props}>home</Span>),
-    addClasses('material-icons'),
-  ),
-});
+const withStartingTrailIcon = flow(
+  withBreadcrumbStartingTrail,
+  withDesign({
+    StartingTrail: flow(
+      replaceWith((props: HTMLProps<HTMLSpanElement>) => <Span {...props}>home</Span>),
+      addClasses('material-icons'),
+    ),
+  }),
+);
 
 const withNonLinkableItems = withDesign({
   BreadcrumbLink: flow(
@@ -50,9 +60,15 @@ const withNonLinkableItems = withDesign({
 const withEditableFinalTrail = (
   nodeKeys?: WithNodeKeyProps,
   placeholder?: string,
-) => withDesign({
-  FinalTrail: asEditable(nodeKeys, placeholder),
-});
+) => flow(
+  withDesign({
+    FinalTrail: flow(
+      replaceWith(Span),
+      asEditable(nodeKeys, placeholder),
+    ),
+  }),
+  withBreadcrumbFinalTrail,
+);
 
 const withBoldedFinalTrail = withDesign({
   FinalTrail: asBold,
