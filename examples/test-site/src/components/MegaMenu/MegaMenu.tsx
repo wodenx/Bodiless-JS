@@ -12,7 +12,9 @@
  * limitations under the License.
  */
 
+import { ComponentType } from 'react';
 import { flow } from 'lodash';
+import { asStatic } from '@bodiless/core';
 import {
   withDesign, replaceWith, H2, addClasses, stylable, Div,
 } from '@bodiless/fclasses';
@@ -20,7 +22,7 @@ import {
   asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaMenuBreadcrumbs,
   asMenuLink, asMegaMenuTopNav,
 } from '@bodiless/organisms';
-import { asStatic } from '@bodiless/core';
+
 import { withEditorSimple } from '../Editors';
 import withMegaMenuStyles, { withMenuToutStyles } from './MegaMenu.token';
 import { asEditableTout } from '../Tout';
@@ -50,15 +52,14 @@ const asMenuTout$ = flow(
   withMenuToutStyles,
 );
 
-const asMegaMenuBase$ = flow(
+const MegaMenuBase = flow(
   asMegaMenuBase(),
   withMegaMenuDesign({
     Title: asMenuTitle,
   }),
-);
+)('ul') as ComponentType<any>;
 
 const MegaMenu = flow(
-  asMegaMenuBase$,
   withDesign({
     Item: withDesign({
       Touts: withDesign({
@@ -68,15 +69,14 @@ const MegaMenu = flow(
   }),
   withMegaMenuStyles,
   asMegaMenuTopNav,
-)('ul');
+)(MegaMenuBase);
 
 const MegaMenuList = flow(
-  asMegaMenuBase$,
   withMegaMenuDesign({
     Item: addClasses('pl-5'),
   }),
   asStatic,
-)('ul');
+)(MegaMenuBase);
 
 // Styles for breadcrumbs.
 const asInline = withDesign({
@@ -98,4 +98,9 @@ const MegaMenuBreadcrumbs = flow(
 )('ul');
 
 export default MegaMenu;
-export { MegaMenuBreadcrumbs, MegaMenuList, asMenuTitle };
+export {
+  MegaMenuBreadcrumbs,
+  MegaMenuList,
+  asMenuTitle,
+  MegaMenuBase,
+};

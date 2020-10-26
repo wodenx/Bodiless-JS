@@ -12,16 +12,10 @@
  * limitations under the License.
  */
 
-import { withDesign, stylable } from '@bodiless/fclasses';
+import SimpleBurgerMenu from './SimpleBurgerMenu';
+import MegaBurgerMenu from './MegaBurgerMenu';
 
-/**
- * HOC, that incorporate the design of given component (usually based on <List /> component)
- * with rc-menu <Menu /> component
- */
-const asStylableList = withDesign({
-  Wrapper: stylable,
-  Item: stylable,
-  Title: stylable,
-});
-
-export default asStylableList;
+export {
+  SimpleBurgerMenu,
+  MegaBurgerMenu,
+};

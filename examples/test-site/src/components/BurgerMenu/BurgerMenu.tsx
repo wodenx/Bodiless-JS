@@ -12,16 +12,18 @@
  * limitations under the License.
  */
 
-import { withDesign, stylable } from '@bodiless/fclasses';
+import { flow } from 'lodash';
+import { withDesign, replaceWith } from '@bodiless/fclasses';
+import { SimpleBurgerMenuClean } from '@bodiless/organisms';
 
-/**
- * HOC, that incorporate the design of given component (usually based on <List /> component)
- * with rc-menu <Menu /> component
- */
-const asStylableList = withDesign({
-  Wrapper: stylable,
-  Item: stylable,
-  Title: stylable,
-});
+import Logo from '../Layout/logo';
+import withBurgerMenuStyles from './BurgerMenu.token';
 
-export default asStylableList;
+const BurgerMenu = flow(
+  withDesign({
+    Header: replaceWith(Logo),
+  }),
+  withBurgerMenuStyles,
+)(SimpleBurgerMenuClean);
+
+export default BurgerMenu;

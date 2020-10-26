@@ -14,29 +14,45 @@
 
 import { ComponentType } from 'react';
 import { flow } from 'lodash';
-import { addClasses } from '@bodiless/fclasses';
-import { asStatic } from '@bodiless/core';
 import {
-  asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenuTopNav,
+  addClasses, withDesign, replaceWith, Div,
+} from '@bodiless/fclasses';
+import {
+  asMenuLink, asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenuTopNav,
 } from '@bodiless/organisms';
 
-import { asMenuTitle } from './MegaMenu';
+import { withEditorSimple } from '../Editors';
 import withSimpleMenuStyles from './SimpleMenu.token';
 
-export const SimpleMenu = flow(
+const withTitleEditor = withEditorSimple('text', 'Menu Item');
+const asMenuTitle = flow(
+  asMenuLink(withTitleEditor),
+  withDesign({
+    _default: replaceWith(Div),
+  }),
+);
+
+const SimpleMenuBase = flow(
   asSimpleMenuBase(),
   withSimpleMenuDesign({
     Title: asMenuTitle,
   }),
+)('ul') as ComponentType<any>;
+
+const SimpleMenu = flow(
   withSimpleMenuStyles,
   asSimpleMenuTopNav,
-)('ul');
+)(SimpleMenuBase);
 
-export const SimpleMenuList = flow(
-  asSimpleMenuBase(),
+const SimpleMenuList = flow(
   withSimpleMenuDesign({
-    Title: asMenuTitle,
     Item: addClasses('pl-5'),
   }),
-  asStatic,
-)('ul') as ComponentType<any>;
+)(SimpleMenuBase);
+
+export default SimpleMenu;
+export {
+  SimpleMenuBase,
+  SimpleMenuList,
+  asMenuTitle,
+};

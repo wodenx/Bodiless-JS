@@ -12,16 +12,25 @@
  * limitations under the License.
  */
 
-import { withDesign, stylable } from '@bodiless/fclasses';
+import { flow } from 'lodash';
+import { withDesign, addClasses, addProps } from '@bodiless/fclasses';
+
+import { asDefaultLogoStyle } from '../Layout/token';
 
 /**
- * HOC, that incorporate the design of given component (usually based on <List /> component)
- * with rc-menu <Menu /> component
+ * Burger Menu Styles
+ * ===========================================
  */
-const asStylableList = withDesign({
-  Wrapper: stylable,
-  Item: stylable,
-  Title: stylable,
+const withBurgerMenuStyles = withDesign({
+  Wrapper: addClasses('bg-teal-600 py-1'),
+  Header: flow(
+    asDefaultLogoStyle,
+    withDesign({ SiteReturn: addClasses('bg-teal-600') }),
+  ),
+  Menu: flow(
+    addClasses('bg-gray-300'),
+    addProps({ noOverlay: true, width: '100%', right: true }),
+  ),
 });
 
-export default asStylableList;
+export default withBurgerMenuStyles;

@@ -13,9 +13,11 @@
  */
 
 import {
-  WithNodeKeyProps, withNodeKey, useNode, NodeProvider, WithNodeProps,
+  WithNodeKeyProps, withNodeKey, useNode, NodeProvider, WithNodeProps, withOnlyProps,
 } from '@bodiless/core';
-import React, { ComponentType, PropsWithChildren, FC } from 'react';
+import React, {
+  Fragment, ComponentType, PropsWithChildren, FC,
+} from 'react';
 import { flow, identity } from 'lodash';
 import {
   replaceWith, withDesign, asComponent, DesignableComponentsProps, designable, HOC,
@@ -29,6 +31,10 @@ type ComponentOrTag<P> = ComponentType<P>|keyof JSX.IntrinsicElements;
 
 export type TitledItemProps = PropsWithChildren<{
   title: JSX.Element,
+}>;
+
+export type OverviewItem = PropsWithChildren<{
+  overview: JSX.Element,
 }>;
 
 const asTitledItem = <P extends TitledItemProps>(Item: ComponentType<P>) => {
@@ -45,26 +51,45 @@ const asTitledItem = <P extends TitledItemProps>(Item: ComponentType<P>) => {
   return TitledItem;
 };
 
+const asOverviewItem = <P extends TitledItemProps>(Item: ComponentType<P>) => {
+  const ItemWithOverview: ComponentType<P> = (props) => {
+    const { children } = props;
+    const { node } = useNode();
+    // Next line ensures that whatever value is stored in the "text" node is replaced with "Overlay"
+    // const node$ = replaceTextWithOverview(node);
+    const overview = <NodeProvider node={node}>{children}</NodeProvider>;
+    const sublistProps = { overview };
+    return (
+      <Item {...sublistProps} {...props} />
+    );
+  };
+
+  return ItemWithOverview;
+};
+
 type SubListComponents = {
   WrapperItem: ComponentType<any>,
   List: ComponentType<any>,
+  Title: ComponentType<any>
 };
 
 const startComponents: SubListComponents = {
   WrapperItem: asComponent('li'),
   List: asComponent('ul'),
+  Title: withOnlyProps('key', 'children')(Fragment),
 };
 
-type SubListProps = TitledItemProps & DesignableComponentsProps<SubListComponents>;
+type SubListProps = TitledItemProps & OverviewItem & DesignableComponentsProps<SubListComponents>;
 
 const SubList$: FC<SubListProps> = ({
-  title, children, components, ...rest
+  title, children, components, overview, ...rest
 }) => {
-  const { WrapperItem, List } = components;
+  const { WrapperItem, List, Title } = components;
+  // console.log('LIST PROPS: ', rest)
   return (
     <WrapperItem {...rest}>
-      {title}
-      <List>
+      <Title>{title}</Title>
+      <List overview={overview}>
         {children}
       </List>
     </WrapperItem>
@@ -121,4 +146,4 @@ const withSimpleSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
 );
 
 export default asBodilessList;
-export { asSubList, withSimpleSubListDesign };
+export { asSubList, withSimpleSubListDesign, asOverviewItem };
