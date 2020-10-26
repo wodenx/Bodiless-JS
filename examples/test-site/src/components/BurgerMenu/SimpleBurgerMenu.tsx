@@ -13,28 +13,20 @@
  */
 
 import { flow } from 'lodash';
-import { withDesign, replaceWith, addClasses } from '@bodiless/fclasses';
+import { withDesign, replaceWith } from '@bodiless/fclasses';
 import { asStatic } from '@bodiless/core';
-import { asEditable } from '@bodiless/components';
-import {
-  asMenuLink, asSimpleMenuBase, withSimpleMenuDesign, asSimpleBurgerMenu,
-} from '@bodiless/organisms';
+import { asSimpleBurgerMenu } from '@bodiless/organisms';
 
+import { SimpleMenuBase } from '../MegaMenu/SimpleMenu';
 import BurgerMenu from './BurgerMenu';
 import withSimpleBurgerMenuStyles, { withBurgerMenuDebugStyles } from './SimpleBurgerMenu.token';
 
-const withTitleEditor = asEditable('text', 'Menu Item');
-const BurgerMenuTitle = asMenuLink(withTitleEditor);
-
 const BurgerMenuBody = flow(
-  asSimpleMenuBase(),
   asSimpleBurgerMenu,
-  withSimpleMenuDesign({
-    Title: BurgerMenuTitle,
-  }),
   withSimpleBurgerMenuStyles,
+  withBurgerMenuDebugStyles,
   asStatic,
-)('ul');
+)(SimpleMenuBase);
 
 const SimpleBurgerMenu = flow(
   withDesign({
@@ -42,29 +34,4 @@ const SimpleBurgerMenu = flow(
   }),
 )(BurgerMenu);
 
-const SimpleBurgerMenuList = flow(
-  asSimpleMenuBase(),
-  withSimpleMenuDesign({
-    Title: BurgerMenuTitle,
-    Item: addClasses('pl-5'),
-  }),
-  withBurgerMenuDebugStyles,
-)('ul');
-
-const SimpleBurgerMenuAccordion = flow(
-  asSimpleMenuBase(),
-  asSimpleBurgerMenu,
-  withSimpleMenuDesign({
-    Title: BurgerMenuTitle,
-    Item: addClasses('pl-5'),
-  }),
-  withBurgerMenuDebugStyles,
-  asStatic,
-)('ul');
-
 export default SimpleBurgerMenu;
-export {
-  BurgerMenuTitle,
-  SimpleBurgerMenuList,
-  SimpleBurgerMenuAccordion,
-};

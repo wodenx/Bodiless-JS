@@ -70,12 +70,7 @@ const withMenuToutStyles = flow(
   asToutHorizontal,
 );
 
-// const withToutStyles = withDesign({
-//   Item: addClasses('w-1/3'),
-// });
-
 const asToutsSubMenu = flow(
-  // withToutStyles,
   withBaseBurgerSubMenuStyles,
 );
 
@@ -83,20 +78,6 @@ const asToutsSubMenu = flow(
  * Columns Sub Menu Styles
  * ===========================================
  */
-// const withColumnHoverEffect = withDesign({
-//   Wrapper: withDesign({
-//     WrapperItem: addClasses('hover:bg-teal-600'),
-//   }),
-//   Item: addClasses('hover:bg-teal-500'),
-// });
-
-// const withColumnStyles = flow(
-//   withDesign({
-//     Item: addClasses('pr-2 pl-5 min-w-100'),
-//   }),
-//   // withColumnHoverEffect,
-// );
-
 const asColumnSubMenu = flow(
   withDesign({
     Item: withBaseBurgerSubMenuStyles,

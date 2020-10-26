@@ -25,14 +25,11 @@ import {
 } from '@bodiless/core';
 
 import Layout from '../../../components/Layout';
-import MegaMenu, { MegaMenuList } from '../../../components/MegaMenu/MegaMenu';
-import SimpleMenu, { SimpleMenuList } from '../../../components/MegaMenu/SimpleMenu';
+import { MegaMenuList } from '../../../components/MegaMenu/MegaMenu';
+import { SimpleMenuList } from '../../../components/MegaMenu/SimpleMenu';
 import { asHeader2, asHeader3, asHeader1 } from '../../../components/Elements.token';
 
-import {
-  SimpleBurgerMenu, SimpleBurgerMenuList, SimpleBurgerMenuAccordion,
-  MegaBurgerMenu, MegaBurgerMenuList,
-} from '../../../components/BurgerMenu';
+import { ResponsiveSimleMenu, ResponsiveMegaMenu } from '../../../components/MegaMenu';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -65,34 +62,9 @@ export default (props: any) => (
       */}
     <Layout>
       <H1>Menu V2</H1>
-      <Description>
-        This page showcases two types of menus.  Each menu is shown as a top nav and also
-        as a simple list of links which render the same data as the top nav.
-      </Description>
-
-      <H2>Burger Simple Menu</H2>
-      <SimpleBurgerMenu nodeKey="burger-menu" />
-      <Description>
-        This is a simple Burger Menu...
-      </Description>
-
-      <H3>Burger Menu as Accordion</H3>
-      <SimpleBurgerMenuAccordion className="w-1/3 mb-3" nodeKey="burger-menu" />
-
-      <H3>Burger Menu as List</H3>
-      <SimpleBurgerMenuList nodeKey="burger-menu" />
-
-      <H2>Burger Mega Menu</H2>
-      <MegaBurgerMenu nodeKey="burger-mega-menu" />
-      <Description>
-        This is a Burger Mega Menu...
-      </Description>
-
-      <H3>Burger Mega Menu as List</H3>
-      <MegaBurgerMenuList nodeKey="burger-mega-menu" />
 
       <H2>Simple Menu</H2>
-      <SimpleMenu nodeKey="list2" />
+      <ResponsiveSimleMenu nodeKey="list2" />
       <Description>
         This is a simple menu with one level of submenu. Click on a menu item in edit mode
         to display a local context menu. &quot;Add&quot; and &quot;Delete&quot; buttons
@@ -106,7 +78,7 @@ export default (props: any) => (
       <SimpleMenuList nodeKey="list2" />
 
       <H2>Mega Menu</H2>
-      <MegaMenu nodeKey="list1" className="w-full" />
+      <ResponsiveMegaMenu nodeKey="list1" />
       <Description>
         <p>
           This is a &quot;mega&quot; menu.

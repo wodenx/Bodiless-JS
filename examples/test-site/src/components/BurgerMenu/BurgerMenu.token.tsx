@@ -31,7 +31,6 @@ const withBurgerMenuStyles = withDesign({
     addClasses('bg-gray-300'),
     addProps({ noOverlay: true, width: '100%', right: true }),
   ),
-  // Body: addClasses('p-3 text-black'),
 });
 
 export default withBurgerMenuStyles;

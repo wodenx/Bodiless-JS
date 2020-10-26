@@ -12,20 +12,21 @@
  * limitations under the License.
  */
 
+import { ComponentType } from 'react';
 import { flow } from 'lodash';
 import {
   withDesign, replaceWith, H2, addClasses, stylable,
 } from '@bodiless/fclasses';
 import {
-  asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaMenuBreadcrumbs,
-  asMenuLink, asMegaMenuTopNav,
+  asMenuTout, asMegaMenuBase, withMegaMenuDesign,
+  asMegaMenuBreadcrumbs, asMegaMenuTopNav,
 } from '@bodiless/organisms';
 import { asReadOnly } from '@bodiless/core';
+
+import { asSimpleMenuLink } from './SimpleMenu';
 import { withEditorSimple } from '../Editors';
 import withMegaMenuStyles, { withMenuToutStyles } from './MegaMenu.token';
 import { withToutEditors } from '../Tout';
-
-const withTitleEditor = withEditorSimple('text', 'Menu Item');
 
 // Customize the tout editors so the node keys match
 const withMenuToutEditors = flow(
@@ -44,15 +45,14 @@ const asMenuTout$ = flow(
   withMenuToutStyles,
 );
 
-const asMegaMenuBase$ = flow(
+const MegaMenuBase = flow(
   asMegaMenuBase(),
   withMegaMenuDesign({
-    Title: asMenuLink(withTitleEditor),
+    Title: asSimpleMenuLink,
   }),
-);
+)('ul') as ComponentType<any>;
 
 const MegaMenu = flow(
-  asMegaMenuBase$,
   withDesign({
     Item: withDesign({
       Touts: withDesign({
@@ -62,15 +62,14 @@ const MegaMenu = flow(
   }),
   withMegaMenuStyles,
   asMegaMenuTopNav,
-)('ul');
+)(MegaMenuBase);
 
 const MegaMenuList = flow(
-  asMegaMenuBase$,
   withMegaMenuDesign({
     Item: addClasses('pl-5'),
   }),
   asReadOnly,
-)('ul');
+)(MegaMenuBase);
 
 // Styles for breadcrumbs.
 const asInline = withDesign({
@@ -82,14 +81,10 @@ const asInline = withDesign({
 });
 
 const MegaMenuBreadcrumbs = flow(
-  asMegaMenuBase(),
-  withMegaMenuDesign({
-    Title: asMenuLink(withTitleEditor),
-  }),
   asMegaMenuBreadcrumbs,
   withMegaMenuDesign(asInline),
   asReadOnly,
-)('ul');
+)(MegaMenuBase);
 
 export default MegaMenu;
-export { MegaMenuBreadcrumbs, MegaMenuList, withTitleEditor };
+export { MegaMenuBreadcrumbs, MegaMenuList, MegaMenuBase };

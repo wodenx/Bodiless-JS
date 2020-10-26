@@ -12,15 +12,10 @@
  * limitations under the License.
  */
 
-import BurgerMenu from './BurgerMenu';
-import SimpleBurgerMenu, { SimpleBurgerMenuList, SimpleBurgerMenuAccordion } from './SimpleBurgerMenu';
-import MegaBurgerMenu, { MegaBurgerMenuList } from './MegaBurgerMenu';
+import SimpleBurgerMenu from './SimpleBurgerMenu';
+import MegaBurgerMenu from './MegaBurgerMenu';
 
 export {
-  BurgerMenu,
   SimpleBurgerMenu,
-  SimpleBurgerMenuList,
-  SimpleBurgerMenuAccordion,
   MegaBurgerMenu,
-  MegaBurgerMenuList,
 };

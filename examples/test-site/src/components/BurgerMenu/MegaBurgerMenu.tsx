@@ -14,53 +14,19 @@
 
 import { flow } from 'lodash';
 import { asStatic } from '@bodiless/core';
-import { asEditable } from '@bodiless/components';
-import {
-  withDesign, replaceWith, addClasses, H2,
-} from '@bodiless/fclasses';
-import {
-  asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaBurgerMenu,
-} from '@bodiless/organisms';
+import { withDesign, replaceWith } from '@bodiless/fclasses';
+import { asMegaBurgerMenu } from '@bodiless/organisms';
 
-import { withToutEditors } from '../Tout';
+import { MegaMenuBase } from '../MegaMenu/MegaMenu';
 import BurgerMenu from './BurgerMenu';
-import { BurgerMenuTitle } from './SimpleBurgerMenu';
-
-import withMegaBurgerMenuStyles, { withMegaBurgerDebugStyles, withMenuToutStyles } from './MegaBurgerMenu.token';
-
-const withMenuToutEditors = flow(
-  withToutEditors,
-  withDesign({
-    Title: flow(
-      replaceWith(H2),
-      // We set the title editor to match the one in asMenuLink
-      asEditable('text', 'Title'),
-    ),
-  }),
-);
-
-const asMenuTout$ = flow(
-  asMenuTout(withMenuToutEditors),
-  withMenuToutStyles,
-);
+import withMegaBurgerMenuStyles, { withMegaBurgerDebugStyles } from './MegaBurgerMenu.token';
 
 const BurgerMenuBody = flow(
-  asMegaMenuBase(),
-  withMegaMenuDesign({
-    Title: BurgerMenuTitle,
-  }),
-  withDesign({
-    Item: withDesign({
-      Touts: withDesign({
-        Title: asMenuTout$,
-      }),
-    }),
-  }),
   asMegaBurgerMenu,
   withMegaBurgerMenuStyles,
   withMegaBurgerDebugStyles,
   asStatic,
-)('ul');
+)(MegaMenuBase);
 
 const MegaBurgerMenu = flow(
   withDesign({
@@ -68,16 +34,4 @@ const MegaBurgerMenu = flow(
   }),
 )(BurgerMenu);
 
-const MegaBurgerMenuList = flow(
-  asMegaMenuBase(),
-  withMegaMenuDesign({
-    Title: BurgerMenuTitle,
-    Item: addClasses('pl-5'),
-  }),
-  withMegaBurgerDebugStyles,
-)('ul');
-
 export default MegaBurgerMenu;
-export {
-  MegaBurgerMenuList,
-};

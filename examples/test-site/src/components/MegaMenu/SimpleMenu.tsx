@@ -20,27 +20,33 @@ import {
   asMenuLink, asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenuTopNav,
 } from '@bodiless/organisms';
 
-import { withTitleEditor } from './MegaMenu';
+import { withEditorSimple } from '../Editors';
 import withSimpleMenuStyles from './SimpleMenu.token';
 
-const SimpleMenu = flow(
+const withTitleEditor = withEditorSimple('text', 'Menu Item');
+const asSimpleMenuLink = asMenuLink(withTitleEditor);
+
+const SimpleMenuBase = flow(
   asSimpleMenuBase(),
   withSimpleMenuDesign({
-    Title: asMenuLink(withTitleEditor),
+    Title: asSimpleMenuLink,
   }),
-  withSimpleMenuStyles,
-  asSimpleMenuTopNav,
 )('ul') as ComponentType<any>;
 
+const SimpleMenu = flow(
+  withSimpleMenuStyles,
+  asSimpleMenuTopNav,
+)(SimpleMenuBase);
+
 const SimpleMenuList = flow(
-  asSimpleMenuBase(),
   withSimpleMenuDesign({
-    Title: asMenuLink(withTitleEditor),
     Item: addClasses('pl-5'),
   }),
-)('ul') as ComponentType<any>;
+)(SimpleMenuBase);
 
 export default SimpleMenu;
 export {
+  SimpleMenuBase,
   SimpleMenuList,
+  asSimpleMenuLink,
 };
