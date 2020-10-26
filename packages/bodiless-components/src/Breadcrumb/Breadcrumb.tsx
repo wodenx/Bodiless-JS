@@ -64,19 +64,22 @@ const BreadcrumbClean$ = (props: BreadcrumbProps) => {
     BreadcrumbTitle,
     FinalTrail,
   } = components;
-  const items$ = items.map((item: BreadcrumbItemKeys, index: number) => (
-    <>
-      <BreadcrumbItem key={item.uuid}>
-        <BreadcrumbLink nodeKey={item.link.nodeKey} nodeCollection={item.link.nodeCollection}>
-          <BreadcrumbTitle
-            nodeKey={item.title.nodeKey}
-            nodeCollection={item.title.nodeCollection}
-          />
-        </BreadcrumbLink>
-      </BreadcrumbItem>
-      {index <= items.length - 1 && <Separator key={`separator${item.uuid}`} />}
-    </>
-  ));
+  const items$ = items.map((item: BreadcrumbItemKeys, index: number) => {
+    const isLastItem = index === (items.length - 1);
+    return (
+      <React.Fragment key={item.uuid}>
+        <BreadcrumbItem key={item.uuid}>
+          <BreadcrumbLink nodeKey={item.link.nodeKey} nodeCollection={item.link.nodeCollection}>
+            <BreadcrumbTitle
+              nodeKey={item.title.nodeKey}
+              nodeCollection={item.title.nodeCollection}
+            />
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        {!isLastItem && <Separator key={`separator${item.uuid}`} />}
+      </React.Fragment>
+    );
+  });
   const hasLastItem$ = (typeof hasLastItem === 'function' ? hasLastItem() : hasLastItem) || true;
   return (
     <BreadcrumbWrapper>

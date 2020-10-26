@@ -173,7 +173,6 @@ export class BreadcrumbStore implements BreadcrumbStoreType {
   }
 
   @action private setActiveItem(item: BreadcrumbItemType) {
-    console.log('setActiveItem into', item.link.data, 'nodePath:', item.title.nodePath);
     this.activeItem = item;
   }
 
