@@ -1,6 +1,6 @@
 import { v1 } from 'uuid';
 import { identity, flow } from 'lodash';
-import type { EditButtonOptions } from '@bodiless/core';
+import type { EditButtonOptions, UseBodilessOverrides } from '@bodiless/core';
 import {
   withDesign, HOC, Design, withoutProps,
 } from '@bodiless/fclasses';
@@ -36,18 +36,20 @@ const useToggleOverrides = ():Partial<EditButtonOptions<any, any>> => {
   };
 };
 
-const useOverrides = () => {
+const getUseOverrides = (
+  useOverrides: UseBodilessOverrides = () => ({}),
+): UseBodilessOverrides => props => {
   const { selectableComponents } = useChameleonContext();
   return Object.keys(selectableComponents).length > 1
-    ? useChameleonOverrides()
-    : useToggleOverrides();
+    ? { ...useChameleonOverrides(), ...useOverrides(props) }
+    : { ...useToggleOverrides(), ...useOverrides(props) };
 };
 
-const asChameleonSubList = flow(
+const asChameleonSubList = (useOverrides?: UseBodilessOverrides) => flow(
   applyChameleon,
   withoutProps('onSubmit'),
   withChameleonComponentFormControls,
-  withChameleonButton(useOverrides),
+  withChameleonButton(getUseOverrides(useOverrides)),
   withChameleonContext('cham-sublist'),
 );
 
@@ -87,8 +89,11 @@ const withSubListDesign = (depth: number) => (
  * @param Depth The number of nested sublists to attach.
  * @return An function accepting a sublist definition and returning an HOC which adds the sublists.
  */
-const withSubLists = (depth: number) => (asSubList$: HOC|Design<any>): HOC => (
-  withSubListDesign(depth)(asSubList$, asChameleonSubList)
+const withSubLists = (
+  depth: number,
+  useOverrides?: UseBodilessOverrides,
+) => (asSubList$: HOC|Design<any>): HOC => (
+  withSubListDesign(depth)(asSubList$, asChameleonSubList(useOverrides))
 );
 export default asChameleonSubList;
 export { withSubLists, withSubListDesign };

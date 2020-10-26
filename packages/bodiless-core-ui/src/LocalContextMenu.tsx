@@ -52,7 +52,7 @@ const LocalTooltip: FC<ReactTooltip['props']> = props => (
 );
 
 const GroupTitle = flow(
-  removeClasses('bl-mb-grid-2 bl-min-w-xl-grid-0'),
+  removeClasses('bl-mb-grid-2 bl-min-w-xl-grid-1'),
 )(ComponentFormTitle);
 
 const ContextMenuGroup: FC<IContextMenuItemProps> = ({ option, children }) => {

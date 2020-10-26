@@ -71,10 +71,10 @@ const withMenuDesign = (design: any) => {
  * @return HOC which creates a basic mega menu list.
  */
 const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
-  asBodilessList(nodeKeys), // undefined, () => ({ groupLabel: 'Menu Item' })),
+  asBodilessList(nodeKeys, undefined, () => ({ groupLabel: 'Menu Item' })),
   asStylableList,
   withDesign({
-    Item: asChameleonSubList,
+    Item: asChameleonSubList(() => ({ formTitle: 'Sub-Menu Type' })),
   }),
   withSubMenuDesign(asMenuSubList),
   withMenuContext,
