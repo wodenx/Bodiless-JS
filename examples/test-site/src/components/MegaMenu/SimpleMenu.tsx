@@ -14,8 +14,9 @@
 
 import { ComponentType } from 'react';
 import { flow } from 'lodash';
-
-import { addClasses } from '@bodiless/fclasses';
+import {
+  addClasses, withDesign, replaceWith, Div,
+} from '@bodiless/fclasses';
 import {
   asMenuLink, asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenuTopNav,
 } from '@bodiless/organisms';
@@ -24,12 +25,17 @@ import { withEditorSimple } from '../Editors';
 import withSimpleMenuStyles from './SimpleMenu.token';
 
 const withTitleEditor = withEditorSimple('text', 'Menu Item');
-const asSimpleMenuLink = asMenuLink(withTitleEditor);
+const asMenuTitle = flow(
+  asMenuLink(withTitleEditor),
+  withDesign({
+    _default: replaceWith(Div),
+  }),
+);
 
 const SimpleMenuBase = flow(
   asSimpleMenuBase(),
   withSimpleMenuDesign({
-    Title: asSimpleMenuLink,
+    Title: asMenuTitle,
   }),
 )('ul') as ComponentType<any>;
 
@@ -48,5 +54,5 @@ export default SimpleMenu;
 export {
   SimpleMenuBase,
   SimpleMenuList,
-  asSimpleMenuLink,
+  asMenuTitle,
 };

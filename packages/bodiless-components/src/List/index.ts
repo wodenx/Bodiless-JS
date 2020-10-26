@@ -19,5 +19,6 @@ export {
 
 export type {
   FinalProps as ListProps,
+  ItemProps as ListItemProps,
   ListDesignableComponents,
 } from './types';

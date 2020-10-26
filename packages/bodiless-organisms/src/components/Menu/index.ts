@@ -23,6 +23,7 @@ import {
   withMenuDesign as withSimpleMenuDesign,
 } from './SimpleMenu';
 
+import { useIsMenuOpen } from './withMenuContext';
 import asSimpleMenuTopNav from './SimpleMenu.token';
 import asMegaMenuTopNav from './MegaMenu.token';
 
@@ -45,4 +46,5 @@ export {
 export {
   asSimpleMenuTopNav,
   asMegaMenuTopNav,
+  useIsMenuOpen,
 };

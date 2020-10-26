@@ -261,5 +261,9 @@ bulleted and numbered:
     Bulleted: asBulletedList,
     Numbered: asNumberedList,
   }),
+  withNode,
 )('ul');
 ```
+Note - we need to add `withNode` here to ensure that the list (and it's chameleon) will
+receive their own node. Without it, the list would attempt to store data at the root
+node, which would conflict with other elements on the page.
