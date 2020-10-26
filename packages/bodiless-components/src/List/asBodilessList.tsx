@@ -33,6 +33,10 @@ export type TitledItemProps = PropsWithChildren<{
   title: JSX.Element,
 }>;
 
+export type OverviewItem = PropsWithChildren<{
+  overview: JSX.Element,
+}>;
+
 const asTitledItem = <P extends TitledItemProps>(Item: ComponentType<P>) => {
   const TitledItem: ComponentType<P> = ({ children, ...rest }) => {
     // prepare and pass the submenu title as a prop according to rc-menu <SubMenu /> specification
@@ -47,6 +51,22 @@ const asTitledItem = <P extends TitledItemProps>(Item: ComponentType<P>) => {
   return TitledItem;
 };
 
+const asOverviewItem = <P extends TitledItemProps>(Item: ComponentType<P>) => {
+  const ItemWithOverview: ComponentType<P> = (props) => {
+    const { children } = props;
+    const { node } = useNode();
+    // Next line ensures that whatever value is stored in the "text" node is replaced with "Overlay"
+    // const node$ = replaceTextWithOverview(node);
+    const overview = <NodeProvider node={node}>{children}</NodeProvider>;
+    const sublistProps = { overview };
+    return (
+      <Item {...sublistProps} {...props} />
+    );
+  };
+
+  return ItemWithOverview;
+};
+
 type SubListComponents = {
   WrapperItem: ComponentType<any>,
   List: ComponentType<any>,
@@ -59,16 +79,17 @@ const startComponents: SubListComponents = {
   Title: withOnlyProps('key', 'children')(Fragment),
 };
 
-type SubListProps = TitledItemProps & DesignableComponentsProps<SubListComponents>;
+type SubListProps = TitledItemProps & OverviewItem & DesignableComponentsProps<SubListComponents>;
 
 const SubList$: FC<SubListProps> = ({
-  title, children, components, ...rest
+  title, children, components, overview, ...rest
 }) => {
   const { WrapperItem, List, Title } = components;
+  // console.log('LIST PROPS: ', rest)
   return (
     <WrapperItem {...rest}>
       <Title>{title}</Title>
-      <List>
+      <List overview={overview}>
         {children}
       </List>
     </WrapperItem>
@@ -125,4 +146,4 @@ const withSimpleSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
 );
 
 export default asBodilessList;
-export { asSubList, withSimpleSubListDesign };
+export { asSubList, withSimpleSubListDesign, asOverviewItem };

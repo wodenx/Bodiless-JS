@@ -12,17 +12,32 @@
  * limitations under the License.
  */
 
+import React, { FC } from 'react';
+// import { flow } from 'lodash';
 import { withDesign } from '@bodiless/fclasses';
+import { asOverviewItem } from '@bodiless/components';
 
 import { withSimpleMenuDesign } from '../Menu';
 import { asAccordionWrapper, asAccodionTitle, asAccordionBody } from '../Accordion';
 
+const withOverlayLinkAccordion = (Component: any) => {
+  const FinalComponent: FC<any> = ({ children, overview, ...rest }) => (
+    <Component {...rest}>
+      { overview }
+      { children }
+    </Component>
+  );
+
+  return asAccordionBody(FinalComponent);
+};
+
 const asSimpleBurgerMenu = withSimpleMenuDesign({
   Wrapper: withDesign({
-    List: asAccordionBody,
+    List: withOverlayLinkAccordion,
     Title: asAccodionTitle,
     WrapperItem: asAccordionWrapper,
   }),
+  Item: asOverviewItem,
 });
 
 export default asSimpleBurgerMenu;
