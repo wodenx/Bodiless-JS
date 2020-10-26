@@ -20,12 +20,12 @@ import {
 import {
   asToutVertical as asBToutVertical,
   asToutHorizontal as asBToutHorizontal,
-  asToutNoTitle,
-  asToutNoBody,
-  asToutNoCta,
-  asToutOverlayTitle,
-  asToutOverlayCta,
-  asToutNoBodyNoTitle,
+  asToutNoTitle as asToutNoTitle$,
+  asToutNoBody as asToutNoBody$,
+  asToutNoCta as asToutNoCta$,
+  asToutOverlayTitle as asToutOverlayTitle$,
+  asToutOverlayCta as asToutOverlayCta$,
+  asToutNoBodyNoTitle as asToutNoBodyNoTitle$,
 } from '@bodiless/organisms';
 import {
   asImageRounded,
@@ -34,8 +34,9 @@ import {
   asBlockItem,
   asTextColorPrimary,
 } from '../Elements.token';
+import { asToken } from '../../data/pages/tokens/TokenMap';
 
-const asToutHorizontal = flow(
+const asToutHorizontal$ = flow(
   withDesign({
     Title: addClasses('px-2'),
     Body: addClasses('px-2'),
@@ -43,7 +44,7 @@ const asToutHorizontal = flow(
   }),
   asBToutHorizontal,
 );
-const asToutVertical = flow(
+const asToutVertical$ = flow(
   withDesign({
     Title: addClasses('px-2'),
     Body: addClasses('px-2'),
@@ -51,20 +52,32 @@ const asToutVertical = flow(
   asBToutVertical,
 );
 
-const asToutDefaultStyle = withDesign({
+const asToutDefaultStyle$ = withDesign({
   Wrapper: asTextColorPrimary,
   Image: asImageRounded,
   Title: asHeader2,
   Link: asCta,
 });
 
-const asToutWithPaddings = withDesign({
+const asToutWithPaddings$ = withDesign({
   Wrapper: asBlockItem,
 });
 
-const asToutTextWhite = withDesign({
+const asToutTextWhite$ = withDesign({
   ContentWrapper: addClasses('text-white'),
 });
+
+const asToutHorizontal = asToken('Orientation')(asToutHorizontal$);
+const asToutVertical = asToken('Orientation')(asToutVertical$);
+const asToutNoTitle = asToken('Structure')(asToutNoTitle$);
+const asToutNoBody = asToken('Structure')(asToutNoBody$);
+const asToutNoCta = asToken('Structure')(asToutNoCta$);
+const asToutDefaultStyle = asToken('Appearance')(asToutDefaultStyle$);
+const asToutOverlayTitle = asToken('Layout')(asToutOverlayTitle$);
+const asToutOverlayCta = asToken('Layout')(asToutOverlayCta$);
+const asToutNoBodyNoTitle = asToken('Structure')(asToutNoBodyNoTitle$);
+const asToutWithPaddings = asToken('Layout')(asToutWithPaddings$);
+const asToutTextWhite = asToken('Appearance')(asToutTextWhite$);
 
 export {
   asToutHorizontal,

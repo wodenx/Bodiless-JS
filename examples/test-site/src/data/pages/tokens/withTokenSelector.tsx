@@ -4,6 +4,7 @@ import {
   withLocalContextMenu, withContextActivator, withEditButton, withNodeDataHandlers,
   EditButtonProps,
   withActivatorWrapper,
+  EditButtonOptions,
 } from '@bodiless/core';
 import { ComponentOrTag, TokensProps } from '@bodiless/fclasses/lib/withTokensFromProps';
 import { flowRight, pick } from 'lodash';
@@ -23,22 +24,53 @@ type TokenSelectorData = {
   tokens: string[],
 };
 
-const useEditButtonOptions = <P extends object>(props: P & TokenSelectorProps<P>) => {
+const initialValueHandler = (data: TokenSelectorData) => (data.tokens || []).reduce((acc, next) => ({
+  ...acc,
+  [next]: true,
+}), {});
+
+const submitValueHandler = (data: { [field: string]: boolean }) => ({
+  tokens: Object.keys(data).reduce((acc, next) => (
+    data[next] ? [...acc, next] : [...acc]
+  ), [] as string[]),
+});
+
+const useCheckboxes = (map: TokenMap<any>) => map.names.map(name => {
+  const { ComponentFormLabel, ComponentFormCheckBox } = useMenuOptionUI();
+  return (
+    <ComponentFormLabel>
+      <ComponentFormCheckBox field={name} />
+      {name}
+    </ComponentFormLabel>
+  );
+});
+
+const useCategoryCheckboxes = (map: TokenMap<any>) => {
+  const { ComponentFormLabel, ComponentFormCheckBox } = useMenuOptionUI();
+  return map.categories.map(cat => (
+    <>
+      <ComponentFormLabel>{cat}</ComponentFormLabel>
+      {map.namesFor(cat).map(name => (
+        <ComponentFormLabel>
+          <ComponentFormCheckBox field={name} />
+          {name}
+        </ComponentFormLabel>
+      ))}
+    </>
+  ));
+};
+
+const useEditButtonOptions = <P extends object>(props: P & TokenSelectorProps<P>): EditButtonOptions<any, any> => {
   const { availableTokens } = props;
   const map = new TokenMap<P>();
   map.add(availableTokens);
   const renderForm = () => {
-    const { ComponentFormLabel, ComponentFormSelect, ComponentFormOption } = useMenuOptionUI();
-    const options = map.names.map(name => (
-      <ComponentFormOption key={name} value={name}>{name}</ComponentFormOption>
-    ));
+    const { ComponentFormTitle, ComponentFormLabel } = useMenuOptionUI();
     return (
-      <ComponentFormLabel>
-        Tokens:
-        <ComponentFormSelect field="tokens" multiple>
-          {options}
-        </ComponentFormSelect>
-      </ComponentFormLabel>
+      <>
+        <ComponentFormTitle>Tokens</ComponentFormTitle>
+        {useCategoryCheckboxes(map)}
+      </>
     );
   };
   return {
@@ -49,6 +81,8 @@ const useEditButtonOptions = <P extends object>(props: P & TokenSelectorProps<P>
     global: false,
     local: true,
     renderForm,
+    initialValueHandler,
+    submitValueHandler,
   };
 };
 
