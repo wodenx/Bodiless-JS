@@ -22,7 +22,8 @@ import { flow } from 'lodash';
 
 import Layout from '../../../components/Layout';
 import { SimpleMenu } from '../../../components/MegaMenu/SimpleMenu';
-import MenuBreadcrumbs from '../../../components/Breadcrumbs/MenuBreadcrumbs';
+import MegaMenu from '../../../components/MegaMenu/MegaMenu';
+import MenuBreadcrumbs, { MegaMenuBreadcrumbs } from '../../../components/Breadcrumbs/MenuBreadcrumbs';
 import {
   withEditableStartingTrail,
   withStartingTrailIcon,
@@ -58,19 +59,23 @@ export default (props: any) => (
     <Layout>
       <H1>Breadcrumb Demo</H1>
       <H2>Simple Menu</H2>
-      <SimpleMenu nodeKey="list2" />
+      <SimpleMenu nodeKey="simplemenu" />
       <H2>Breadcrumbs with editable starting trail</H2>
-      <BreadcrumbWithEditableStartingTrail nodeKey="list2" className="my-2" />
+      <BreadcrumbWithEditableStartingTrail nodeKey="simplemenu" className="my-2" />
       <H2>Breadcrumbs with starting trail icon</H2>
-      <BreadcrumbWithStartingTrailIcon nodeKey="list2" className="my-2" />
+      <BreadcrumbWithStartingTrailIcon nodeKey="simplemenu" className="my-2" />
       <H2>Breadcrumbs with non-linkable items</H2>
-      <BreadcrumbWithNonLinkableItems nodeKey="list2" className="my-2" />
+      <BreadcrumbWithNonLinkableItems nodeKey="simplemenu" className="my-2" />
       <H2>Breadcrumbs with boldable final trail item</H2>
-      <BreadcrumbWithBoldableFinalItem nodeKey="list2" className="my-2" />
+      <BreadcrumbWithBoldableFinalItem nodeKey="simplemenu" className="my-2" />
       <H2>Breadcrumbs with vertical bar separator</H2>
-      <BreadcrumbWithVerticalBarSeparator nodeKey="list2" className="my-2" />
+      <BreadcrumbWithVerticalBarSeparator nodeKey="simplemenu" className="my-2" />
       <H2>Breadcrumbs with slash separator</H2>
-      <BreadcrumbWithSlashSeparator nodeKey="list2" className="my-2" />
+      <BreadcrumbWithSlashSeparator nodeKey="simplemenu" className="my-2" />
+      <H2>MegaMenu</H2>
+      <MegaMenu nodeKey="megamenu" className="my-2" />
+      <H2>MegaMenu breadcrumbs</H2>
+      <MegaMenuBreadcrumbs nodeKey="megamenu" className="my-2" />
     </Layout>
   </Page>
 );

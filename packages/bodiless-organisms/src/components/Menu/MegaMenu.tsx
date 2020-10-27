@@ -12,13 +12,20 @@
  * limitations under the License.
  */
 
+import React from 'react';
 import { flow } from 'lodash';
 
-import { withDesign } from '@bodiless/fclasses';
+import {
+  withDesign,
+  replaceWith,
+  withOnlyProps,
+} from '@bodiless/fclasses';
 import { WithNodeKeyProps } from '@bodiless/core';
 import {
+  asBreadcrumb, withBreadcrumb, withSubListDesign,
   asBodilessList, asChameleonSubList,
 } from '@bodiless/components';
+import type { BreadcrumbSettings } from '@bodiless/components';
 
 import { asMenuSubList } from './SimpleMenu';
 import asStylableList from './asStylableList';
@@ -79,7 +86,50 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   withMenuContext,
 );
 
-// Now we create breaccrumbs
+// Now we create breadcrumbs
+
+/**
+ * HOC that can be applied to a mage menu based component
+ * it renders all list and sublist items
+ * but produces no markup
+ */
+const withEmptyMenuMarkup = flow(
+  withDesign({
+    Item: withDesign({
+      Touts: withDesign({
+        Item: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+      }),
+    }),
+  }),
+  withMenuDesign({
+    Wrapper: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+  }),
+  withMenuDesign({
+    Wrapper: withDesign({
+      WrapperItem: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+    }),
+  }),
+  withSubListDesign(1)({
+    _default: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+  }),
+);
+
+/**
+ * HOC which can be applied to a base menu to make it into a site's breadcrumbs
+ *
+ * @param A base menu component created via asMenuBase()
+ *
+ * @return A clean (unstyled) site breadcrumb component.
+ */
+const asBreadcrumbsClean = (settings: BreadcrumbSettings) => flow(
+  withEmptyMenuMarkup,
+  withMenuDesign({
+    Item: flow(
+      asBreadcrumb(settings),
+    ),
+  }),
+  withBreadcrumb,
+);
 
 // @TODO Add a similar HOC for BurgerMenu, something like:
 // const asMegaMenuClean = withMenuDesign({
@@ -89,4 +139,5 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
 
 export {
   asMenuSubList, asMenuBase, withMenuDesign,
+  asBreadcrumbsClean,
 };

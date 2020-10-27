@@ -27,6 +27,8 @@ import { withRichtextPlainSerializer } from '@bodiless/richtext';
 import {
   asSimpleMenuBase,
   asSimpleMenuBreadcrumbs,
+  asMegaMenuBreadcrumbs,
+  asMegaMenuBase,
 } from '@bodiless/organisms';
 
 import { withArrowSeparator } from './MenuBreadcrumbs.token';
@@ -70,4 +72,15 @@ const MenuBreadcrumbs = flow(
   withMenuBreadcrumbsStyles,
 )('ul');
 
+const MegaMenuBreadcrumbs = flow(
+  asMegaMenuBase(),
+  asMegaMenuBreadcrumbs({
+    linkNodeKey: 'title$link',
+    titleNodeKey: 'title$text',
+  }),
+  withMenuBreadcrumbSchema,
+  withMenuBreadcrumbsStyles,
+)('ul');
+
 export default MenuBreadcrumbs;
+export { MegaMenuBreadcrumbs };

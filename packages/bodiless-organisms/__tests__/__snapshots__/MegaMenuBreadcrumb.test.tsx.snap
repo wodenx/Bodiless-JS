@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`asBreadcrumbsClean creates breadcrumbs for basic 2-level menu 1`] = `"<ul><li><a href=\\"/products\\"></a></li><span></span><li><a href=\\"/products/productA\\"></a></li></ul>"`;
