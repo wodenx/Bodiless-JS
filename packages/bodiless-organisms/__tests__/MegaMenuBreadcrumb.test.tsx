@@ -50,7 +50,7 @@ const createBreadcrumbComponent = ({
 )('ul');
 
 describe('asBreadcrumbsClean', () => {
-  it('creates breadcrumbs for basic 2-level menu', () => {
+  it('creates breadcrumbs for 2-level Touts MegaMenu', () => {
     setPagePath('/products/productA');
     const Breadcrumb = createBreadcrumbComponent({
       content: {
@@ -74,6 +74,78 @@ describe('asBreadcrumbsClean', () => {
         },
         'testMenu$products$cham-sublist': {
           component: 'Touts',
+        },
+        testMenu$products$sublist$productA$title$link: {
+          href: '/products/productA',
+        },
+        testMenu$products$sublist$productB$title$link: {
+          href: '/products/productB',
+        },
+      },
+    });
+    const wrapper = mount(<Breadcrumb />);
+    expect(wrapper.html()).toMatchSnapshot();
+  });
+  it('creates breadcrumbs for 2-level List MegaMenu', () => {
+    setPagePath('/products/productA');
+    const Breadcrumb = createBreadcrumbComponent({
+      content: {
+        testMenu: {
+          items: [
+            'home',
+            'products',
+          ],
+        },
+        testMenu$home$title$link: {
+          href: '/',
+        },
+        testMenu$products$title$link: {
+          href: '/products',
+        },
+        testMenu$products$sublist: {
+          items: [
+            'productA',
+            'productB',
+          ],
+        },
+        'testMenu$products$cham-sublist': {
+          component: 'List',
+        },
+        testMenu$products$sublist$productA$title$link: {
+          href: '/products/productA',
+        },
+        testMenu$products$sublist$productB$title$link: {
+          href: '/products/productB',
+        },
+      },
+    });
+    const wrapper = mount(<Breadcrumb />);
+    expect(wrapper.html()).toMatchSnapshot();
+  });
+  it('creates breadcrumbs for 2-level Columns MegaMenu', () => {
+    setPagePath('/products/productA');
+    const Breadcrumb = createBreadcrumbComponent({
+      content: {
+        testMenu: {
+          items: [
+            'home',
+            'products',
+          ],
+        },
+        testMenu$home$title$link: {
+          href: '/',
+        },
+        testMenu$products$title$link: {
+          href: '/products',
+        },
+        testMenu$products$sublist: {
+          items: [
+            'productA',
+            'productB',
+          ],
+        },
+        'testMenu$products$cham-sublist': {
+          component: 'Columns',
         },
         testMenu$products$sublist$productA$title$link: {
           href: '/products/productA',

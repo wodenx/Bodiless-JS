@@ -94,20 +94,11 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
  * but produces no markup
  */
 const withEmptyMenuMarkup = flow(
-  withDesign({
-    Item: withDesign({
-      Touts: withDesign({
-        Item: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
-      }),
-    }),
+  withSubMenuDesign({
+    Item: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
   }),
   withMenuDesign({
     Wrapper: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
-  }),
-  withMenuDesign({
-    Wrapper: withDesign({
-      WrapperItem: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
-    }),
   }),
   withSubListDesign(1)({
     _default: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),

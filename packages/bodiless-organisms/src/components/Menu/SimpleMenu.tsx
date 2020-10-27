@@ -100,11 +100,6 @@ const withEmptyMenuMarkup = flow(
   withMenuDesign({
     Wrapper: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
   }),
-  withMenuDesign({
-    Wrapper: withDesign({
-      WrapperItem: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
-    }),
-  }),
   withSubListDesign(1)({
     _default: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
   }),
