@@ -15,12 +15,12 @@
 import {
   asMenuBase as asMegaMenuBase,
   withMenuDesign as withMegaMenuDesign,
-  asBreadcrumbsClean as asMegaMenuBreadcrumbs,
 } from './MegaMenu';
 
 import {
   asMenuBase as asSimpleMenuBase,
   withMenuDesign as withSimpleMenuDesign,
+  asBreadcrumbsClean as asSimpleMenuBreadcrumbs,
 } from './SimpleMenu';
 
 import { useIsMenuOpen } from './withMenuContext';
@@ -35,12 +35,12 @@ export {
 export {
   asMegaMenuBase,
   withMegaMenuDesign,
-  asMegaMenuBreadcrumbs,
 };
 
 export {
   asSimpleMenuBase,
   withSimpleMenuDesign,
+  asSimpleMenuBreadcrumbs,
 };
 
 export {

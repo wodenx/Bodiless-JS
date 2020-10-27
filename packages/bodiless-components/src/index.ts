@@ -70,7 +70,6 @@ import {
   ifViewportIs,
   ifViewportIsNot,
 } from './withResponsiveToggle';
-import asBreadcrumb, { useBreadcrumbContext } from './asBreadcrumb';
 import withBodilessLinkToggle from './withBodilessLinkToggle';
 
 export {
@@ -134,11 +133,11 @@ export {
   ifViewportIsNot,
   withMetaForm,
   withMetaSnippet,
-  asBreadcrumb,
-  useBreadcrumbContext,
 };
 
 export * from './Chameleon/index';
 export * from './List';
+
+export * from './Breadcrumb';
 
 export type { MetaFormFieldType, YouTubePlayerSettings };
