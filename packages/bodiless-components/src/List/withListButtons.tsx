@@ -42,7 +42,7 @@ const useMenuOptions = (useOverrides: UseListOverrides = () => ({})) => (props: 
   for (let c:PageEditContextInterface|undefined = context; c; c = c.parent) {
     if (c.type === 'list-item') n += 1;
   }
-  const sublistLabel = n > 1 ? `Sublist ${n} Item` : 'Sublist Item';
+  const sublistLabel = n > 1 ? `Sub-List ${n} Item` : 'Sub-List Item';
   const defaultGroupLabel = n > 0 ? sublistLabel : 'List Item';
 
   const { groupLabel = defaultGroupLabel, global = false, local = true } = useOverrides(props);
