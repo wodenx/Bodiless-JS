@@ -183,7 +183,7 @@ const addAriaLabels = (map: LocalOptionsMap): LocalOptionsMap => {
         const ariaLabel = () => {
           const groupLabel$ = typeof groupLabel === 'function' ? groupLabel() : groupLabel;
           const label$ = typeof label === 'function' ? label() : label;
-          return `${groupLabel$}: ${label$}`;
+          return `${label$} ${groupLabel$}`;
         };
         map.options.set(name, { ...op, ariaLabel });
       }
