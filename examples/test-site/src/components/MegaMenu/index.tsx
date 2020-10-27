@@ -48,7 +48,7 @@ const ResponsiveMenuClean = designable(menuComponentsStart)(MenuClean);
 
 const withMenu = (Menu: MenuType) => withDesign<MenuComponents>({ Menu });
 
-const ResponsiveSimleMenu = flow(
+const ResponsiveSimpleMenu = flow(
   ifViewportIs(['lg', 'xl', 'xxl'])(withMenu(() => SimpleMenu)),
   ifViewportIsNot(['lg', 'xl', 'xxl'])(withMenu(() => SimpleBurgerMenu)),
   withPageDimensionsContext({ breakpoints }),
@@ -61,6 +61,6 @@ const ResponsiveMegaMenu = flow(
 )(ResponsiveMenuClean);
 
 export {
-  ResponsiveSimleMenu,
+  ResponsiveSimpleMenu,
   ResponsiveMegaMenu,
 };

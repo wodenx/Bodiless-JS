@@ -29,7 +29,7 @@ import { MegaMenuList } from '../../../components/MegaMenu/MegaMenu';
 import { SimpleMenuList } from '../../../components/MegaMenu/SimpleMenu';
 import { asHeader2, asHeader3, asHeader1 } from '../../../components/Elements.token';
 
-import { ResponsiveSimleMenu, ResponsiveMegaMenu } from '../../../components/MegaMenu';
+import { ResponsiveSimpleMenu, ResponsiveMegaMenu } from '../../../components/MegaMenu';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -69,7 +69,7 @@ export default (props: any) => (
       </Description>
 
       <H2>Simple Menu</H2>
-      <ResponsiveSimleMenu nodeKey="list2" />
+      <ResponsiveSimpleMenu nodeKey="list2" />
       <Description>
         This is a simple menu with one level of submenu. Click on a menu item in edit mode
         to display a local context menu. &quot;Add&quot; and &quot;Delete&quot; buttons
