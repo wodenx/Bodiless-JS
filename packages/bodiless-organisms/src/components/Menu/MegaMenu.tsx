@@ -12,14 +12,20 @@
  * limitations under the License.
  */
 
+import React from 'react';
 import { flow } from 'lodash';
-import { observer } from 'mobx-react-lite';
 
-import { withDesign, addClassesIf } from '@bodiless/fclasses';
-import { withSidecarNodes, WithNodeKeyProps } from '@bodiless/core';
 import {
-  asBreadcrumb, useBreadcrumbContext, asBodilessList, asChameleonSubList,
+  withDesign,
+  replaceWith,
+  withOnlyProps,
+} from '@bodiless/fclasses';
+import { WithNodeKeyProps } from '@bodiless/core';
+import {
+  asBreadcrumb, withBreadcrumb, withSubListDesign,
+  asBodilessList, asChameleonSubList,
 } from '@bodiless/components';
+import type { BreadcrumbSettings } from '@bodiless/components';
 
 import { asMenuSubList } from './SimpleMenu';
 import asStylableList from './asStylableList';
@@ -80,7 +86,24 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   withMenuContext,
 );
 
-// Now we create breaccrumbs
+// Now we create breadcrumbs
+
+/**
+ * HOC that can be applied to a mage menu based component
+ * it renders all list and sublist items
+ * but produces no markup
+ */
+const withEmptyMenuMarkup = flow(
+  withSubMenuDesign({
+    Item: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+  }),
+  withMenuDesign({
+    Wrapper: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+  }),
+  withSubListDesign(1)({
+    _default: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+  }),
+);
 
 /**
  * HOC which can be applied to a base menu to make it into a site's breadcrumbs
@@ -89,13 +112,15 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
  *
  * @return A clean (unstyled) site breadcrumb component.
  */
-const asBreadcrumbsClean = withMenuDesign({
-  Item: withSidecarNodes(asBreadcrumb('title$component')),
-  Title: flow(
-    addClassesIf(() => !useBreadcrumbContext().isActive)('hidden'),
-    observer,
-  ),
-});
+const asBreadcrumbsClean = (settings: BreadcrumbSettings) => flow(
+  withEmptyMenuMarkup,
+  withMenuDesign({
+    Item: flow(
+      asBreadcrumb(settings),
+    ),
+  }),
+  withBreadcrumb,
+);
 
 // @TODO Add a similar HOC for BurgerMenu, something like:
 // const asMegaMenuClean = withMenuDesign({
@@ -104,5 +129,6 @@ const asBreadcrumbsClean = withMenuDesign({
 // });
 
 export {
-  asMenuSubList, asMenuBase, withMenuDesign, asBreadcrumbsClean,
+  asMenuSubList, asMenuBase, withMenuDesign,
+  asBreadcrumbsClean,
 };

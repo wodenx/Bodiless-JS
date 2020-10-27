@@ -16,10 +16,10 @@ import { ComponentType } from 'react';
 import { flow } from 'lodash';
 import { asStatic } from '@bodiless/core';
 import {
-  withDesign, replaceWith, H2, addClasses, stylable, Div,
+  withDesign, replaceWith, H2, addClasses, Div,
 } from '@bodiless/fclasses';
 import {
-  asMenuTout, asMegaMenuBase, withMegaMenuDesign, asMegaMenuBreadcrumbs,
+  asMenuTout, asMegaMenuBase, withMegaMenuDesign,
   asMenuLink, asMegaMenuTopNav,
 } from '@bodiless/organisms';
 
@@ -78,28 +78,8 @@ const MegaMenuList = flow(
   asStatic,
 )(MegaMenuBase);
 
-// Styles for breadcrumbs.
-const asInline = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: flow(stylable, addClasses('inline pl-5')),
-    List: flow(stylable, addClasses('inline')),
-  }),
-  Item: addClasses('inline pl-5'),
-});
-
-const MegaMenuBreadcrumbs = flow(
-  asMegaMenuBase(),
-  withMegaMenuDesign({
-    Title: asMenuTitle,
-  }),
-  asMegaMenuBreadcrumbs,
-  withMegaMenuDesign(asInline),
-  asStatic,
-)('ul');
-
 export default MegaMenu;
 export {
-  MegaMenuBreadcrumbs,
   MegaMenuList,
   asMenuTitle,
   MegaMenuBase,

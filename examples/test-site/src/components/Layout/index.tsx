@@ -14,13 +14,18 @@
 
 import React from 'react';
 import { flow } from 'lodash';
-import { Div } from '@bodiless/fclasses';
+import {
+  Div, designable, addClasses, replaceWith,
+} from '@bodiless/fclasses';
+import { useNode, withNodeKey, ifToggledOn } from '@bodiless/core';
 import Header from './header';
 import Footer from './footer';
 import SeoHelmet from './meta';
 import SiteGTMHelmetEvent from './GTM';
 import { asPageContainer, asYMargin } from '../Elements.token';
 import { asSiteHeader, asSiteFooter } from './token';
+
+import MenuBreadcrumbs from '../Breadcrumbs/MenuBreadcrumbs';
 
 const SiteHeader = asSiteHeader(Header);
 const SiteFooter = asSiteFooter(Footer);
@@ -30,16 +35,31 @@ const Container = flow(
   asYMargin,
 )(Div);
 
-const Layout = ({ children }) => (
-  <>
-    <SeoHelmet />
-    <SiteGTMHelmetEvent />
-    <SiteHeader />
-    <Container>
-      {children}
-    </Container>
-    <SiteFooter />
-  </>
-);
+const BaseLayout = ({ children, components }) => {
+  const { Breadcrumb } = components;
+  return (
+    <>
+      <SeoHelmet />
+      <SiteGTMHelmetEvent />
+      <SiteHeader />
+      <Container>
+        { Breadcrumb && <Breadcrumb />}
+        {children}
+      </Container>
+      <SiteFooter />
+    </>
+  );
+};
+
+const isHomePage = () => useNode().node.pagePath === '/';
+
+const Layout = designable({
+  Breadcrumb: flow(
+    withNodeKey({ nodeKey: 'MainMenu', nodeCollection: 'site' }),
+    addClasses('pt-2'),
+    // hide breadcrumbs on home page
+    ifToggledOn(isHomePage)(replaceWith(React.Fragment)),
+  )(MenuBreadcrumbs),
+})(BaseLayout);
 
 export default Layout;
