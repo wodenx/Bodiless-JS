@@ -174,6 +174,24 @@ const addHideEmptyGroups = (map: LocalOptionsMap): LocalOptionsMap => {
   return { groups: map.groups, options };
 };
 
+const addAriaLabels = (map: LocalOptionsMap): LocalOptionsMap => {
+  map.options.forEach((op, name) => {
+    if (!map.groups.has(name) && !op.ariaLabel) {
+      const groupLabel = op.group && map.options.get(op.group)?.label;
+      const { label } = op;
+      if (groupLabel && label) {
+        const ariaLabel = () => {
+          const groupLabel$ = typeof groupLabel === 'function' ? groupLabel() : groupLabel;
+          const label$ = typeof label === 'function' ? label() : label;
+          return `${groupLabel$}: ${label$}`;
+        };
+        map.options.set(name, { ...op, ariaLabel });
+      }
+    }
+  });
+  return map;
+};
+
 const useLocalOptions = () => {
   const { contextMenuOptions } = useEditContext();
   const { options } = flow(
@@ -182,6 +200,7 @@ const useLocalOptions = () => {
     mergeGroups,
     reverseContextOrder,
     addHideEmptyGroups,
+    addAriaLabels,
   )(contextMenuOptions);
   return Array.from(options.values());
 };
