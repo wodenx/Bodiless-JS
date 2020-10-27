@@ -38,14 +38,12 @@ export type BreadcrumbSettings = {
 
 /**
  * Creates an HOC which specifies that a wrapped component is a breadcrumb. The HOC
- * will compare link data (href) from the specified nodekey with the current page
- * path and mark the breadcrumb as "active" if the current page matches or is a
- * subpage. When a breadcrumb is active, all parent breadcrumbs are also marked
- * as active.  The state of the breadcrumb can then be tested with the
- * `useIsBreadcrumbActive` hook, or with the `ifActiveVBreadcrumb` or
- * `ifNotActiveBreadcrumb` flow toggles, to control rendering.
+ * will read link and title from the specified nodekeys and will push link and title
+ * to the breadcrumb store. Once the wrapped component is unmounted, the corresponding link
+ * and title are deleted from the breadcrumb store
  *
- * @param nodeKeys The nodekeys defining where to locate the link data defining this breadcrumb.
+ * @param linkNodeKey The link nodekey defining where to locate the link node.
+ * @param titleNodeKey The title nodekey defining where to locate the title node.
  *
  * @return An HOC which defines the wrapped component as a breadcrumb.
  */

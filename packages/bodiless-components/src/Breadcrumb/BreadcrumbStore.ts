@@ -49,7 +49,7 @@ export type BreadcrumbItemType = {
 
 const DEFAULT_URL_BASE = 'http://host';
 
-const withoutTrailingSlash = (str: string) => str.replace(/\/$/, '');
+const trimTrailingSlash = (str: string) => str.replace(/\/$/, '');
 
 const isChildOf = (child: string, parent: string) => {
   if (child === parent) return false;
@@ -100,7 +100,7 @@ export class BreadcrumbItem implements BreadcrumbItemType {
     const itemURL = typeof item === 'string' ? new URL(item, base) : new URL(item.link.data, base);
     const thisURL = new URL(this.link.data, base);
     if (itemURL.host !== thisURL.host) return false;
-    return withoutTrailingSlash(thisURL.pathname) === withoutTrailingSlash(itemURL.pathname);
+    return trimTrailingSlash(thisURL.pathname) === trimTrailingSlash(itemURL.pathname);
   }
 
   isDescendantOf(item: BreadcrumbItemType) {

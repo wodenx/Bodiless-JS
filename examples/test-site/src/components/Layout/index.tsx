@@ -57,6 +57,7 @@ const Layout = designable({
   Breadcrumb: flow(
     withNodeKey({ nodeKey: 'MainMenu', nodeCollection: 'site' }),
     addClasses('pt-2'),
+    // hide breadcrumbs on home page
     ifToggledOn(isHomePage)(replaceWith(React.Fragment)),
   )(MenuBreadcrumbs),
 })(BaseLayout);
