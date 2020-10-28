@@ -115,8 +115,16 @@ const BreadcrumbStartComponents: BreadcrumbsComponents = {
   FinalTrail: asComponent('span'),
 };
 
+/**
+ * Clean component that renders breadcrumbs.
+ * @see BreadcrumbsComponents for a list of design components.
+ */
 const BreadcrumbsClean = designable(BreadcrumbStartComponents)(BreadcrumbsClean$);
 
+/**
+ * HOC that populates a breadcrumb based component with data from breadcrumb store.
+ * @param Component a breadcrumb based component
+ */
 // eslint-disable-next-line max-len
 const withBreadcrumbsItemsFromStore = (Component: ComponentType<BreadcrumbsProps & WithNodeProps>) => {
   const WithBreadcrumbItemsFromStore = (props: BreadcrumbsProps & WithNodeProps) => {
@@ -147,22 +155,41 @@ const withBreadcrumbsItemsFromStore = (Component: ComponentType<BreadcrumbsProps
   return WithBreadcrumbItemsFromStore;
 };
 
+/**
+ * HOC that enables rendering of starting trail for a breadcrumb based component.
+ * @param Component a breadcrumb based component
+ */
 const withStartingTrail = addProps({
   hasStartingTrail: true,
 });
 
+/**
+ * HOC that disables rendering of starting trail for a breadcrumb based component.
+ * @param Component a breadcrumb based component
+ */
 const withoutStartingTrail = addProps({
   hasStartingTrail: false,
 });
 
+/**
+ * HOC that enables rendering of final trail for a breadcrumb based component.
+ * @param Component a breadcrumb based component
+ */
 const withFinalTrail = addProps({
   hasFinalTrail: true,
 });
 
+/**
+ * HOC that disables rendering of final trail for a breadcrumb based component.
+ * @param Component a breadcrumb based component
+ */
 const withoutFinalTrail = addProps({
   hasFinalTrail: false,
 });
 
+/**
+ * Component that renders breadcrumb items retrieved from breadcrumb store.
+ */
 const Breadcrumbs = flowRight(
   observer,
   withBreadcrumbsItemsFromStore,

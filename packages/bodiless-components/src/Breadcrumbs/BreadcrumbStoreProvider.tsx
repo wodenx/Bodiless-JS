@@ -17,10 +17,16 @@ import type { BreadcrumbStoreType } from './BreadcrumbStore';
 
 const BreadcrumbsStoreContext = React.createContext<BreadcrumbStoreType | undefined>(undefined);
 
+/**
+ * Component that adds react context provider containing store to its children.
+ */
 const BreadcrumbStoreProvider: ComponentType<any> = ({ children, store }: any) => (
   <BreadcrumbsStoreContext.Provider value={store}>{children}</BreadcrumbsStoreContext.Provider>
 );
 
+/**
+ * React hook to get store.
+ */
 const useBreadcrumbStore = () => React.useContext(BreadcrumbsStoreContext);
 
 export {

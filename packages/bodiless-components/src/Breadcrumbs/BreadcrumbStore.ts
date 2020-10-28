@@ -58,6 +58,9 @@ const isChildOf = (child: string, parent: string) => {
   return parentTokens.every((t, i) => childTokens[i] === t);
 };
 
+/**
+ * Stores breadcrumb item data.
+ */
 export class BreadcrumbItem implements BreadcrumbItemType {
   _uuid: string;
 
@@ -162,6 +165,13 @@ export type BreadcrumbStoreType = {
   hasLastItem: () => boolean;
 };
 
+/**
+ * MobX storage of breadcrumb items.
+ * API:
+ * + set/delete item.
+ * + get breadcrumb trail.
+ * + check if last breadcrumb item exists in the store.
+ */
 export class BreadcrumbStore implements BreadcrumbStoreType {
   // eslint-disable-next-line max-len
   @observable private items: Map<string, BreadcrumbItemType> = new Map<string, BreadcrumbItemType>();
