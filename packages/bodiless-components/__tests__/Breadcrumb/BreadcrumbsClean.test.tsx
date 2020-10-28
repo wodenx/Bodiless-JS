@@ -19,7 +19,7 @@ import {
 } from '@bodiless/fclasses';
 import { flowRight } from 'lodash';
 import {
-  BreadcrumbClean,
+  BreadcrumbsClean,
   withBreadcrumbStartingTrail,
   withoutBreadcrumbFinalTrail,
 } from '../../src/Breadcrumb';
@@ -36,9 +36,9 @@ const withAttrRename = (oldAttr: string, newAttr: string) => (Component: Compone
   return WithAttrRename;
 };
 
-describe('BreadcrumbClean', () => {
+describe('BreadcrumbsClean', () => {
   it('renders as empty unordered list by default', () => {
-    const wrapper = mount(<BreadcrumbClean />);
+    const wrapper = mount(<BreadcrumbsClean />);
     expect(wrapper.html()).toMatchSnapshot();
   });
   it('allows adding starting trail and design it using design api', () => {
@@ -49,7 +49,7 @@ describe('BreadcrumbClean', () => {
         }),
       }),
       withBreadcrumbStartingTrail,
-    )(BreadcrumbClean);
+    )(BreadcrumbsClean);
     const wrapper = mount(<Breadcrumb />);
     expect(wrapper.html()).toMatchSnapshot();
   });
@@ -83,7 +83,7 @@ describe('BreadcrumbClean', () => {
         withAttrRename('nodeKey', 'aria-label'),
         withoutProps('nodeCollection'),
       ),
-    })(BreadcrumbClean);
+    })(BreadcrumbsClean);
     const wrapper = mount(<Breadcrumb items={items} />);
     expect(wrapper.html()).toMatchSnapshot();
   });
@@ -122,7 +122,7 @@ describe('BreadcrumbClean', () => {
           className: 'separator',
         }),
       }),
-    )(BreadcrumbClean);
+    )(BreadcrumbsClean);
     const wrapper = mount(<Breadcrumb items={items} />);
     expect(wrapper.html()).toMatchSnapshot();
   });
@@ -150,7 +150,7 @@ describe('BreadcrumbClean', () => {
         ),
       }),
       withoutBreadcrumbFinalTrail,
-    )(BreadcrumbClean);
+    )(BreadcrumbsClean);
     const wrapper = mount(<Breadcrumb items={items} />);
     expect(wrapper.html()).toMatchSnapshot();
   });

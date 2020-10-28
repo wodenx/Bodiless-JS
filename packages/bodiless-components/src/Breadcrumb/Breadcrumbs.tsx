@@ -22,7 +22,7 @@ import { flowRight } from 'lodash';
 import type { BreadcrumbItemType as BreadcrumbStoreItemType } from './BreadcrumbStore';
 import { useBreadcrumbStore } from './BreadcrumbStoreProvider';
 
-type BreadCrumbComponents = {
+type BreadcrumbsComponents = {
   StartingTrail: ComponentType<HTMLProps<HTMLSpanElement>>,
   Separator: ComponentType<HTMLProps<HTMLSpanElement>>,
   BreadcrumbWrapper: ComponentType<HTMLProps<HTMLUListElement>>,
@@ -38,13 +38,13 @@ type BreadcrumbItemKeys = {
   link: WithNodeProps;
 };
 
-type BreadcrumbProps = DesignableComponentsProps<BreadCrumbComponents> & {
+type BreadcrumbsProps = DesignableComponentsProps<BreadcrumbsComponents> & {
   hasStartingTrail?: boolean | (() => boolean),
   items?: BreadcrumbItemKeys[],
   hasFinalTrail?: boolean | (() => boolean),
 } & { };
 
-const BreadcrumbClean$ = (props: BreadcrumbProps) => {
+const BreadcrumbsClean$ = (props: BreadcrumbsProps) => {
   const {
     hasStartingTrail = false,
     components,
@@ -105,7 +105,7 @@ const BreadcrumbClean$ = (props: BreadcrumbProps) => {
   );
 };
 
-const BreadcrumbStartComponents: BreadCrumbComponents = {
+const BreadcrumbStartComponents: BreadcrumbsComponents = {
   StartingTrail: asComponent('span'),
   Separator: asComponent('span'),
   BreadcrumbWrapper: asComponent('ul'),
@@ -115,11 +115,11 @@ const BreadcrumbStartComponents: BreadCrumbComponents = {
   FinalTrail: asComponent('span'),
 };
 
-const BreadcrumbClean = designable(BreadcrumbStartComponents)(BreadcrumbClean$);
+const BreadcrumbsClean = designable(BreadcrumbStartComponents)(BreadcrumbsClean$);
 
 // eslint-disable-next-line max-len
-const withBreadcrumbItemsFromStore = (Component: ComponentType<BreadcrumbProps & WithNodeProps>) => {
-  const WithBreadcrumbItemsFromStore = (props: BreadcrumbProps & WithNodeProps) => {
+const withBreadcrumbsItemsFromStore = (Component: ComponentType<BreadcrumbsProps & WithNodeProps>) => {
+  const WithBreadcrumbItemsFromStore = (props: BreadcrumbsProps & WithNodeProps) => {
     const { nodeCollection, hasFinalTrail = false, ...rest } = props;
     const store = useBreadcrumbStore();
     if (store === undefined) return <Component {...props} />;
@@ -163,14 +163,14 @@ const withoutFinalTrail = addProps({
   hasFinalTrail: false,
 });
 
-const Breadcrumb = flowRight(
+const Breadcrumbs = flowRight(
   observer,
-  withBreadcrumbItemsFromStore,
-)(BreadcrumbClean);
+  withBreadcrumbsItemsFromStore,
+)(BreadcrumbsClean);
 
 export {
-  BreadcrumbClean,
-  Breadcrumb,
+  BreadcrumbsClean,
+  Breadcrumbs,
   withStartingTrail as withBreadcrumbStartingTrail,
   withoutStartingTrail as withoutBreadcrumbStartingTrail,
   withFinalTrail as withBreadcrumbFinalTrail,

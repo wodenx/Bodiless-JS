@@ -47,6 +47,7 @@ import type {
 import {
   flowIf, hasProp, withoutProps, withOnlyProps,
 } from './hoc-util';
+import Fragment from './Fragment';
 
 export * from './StyledHTML';
 
@@ -72,6 +73,7 @@ export {
   asComponent,
   addClassesIf,
   removeClassesIf,
+  Fragment,
 };
 
 export type {

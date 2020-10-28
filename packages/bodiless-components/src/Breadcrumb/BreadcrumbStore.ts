@@ -84,9 +84,7 @@ export class BreadcrumbItem implements BreadcrumbItemType {
   }
 
   isSubpathOf(item: BreadcrumbItemType | string) {
-    const base = typeof window === 'undefined'
-      ? DEFAULT_URL_BASE
-      : `${window.location.protocol}//${window.location.host}`;
+    const base = DEFAULT_URL_BASE;
     const itemURL = typeof item === 'string' ? new URL(item, base) : new URL(item.link.data, base);
     const thisURL = new URL(this.link.data, base);
     if (itemURL.host !== thisURL.host) return false;
@@ -94,9 +92,7 @@ export class BreadcrumbItem implements BreadcrumbItemType {
   }
 
   hasPath(item: BreadcrumbItemType | string) {
-    const base = typeof window === 'undefined'
-      ? DEFAULT_URL_BASE
-      : `${window.location.protocol}//${window.location.host}`;
+    const base = DEFAULT_URL_BASE;
     const itemURL = typeof item === 'string' ? new URL(item, base) : new URL(item.link.data, base);
     const thisURL = new URL(this.link.data, base);
     if (itemURL.host !== thisURL.host) return false;

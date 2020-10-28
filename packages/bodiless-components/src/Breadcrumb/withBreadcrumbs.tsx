@@ -15,22 +15,22 @@
 import React, { ComponentType } from 'react';
 import { useNode } from '@bodiless/core';
 import { BreadcrumbStore } from './BreadcrumbStore';
-import { Breadcrumb } from './Breadcrumb';
+import { Breadcrumbs } from './Breadcrumbs';
 import { BreadcrumbStoreProvider } from './BreadcrumbStoreProvider';
 
-const withBreadcrumb = (Component: ComponentType<any>) => {
-  const WithBreadcrumb = (props: any) => {
+const withBreadcrumbs = (Component: ComponentType<any>) => {
+  const WithBreadcrumbs = (props: any) => {
     const { node } = useNode();
     const { pagePath } = node;
     const store = new BreadcrumbStore(pagePath);
     return (
       <BreadcrumbStoreProvider store={store}>
         <Component {...props} />
-        <Breadcrumb {...props} />
+        <Breadcrumbs {...props} />
       </BreadcrumbStoreProvider>
     );
   };
-  return WithBreadcrumb;
+  return WithBreadcrumbs;
 };
 
-export default withBreadcrumb;
+export default withBreadcrumbs;
