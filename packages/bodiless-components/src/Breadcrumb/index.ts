@@ -31,17 +31,17 @@ export type {
 } from './BreadcrumbStore';
 
 export {
-  BreadcrumbClean,
-  Breadcrumb,
+  BreadcrumbsClean,
+  Breadcrumbs,
   withBreadcrumbStartingTrail,
   withoutBreadcrumbStartingTrail,
   withBreadcrumbFinalTrail,
   withoutBreadcrumbFinalTrail,
-} from './Breadcrumb';
+} from './Breadcrumbs';
 
 export {
   useBreadcrumbStore,
   BreadcrumbStoreProvider,
 } from './BreadcrumbStoreProvider';
 
-export { default as withBreadcrumb } from './withBreadcrumb';
+export { default as withBreadcrumb } from './withBreadcrumbs';

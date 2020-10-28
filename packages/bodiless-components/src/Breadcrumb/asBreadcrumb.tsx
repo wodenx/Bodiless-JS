@@ -21,10 +21,7 @@ import { observer } from 'mobx-react-lite';
 import { BreadcrumbItem } from './BreadcrumbStore';
 import type { BreadcrumbItemType } from './BreadcrumbStore';
 import { useBreadcrumbStore } from './BreadcrumbStoreProvider';
-
-type LinkData = {
-  href: string,
-};
+import type { LinkData } from '../Link';
 
 const breadcrumbContext = createContext<BreadcrumbItemType | undefined>(undefined);
 

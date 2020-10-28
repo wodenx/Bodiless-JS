@@ -12,18 +12,9 @@
  * limitations under the License.
  */
 
-import React, { ComponentType } from 'react';
-import type { BreadcrumbStoreType } from './BreadcrumbStore';
+import { Fragment as BaseFragment } from 'react';
+import { withOnlyProps } from './hoc-util';
 
-const BreadcrumbsStoreContext = React.createContext<BreadcrumbStoreType | undefined>(undefined);
+const Fragment = withOnlyProps('key', 'children')(BaseFragment);
 
-const BreadcrumbStoreProvider: ComponentType<any> = ({ children, store }: any) => (
-  <BreadcrumbsStoreContext.Provider value={store}>{children}</BreadcrumbsStoreContext.Provider>
-);
-
-const useBreadcrumbStore = () => React.useContext(BreadcrumbsStoreContext);
-
-export {
-  useBreadcrumbStore,
-  BreadcrumbStoreProvider,
-};
+export default Fragment;

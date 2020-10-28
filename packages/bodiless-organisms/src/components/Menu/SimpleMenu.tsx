@@ -12,7 +12,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { flow } from 'lodash';
 
 import {
@@ -20,7 +19,7 @@ import {
   Design,
   stylable,
   replaceWith,
-  withOnlyProps,
+  Fragment,
 } from '@bodiless/fclasses';
 import {
   WithNodeKeyProps,
@@ -93,15 +92,15 @@ const withEmptyMenuMarkup = flow(
   withDesign({
     Item: withDesign({
       SubMenu: withDesign({
-        Item: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+        Item: replaceWith(Fragment),
       }),
     }),
   }),
   withMenuDesign({
-    Wrapper: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+    Wrapper: replaceWith(Fragment),
   }),
   withSubListDesign(1)({
-    _default: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+    _default: replaceWith(Fragment),
   }),
 );
 

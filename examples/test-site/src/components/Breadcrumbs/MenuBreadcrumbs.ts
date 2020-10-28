@@ -23,7 +23,6 @@ import {
   Span,
   Ul,
 } from '@bodiless/fclasses';
-import { withRichtextPlainSerializer } from '@bodiless/richtext';
 import {
   asSimpleMenuBase,
   asSimpleMenuBreadcrumbs,
@@ -31,10 +30,11 @@ import {
   asMegaMenuBase,
 } from '@bodiless/organisms';
 
+import { EditorSimple } from '../Editors';
+
 import { withArrowSeparator } from './MenuBreadcrumbs.token';
 
 const withMenuBreadcrumbSchema = withDesign({
-  Separator: replaceWith(Span),
   BreadcrumbLink: flow(
     replaceWith(
       withSidecarNodes(
@@ -43,15 +43,13 @@ const withMenuBreadcrumbSchema = withDesign({
     ),
     asReadOnly,
   ),
-  BreadcrumbTitle: flow(
-    replaceWith(Span),
-    withRichtextPlainSerializer,
-  ),
+  BreadcrumbTitle: replaceWith(EditorSimple),
 });
 
 const withMenuBreadcrumbsStyles = flow(
   withDesign({
     Separator: flow(
+      replaceWith(Span),
       addClasses('mx-1'),
     ),
     BreadcrumbWrapper: flow(
@@ -62,7 +60,7 @@ const withMenuBreadcrumbsStyles = flow(
   withArrowSeparator,
 );
 
-const MenuBreadcrumbs = flow(
+const Breadcrumbs = flow(
   asSimpleMenuBase(),
   asSimpleMenuBreadcrumbs({
     linkNodeKey: 'title$link',
@@ -82,5 +80,5 @@ const MegaMenuBreadcrumbs = flow(
   withMenuBreadcrumbsStyles,
 )('ul');
 
-export default MenuBreadcrumbs;
+export default Breadcrumbs;
 export { MegaMenuBreadcrumbs };

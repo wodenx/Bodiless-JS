@@ -12,13 +12,12 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { flow } from 'lodash';
 
 import {
   withDesign,
   replaceWith,
-  withOnlyProps,
+  Fragment,
 } from '@bodiless/fclasses';
 import { WithNodeKeyProps } from '@bodiless/core';
 import {
@@ -95,13 +94,13 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
  */
 const withEmptyMenuMarkup = flow(
   withSubMenuDesign({
-    Item: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+    Item: replaceWith(Fragment),
   }),
   withMenuDesign({
-    Wrapper: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+    Wrapper: replaceWith(Fragment),
   }),
   withSubListDesign(1)({
-    _default: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+    _default: replaceWith(Fragment),
   }),
 );
 

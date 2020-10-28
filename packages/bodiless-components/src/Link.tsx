@@ -92,3 +92,4 @@ export const asBodilessLink: AsBodiless<Props, Data> = (nodeKeys?) => flowRight(
 );
 const Link = asBodilessLink()('a');
 export default Link;
+export type { Data as LinkData };
