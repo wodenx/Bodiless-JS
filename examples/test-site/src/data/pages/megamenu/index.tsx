@@ -25,11 +25,11 @@ import {
 } from '@bodiless/core';
 
 import Layout from '../../../components/Layout';
-import { MegaMenuList } from '../../../components/MegaMenu/MegaMenu';
-import { SimpleMenuList } from '../../../components/MegaMenu/SimpleMenu';
+import { MegaMenuList } from '../../../components/Menu/MegaMenu';
+import { SimpleMenuList } from '../../../components/Menu/SimpleMenu';
 import { asHeader2, asHeader3, asHeader1 } from '../../../components/Elements.token';
 
-import { ResponsiveSimpleMenu, ResponsiveMegaMenu } from '../../../components/MegaMenu';
+import { ResponsiveSimpleMenu, ResponsiveMegaMenu } from '../../../components/Menu';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();

@@ -21,8 +21,8 @@ import {
 import { flow } from 'lodash';
 
 import Layout from '../../../components/Layout';
-import { SimpleMenu } from '../../../components/MegaMenu/SimpleMenu';
-import MegaMenu from '../../../components/MegaMenu/MegaMenu';
+import SimpleMenu from '../../../components/Menu/SimpleMenu';
+import MegaMenu from '../../../components/Menu/MegaMenu';
 import MenuBreadcrumbs, { MegaMenuBreadcrumbs } from '../../../components/Breadcrumbs/MenuBreadcrumbs';
 import {
   withEditableStartingTrail,

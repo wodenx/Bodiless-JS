@@ -12,8 +12,7 @@
  * limitations under the License.
  */
 
-import SimpleBurgerMenu from './SimpleBurgerMenu';
-import MegaBurgerMenu from './MegaBurgerMenu';
+import { SimpleBurgerMenu, MegaBurgerMenu } from './BurgerMenu';
 
 export {
   SimpleBurgerMenu,

@@ -13,66 +13,9 @@
  */
 
 import { flow } from 'lodash';
-import { withDesign, addClasses } from '@bodiless/fclasses';
+import { withDesign } from '@bodiless/fclasses';
 
-import { asToutWithPaddings, asToutDefaultStyle, asToutHorizontal } from '../Tout/token';
 import { withBaseBurgerMenuStyles, withBaseBurgerSubMenuStyles } from './SimpleBurgerMenu.token';
-
-/**
- * DEBUG Styles
- * ===========================================
- */
-const withBaseMenuDebugStyles = withDesign({
-  Wrapper: addClasses('BURGER_WRAPPER'),
-  Item: addClasses('BURGER_ITEM'),
-  Title: addClasses('BURGER_TITLE'),
-});
-
-const baseDebugStyles = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('ACCORDION_BODY'),
-    Title: withDesign({
-      Label: addClasses('ACCORDION_LABEL'),
-    }),
-    WrapperItem: addClasses('ACCORDION_WRAPPER'),
-  }),
-  Item: addClasses('BURGER_SUB_ITEM'),
-  Title: addClasses('BURGER_SUB_TITLE'),
-});
-
-const columnDebugStyles = flow(
-  withDesign({
-    Item: baseDebugStyles,
-  }),
-  baseDebugStyles,
-);
-
-const asDebugStyles = withDesign({
-  List: baseDebugStyles,
-  Touts: baseDebugStyles,
-  Columns: columnDebugStyles,
-});
-
-const withMegaBurgerDebugStyles = flow(
-  withDesign({
-    Item: asDebugStyles,
-  }),
-  withBaseMenuDebugStyles,
-);
-
-/**
- * Touts Sub Menu Styles
- * ===========================================
- */
-const withMenuToutStyles = flow(
-  asToutWithPaddings,
-  asToutDefaultStyle,
-  asToutHorizontal,
-);
-
-const asToutsSubMenu = flow(
-  withBaseBurgerSubMenuStyles,
-);
 
 /**
  * Columns Sub Menu Styles
@@ -86,29 +29,18 @@ const asColumnSubMenu = flow(
 );
 
 /**
- * Mega Menu Sub Menu Styles
- * ===========================================
- */
-
-const asMegaMenuSubListStyles = withDesign({
-  List: withBaseBurgerSubMenuStyles,
-  Touts: asToutsSubMenu,
-  Columns: asColumnSubMenu,
-});
-
-/**
  * Mega Menu Styles
  * ===========================================
  */
 const withMegaBurgerMenuStyles = flow(
   withDesign({
-    Item: asMegaMenuSubListStyles,
+    Item: withDesign({
+      List: withBaseBurgerSubMenuStyles,
+      Touts: withBaseBurgerSubMenuStyles,
+      Columns: asColumnSubMenu,
+    }),
   }),
   withBaseBurgerMenuStyles,
 );
 
 export default withMegaBurgerMenuStyles;
-export {
-  withMenuToutStyles,
-  withMegaBurgerDebugStyles,
-};

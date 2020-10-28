@@ -13,19 +13,58 @@
  */
 
 import { flow } from 'lodash';
+import { asStatic } from '@bodiless/core';
 import { withDesign, replaceWith } from '@bodiless/fclasses';
-import { SimpleBurgerMenuClean } from '@bodiless/organisms';
+import { BurgerMenuClean, asMegaBurgerMenu, asSimpleBurgerMenu } from '@bodiless/organisms';
 
 import Logo from '../Layout/logo';
+
+import { MegaMenuBase } from '../Menu/MegaMenu';
+import { SimpleMenuBase } from '../Menu/SimpleMenu';
+
 import withBurgerMenuStyles from './BurgerMenu.token';
+import withMegaBurgerMenuStyles from './MegaBurgerMenu.token';
+import withSimpleBurgerMenuStyles from './SimpleBurgerMenu.token';
 
 import './burger-menu.css';
 
-const BurgerMenu = flow(
-  withDesign({
-    Header: replaceWith(Logo),
-  }),
-  withBurgerMenuStyles,
-)(SimpleBurgerMenuClean);
+const MegaBurgerMenuBody = flow(
+  asMegaBurgerMenu,
+  withMegaBurgerMenuStyles,
+  asStatic,
+)(MegaMenuBase);
 
-export default BurgerMenu;
+const BurgerMenuBody = flow(
+  asSimpleBurgerMenu,
+  withSimpleBurgerMenuStyles,
+  asStatic,
+)(SimpleMenuBase);
+
+const withBurgerMenuLogo = withDesign({
+  Header: replaceWith(Logo),
+});
+
+const withSimpleBurgerMenuBody = withDesign({
+  Body: replaceWith(BurgerMenuBody),
+});
+
+const withMegaBurgerMenuBody = withDesign({
+  Body: replaceWith(MegaBurgerMenuBody),
+});
+
+const SimpleBurgerMenu = flow(
+  withBurgerMenuLogo,
+  withSimpleBurgerMenuBody,
+  withBurgerMenuStyles,
+)(BurgerMenuClean);
+
+const MegaBurgerMenu = flow(
+  withBurgerMenuLogo,
+  withMegaBurgerMenuBody,
+  withBurgerMenuStyles,
+)(BurgerMenuClean);
+
+export {
+  SimpleBurgerMenu,
+  MegaBurgerMenu,
+};

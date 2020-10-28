@@ -15,7 +15,7 @@
 import { flow } from 'lodash';
 import { useEditContext } from '@bodiless/core';
 import {
-  withDesign, addClasses, addClassesIf, removeClassesIf,
+  withDesign, addClasses, addClassesIf, removeClassesIf, stylable,
 } from '@bodiless/fclasses';
 
 import { useIsMenuOpen } from './withMenuContext';
@@ -50,6 +50,12 @@ const asResponsiveSublist = withDesign({
   Wrapper: withDesign({
     List: addClasses('w-content min-w-full'),
   }),
+});
+
+const asStylableList = withDesign({
+  Wrapper: stylable,
+  Item: stylable,
+  Title: stylable,
 });
 
 /*
@@ -117,5 +123,6 @@ export {
   withBaseSubMenuStyles,
   withBaseMenuStyles,
   asSimpleSubMenu,
+  asStylableList,
   asRelative,
 };

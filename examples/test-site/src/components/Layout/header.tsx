@@ -21,7 +21,7 @@ import {
   Div,
 } from '@bodiless/fclasses';
 import { withNodeKey } from '@bodiless/core';
-import { ResponsiveSimpleMenu } from '../MegaMenu';
+import { ResponsiveSimpleMenu } from '../Menu';
 import Logo from './logo';
 
 type HeaderComponents = {

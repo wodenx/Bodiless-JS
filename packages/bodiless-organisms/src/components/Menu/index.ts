@@ -50,3 +50,5 @@ export {
   asMegaMenuTopNav,
   useIsMenuOpen,
 };
+
+export * from './BurgerMenu';

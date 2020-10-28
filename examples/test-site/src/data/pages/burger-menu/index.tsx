@@ -16,7 +16,7 @@ import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 
 import Layout from '../../../components/Layout';
-import { ResponsiveSimpleMenu } from '../../../components/MegaMenu';
+import { ResponsiveSimpleMenu } from '../../../components/Menu';
 
 export default (props: any) => (
   <Page {...props}>

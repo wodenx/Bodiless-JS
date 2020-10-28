@@ -27,7 +27,7 @@ import {
 import type { BreadcrumbSettings } from '@bodiless/components';
 
 import { asMenuSubList } from './SimpleMenu';
-import asStylableList from './asStylableList';
+import { asStylableList } from './SimpleMenu.token';
 import withMenuContext from './withMenuContext';
 
 /**
@@ -119,12 +119,6 @@ const asBreadcrumbsClean = (settings: BreadcrumbSettings) => flow(
   }),
   withBreadcrumb,
 );
-
-// @TODO Add a similar HOC for BurgerMenu, something like:
-// const asMegaMenuClean = withMenuDesign({
-//   WrapperItem: asAccodionTitle,
-//   List: asAccordionBody,
-// });
 
 export {
   asMenuSubList, asMenuBase, withMenuDesign,

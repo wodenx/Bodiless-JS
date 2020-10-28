@@ -13,12 +13,12 @@
  */
 
 import React, { FC } from 'react';
-// import { flow } from 'lodash';
 import { withDesign } from '@bodiless/fclasses';
 import { asOverviewItem } from '@bodiless/components';
 
-import { withSimpleMenuDesign } from '../Menu';
-import { asAccordionWrapper, asAccodionTitle, asAccordionBody } from '../Accordion';
+import { asAccordionWrapper, asAccodionTitle, asAccordionBody } from '../../Accordion';
+import { withMenuDesign as withSimpleMenuDesign } from '../SimpleMenu';
+import { withMenuDesign as withMegaMenuDesign } from '../MegaMenu';
 
 const withOverlayLinkAccordion = (Component: any) => {
   const FinalComponent: FC<any> = ({ children, overview, ...rest }) => (
@@ -31,13 +31,19 @@ const withOverlayLinkAccordion = (Component: any) => {
   return asAccordionBody(FinalComponent);
 };
 
-const asSimpleBurgerMenu = withSimpleMenuDesign({
+const asBurgerMenuDesign = {
   Wrapper: withDesign({
     List: withOverlayLinkAccordion,
     Title: asAccodionTitle,
     WrapperItem: asAccordionWrapper,
   }),
   Item: asOverviewItem,
-});
+};
 
-export default asSimpleBurgerMenu;
+const asSimpleBurgerMenu = withSimpleMenuDesign(asBurgerMenuDesign);
+const asMegaBurgerMenu = withMegaMenuDesign(asBurgerMenuDesign);
+
+export {
+  asSimpleBurgerMenu,
+  asMegaBurgerMenu,
+};

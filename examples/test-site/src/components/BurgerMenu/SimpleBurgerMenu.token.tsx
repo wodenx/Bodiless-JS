@@ -16,39 +16,6 @@ import { flow } from 'lodash';
 import { withDesign, addClasses } from '@bodiless/fclasses';
 
 /**
- * DEBUG Burger Menu Styles
- * ===========================================
- */
-const withBaseMenuDebugStyles = withDesign({
-  Wrapper: addClasses('BURGER_WRAPPER'),
-  Item: addClasses('BURGER_ITEM'),
-  Title: addClasses('BURGER_TITLE'),
-});
-
-const withBaseSubMenuDebugStyles = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('ACCORDION_BODY'),
-    Title: withDesign({
-      Label: addClasses('ACCORDION_LABEL'),
-    }),
-    WrapperItem: addClasses('ACCORDION_WRAPPER'),
-  }),
-  Item: addClasses('BURGER_SUB_ITEM'),
-  Title: addClasses('BURGER_SUB_TITLE'),
-});
-
-const asSimpleSubMenuDebugStyles = withDesign({
-  SubMenu: withBaseSubMenuDebugStyles,
-});
-
-const withBurgerMenuDebugStyles = flow(
-  withDesign({
-    Item: asSimpleSubMenuDebugStyles,
-  }),
-  withBaseMenuDebugStyles,
-);
-
-/**
  * Base Burger Menu Styles
  * ===========================================
  */
@@ -57,7 +24,7 @@ const withBaseBurgerMenuStyles = withDesign({
 });
 
 /**
- * Base Sub Menu Styles
+ * Base Burger Sub Menu Styles
  * ===========================================
  */
 const withBaseBurgerSubMenuStyles = withDesign({
@@ -69,17 +36,15 @@ const withBaseBurgerSubMenuStyles = withDesign({
   Item: addClasses('pl-3'),
 });
 
-const asSimpleBurgerSubMenuStyles = withDesign({
-  SubMenu: withBaseBurgerSubMenuStyles,
-});
-
 /**
  * Simple Burger Menu Styles
  * ===========================================
  */
 const withSimpleBurgerMenuStyles = flow(
   withDesign({
-    Item: asSimpleBurgerSubMenuStyles,
+    Item: withDesign({
+      SubMenu: withBaseBurgerSubMenuStyles,
+    }),
   }),
   withBaseBurgerMenuStyles,
 );
@@ -88,5 +53,4 @@ export default withSimpleBurgerMenuStyles;
 export {
   withBaseBurgerMenuStyles,
   withBaseBurgerSubMenuStyles,
-  withBurgerMenuDebugStyles,
 };
