@@ -19,6 +19,8 @@ import { SimpleBurgerMenuClean } from '@bodiless/organisms';
 import Logo from '../Layout/logo';
 import withBurgerMenuStyles from './BurgerMenu.token';
 
+import './burger-menu.css';
+
 const BurgerMenu = flow(
   withDesign({
     Header: replaceWith(Logo),
