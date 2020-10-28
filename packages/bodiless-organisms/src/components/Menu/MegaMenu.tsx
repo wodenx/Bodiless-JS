@@ -88,9 +88,8 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
 // Now we create breadcrumbs
 
 /**
- * HOC that can be applied to a mage menu based component
- * it renders all list and sublist items
- * but produces no markup
+ * HOC that can be applied to a mega menu based component,
+ * it renders all list and sublist items but produces no markup.
  */
 const withEmptyMenuMarkup = flow(
   withSubMenuDesign({
@@ -105,11 +104,11 @@ const withEmptyMenuMarkup = flow(
 );
 
 /**
- * HOC which can be applied to a base menu to make it into a site's breadcrumbs
+ * Creates a HOC which can be applied to a base menu to make it into a site's breadcrumbs
  *
- * @param A base menu component created via asMenuBase()
+ * @param settings The title and link nodekeys defining where to locate the link and title nodes.
  *
- * @return A clean (unstyled) site breadcrumb component.
+ * @return  HOC for composing a clean (unstyled) site breadcrumb component.
  */
 const asBreadcrumbsClean = (settings: BreadcrumbSettings) => flow(
   withEmptyMenuMarkup,

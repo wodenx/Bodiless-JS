@@ -18,6 +18,10 @@ import { BreadcrumbStore } from './BreadcrumbStore';
 import { Breadcrumbs } from './Breadcrumbs';
 import { BreadcrumbStoreProvider } from './BreadcrumbStoreProvider';
 
+/**
+ * HOC that adds breadcrumb store and renders breadcrumbs.
+ * @param Component that pushes its data to the store.
+ */
 const withBreadcrumbs = (Component: ComponentType<any>) => {
   const WithBreadcrumbs = (props: any) => {
     const { node } = useNode();

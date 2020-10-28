@@ -39,8 +39,7 @@ export type BreadcrumbSettings = {
  * to the breadcrumb store. Once the wrapped component is unmounted, the corresponding link
  * and title are deleted from the breadcrumb store
  *
- * @param linkNodeKey The link nodekey defining where to locate the link node.
- * @param titleNodeKey The title nodekey defining where to locate the title node.
+ * @param settings The title and link nodekeys defining where to locate the link and title nodes.
  *
  * @return An HOC which defines the wrapped component as a breadcrumb.
  */
