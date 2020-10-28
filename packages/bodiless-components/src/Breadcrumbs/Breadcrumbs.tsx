@@ -66,7 +66,7 @@ const BreadcrumbsClean$ = (props: BreadcrumbsProps) => {
     const isLastItem = index === (items.length - 1);
     return (
       <React.Fragment key={item.uuid}>
-        <BreadcrumbItem key={item.uuid}>
+        <BreadcrumbItem>
           <BreadcrumbLink nodeKey={item.link.nodeKey} nodeCollection={item.link.nodeCollection}>
             <BreadcrumbTitle
               nodeKey={item.title.nodeKey}
