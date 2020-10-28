@@ -16,7 +16,7 @@ import { v4 } from 'uuid';
 import {
   BreadcrumbItem,
   BreadcrumbStore,
-} from '../../src/Breadcrumb/BreadcrumbStore';
+} from '../../src/Breadcrumbs/BreadcrumbStore';
 
 describe('BreadcrumbItem', () => {
   describe('isSubpathOf', () => {
