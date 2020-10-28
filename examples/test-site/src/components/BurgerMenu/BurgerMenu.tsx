@@ -44,23 +44,19 @@ const withBurgerMenuLogo = withDesign({
   Header: replaceWith(Logo),
 });
 
-const withSimpleBurgerMenuBody = withDesign({
-  Body: replaceWith(BurgerMenuBody),
-});
-
-const withMegaBurgerMenuBody = withDesign({
-  Body: replaceWith(MegaBurgerMenuBody),
-});
-
 const SimpleBurgerMenu = flow(
+  withDesign({
+    Body: replaceWith(BurgerMenuBody),
+  }),
   withBurgerMenuLogo,
-  withSimpleBurgerMenuBody,
   withBurgerMenuStyles,
 )(BurgerMenuClean);
 
 const MegaBurgerMenu = flow(
+  withDesign({
+    Body: replaceWith(MegaBurgerMenuBody),
+  }),
   withBurgerMenuLogo,
-  withMegaBurgerMenuBody,
   withBurgerMenuStyles,
 )(BurgerMenuClean);
 
