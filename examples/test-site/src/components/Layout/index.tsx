@@ -25,7 +25,7 @@ import SiteGTMHelmetEvent from './GTM';
 import { asPageContainer, asYMargin } from '../Elements.token';
 import { asSiteHeader, asSiteFooter } from './token';
 
-import MenuBreadcrumbs from '../Breadcrumbs/MenuBreadcrumbs';
+import { MegaMenuBreadcrumbs } from '../Breadcrumbs/MenuBreadcrumbs';
 
 const SiteHeader = asSiteHeader(Header);
 const SiteFooter = asSiteFooter(Footer);
@@ -59,7 +59,7 @@ const Layout = designable({
     addClasses('pt-2'),
     // hide breadcrumbs on home page
     ifToggledOn(isHomePage)(replaceWith(React.Fragment)),
-  )(MenuBreadcrumbs),
+  )(MegaMenuBreadcrumbs),
 })(BaseLayout);
 
 export default Layout;
