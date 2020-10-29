@@ -18,6 +18,7 @@ import {
   designable,
   DesignableComponentsProps,
 } from '@bodiless/fclasses';
+import { useNode } from '@bodiless/core';
 
 type MenuLinkComponents = {
   Link: ComponentType<any>,
@@ -25,30 +26,45 @@ type MenuLinkComponents = {
 };
 
 const menulinkComponents: MenuLinkComponents = {
-  Link: A,
   ActiveLink: A,
 };
 
-const isCurrentPage = (href: string | undefined) => {
-  if (!href || (typeof window === 'undefined')) {
-    return false;
-  }
-  const urls = [];
-  urls.push(window.location.toString());
+// const isCurrentPage = (href: string | undefined) => {
+//   if (!href || (typeof window === 'undefined')) {
+//     return false;
+//   }
+//   const urls = [];
+//   urls.push(window.location.toString());
+// 
+//   let relativeUrl = window.location.pathname;
+//   urls.push(relativeUrl);
+//   if (window.location.search) {
+//     relativeUrl += window.location.search;
+//     urls.push(relativeUrl);
+//   }
+//   if (window.location.hash) {
+//     relativeUrl += window.location.hash;
+//     urls.push(relativeUrl);
+//     urls.push(window.location.hash); // a case when only a hash presents in link href
+//   }
+//   return urls.indexOf(href) > -1;
+// };
 
-  let relativeUrl = window.location.pathname;
-  urls.push(relativeUrl);
-  if (window.location.search) {
-    relativeUrl += window.location.search;
-    urls.push(relativeUrl);
-  }
-  if (window.location.hash) {
-    relativeUrl += window.location.hash;
-    urls.push(relativeUrl);
-    urls.push(window.location.hash); // a case when only a hash presents in link href
-  }
-  return urls.indexOf(href) > -1;
-};
+const nor
+
+const useIsCurrentPage = (href: string) => {
+  // const base = typeof window === 'undefined'
+  //   ? DEFAULT_URL_BASE
+  //   : `${window.location.protocol}//${window.location.host}`;
+  const base = 'https://host';
+  const { node } = useNode();
+  const currentUrl = new URL(node.pagePath, base);
+  const testUrl = new URL(href, base);
+  if (currentUrl.host !== testUrl.host) return false;
+
+
+
+}
 
 export type Props = {
   href?: string,

@@ -13,7 +13,6 @@
  */
 
 import Editable, { withPlaceholder, asEditable } from './Editable';
-import { asBodilessLink } from './Link';
 import Image, {
   asBodilessImage,
   TImagePickerUI,
@@ -75,7 +74,6 @@ import withBodilessLinkToggle from './withBodilessLinkToggle';
 
 export {
   withBodilessLinkToggle,
-  asBodilessLink,
   Image,
   asBodilessImage,
   withImagePlaceholder,

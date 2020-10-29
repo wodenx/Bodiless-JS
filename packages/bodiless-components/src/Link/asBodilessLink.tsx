@@ -22,6 +22,7 @@ import {
 } from '@bodiless/core';
 import type { AsBodiless, BodilessOptions } from '@bodiless/core';
 import { flowRight } from 'lodash';
+import NormalHref, { NormalHrefOptions } from './NormalHref';
 
 // Type of the data used by this component.
 type Data = {
@@ -76,19 +77,24 @@ const options: BodilessOptions<Props, Data> = {
   },
 };
 
-const withHrefTransformer = (Component : ComponentType<Props>) => {
-  const TransformedHref = ({ href, ...rest } : Props) => <Component href={href !== '' ? href : '#'} {...rest} />;
-  return TransformedHref;
+const withNormalHref = (hrefOptions?: NormalHrefOptions) => (Component : ComponentType<Props>) => {
+  const WithNormalHref = ({ href, ...rest } : Props) => (
+    <Component
+      href={new NormalHref(href, hrefOptions).toString()}
+      {...rest}
+    />
+  );
+  return WithNormalHref;
 };
 
-export const asBodilessLink: AsBodiless<Props, Data> = (nodeKeys?) => flowRight(
+const asBodilessLink: AsBodiless<Props, Data> = (nodeKeys?) => flowRight(
   // Prevent following the link in edit mode
   ifEditable(
     withExtendHandler('onClick', () => (e: MouseEvent) => e.preventDefault()),
   ),
   asBodilessComponent<Props, Data>(options)(nodeKeys),
   withoutProps(['unwrap']),
-  withHrefTransformer,
+  withNormalHref(),
 );
-const Link = asBodilessLink()('a');
-export default Link;
+
+export default asBodilessLink;
