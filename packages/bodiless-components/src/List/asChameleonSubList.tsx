@@ -16,8 +16,6 @@ const useChameleonOverrides = ():Partial<EditButtonOptions<any, any>> => {
     name: `chameleon-sublist-${v1()}`,
     label: 'Sub',
     groupMerge: 'merge-up',
-    // label: isOn ? 'Swap' : 'Add',
-    // groupLabel: 'Sublist',
     formTitle: 'Sublist',
   };
 };

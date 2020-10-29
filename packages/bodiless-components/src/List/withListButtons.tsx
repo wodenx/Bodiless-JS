@@ -31,7 +31,6 @@ const hasChildSubList = (context: PageEditContextInterface, count: number = 1): 
 };
 
 const useMenuOptions = (useOverrides: UseListOverrides = () => ({})) => (props: ItemProps) => {
-  // const context = useEditContext();
   const {
     addItem, deleteItem, canDelete,
   } = props;
@@ -52,7 +51,6 @@ const useMenuOptions = (useOverrides: UseListOverrides = () => ({})) => (props: 
   const menuOptions:TMenuOption[] = useMemo(() => ([
     {
       name: `add-${id}`,
-      // isHidden: () => hasChildSubList(context),
       icon: 'add',
       label: 'Add',
       handler: addItem,
@@ -64,7 +62,6 @@ const useMenuOptions = (useOverrides: UseListOverrides = () => ({})) => (props: 
       name: `remove-${id}`,
       icon: 'delete',
       label: 'Delete',
-      // isHidden: () => !canDelete() || hasChildSubList(context),
       isHidden: () => !canDelete(),
       handler: deleteItem,
       global,

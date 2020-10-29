@@ -14,12 +14,12 @@
 
 import { Fragment } from 'react';
 import {
-  withSidecarNodes,
-  ifReadOnly, ifEditable, withOnlyProps, UseBodilessOverrides, EditButtonProps,
+  withSidecarNodes, ifReadOnly, ifEditable, withOnlyProps,
 } from '@bodiless/core';
+import type { UseBodilessOverrides, EditButtonProps } from '@bodiless/core';
 import { flowRight, identity } from 'lodash';
 import { replaceWith, withoutProps, withDesign } from '@bodiless/fclasses';
-import { AsBodilessLink } from 'src';
+import type { AsBodilessLink } from './Link';
 import {
   withChameleonComponentFormControls, applyChameleon, withChameleonContext, useChameleonContext,
 } from './Chameleon';

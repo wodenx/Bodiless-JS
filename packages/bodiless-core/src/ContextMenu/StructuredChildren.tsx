@@ -16,7 +16,7 @@ import React, {
   FC, ReactElement, ReactNode, ComponentType,
 } from 'react';
 import { flow } from 'lodash';
-import { IContextMenuItemProps } from '../Types/ContextMenuTypes';
+import type { IContextMenuItemProps } from '../Types/ContextMenuTypes';
 
 type GroupTree = {
   [name: string]: {

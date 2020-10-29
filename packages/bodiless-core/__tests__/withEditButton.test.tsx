@@ -21,7 +21,7 @@ import { observer } from 'mobx-react-lite';
 import withEditButton from '../src/withEditButton';
 import { useEditContext } from '../src/hooks';
 import ContextMenuItem from '../src/components/ContextMenuItem';
-import { TMenuOption, EditButtonOptions } from '../lib';
+import { TMenuOption, EditButtonOptions } from '../src';
 
 type Props = HTMLProps<HTMLDivElement>;
 type Data = {
@@ -162,7 +162,6 @@ describe('withEditButton', () => {
       <Foo setComponentData={() => undefined} componentData={{}} />,
     );
 
-    console.log(wrapper.debug());
     // @TODO Need to be able to pass context definition overrides.
     // expect(wrapper.prop('name')).toBe(options.name);
     const menuOptions: TMenuOption[] = wrapper.prop('getMenuOptions')();
