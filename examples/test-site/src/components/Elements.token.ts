@@ -40,6 +40,7 @@ const asXMargin = addClasses('mx-2');
 const asYMargin = addClasses('my-2');
 const asNegXMargin = addClasses('-mx-1');
 const asNegYMargin = addClasses('-my-1');
+const withPadding3 = addClasses('p-3');
 const withPadding5 = addClasses('p-5');
 
 /* Responsive design */
@@ -109,6 +110,7 @@ export {
   asNegXMargin,
   asNegYMargin,
   asBlockQuote,
+  withPadding3,
   withPadding5,
   asResponsive21By9Embed,
   asResponsive16By9Embed,

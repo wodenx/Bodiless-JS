@@ -64,8 +64,8 @@ const asStylableList = withDesign({
  */
 const withHoverStyles = withDesign({
   Item: flow(
-    addClasses('hover:overflow-visible'),
-    removeClassesIf(useIsMenuOpen)('hover:overflow-visible'),
+    addClasses('hover:overflow-visible focus:overflow-visible'),
+    removeClassesIf(useIsMenuOpen)('hover:overflow-visible focus:overflow-visible'),
   ),
 });
 

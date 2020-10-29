@@ -15,12 +15,14 @@
 import { flow } from 'lodash';
 import { withDesign, addClasses } from '@bodiless/fclasses';
 
+import { asBold, withPadding3 } from '../Elements.token';
+
 /**
  * Base Burger Menu Styles
  * ===========================================
  */
 const withBaseBurgerMenuStyles = withDesign({
-  Wrapper: addClasses('p-3'),
+  Wrapper: withPadding3,
 });
 
 /**
@@ -30,7 +32,7 @@ const withBaseBurgerMenuStyles = withDesign({
 const withBaseBurgerSubMenuStyles = withDesign({
   Wrapper: withDesign({
     Title: withDesign({
-      Label: addClasses('font-bold'),
+      Label: asBold,
     }),
   }),
   Item: addClasses('pl-3'),
