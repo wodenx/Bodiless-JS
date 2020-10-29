@@ -44,4 +44,4 @@ export {
   BreadcrumbStoreProvider,
 } from './BreadcrumbStoreProvider';
 
-export { default as withBreadcrumb } from './withBreadcrumbs';
+export { default as withBreadcrumbs } from './withBreadcrumbs';

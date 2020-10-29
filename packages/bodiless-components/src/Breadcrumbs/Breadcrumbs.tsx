@@ -126,7 +126,7 @@ const BreadcrumbsClean = designable(BreadcrumbStartComponents)(BreadcrumbsClean$
  * @param Component a breadcrumb based component
  */
 // eslint-disable-next-line max-len
-const withBreadcrumbsItemsFromStore = (Component: ComponentType<BreadcrumbsProps & WithNodeProps>) => {
+const withBreadcrumbItemsFromStore = (Component: ComponentType<BreadcrumbsProps & WithNodeProps>) => {
   const WithBreadcrumbItemsFromStore = (props: BreadcrumbsProps & WithNodeProps) => {
     const { nodeCollection, hasFinalTrail = false, ...rest } = props;
     const store = useBreadcrumbStore();
@@ -192,7 +192,7 @@ const withoutFinalTrail = addProps({
  */
 const Breadcrumbs = flowRight(
   observer,
-  withBreadcrumbsItemsFromStore,
+  withBreadcrumbItemsFromStore,
 )(BreadcrumbsClean);
 
 export {

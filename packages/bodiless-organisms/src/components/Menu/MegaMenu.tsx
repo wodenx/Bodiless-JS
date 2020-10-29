@@ -21,7 +21,7 @@ import {
 } from '@bodiless/fclasses';
 import { WithNodeKeyProps } from '@bodiless/core';
 import {
-  asBreadcrumb, withBreadcrumb, withSubListDesign,
+  asBreadcrumb, withBreadcrumbs, withSubListDesign,
   asBodilessList, asChameleonSubList,
 } from '@bodiless/components';
 import type { BreadcrumbSettings } from '@bodiless/components';
@@ -117,7 +117,7 @@ const asBreadcrumbsClean = (settings: BreadcrumbSettings) => flow(
       asBreadcrumb(settings),
     ),
   }),
-  withBreadcrumb,
+  withBreadcrumbs,
 );
 
 export {
