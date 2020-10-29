@@ -93,11 +93,18 @@ const createMenuOptionHook = <P extends object, D extends object>(
       renderForm,
       groupLabel,
       groupMerge,
+      initialValueHandler,
+      submitValueHandler,
       ...rest
     } = options$;
     const { isActive } = props;
-    const render = useContextMenuForm(useEditFormProps({ ...props, renderForm }));
-    const menuOption:TMenuOption = {
+    const render = useContextMenuForm(useEditFormProps({
+      ...props,
+      renderForm,
+      initialValueHandler,
+      submitValueHandler,
+    }));
+    const menuOption = {
       ...rest,
       handler: () => render,
     };
