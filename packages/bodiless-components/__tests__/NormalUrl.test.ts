@@ -1,4 +1,4 @@
-import NormalHref from './NormalHref';
+import NormalHref from '../src/Link/NormalHref';
 
 describe('NormalUrl', () => {
   it('treats any url with explicit host as external', () => {
@@ -42,6 +42,14 @@ describe('NormalUrl', () => {
     const normal = new NormalHref('#foo');
     expect(normal.toString()).toEqual('./#foo');
   });
+
+  it('Treats empty url as relative fragment', () => {
+    const normal = new NormalHref(' ');
+    expect(normal.toString()).toEqual('./#');
+    const normal1 = new NormalHref();
+    expect(normal1.toString()).toEqual('./#');
+
+  })
 
   it('Handles relative fragments and queries correctly', () => {
     const normal = new NormalHref('./?foo=bar#baz');

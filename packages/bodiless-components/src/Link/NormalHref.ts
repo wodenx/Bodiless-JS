@@ -21,10 +21,10 @@ class NormalHref {
 
   protected urlString: string;
 
-  constructor(urlString: string = '#', options: NormalHrefOptions = {}) {
+  constructor(urlString?: string, options: NormalHrefOptions = {}) {
+    this.urlString = urlString?.trim() || '#';
     this.options = { ...defaultOptions, ...options };
-    this.url = new URL(urlString, DEFAULT_BASE);
-    this.urlString = urlString;
+    this.url = new URL(this.urlString, DEFAULT_BASE);
   }
 
   get isExternal(): boolean {
@@ -33,13 +33,12 @@ class NormalHref {
   }
 
   get isRelative(): boolean {
-    return /^\./.test(this.urlString);
+    return  !this.isExternal && (Boolean(this.relativePrefix) || !this.url.pathname);
   }
 
   protected get relativePrefix() {
     // Ensure url which starts with hash is treated as relative
-    const urlString = this.urlString.charAt(0) === '#' ? `./${this.urlString}` : this.urlString;
-    const rel = urlString.match(/^\.[./]+/g);
+    const rel = this.urlString.match(/^\.[./]+/g);
     if (!rel) return '';
     return rel[0].replace(/\/+$/g, '');
   }
@@ -47,6 +46,7 @@ class NormalHref {
   get pathname(): string {
     if (this.isExternal) return this.url.pathname;
     const basePathname = `${this.relativePrefix}${this.url.pathname}`;
+    if (!basePathname) return '';
     const stripped = basePathname.replace(/\/+$/g, '');
     // Append trailing slash if requested and not a file link, and always for homepage.
     return stripped.length === 0 || (this.options.trailingSlash && !path.extname(stripped))
@@ -55,7 +55,7 @@ class NormalHref {
 
   toString(): string {
     if (this.isExternal) return this.url.toString();
-    return `${this.pathname}${this.url.search}${this.url.hash}`;
+    return `${this.pathname}${this.url.search}${this.url.hash}` || '#';
   }
 
   protected canCompare(that: NormalHref) {
