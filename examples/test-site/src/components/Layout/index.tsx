@@ -21,7 +21,6 @@ import { useNode, withNodeKey, ifToggledOn } from '@bodiless/core';
 import Header from './header';
 import Footer from './footer';
 import SeoHelmet from './meta';
-import SiteGTMHelmetEvent from './GTM';
 import { asPageContainer, asYMargin } from '../Elements.token';
 import { asSiteHeader, asSiteFooter } from './token';
 
@@ -40,7 +39,6 @@ const BaseLayout = ({ children, components }) => {
   return (
     <>
       <SeoHelmet />
-      <SiteGTMHelmetEvent />
       <SiteHeader />
       <Container>
         { Breadcrumb && <Breadcrumb />}
