@@ -27,7 +27,7 @@ import {
 import {
   asBodilessList,
   withSubListDesign, withSubLists, asSubList, withDeleteNodeOnUnwrap,
-  asBreadcrumb, withBreadcrumb,
+  asBreadcrumb, withBreadcrumbs,
 } from '@bodiless/components';
 import type { BreadcrumbSettings } from '@bodiless/components';
 
@@ -117,7 +117,7 @@ const asBreadcrumbsClean = (settings: BreadcrumbSettings) => flow(
       asBreadcrumb(settings),
     ),
   }),
-  withBreadcrumb,
+  withBreadcrumbs,
 );
 
 // @TODO Add a similar HOC for BurgerMenu, something like:
