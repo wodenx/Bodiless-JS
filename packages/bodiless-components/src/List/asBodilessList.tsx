@@ -51,22 +51,6 @@ const asTitledItem = <P extends TitledItemProps>(Item: ComponentType<P>) => {
   return TitledItem;
 };
 
-const asOverviewItem = <P extends TitledItemProps>(Item: ComponentType<P>) => {
-  const ItemWithOverview: ComponentType<P> = (props) => {
-    const { children } = props;
-    const { node } = useNode();
-    // Next line ensures that whatever value is stored in the "text" node is replaced with "Overlay"
-    // const node$ = replaceTextWithOverview(node);
-    const overview = <NodeProvider node={node}>{children}</NodeProvider>;
-    const sublistProps = { overview };
-    return (
-      <Item {...sublistProps} {...props} />
-    );
-  };
-
-  return ItemWithOverview;
-};
-
 type SubListComponents = {
   WrapperItem: ComponentType<any>,
   List: ComponentType<any>,
@@ -146,4 +130,4 @@ const withSimpleSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
 );
 
 export default asBodilessList;
-export { asSubList, withSimpleSubListDesign, asOverviewItem };
+export { asSubList, withSimpleSubListDesign };

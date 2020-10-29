@@ -12,23 +12,43 @@
  * limitations under the License.
  */
 
-import React, { FC } from 'react';
+import React, { FC, ComponentType } from 'react';
+import { useNode, NodeProvider } from '@bodiless/core';
 import { withDesign } from '@bodiless/fclasses';
-import { asOverviewItem } from '@bodiless/components';
 
 import { asAccordionWrapper, asAccodionTitle, asAccordionBody } from '../../Accordion';
 import { withMenuDesign as withSimpleMenuDesign } from '../SimpleMenu';
 import { withMenuDesign as withMegaMenuDesign } from '../MegaMenu';
 
-const withOverlayLinkAccordion = (Component: any) => {
-  const FinalComponent: FC<any> = ({ children, overview, ...rest }) => (
-    <Component {...rest}>
+type OverviewItem = {
+  overview: JSX.Element,
+};
+
+const asBurgerMenuOverviewLink = <P extends object>(Item: ComponentType<P>) => {
+  const ItemWithOverview: ComponentType<P> = (props) => {
+    const { children } = props;
+    const { node } = useNode();
+    // Next line ensures that whatever value is stored in the "text" node is replaced with "Overlay"
+    // const node$ = replaceTextWithOverview(node);
+    const overview = <NodeProvider node={node}>{children}</NodeProvider>;
+    const sublistProps = { overview };
+    return (
+      <Item {...sublistProps} {...props} />
+    );
+  };
+
+  return ItemWithOverview;
+};
+
+const withOverlayLinkAccordion = <P extends object>(Component: ComponentType<P>) => {
+  const WithOverlayLinkAccordion: FC<P & OverviewItem> = ({ children, overview, ...rest }) => (
+    <Component {...rest as P}>
       { overview }
       { children }
     </Component>
   );
 
-  return asAccordionBody(FinalComponent);
+  return asAccordionBody(WithOverlayLinkAccordion as ComponentType<P>);
 };
 
 const asBurgerMenuDesign = {
@@ -37,7 +57,7 @@ const asBurgerMenuDesign = {
     Title: asAccodionTitle,
     WrapperItem: asAccordionWrapper,
   }),
-  Item: asOverviewItem,
+  Item: asBurgerMenuOverviewLink,
 };
 
 const asSimpleBurgerMenu = withSimpleMenuDesign(asBurgerMenuDesign);

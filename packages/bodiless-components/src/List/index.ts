@@ -1,5 +1,5 @@
 import asBodilessList, {
-  asSubList, withSimpleSubListDesign, asOverviewItem,
+  asSubList, withSimpleSubListDesign,
 } from './asBodilessList';
 
 import asChameleonSubList, { withSubLists, withSubListDesign } from './asChameleonSubList';
@@ -9,7 +9,6 @@ import { asTestableList } from './List';
 export {
   asBodilessList,
   asSubList,
-  asOverviewItem,
   asChameleonSubList,
   withSimpleSubListDesign,
   withSubLists,
