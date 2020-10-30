@@ -13,37 +13,8 @@
  */
 
 import React from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { mount, ReactWrapper } from 'enzyme';
-import { asBodilessLink } from '../src/Link';
-import DefaultNormalHref, { HrefNormalizer } from '../src/Link/NormalHref';
-import { ContentNode, NodeProvider, PageEditContext } from '@bodiless/core';
-
-export { DefaultNormalHref };
-
-const Link = asBodilessLink()('a');
-
-class MockContentNode implements ContentNode<any> {
-  data = {};
-  setData = jest.fn();
-  delete = jest.fn();
-  keys = [];
-  path = [];
-  pagePath = '';
-  baseResourcePath = '';
-  child = jest.fn();
-  peer = jest.fn();
-  hasError = jest.fn();
-};
-
-
-const mockCreateNormalHref = jest.fn((href: string) => ({
-  toString: () => `mock://${href}`,
-}));
-//jest.mock('../src/Link/NormalHref', () => (
-//  jest.fn().mockImplementation((href: string) => {
-//    return mockCreateNormalHref(href);
-//  })
-//));
 
 const setEditMode = (isEdit: boolean) => {
   // @TODO bodiless-core internals should not be touched
@@ -51,6 +22,11 @@ const setEditMode = (isEdit: boolean) => {
   window.sessionStorage.isEdit = isEdit;
 };
 setEditMode(true);
+
+// eslint-disable-next-line import/first
+import { asBodilessLink } from '../src/Link';
+
+const Link = asBodilessLink()('a');
 
 let wrapper: ReactWrapper;
 let menuButton: ReactWrapper;
@@ -60,55 +36,8 @@ let menuPopup: ReactWrapper;
 const firstLinkProps = { nodeKey: 'oneLink' };
 const secondLinkProps = { nodeKey: 'anotherLink' };
 
-describe('asBodilessLink', () => {
-  describe('link normalization', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
-
-    it('invokes the default normalizer on render', () => {
-      const A = asBodilessLink()('a');
-      wrapper = mount(<A href="foo" id="test" />);
-      console.log(wrapper.debug());
-      expect(mockCreateNormalHref).toBeCalledWith('foo');
-      expect(wrapper.find('a#test').prop('href')).toBe('mock://foo');
-    });
-
-    it('invokes the default normalizer on save', () => {
-      const node = new MockContentNode();
-      const A = asBodilessLink()('a');
-      wrapper = mount(<NodeProvider node={node}><A /></NodeProvider>);
-      console.log(wrapper.debug());
-      // const nodes = wrapper.findWhere(n => n.prop('setComponentData') !== undefined);
-      // nodes.at(0).prop('setComponentData')({ href: 'foo' });
-      // expect(node.setData).toBeCalledWith({ href: 'mock://foo' });
-    });
-
-    it('invokes a custom normalizer on render', () => {
-      const normalizeHref: HrefNormalizer = jest.fn((href?: string) => `custommock://${href}`);
-      const A = asBodilessLink(undefined, undefined, () => ({ normalizeHref }))('a');
-      wrapper = mount(<A href="foo" id="test" />);
-      expect(mockCreateNormalHref).not.toBeCalled();
-      expect(normalizeHref).toBeCalledWith('foo');
-      expect(wrapper.find('a#test').prop('href')).toBe('custommock://foo');
-    });
-  });
-});
-
-
-describe.only('link interactions', () => {
-  let mockIsEdit: jest.SpyInstance;
-
-  beforeAll(() => {
-    mockIsEdit = jest.spyOn(PageEditContext.prototype, 'isEdit', 'get');
-    mockIsEdit.mockImplementation(() => true);
-  });
-
-  afterAll(() => {
-    mockIsEdit.mockRestore();
-  });
-
-  it.only('should render a link menu item when clicked', () => {
+describe('link interactions', () => {
+  it('should render a link menu item when clicked', () => {
     wrapper = mount(
       <div>
         <Link {...firstLinkProps}>This is a link</Link>
@@ -120,8 +49,6 @@ describe.only('link interactions', () => {
 
     firstLink.find('a').simulate('click');
     menuButton = wrapper.find('i');
-    wrapper.update();
-    console.log(wrapper.debug());
     expect(menuButton.text()).toBe('link');
   });
 
@@ -175,7 +102,7 @@ describe.only('link interactions', () => {
     menuForm = menuPopup.find('form');
     inputField = menuForm.find('input#link-href');
 
-    expect(inputField.prop('value')).toBe('ok');
+    expect(inputField.prop('value')).toBe('/ok/');
 
     wrapper.find({ ...secondLinkProps }).find('a').simulate('click');
     wrapper.find({ ...firstLinkProps }).find('a').simulate('click');
@@ -186,7 +113,7 @@ describe.only('link interactions', () => {
     menuPopup = wrapper.find('Tooltip[visible=true]').at(1);
     menuForm = menuPopup.find('form');
     inputField = menuForm.find('input#link-href');
-    expect(inputField.prop('value')).toBe('ok');
+    expect(inputField.prop('value')).toBe('/ok/');
   });
 
   it('context form should not save content when cancel is clicked', () => {
@@ -196,6 +123,6 @@ describe.only('link interactions', () => {
     const cancelButton = menuForm.find('button[aria-label="Cancel"]');
     cancelButton.simulate('submit');
     expect(wrapper.find('Popup[visible=true]')).toHaveLength(1);
-    expect(inputField.prop('value')).toBe('ok');
+    expect(inputField.prop('value')).toBe('/ok/');
   });
 });
