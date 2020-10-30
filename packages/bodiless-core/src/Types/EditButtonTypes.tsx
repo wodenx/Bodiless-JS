@@ -46,6 +46,6 @@ export type EditButtonOptions<P, D> = Omit<TMenuOption, 'handler'> & {
   useCompoundForm?: () => boolean,
 } & EditDataHandler<D>;
 
-export type UseBodilessOverrides<P = any, D = any> = (
+export type UseBodilessOverrides<P = any, D = any, E = {}> = (
   props: P & EditButtonProps<D>,
-) => Partial<EditButtonOptions<P, D>>;
+) => Partial<EditButtonOptions<P, D> & E>;

@@ -19,13 +19,15 @@ import {
   withoutProps,
   ifEditable,
   withExtendHandler,
+  UseBodilessOverrides,
 } from '@bodiless/core';
 import type { AsBodiless, BodilessOptions } from '@bodiless/core';
-import { flowRight } from 'lodash';
-import NormalHref, { NormalHrefOptions } from './NormalHref';
+import { flowRight, identity } from 'lodash';
+import DefaultNormalHref from './NormalHref';
+import type { HrefNormalizer } from './NormalHref';
 
 // Type of the data used by this component.
-type Data = {
+export type LinkData = {
   href: string;
 };
 
@@ -33,7 +35,27 @@ type Props = HTMLProps<HTMLAnchorElement> & {
   unwrap?: () => void,
 };
 
-const options: BodilessOptions<Props, Data> = {
+type ExtraLinkOptions = {
+  normalizeHref: HrefNormalizer,
+};
+
+type UseLinkOverrides = UseBodilessOverrides<Props, LinkData, ExtraLinkOptions>;
+
+const useLinkOverrides = (useOverrides: UseLinkOverrides = () => ({})): UseLinkOverrides => (
+  props => {
+    const overrides = useOverrides(props);
+    const {
+      submitValueHandler: submitValueHandler$ = identity,
+      normalizeHref = (href?: string) => new DefaultNormalHref(href).toString(),
+    } = overrides;
+    const submitValueHandler = ({ href }: LinkData) => submitValueHandler$({
+      href: normalizeHref(href),
+    });
+    return { ...overrides, normalizeHref, submitValueHandler };
+  }
+);
+
+const options: BodilessOptions<Props, LinkData> = {
   icon: 'link',
   name: 'Link',
   label: 'Link',
@@ -77,24 +99,30 @@ const options: BodilessOptions<Props, Data> = {
   },
 };
 
-const withNormalHref = (hrefOptions?: NormalHrefOptions) => (Component : ComponentType<Props>) => {
-  const WithNormalHref = ({ href, ...rest } : Props) => (
+export const withNormalHref = (
+  useOverrides: () => ExtraLinkOptions,
+) => (Component : ComponentType<Props>) => {
+  const WithNormalHref = ({ href, ...rest }: Props) => (
     <Component
-      href={new NormalHref(href, hrefOptions).toString()}
+      href={useOverrides().normalizeHref(href)}
       {...rest}
     />
   );
   return WithNormalHref;
 };
 
-const asBodilessLink: AsBodiless<Props, Data> = (nodeKeys?) => flowRight(
+export type AsBodilessLink = AsBodiless<Props, LinkData, ExtraLinkOptions>;
+
+const asBodilessLink: AsBodilessLink = (
+  nodeKeys, defaultData, useOverrides,
+) => flowRight(
   // Prevent following the link in edit mode
   ifEditable(
     withExtendHandler('onClick', () => (e: MouseEvent) => e.preventDefault()),
   ),
-  asBodilessComponent<Props, Data>(options)(nodeKeys),
+  asBodilessComponent<Props, LinkData>(options)(nodeKeys, defaultData, useLinkOverrides(useOverrides)),
   withoutProps(['unwrap']),
-  withNormalHref(),
+  withNormalHref(useLinkOverrides(useOverrides) as () => ExtraLinkOptions),
 );
 
 export default asBodilessLink;
