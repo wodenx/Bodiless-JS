@@ -16,9 +16,11 @@ import React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { asBodilessLink } from '../src/Link';
 import DefaultNormalHref, { HrefNormalizer } from '../src/Link/NormalHref';
-import { ContentNode, NodeProvider } from '@bodiless/core';
+import { ContentNode, NodeProvider, PageEditContext } from '@bodiless/core';
 
 export { DefaultNormalHref };
+
+const Link = asBodilessLink()('a');
 
 class MockContentNode implements ContentNode<any> {
   data = {};
@@ -37,11 +39,11 @@ class MockContentNode implements ContentNode<any> {
 const mockCreateNormalHref = jest.fn((href: string) => ({
   toString: () => `mock://${href}`,
 }));
-jest.mock('../src/Link/NormalHref', () => (
-  jest.fn().mockImplementation((href: string) => {
-    return mockCreateNormalHref(href);
-  })
-));
+//jest.mock('../src/Link/NormalHref', () => (
+//  jest.fn().mockImplementation((href: string) => {
+//    return mockCreateNormalHref(href);
+//  })
+//));
 
 const setEditMode = (isEdit: boolean) => {
   // @TODO bodiless-core internals should not be touched
@@ -93,9 +95,20 @@ describe('asBodilessLink', () => {
   });
 });
 
+
 describe.only('link interactions', () => {
-  const Link = asBodilessLink()('a');
-  it('should render a link menu item when clicked', () => {
+  let mockIsEdit: jest.SpyInstance;
+
+  beforeAll(() => {
+    mockIsEdit = jest.spyOn(PageEditContext.prototype, 'isEdit', 'get');
+    mockIsEdit.mockImplementation(() => true);
+  });
+
+  afterAll(() => {
+    mockIsEdit.mockRestore();
+  });
+
+  it.only('should render a link menu item when clicked', () => {
     wrapper = mount(
       <div>
         <Link {...firstLinkProps}>This is a link</Link>
@@ -107,6 +120,8 @@ describe.only('link interactions', () => {
 
     firstLink.find('a').simulate('click');
     menuButton = wrapper.find('i');
+    wrapper.update();
+    console.log(wrapper.debug());
     expect(menuButton.text()).toBe('link');
   });
 

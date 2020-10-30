@@ -20,6 +20,7 @@ import {
   ifEditable,
   withExtendHandler,
   UseBodilessOverrides,
+  useEditContext,
 } from '@bodiless/core';
 import type { AsBodiless, BodilessOptions } from '@bodiless/core';
 import { flowRight, identity } from 'lodash';
@@ -43,6 +44,8 @@ type UseLinkOverrides = UseBodilessOverrides<Props, LinkData, ExtraLinkOptions>;
 
 const useLinkOverrides = (useOverrides: UseLinkOverrides = () => ({})): UseLinkOverrides => (
   props => {
+    const context = useEditContext();
+    console.log('iedit', context.isEdit);
     const overrides = useOverrides(props);
     const {
       submitValueHandler: submitValueHandler$ = identity,
