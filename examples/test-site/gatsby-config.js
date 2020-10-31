@@ -25,9 +25,10 @@ const plugins = [
     resolve: 'gatsby-source-apiserver',
     options: {
       entitiesArray: [
-        apiResource('nav', 'navigation/main-menu'),
-        apiResource('tacos', 'taco-list/home-sections'),
-        apiResource('productTacos', 'taco-list/homepage-product'),
+        // apiResource('nav', 'navigation/main-menu'),
+        // apiResource('tacos', 'taco-list/home-sections'),
+        // apiResource('productTacos', 'taco-list/homepage-product'),
+        apiResource('pages', 'pages'),
       ],
     },
   },

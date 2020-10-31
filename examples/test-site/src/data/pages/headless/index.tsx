@@ -23,9 +23,10 @@ import { flow } from 'lodash';
 import Layout from '../../../components/Layout';
 import { asHeader2, asHeader1 } from '../../../components/Elements.token';
 
-import MainMenu, { MenuContent } from './MainMenu';
-import TacoContainer, { TacoContent } from './TacoList';
-import ProductTacoContainer from './ProductTacoList';
+// import MainMenu, { MenuContent } from './MainMenu';
+// import TacoContainer, { TacoContent } from './TacoList';
+// import ProductTacoContainer from './ProductTacoList';
+import TacoContainer, { TacoContent } from './TacoContainer';
 import { NodeTreePrinter } from './DataPrinter';
 
 const H1 = flow(addClasses('pt-5'), asHeader1)(H1$);
@@ -35,9 +36,9 @@ export default (props: any) => (
   <Page {...props}>
     <Layout>
       <H1>Headless Home Page</H1>
-      <MainMenu />
+      {/* <MainMenu /> */}
       <TacoContainer />
-      <ProductTacoContainer />
+      {/* <ProductTacoContainer /> */}
       <H2>Taco Data</H2>
       <div className="overflow-x-scroll">
         <NodeTreePrinter nodeKey="tacos-1" title="Local Data" />
@@ -46,7 +47,7 @@ export default (props: any) => (
       <H2>Menu Data</H2>
       <div className="overflow-x-scroll">
         <NodeTreePrinter nodeKey="menu" title="Local Data" />
-        <MenuContent />
+        {/* <MenuContent /> */}
       </div>
     </Layout>
   </Page>

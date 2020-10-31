@@ -64,33 +64,42 @@ https://ghn3btyvqf.execute-api.ap-southeast-1.amazonaws.com/dev/v1/content/imodi
 ]
 */
 
-type CTacoImage = {
+type CImage = {
+  alt: string,
   src: string,
 };
 
-type CTacoLink = {
+type CLink = {
   href: string,
   title: string,
-  target: string,
 };
 
 type CTaco = {
   title: string,
-  summary: string,
-  link: CTacoLink,
-  image: CTacoImage,
-};
-export type CTacoNode = {
-  node: CTaco,
+  description: string,
+  edit_link: string,
+  image: CImage,
+  group: string,
+  link: CLink,
+  title_wrapper: string,
+  view_mode: string,
+  width: string,
 };
 
-const baseNormalItem = {
-  wrapperProps: {
-    className: 'lg:w-1/3',
-  },
-  // type: 'ToutVerticalWithTitleBodyWithCTA',
-  type: 'HeadlessTout',
+const mapWidthToClass = (width: string) => {
+  const map = {
+    '33%': 'lg:w-1/3',
+    '50%': 'lg:w-1/2',
+  };
+  return map[width] || 'lg:w-full';
 };
+
+const getItem = (taco: CTaco) => ({
+  wrapperProps: {
+    className: mapWidthToClass(taco.width),
+  },
+  type: 'HeadlessTout',
+});
 
 const plainTextToSlate = (text: string) => ({
   document: {
@@ -118,43 +127,48 @@ const plainTextToSlate = (text: string) => ({
   },
 });
 
-export const translateItems = (items: CTaco[], prefix = '', baseItem = baseNormalItem) => {
+export const translateItems = (items: CTaco[], prefix = '') => {
   const entries = items.reduce<any>((acc, item, index) => ({
     ...acc,
     [`${prefix}$${index}$image`]: item.image,
     [`${prefix}$${index}$title`]: plainTextToSlate(item.title),
-    [`${prefix}$${index}$body`]: plainTextToSlate(item.summary),
+    [`${prefix}$${index}$body`]: plainTextToSlate(item.description),
     [`${prefix}$${index}$ctatext`]: plainTextToSlate(item.link.title),
     [`${prefix}$${index}$link`]: { href: item.link.href },
   }), {});
   return {
-    [`${prefix}`]: { items: items.map((item, index) => ({ uuid: `${index}`, ...baseItem })) },
+    [`${prefix}`]: { items: items.map((item, index) => ({ uuid: `${index}`, ...getItem(item) })) },
     ...entries,
   };
 };
 
 const useTacoListData = () => {
   const data = useStaticQuery(graphql`
-    query TacoQuery {
-      allTacos {
-        edges {
-          node {
+    query TacoListQuery {
+      pages {
+        taco_list {
+          content {
+            description
+            edit_link
             image {
+              alt
               src
             }
-            title
-            summary
+            group
             link {
               href
               title
             }
+            title
+            title_wrapper
+            view_mode
+            width
           }
         }
       }
     }
   `);
-  const normalizedData = data.allTacos.edges.map((item: CTacoNode) => item.node);
-  return translateItems(normalizedData, 'tacos-1');
+  return translateItems(data.pages.taco_list.content, 'tacos-1');
 };
 
 export const TacoContent = (props: HTMLProps<HTMLDivElement>) => (
