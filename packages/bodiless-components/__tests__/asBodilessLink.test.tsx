@@ -14,21 +14,12 @@
 
 import React from 'react';
 import { mount } from 'enzyme';
+import { PageEditContext } from '@bodiless/core';
+import { flow } from 'lodash';
 import { asBodilessLink } from '../src/Link';
 import { HrefNormalizer } from '../src/Link/NormalHref';
-
-// class MockContentNode implements ContentNode<any> {
-//   data = {};
-//   setData = jest.fn();
-//   delete = jest.fn();
-//   keys = [];
-//   path = [];
-//   pagePath = '';
-//   baseResourcePath = '';
-//   child = jest.fn();
-//   peer = jest.fn();
-//   hasError = jest.fn();
-// };
+import { withMockNode } from './helpers/MockContentNode';
+import findContextMenuForm from './helpers/findContextMenuForm';
 
 const mockCreateNormalHref = jest.fn((href: string) => ({
   toString: () => `mock://${href}`,
@@ -43,31 +34,58 @@ describe('asBodilessLink', () => {
       jest.clearAllMocks();
     });
 
-    it('invokes the default normalizer on render', () => {
-      const A = asBodilessLink()('a');
-      const wrapper = mount(<A href="foo" id="test" />);
-      console.log(wrapper.debug());
-      expect(mockCreateNormalHref).toBeCalledWith('foo');
-      expect(wrapper.find('a#test').prop('href')).toBe('mock://foo');
+    describe('on render', () => {
+      it('invokes the default normalizer', () => {
+        const A = asBodilessLink()('a');
+        const wrapper = mount(<A href="foo" id="test" />);
+        expect(mockCreateNormalHref).toBeCalledWith('foo');
+        expect(wrapper.find('a#test').prop('href')).toBe('mock://foo');
+      });
+      it('invokes a custom normalizer', () => {
+        const normalizeHref: HrefNormalizer = jest.fn((href?: string) => `custommock://${href}`);
+        const A = asBodilessLink(undefined, undefined, () => ({ normalizeHref }))('a');
+        const wrapper = mount(<A href="foo" id="test" />);
+        expect(mockCreateNormalHref).not.toBeCalled();
+        expect(normalizeHref).toBeCalledWith('foo');
+        expect(wrapper.find('a#test').prop('href')).toBe('custommock://foo');
+      });
     });
 
-    // it('invokes the default normalizer on save', () => {
-    //   const node = new MockContentNode();
-    //   const A = asBodilessLink()('a');
-    //   const wrapper = mount(<NodeProvider node={node}><A /></NodeProvider>);
-    //   console.log(wrapper.debug());
-    //   // const nodes = wrapper.findWhere(n => n.prop('setComponentData') !== undefined);
-    //   // nodes.at(0).prop('setComponentData')({ href: 'foo' });
-    //   // expect(node.setData).toBeCalledWith({ href: 'mock://foo' });
-    // });
+    describe('on save', () => {
+      let mockIsEdit: jest.SpyInstance;
 
-    it('invokes a custom normalizer on render', () => {
-      const normalizeHref: HrefNormalizer = jest.fn((href?: string) => `custommock://${href}`);
-      const A = asBodilessLink(undefined, undefined, () => ({ normalizeHref }))('a');
-      const wrapper = mount(<A href="foo" id="test" />);
-      expect(mockCreateNormalHref).not.toBeCalled();
-      expect(normalizeHref).toBeCalledWith('foo');
-      expect(wrapper.find('a#test').prop('href')).toBe('custommock://foo');
+      beforeAll(() => {
+        mockIsEdit = jest.spyOn(PageEditContext.prototype, 'isEdit', 'get').mockReturnValue(true);
+      });
+
+      afterAll(() => {
+        mockIsEdit.mockRestore();
+      });
+
+      it('invokes the default normalizer', () => {
+        const A = flow(
+          asBodilessLink(),
+          withMockNode,
+        )('a');
+        const wrapper = mount(<A />);
+        const formWrapper = findContextMenuForm(wrapper);
+        formWrapper.prop('submitValues')!({ href: 'bar' });
+        expect(mockCreateNormalHref).toBeCalledWith('bar');
+        expect(A.node.setData).toBeCalledWith({ href: 'mock://bar' });
+      });
+
+      it('invokes a custom normalizer', () => {
+        const normalizeHref: HrefNormalizer = jest.fn((href?: string) => `custommock://${href}`);
+        const A = flow(
+          asBodilessLink(undefined, undefined, () => ({ normalizeHref })),
+          withMockNode,
+        )('a');
+        const wrapper = mount(<A />);
+        const formWrapper = findContextMenuForm(wrapper);
+        formWrapper.prop('submitValues')!({ href: 'bar' });
+        expect(mockCreateNormalHref).not.toBeCalled();
+        expect(A.node.setData).toBeCalledWith({ href: 'custommock://bar' });
+      });
     });
   });
 });

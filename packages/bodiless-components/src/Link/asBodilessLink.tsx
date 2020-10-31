@@ -20,7 +20,6 @@ import {
   ifEditable,
   withExtendHandler,
   UseBodilessOverrides,
-  useEditContext,
 } from '@bodiless/core';
 import type { AsBodiless, BodilessOptions } from '@bodiless/core';
 import { flowRight, identity } from 'lodash';
@@ -44,8 +43,6 @@ type UseLinkOverrides = UseBodilessOverrides<Props, LinkData, ExtraLinkOptions>;
 
 const useLinkOverrides = (useOverrides: UseLinkOverrides = () => ({})): UseLinkOverrides => (
   props => {
-    const context = useEditContext();
-    console.log('iedit', context.isEdit);
     const overrides = useOverrides(props);
     const {
       submitValueHandler: submitValueHandler$ = identity,
@@ -102,7 +99,7 @@ const options: BodilessOptions<Props, LinkData> = {
   },
 };
 
-export const withNormalHref = (
+const withNormalHref = (
   useOverrides: () => ExtraLinkOptions,
 ) => (Component : ComponentType<Props>) => {
   const WithNormalHref = ({ href, ...rest }: Props) => (
@@ -123,7 +120,9 @@ const asBodilessLink: AsBodilessLink = (
   ifEditable(
     withExtendHandler('onClick', () => (e: MouseEvent) => e.preventDefault()),
   ),
-  asBodilessComponent<Props, LinkData>(options)(nodeKeys, defaultData, useLinkOverrides(useOverrides)),
+  asBodilessComponent<Props, LinkData>(options)(
+    nodeKeys, defaultData, useLinkOverrides(useOverrides),
+  ),
   withoutProps(['unwrap']),
   withNormalHref(useLinkOverrides(useOverrides) as () => ExtraLinkOptions),
 );
