@@ -21,27 +21,24 @@ import {
   replaceWith,
   withDesign,
 } from '@bodiless/fclasses';
-import { ToutClean, asToutVertical } from '@bodiless/organisms';
 import { withType } from './Categories';
 import { WantToLearnMore, GivingBackToCommunity } from '../Contentful/Tout';
 import { withOrientationFacet, withStructureFacet } from './withToutVariations';
-import { withToutEditors, withToutResetButtons } from '../Tout';
-import { asToutDefaultStyle } from '../Tout/token';
 
 const contentfulTouts = {
-  HeadlessTout: flow(
-    replaceWith(ToutClean),
-    withToutEditors,
-    withToutResetButtons,
-    asToutVertical,
-    asToutDefaultStyle,
-    withType('Tout')(),
-    withOrientationFacet('Vertical')(),
-    withStructureFacet('With Title and Body')(),
-    withStructureFacet('With CTA')(),
-    withTitle('Headless'),
-    withDesc('Demo tout to render headless content'),
-  ),
+  // HeadlessTout: flow(
+  //   replaceWith(ToutClean),
+  //   withToutEditors,
+  //   withToutResetButtons,
+  //   asToutVertical,
+  //   asToutDefaultStyle,
+  //   withType('Tout')(),
+  //   withOrientationFacet('Vertical')(),
+  //   withStructureFacet('With Title and Body')(),
+  //   withStructureFacet('With CTA')(),
+  //   withTitle('Headless'),
+  //   withDesc('Demo tout to render headless content'),
+  // ),
   GivingBackToCommunity: flow(
     replaceWith(GivingBackToCommunity),
     withType('Contentful')(),

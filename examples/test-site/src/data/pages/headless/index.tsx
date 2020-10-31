@@ -26,7 +26,7 @@ import { asHeader2, asHeader1 } from '../../../components/Elements.token';
 // import MainMenu, { MenuContent } from './MainMenu';
 // import TacoContainer, { TacoContent } from './TacoList';
 // import ProductTacoContainer from './ProductTacoList';
-import TacoContainer, { TacoContent } from './TacoContainer';
+import TacoContainer, { TacoContent } from '../../../components/headless/TacoContainer';
 import { NodeTreePrinter } from './DataPrinter';
 
 const H1 = flow(addClasses('pt-5'), asHeader1)(H1$);

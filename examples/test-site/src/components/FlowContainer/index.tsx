@@ -21,6 +21,7 @@ import withSingleAccordionVariations from './withSingleAccordionVariations';
 import withImageVariations from './withImageVariations';
 
 import { asFlowContainerWithMargins } from './token';
+import withHeadlessTouts from '../headless/withHeadlessTouts';
 
 // Order of includes currently dictates order in Component Picker
 // thus recommend putting more frequently used components toward top for quicker access.
@@ -29,6 +30,7 @@ const FlowContainerDefault = flow(
   withImageVariations,
   withToutVariations,
   withContentfulTouts,
+  withHeadlessTouts,
   withSingleAccordionVariations,
   asFlowContainerWithMargins,
   withMandatoryCategories(['Orientation', 'Type']),
