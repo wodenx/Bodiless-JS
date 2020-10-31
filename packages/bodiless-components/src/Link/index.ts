@@ -1,4 +1,6 @@
 import asBodilessLink from './asBodilessLink';
-import NormalHref from './NormalHref';
+import type { NormalHref } from './NormalHref';
+import DefaultNormalHref from './NormalHref';
 
-export { asBodilessLink, NormalHref };
+export { asBodilessLink, DefaultNormalHref };
+export type { NormalHref };
