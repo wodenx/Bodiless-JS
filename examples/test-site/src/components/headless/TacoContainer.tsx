@@ -71,6 +71,14 @@ const plainTextToSlate = (text: string) => ({
   },
 });
 
+const buildEditLink = (item: CTaco) => {
+  const img = new URL(item.image.src);
+  img.hostname = `edit-${img.hostname}`;
+  img.protocol = 'https';
+  const edit = new URL(item.edit_link, img.href);
+  return edit.href;
+};
+
 export const translateItems = (items: CTaco[], prefix = '') => {
   const entries = items.reduce<any>((acc, item, index) => ({
     ...acc,
@@ -79,6 +87,7 @@ export const translateItems = (items: CTaco[], prefix = '') => {
     [`${prefix}$${index}$body`]: plainTextToSlate(item.description),
     [`${prefix}$${index}$ctatext`]: plainTextToSlate(item.link.title),
     [`${prefix}$${index}$link`]: { href: item.link.href },
+    [`${prefix}$${index}$edit-url`]: { url: buildEditLink(item) },
   }), {});
   return {
     [`${prefix}`]: { items: items.map((item, index) => ({ uuid: `${index}`, ...getItem(item) })) },

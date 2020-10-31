@@ -30,11 +30,12 @@ import { withType } from '../FlowContainer/Categories';
 import { withOrientationFacet, withStructureFacet } from '../FlowContainer/withToutVariations';
 import { withToutEditors, withToutResetButtons } from '../Tout';
 import { asToutDefaultStyle, asToutHorizontal, asToutVertical } from '../Tout/token';
-import withEditLink from '../../data/pages/headless/withEditLink';
+import withEditLink from './withEditLink';
 
 const asHeadlessToutBese = flow(
   replaceWith(ToutClean),
   withToutEditors,
+  withEditLink,
   withToutResetButtons,
   asToutDefaultStyle,
 );
