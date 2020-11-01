@@ -7,7 +7,8 @@ require('dotenv').config({
 });
 
 const SITEURL = process.env.SITE_URL;
-const API_BASE_URL = 'https://cx9d95owmh.execute-api.ap-southeast-1.amazonaws.com/dev/content/v1/imodium/au/en';
+// const API_BASE_URL = 'https://cx9d95owmh.execute-api.ap-southeast-1.amazonaws.com/dev/content/v1/imodium/au/en';
+const API_BASE_URL = 'http://localhost:3000';
 
 const apiResource = (name, path) => ({
   url: `${API_BASE_URL}/${path}`,
@@ -17,6 +18,7 @@ const apiResource = (name, path) => ({
   },
   name,
   entityLevel: 'data',
+  enableDevRefresh: true,
 });
 
 // Gatsby plugins list.

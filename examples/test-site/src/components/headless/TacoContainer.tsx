@@ -38,11 +38,17 @@ const mapWidthToClass = (width: string) => {
   return map[width] || 'lg:w-full';
 };
 
+const mapItemToTout = (item: CTaco) => {
+  const orientation = item.view_mode === 'vertical' ? 'Vertical' : 'Horizontal';
+  console.log('view mode', item.view_mode);
+  return `HeadlessTout${orientation}`;
+};
+
 const getItem = (taco: CTaco) => ({
   wrapperProps: {
     className: mapWidthToClass(taco.width),
   },
-  type: 'HeadlessToutVertical',
+  type: mapItemToTout(taco),
 });
 
 const plainTextToSlate = (text: string) => ({
@@ -97,10 +103,11 @@ export const translateItems = (items: CTaco[], prefix = '') => {
 
 const useTacoListData = () => {
   const data = useStaticQuery(graphql`
-    query TacoListQuery {
-      pages {
+    query HPFCQuery {
+      pages(id: {eq: "cbdfabd6-a29a-442a-92cb-e05c4b670962"}) {
         taco_list {
           content {
+            __typename
             description
             edit_link
             image {

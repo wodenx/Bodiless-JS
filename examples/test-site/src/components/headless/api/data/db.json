@@ -1,0 +1,175 @@
+{
+    "pages": {
+        "requestId": "cbdfabd6-a29a-442a-92cb-e05c4b670962",
+        "code": 200,
+        "message": "Success",
+        "data": {
+            "id": "cbdfabd6-a29a-442a-92cb-e05c4b670962",
+            "carousel": {
+                "content": [
+                    {
+                        "title": "Life in Rhythm: Support & Advice",
+                        "summary": "Do you suffer from diarrhoea? We want to arm you with information to better\nunderstand what’s happening to your body. Find out more about diarrhoea, what it\ndoes to you and handy tips for dealing with the condition. Learn how to improve\nyour digestive health so you can get your life back in rhythm.",
+                        "link": [
+                            {
+                                "href": "/treatment",
+                                "title": "Get support and advice"
+                                
+                            },
+                            {
+                                "href": "/treatment/healthy-food",
+                                "title": "TEST - Get support and advice"
+                            }
+                        ],
+                        "image": {
+                            "src": "https://con-apac-pilotimodium-au-en.jnjapacb17d6-dev3.jjc-devops.com/sites/pilotimodium_au/files/slide-images/homepage-slide-1-image_0.png",
+                            "alt": "homepage-slide-1-image.png",
+                            "title": "Test",
+                            "width": "761",
+                            "height": "428"
+                        },
+                        "edit_link": "/node/1061/edit",
+                        "slide_layout": "top-left",
+                        "slide_speed": 5,
+                        "slide_prefix": "test"
+                    },
+                    {
+                        "title": "Food: What you eat. How you eat.",
+                        "summary": "Simple changes to your diet, including not eating too quickly, can make a\ndifference to having healthy digestion. Find out more about the kind of things\nthat can put your digestive system into a spin.",
+                        "link": [
+                            {
+                                "href": "/treatment/healthy-food",
+                                "title": "How food affects your rhythm",
+                                "target": "_blank"
+                            }
+                        ],
+                        "image": {
+                            "src": "https://con-apac-pilotimodium-au-en.jnjapacb17d6-dev3.jjc-devops.com/sites/pilotimodium_au/files/slide-images/advice-food-header-image.png",
+                            "alt": "advice-food-header-image.png",
+                            "width": "761",
+                            "height": "428"
+                        },
+                        "edit_link": "/node/1066/edit",
+                        "slide_layout": "top-left",
+                        "slide_speed": 5,
+                        "slide_prefix": "test"
+                    },
+                    {
+                        "title": "Mood: Our stressful lifestyles can often be a cause",
+                        "summary": "Living a busy modern lifestyle can have physical as well as emotional effects.\nFind out how stress and anxiety are sometimes connected to diarrhoea and what\nyou can do about it.",
+                        "link": {
+                            "href": "/treatment/mood",
+                            "title": "How to manage mood & stress",
+                            "target": "_blank"
+                        },
+                        "image": {
+                            "src": "https://con-apac-pilotimodium-au-en.jnjapacb17d6-dev3.jjc-devops.com/sites/pilotimodium_au/files/slide-images/homepage-slide-3-image_0.png",
+                            "alt": "homepage-slide-3-image.png",
+                            "width": "761",
+                            "height": "428"
+                        },
+                        "edit_link": "/node/1071/edit",
+                        "slide_layout": "top-left",
+                        "slide_speed": 5,
+                        "slide_prefix": "test"
+                    }
+                ]
+            },
+            "taco_list": {
+                "content": [
+                    {
+                        "title": "Ask IMODIUM®",
+                        "title_wrapper": "h2",
+                        "description": "Get quick answers to common questions and advice on key diarrhoea related\ntopics.",
+                        "link": {
+                            "href": "/diarrhoea-faq",
+                            "title": "IMODIUM® answers"
+                        },
+                        "image": {
+                            "src": "https://con-apac-pilotimodium-au-en.jnjapacb17d6-dev3.jjc-devops.com/sites/pilotimodium_au/files/ask-imodium-related-tout-image.png",
+                            "alt": "ask-imodium-related-tout-image.png",
+                            "title": "123456"
+                        },
+                        "group": "home-taco",
+                        "width": "50%",
+                        "view_mode": "vertical",
+                        "edit_link": "/node/351/edit"
+                    },
+                    {
+                        "title": "Get your life back in rhythm",
+                        "title_wrapper": "h2",
+                        "description": "Be in harmony with your digestive health and well-being. Live in tune, live in\nrhythm.",
+                        "link": {
+                            "href": "/causes-of-frequent-diarrhoea/understanding-diarrhoea",
+                            "title": "Understanding Diarrhoea"
+                        },
+                        "image": {
+                            "src": "https://con-apac-pilotimodium-au-en.jnjapacb17d6-dev3.jjc-devops.com/sites/pilotimodium_au/files/get-your-life-back-tout-image.jpg",
+                            "alt": "get-your-life-back-tout-image.jpg",
+                            "title": ""
+                        },
+                        "group": "home-taco",
+                        "width": "33%",
+                        "view_mode": "vertical",
+                        "edit_link": "/node/496/edit"
+                    },
+                    {
+                        "title": "Which IMODIUM® product is right for me? -  3rd TACO - Test",
+                        "title_wrapper": "h2",
+                        "description": "Not everyone’s situation is the same, so we’ve designed a range of products to\nsuit your needs. Find the right one for you.",
+                        "link": {
+                            "href": "/products/imodium-products",
+                            "title": "IMODIUM® range - Test"
+                        },
+                        "image": {
+                            "src": "https://con-apac-pilotimodium-au-en.jnjapacb17d6-dev3.jjc-devops.com/sites/pilotimodium_au/files/tout_1.9_0.jpg",
+                            "alt": "imodium-range-tout-image.jpg"
+                        },
+                        "group": "home-taco",
+                        "width": "33%",
+                        "view_mode": "vertical",
+                        "edit_link": "/node/976/edit?destination=admin/content"
+                    },
+                    {
+                        "title": "IMODIUM® Zapid®",
+                        "title_wrapper": "h2",
+                        "description": "IMODIUM® Zapid® tablets come in a unique format, that dissolves instantly on\nyour tongue, without the need for water.",
+                        "link": {
+                            "href": "/products/imodium-zapid",
+                            "title": "IMODIUM® Zapid®",
+                            "target": "_blank"
+                        },
+                        "image": {
+                            "src": "https://con-apac-pilotimodium-au-en.jnjapacb17d6-dev3.jjc-devops.com/sites/pilotimodium_au/files/imodium-zapid-product-image.png",
+                            "alt": "imodium-zapid-product-image.png",
+                            "title": ""
+                        },
+                        "group": "tacos",
+                        "width": "50%",
+                        "view_mode": "vertical",
+                        "edit_link": "/node/346/edit"
+                    },
+                    {
+                        "title": "IMODIUM® Advanced®",
+                        "title_wrapper": "h2",
+                        "description": "IMODIUM® Advanced® tablets provide multi symptom relief of diarrhoea and wind\npain including painful cramps, bloating and gas.",
+                        "link": {
+                            "href": "/products/imodium-advanced",
+                            "title": "IMODIUM® Advanced®",
+                            "target": 0
+                        },
+                        "image": {
+                            "src": "https://con-apac-pilotimodium-au-en.jnjapacb17d6-dev3.jjc-devops.com/sites/pilotimodium_au/files/imodium-advanced-product-image.png",
+                            "alt": "imodium-advanced-product-image.png",
+                            "title": "123456"
+                        },
+                        "group": "tacos",
+                        "width": "50%",
+                        "view_mode": "vertical",
+                        "edit_link": "/node/381/edit"
+                    }
+                ]
+            }
+        }
+    }
+}
