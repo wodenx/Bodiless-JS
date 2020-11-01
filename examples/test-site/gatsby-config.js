@@ -7,8 +7,10 @@ require('dotenv').config({
 });
 
 const SITEURL = process.env.SITE_URL;
-// const API_BASE_URL = 'https://cx9d95owmh.execute-api.ap-southeast-1.amazonaws.com/dev/content/v1/imodium/au/en';
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL_REAL = 'https://cx9d95owmh.execute-api.ap-southeast-1.amazonaws.com/dev/content/v1/imodium/au/en';
+const API_BASE_URL_MOCK = 'http://localhost:3000';
+const API_BASE_URL = process.env.HEADLESS_API_MOCK === '1'
+  ? API_BASE_URL_MOCK : API_BASE_URL_REAL;
 
 const apiResource = (name, path) => ({
   url: `${API_BASE_URL}/${path}`,

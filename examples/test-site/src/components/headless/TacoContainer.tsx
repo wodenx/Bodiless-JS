@@ -104,7 +104,7 @@ export const translateItems = (items: CTaco[], prefix = '') => {
 const useTacoListData = () => {
   const data = useStaticQuery(graphql`
     query HPFCQuery {
-      pages(id: {eq: "cbdfabd6-a29a-442a-92cb-e05c4b670962"}) {
+      pages(id: {ne: "dummy"}) {
         taco_list {
           content {
             __typename
