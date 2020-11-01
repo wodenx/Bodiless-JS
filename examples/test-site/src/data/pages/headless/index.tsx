@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
@@ -28,28 +28,33 @@ import { asHeader2, asHeader1 } from '../../../components/Elements.token';
 // import ProductTacoContainer from './ProductTacoList';
 import TacoContainer, { TacoContent } from '../../../components/headless/TacoContainer';
 import { NodeTreePrinter } from './DataPrinter';
+import withRefreshButton from '../../../components/headless/withRefreshButton';
 
 const H1 = flow(addClasses('pt-5'), asHeader1)(H1$);
 const H2 = flow(addClasses('pt-5'), asHeader2)(H2$);
 
+const RefreshButton = withRefreshButton(Fragment);
+
 export default (props: any) => (
   <Page {...props}>
-    <Layout>
-      <H1>Headless Home Page</H1>
-      {/* <MainMenu /> */}
-      <TacoContainer />
-      {/* <ProductTacoContainer /> */}
-      <H2>Taco Data</H2>
-      <div className="overflow-x-scroll">
-        <NodeTreePrinter nodeKey="tacos-1" title="Local Data" />
-        <TacoContent />
-      </div>
-      <H2>Menu Data</H2>
-      <div className="overflow-x-scroll">
-        <NodeTreePrinter nodeKey="menu" title="Local Data" />
-        {/* <MenuContent /> */}
-      </div>
-    </Layout>
+    <RefreshButton>
+      <Layout>
+        <H1>Headless Home Page</H1>
+        {/* <MainMenu /> */}
+        <TacoContainer />
+        {/* <ProductTacoContainer /> */}
+        <H2>Taco Data</H2>
+        <div className="overflow-x-scroll">
+          <NodeTreePrinter nodeKey="tacos-1" title="Local Data" />
+          <TacoContent />
+        </div>
+        <H2>Menu Data</H2>
+        <div className="overflow-x-scroll">
+          <NodeTreePrinter nodeKey="menu" title="Local Data" />
+          {/* <MenuContent /> */}
+        </div>
+      </Layout>
+    </RefreshButton>
   </Page>
 );
 
