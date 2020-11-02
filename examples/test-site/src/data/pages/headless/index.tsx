@@ -23,7 +23,7 @@ import { flow } from 'lodash';
 import Layout from '../../../components/Layout';
 import { asHeader2, asHeader1 } from '../../../components/Elements.token';
 
-// import MainMenu, { MenuContent } from './MainMenu';
+import MainMenu, { MenuContent } from './MainMenu';
 // import TacoContainer, { TacoContent } from './TacoList';
 // import ProductTacoContainer from './ProductTacoList';
 import TacoContainer, { TacoContent } from '../../../components/headless/TacoContainer';
@@ -40,7 +40,7 @@ export default (props: any) => (
     <RefreshButton>
       <Layout>
         <H1>Headless Home Page</H1>
-        {/* <MainMenu /> */}
+        <MainMenu />
         <TacoContainer />
         {/* <ProductTacoContainer /> */}
         <H2>Taco Data</H2>
@@ -51,7 +51,7 @@ export default (props: any) => (
         <H2>Menu Data</H2>
         <div className="overflow-x-scroll">
           <NodeTreePrinter nodeKey="menu" title="Local Data" />
-          {/* <MenuContent /> */}
+          <MenuContent />
         </div>
       </Layout>
     </RefreshButton>

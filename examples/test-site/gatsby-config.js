@@ -12,14 +12,14 @@ const API_BASE_URL_MOCK = 'http://localhost:3000';
 const API_BASE_URL = process.env.HEADLESS_API_MOCK === '1'
   ? API_BASE_URL_MOCK : API_BASE_URL_REAL;
 
-const apiResource = (name, path) => ({
+const apiResource = (name, path, entityLevel) => ({
   url: `${API_BASE_URL}/${path}`,
   method: 'get',
   headers: {
     'x-api-key': process.env.HEADLESS_API_KEY,
   },
   name,
-  entityLevel: 'data',
+  entityLevel: entityLevel || undefined,
   enableDevRefresh: true,
 });
 
@@ -29,10 +29,10 @@ const plugins = [
     resolve: 'gatsby-source-apiserver',
     options: {
       entitiesArray: [
-        // apiResource('nav', 'navigation/main-menu'),
+        apiResource('nav', 'navigation/main-menu'),
         // apiResource('tacos', 'taco-list/home-sections'),
         // apiResource('productTacos', 'taco-list/homepage-product'),
-        apiResource('pages', 'pages'),
+        apiResource('pages', 'pages', 'data'),
       ],
     },
   },

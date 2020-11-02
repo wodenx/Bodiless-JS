@@ -1,4 +1,250 @@
 {
+    "mainmenu": {
+        "requestId": "49e95f0c-7d64-4174-b152-56bc21bb885d",
+        "id": "49e95f0c-7d64-4174-b152-56bc21bb885d",
+        "code": 200,
+        "message": "Success",
+        "data": [
+            {
+                "title": "Home",
+                "link": {
+                    "path": "/",
+                    "external": true
+                },
+                "submenu": []
+            },
+            {
+                "title": "Causes of Diarrhoea",
+                "link": {
+                    "path": "/common-causes-frequent-diarrhoea",
+                    "external": false
+                },
+                "submenu": [
+                    {
+                        "title": "Understanding Diarrhoea",
+                        "link": {
+                            "path": "/causes-of-frequent-diarrhoea/understanding-diarrhoea",
+                            "external": false
+                        },
+                        "submenu": []
+                    },
+                    {
+                        "title": "Stress and Anxiety",
+                        "link": {
+                            "path": "/causes-of-frequent-diarrhoea/stress-and-anxiety",
+                            "external": false
+                        },
+                        "submenu": []
+                    },
+                    {
+                        "title": "Food Allergies & Intolerance",
+                        "link": {
+                            "path": "/causes-of-frequent-diarrhoea/food-allergies",
+                            "external": false
+                        },
+                        "submenu": []
+                    },
+                    {
+                        "title": "Eating Habits",
+                        "link": {
+                            "path": "/causes-of-frequent-diarrhoea/eating-habits-diet-tips",
+                            "external": false
+                        },
+                        "submenu": []
+                    },
+                    {
+                        "title": "Menstruation",
+                        "link": {
+                            "path": "/causes-of-frequent-diarrhoea/menstruation",
+                            "external": false
+                        },
+                        "submenu": []
+                    },
+                    {
+                        "title": "Stomach Infection",
+                        "link": {
+                            "path": "/causes-of-frequent-diarrhoea/stomach-infection",
+                            "external": false
+                        },
+                        "submenu": []
+                    }
+                ]
+            },
+            {
+                "title": "Types of Diarrhoea",
+                "link": {
+                    "path": "/types-of-diarrhoea",
+                    "external": false
+                },
+                "submenu": [
+                    {
+                        "title": "Children and Diarrhoea",
+                        "link": {
+                            "path": "/types-of-diarrhoea/children",
+                            "external": false
+                        },
+                        "submenu": []
+                    },
+                    {
+                        "title": "Gastroenteritis (gastro)",
+                        "link": {
+                            "path": "/types-of-diarrhoea/gastroenteritis",
+                            "external": false
+                        },
+                        "submenu": []
+                    },
+                    {
+                        "title": "Diarrhoea During Pregnancy",
+                        "link": {
+                            "path": "/types-of-diarrhoea/pregnancy",
+                            "external": false
+                        },
+                        "submenu": []
+                    },
+                    {
+                        "title": "Frequent Diarrhoea",
+                        "link": {
+                            "path": "/types-of-diarrhoea/frequent",
+                            "external": false
+                        },
+                        "submenu": []
+                    },
+                    {
+                        "title": "Travellers' Diarrhoea",
+                        "link": {
+                            "path": "/types-of-diarrhoea/travellers",
+                            "external": false
+                        },
+                        "submenu": []
+                    }
+                ]
+            },
+            {
+                "title": "Treatment of Diarrhoea",
+                "link": {
+                    "path": "/treatment",
+                    "external": false
+                },
+                "submenu": [
+                    {
+                        "title": "Why Treat Diarrhoea",
+                        "link": {
+                            "path": "/treatment/why-treat-diarrhoea",
+                            "external": false
+                        },
+                        "submenu": []
+                    },
+                    {
+                        "title": "How to Treat Diarrhoea",
+                        "link": {
+                            "path": "/treatment/how-to-treat-diarrhoea",
+                            "external": false
+                        },
+                        "submenu": []
+                    },
+                    {
+                        "title": "Advice - Food",
+                        "link": {
+                            "path": "/treatment/healthy-food",
+                            "external": false
+                        },
+                        "submenu": []
+                    },
+                    {
+                        "title": "Advice - Mood",
+                        "link": {
+                            "path": "/treatment/mood",
+                            "external": false
+                        },
+                        "submenu": []
+                    },
+                    {
+                        "title": "Advice - Movement",
+                        "link": {
+                            "path": "/treatment/movement",
+                            "external": false
+                        },
+                        "submenu": []
+                    }
+                ]
+            },
+            {
+                "title": "IMODIUM® Products",
+                "link": {
+                    "path": "/imodium-products",
+                    "external": false
+                },
+                "submenu": [
+                    {
+                        "title": "How IMODIUM® Products Work",
+                        "link": {
+                            "path": "/treatment/how-imodium-works",
+                            "external": false
+                        },
+                        "submenu": [
+                            {
+                                "title": "IMODIUM Heritage",
+                                "link": {
+                                    "path": "/products/imodium-heritage",
+                                    "external": false
+                                },
+                                "submenu": []
+                            }
+                        ]
+                    },
+                    {
+                        "title": "Which IMODIUM® Product is Right for Me?",
+                        "link": {
+                            "path": "/products/imodium-products",
+                            "external": false
+                        },
+                        "submenu": [
+                            {
+                                "title": "IMODIUM® Zapid®",
+                                "link": {
+                                    "path": "/products/imodium-zapid",
+                                    "external": false
+                                },
+                                "submenu": []
+                            },
+                            {
+                                "title": "IMODIUM® Capsules",
+                                "link": {
+                                    "path": "/products/imodium-original",
+                                    "external": false
+                                },
+                                "submenu": []
+                            },
+                            {
+                                "title": "IMODIUM® Advanced",
+                                "link": {
+                                    "path": "/products/imodium-advanced",
+                                    "external": false
+                                },
+                                "submenu": []
+                            }
+                        ]
+                    },
+                    {
+                        "title": "Where To Buy IMODIUM®",
+                        "link": {
+                            "path": "/imodium-products/where-to-buy-diarrhoea-relief-products",
+                            "external": false
+                        },
+                        "submenu": []
+                    }
+                ]
+            },
+            {
+                "title": "FAQ: Ask IMODIUM®",
+                "link": {
+                    "path": "/diarrhoea-faq",
+                    "external": false
+                },
+                "submenu": []
+            }
+        ]
+    },
     "pages": {
         "requestId": "cbdfabd6-a29a-442a-92cb-e05c4b670962",
         "code": 200,
@@ -14,7 +260,6 @@
                             {
                                 "href": "/treatment",
                                 "title": "Get support and advice"
-                                
                             },
                             {
                                 "href": "/treatment/healthy-food",

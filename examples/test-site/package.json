@@ -61,7 +61,7 @@
     "url": "https://github.com/johnsonandjohnson/bodiless-js.git"
   },
   "scripts": {
-    "mock-api": "json-server --watch ./src/components/headless/api/data/db.json",
+    "mock-api": "json-server --routes ./src/components/headless/api/routes.json --watch ./src/components/headless/api/data/db.json",
     "start:mock": "npm run mock-api & HEADLESS_API_MOCK=1 npm run start", 
     "refresh": "curl -X POST http://localhost:8005/__refresh",
     "build": "npm-run-all build:env-vars build:lib build:scripts build:doc psh-validate",
