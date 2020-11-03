@@ -50,7 +50,7 @@ type Props = {
     height?: string | number | undefined;
   };
   className: string;
-  style: React.CSSProperties,
+  style?: React.CSSProperties,
   useGetMenuOptions: () => TMenuOptionGetter;
   onResizeStop?: ResizeCallback;
   onResize?: ResizeCallback;

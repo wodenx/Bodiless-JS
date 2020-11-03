@@ -21,12 +21,13 @@ import { defaultSnapData } from './utils/appendTailwindWidthClass';
 import { SortableChildProps } from './types';
 
 const RESIZE_THROTTLE_INTERVAL: number = 100;
-// const createThrottledOnResizeStop = (onResizeStop: ResizeCallback) => (
-//   throttle(onResizeStop, RESIZE_THROTTLE_INTERVAL)
-// );
 const FALLBACK_SNAP_CLASSNAME = 'w-full';
 
-const SortableChild = (props: SortableChildProps) => {
+/**
+ * This is the component which wraps all items in the flow container. You probably
+ * only need to use it directly if you are customizing the Admin UI.
+ */
+const SortableChild = observer((props: SortableChildProps) => {
   const {
     flowContainerItem,
     onResizeStop: onResizeStopProp = () => undefined,
@@ -37,33 +38,40 @@ const SortableChild = (props: SortableChildProps) => {
     children,
     ...restProps
   } = props;
-  const [snapWidth, setSnapWidth] = useState<number|undefined>(undefined);
-  const resizing = snapWidth !== undefined;
-  const snapClassName = flowContainerItem.wrapperProps?.className || getDefaultWidth(snapData);
-  // We need the starting width so we can set defaultSize on re-resizeable.  This ensures
-  // that we get back % during resize (otherwise we get pixels).
-  const { width: startingWidth } = snapData({ className: snapClassName });
+
+  // These are the classes which control width when not resizing. The come from
+  // the flow container item, or from the default width callback.
+  const widthClasses = flowContainerItem.wrapperProps?.className || getDefaultWidth(snapData);
+
+  // We need the starting width so we can set defaultSize on the re-resizeable.
+  // This ensures that we get back % during resize (otherwise we get pixels).
+  const { width: startingWidth } = snapData({ className: widthClasses });
 
   // Track the snap width during resize so we can display it.
+  const [snapWidth, setSnapWidth] = useState<number|undefined>(undefined);
   const onResize: ResizeCallback = useCallback((e, dir, ref) => {
     const { width } = snapData({
-      className: snapClassName,
+      className: widthClasses,
       width: ref.style.width ? parseInt(ref.style.width, 10) : startingWidth,
     });
     setSnapWidth(width);
-  }, [snapClassName, startingWidth]);
+  }, [widthClasses, startingWidth]);
 
+  // When resizing is complete, clear the snap width and notify the flow container
+  // of the selected classes.
   const onResizeStop: ResizeCallback = useCallback((e, dir, ref) => {
     setSnapWidth(undefined);
     const { className } = snapData({
-      className: snapClassName,
+      className: widthClasses,
       width: ref.style.width ? parseInt(ref.style.width, 10) : startingWidth,
     });
     if (onResizeStopProp) onResizeStopProp({ className });
-  }, [snapClassName, startingWidth, onResizeStopProp]);
+  }, [widthClasses, startingWidth, onResizeStopProp]);
 
-  // we have to remove the style width when we are done resizing so that our responsive
-  // classes will control width, otherwise the width will be fixed at all breakpoints.
+  // we have to remove the width style when we are done resizing so that our responsive
+  // classes will control width. Otherwise the width will be fixed at all breakpoints.
+  // We need to do this onEffect bc we have to find the actual dom element.
+  const resizing = snapWidth !== undefined; 
   useEffect(() => {
     if (resizing) return;
     const elm: HTMLElement | null = document.querySelector(`[uuid='${flowContainerItem.uuid}']`);
@@ -74,16 +82,16 @@ const SortableChild = (props: SortableChildProps) => {
   }, [resizing]);
 
   const { width: minWidth } = snapData({ width: 0, className: '' });
-  const className = [...snapClassName.split(' '), ...(classNameProp).split(' ')].join(' ');
+  const className = [...widthClasses.split(' '), ...(classNameProp).split(' ')].join(' ');
   const { SnapIndicator } = getUI(ui);
   return (
     <SlateSortableResizable
       uuid={flowContainerItem.uuid}
       onResize={onResize}
-      // onResizeStop={createThrottledOnResizeStop(onResizeStop)}
       onResizeStop={throttle(onResizeStop, RESIZE_THROTTLE_INTERVAL)}
-      minWidth={`${minWidth * 0.99}%`}
-      style={{ position: 'relative' }}
+      // Set min width a bit smaller to ensure user can drag there, and provide snap back effect.
+      minWidth={`${minWidth * 0.9}%`}
+      // Set default size to starting width so we get sizes in %.
       defaultSize={{
         width: `${startingWidth}%`,
         height: 'auto',
@@ -93,19 +101,14 @@ const SortableChild = (props: SortableChildProps) => {
       {...restProps}
     >
       {resizing && (
-        <SnapIndicator style={{ position: 'absolute', right: '0px', zIndex: 100 }}>
+        // Show a label indicating where we'll snap to.
+        <SnapIndicator>
           {`${Math.round(snapWidth!)}%`}
         </SnapIndicator>
       )}
       {children}
     </SlateSortableResizable>
   );
-};
+});
 
-SortableChild.displayName = 'SortableChild';
-
-SortableChild.defaultProps = {
-  onResizeStop: () => {},
-};
-
-export default observer(SortableChild);
+export default SortableChild;
