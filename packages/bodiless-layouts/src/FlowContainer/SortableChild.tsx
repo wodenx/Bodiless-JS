@@ -71,7 +71,7 @@ const SortableChild = observer((props: SortableChildProps) => {
   // we have to remove the width style when we are done resizing so that our responsive
   // classes will control width. Otherwise the width will be fixed at all breakpoints.
   // We need to do this onEffect bc we have to find the actual dom element.
-  const resizing = snapWidth !== undefined; 
+  const resizing = snapWidth !== undefined;
   useEffect(() => {
     if (resizing) return;
     const elm: HTMLElement | null = document.querySelector(`[uuid='${flowContainerItem.uuid}']`);

@@ -13,7 +13,7 @@
  */
 
 import React, { FC, HTMLProps } from 'react';
-import { FlowContainer as FlowContainerClean, FlowContainerProps, SortableChild } from '@bodiless/layouts';
+import { FlowContainer as FlowContainerClean, FlowContainerProps } from '@bodiless/layouts';
 import { ui as componentSelectorUI } from './ComponentSelector';
 import Wrapper from './SortableResizableWrapper';
 

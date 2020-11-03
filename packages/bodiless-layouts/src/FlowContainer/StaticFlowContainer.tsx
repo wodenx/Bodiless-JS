@@ -19,9 +19,9 @@ import {
   designable,
   Div,
 } from '@bodiless/fclasses';
+import { observer } from 'mobx-react-lite';
 import { useItemHandlers } from './model';
 import { StaticFlowContainerProps, FlowContainerItem, FlowContainerComponents } from './types';
-import { observer } from 'mobx-react-lite';
 
 const flowContainerComponentStart: FlowContainerComponents = {
   Wrapper: Div,

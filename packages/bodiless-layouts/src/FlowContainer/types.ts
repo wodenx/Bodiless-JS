@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { ComponentType, HTMLProps } from 'react';
+import { ComponentType } from 'react';
 import { WithNodeProps, TMenuOptionGetter } from '@bodiless/core';
 import { DesignableComponents, StylableProps } from '@bodiless/fclasses';
 import { ComponentSelectorUI } from '../ComponentSelector/types';
