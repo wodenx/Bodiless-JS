@@ -28,8 +28,6 @@ const asBurgerMenuOverviewLink = <P extends object>(Item: ComponentType<P>) => {
   const ItemWithOverview: ComponentType<P> = (props) => {
     const { children } = props;
     const { node } = useNode();
-    // Next line ensures that whatever value is stored in the "text" node is replaced with "Overlay"
-    // const node$ = replaceTextWithOverview(node);
     const overview = <NodeProvider node={node}>{children}</NodeProvider>;
     const sublistProps = { overview };
     return (

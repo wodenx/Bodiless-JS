@@ -69,7 +69,6 @@ const SubList$: FC<SubListProps> = ({
   title, children, components, overview, ...rest
 }) => {
   const { WrapperItem, List, Title } = components;
-  // console.log('LIST PROPS: ', rest)
   return (
     <WrapperItem {...rest}>
       <Title>{title}</Title>

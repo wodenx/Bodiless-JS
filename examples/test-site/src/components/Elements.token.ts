@@ -79,6 +79,9 @@ const asEditable = asEditableCore;
 // Tout Components
 const asCta = addClasses('bg-orange-700 hover:bg-orange-600 text-center text-white p-2 rounded');
 
+/* Utility Classes */
+const asDisabled = addClasses('pointer-events-none');
+
 export {
   asBold,
   asItalic,
@@ -94,6 +97,7 @@ export {
   asHeader2,
   asHeader3,
   asCta,
+  asDisabled,
   asBlockItem,
   asPageContainer,
   asPrimaryColorBackground,
