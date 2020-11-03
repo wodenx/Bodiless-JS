@@ -12,12 +12,13 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import throttle from 'lodash/throttle';
 import { ResizeCallback } from 're-resizable';
 import SlateSortableResizable from '../SlateSortableResizable';
 import { defaultSnapData } from './utils/appendTailwindWidthClass';
 import { SortableChildProps } from './types';
+import { observer } from 'mobx-react-lite';
 
 const RESIZE_THROTTLE_INTERVAL: number = 100;
 const createThrottledOnResizeStop = (onResizeStop: ResizeCallback) => (
@@ -32,6 +33,7 @@ const SortableChild = (props: SortableChildProps) => {
     snapData: snapRaw,
     getDefaultWidth,
     className: classNameRaw,
+    children,
     ...restProps
   } = props;
   const snap = snapRaw || defaultSnapData;
@@ -41,17 +43,17 @@ const SortableChild = (props: SortableChildProps) => {
     width: 0,
     className: '',
   });
+  const resizing = useRef(false);
   const passedSnapClassName = getDefaultWidth && getDefaultWidth(snap);
   // local classname is used to store intermidiary classname state,
   // so className is stored only onResizeStop
   // we are only getting a class from the default Width if we have a default width
-  const [snapClassName, setSnapClassName] = useState(
-    (flowContainerItem.wrapperProps && flowContainerItem.wrapperProps.className)
+  const startSnapClassName = flowContainerItem.wrapperProps?.className
       || passedSnapClassName
-      || FALLBACK_SNAP_CLASSNAME,
-  );
-  // Store what with aligns with the current class
-  const [snapWidth, setSnapWidth] = useState('');
+      || FALLBACK_SNAP_CLASSNAME;
+  const { width: startSnapWidth } = snap({ className: startSnapClassName });
+  const [snapClassName, setSnapClassName] = useState(startSnapClassName);
+  const [snapWidth, setSnapWidth] = useState(`${startSnapWidth}%`);
   // We start this off as not set so that the classes are used
   const [size, setSize] = useState({
     height: '',
@@ -65,22 +67,31 @@ const SortableChild = (props: SortableChildProps) => {
     });
   };
   const onResize: ResizeCallback = (e, direction, ref) => {
+    console.log('onResize, ref width', snapClassName, ref.style?.width );
+    if (!resizing.current) updateSizeWithWidth();
+    resizing.current = true;
     const { className, width } = snap({
       className: snapClassName,
-      width: ref.style.width ? parseInt(ref.style.width, 10) : 100,
+      width: ref.style.width && ref.style.width.match(/\%$/)
+        ? parseInt(ref.style.width, 10) : startSnapWidth,
     });
     setSnapWidth(`${width}%`);
     // Set the class in are state
     setSnapClassName(className);
   };
   useEffect(() => (
-    // Call resize handler on component's unmount
+    // Call resize handler on component's initial mount
     // to make sure the correct wrapper classname is set
     // even if the component was never be resized manually.
     onResizeStop({
       className: snapClassName,
     })
   ), []);
+  useEffect(() => {
+    if (!resizing.current && flowContainerItem.wrapperProps && flowContainerItem.wrapperProps.className) {
+      setSnapClassName(flowContainerItem.wrapperProps.className);
+    };
+  });
   useLayoutEffect(() => {
     const elm: HTMLElement | null = document.querySelector(`[uuid='${flowContainerItem.uuid}']`);
     // we have to remove the style width when we have arrived at our correct size
@@ -96,12 +107,13 @@ const SortableChild = (props: SortableChildProps) => {
       1,
     );
   });
-  const classNameOut = [...snapClassName.split(' '), ...(classNameRaw || '').split(' ')].join(' ');
+  const classNameOut = [...snapClassName.split(' '), 'relative', ...(classNameRaw || '').split(' ')].join(' ');
   return (
     <SlateSortableResizable
       uuid={flowContainerItem.uuid}
       onResize={onResize}
       onResizeStop={createThrottledOnResizeStop(() => {
+        resizing.current = false;
         onResizeStop({
           className: snapClassName,
         });
@@ -111,7 +123,14 @@ const SortableChild = (props: SortableChildProps) => {
       minWidth={`${minWidth * 0.99}%`}
       className={classNameOut}
       {...restProps}
-    />
+    >
+      { resizing.current && (
+        <div style={{ position: 'absolute', right: '0px', zIndex: 100, background: 'white' }}>
+          {snapWidth}
+        </div>
+      )}
+      {children}
+    </SlateSortableResizable>
   );
 };
 
@@ -121,4 +140,4 @@ SortableChild.defaultProps = {
   onResizeStop: () => {},
 };
 
-export default SortableChild;
+export default observer(SortableChild);
