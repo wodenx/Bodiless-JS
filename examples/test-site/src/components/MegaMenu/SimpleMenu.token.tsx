@@ -14,7 +14,7 @@
 
 import { flow } from 'lodash';
 import { withDesign, addClasses } from '@bodiless/fclasses';
-import { asBold, asActiveMenuLink } from '../Elements.token';
+import { asActiveMenuLink } from '../Elements.token';
 
 /**
  * Base Menu Styles
