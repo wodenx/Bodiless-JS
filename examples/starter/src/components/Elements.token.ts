@@ -40,6 +40,7 @@ const asXMargin = addClasses('mx-2');
 const asYMargin = addClasses('my-2');
 const asNegXMargin = addClasses('-mx-1');
 const asNegYMargin = addClasses('-my-1');
+const withPadding3 = addClasses('p-3');
 const withPadding5 = addClasses('p-5');
 
 /* Responsive design */
@@ -77,6 +78,9 @@ const asEditable = asEditableCore;
 // Tout Components
 const asCta = addClasses('bg-orange-700 hover:bg-orange-600 text-center text-white p-2 rounded');
 
+/* Utility Classes */
+const asDisabled = addClasses('pointer-events-none');
+
 export {
   asBold,
   asItalic,
@@ -91,6 +95,7 @@ export {
   asHeader2,
   asHeader3,
   asCta,
+  asDisabled,
   asBlockItem,
   asPageContainer,
   asPrimaryColorBackground,
@@ -107,6 +112,7 @@ export {
   asNegXMargin,
   asNegYMargin,
   asBlockQuote,
+  withPadding3,
   withPadding5,
   asResponsive21By9Embed,
   asResponsive16By9Embed,
