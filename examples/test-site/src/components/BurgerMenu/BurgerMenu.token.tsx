@@ -13,22 +13,26 @@
  */
 
 import { flow } from 'lodash';
-import { withDesign, addClasses, addProps } from '@bodiless/fclasses';
+import { withDesign, addProps } from '@bodiless/fclasses';
 
 import { asDefaultLogoStyle } from '../Layout/token';
+import { asPrimaryColorBackground, withPadding1, asTealBackground } from '../Elements.token';
 
 /**
  * Burger Menu Styles
  * ===========================================
  */
 const withBurgerMenuStyles = withDesign({
-  Wrapper: addClasses('bg-teal-600 py-1'),
+  Wrapper: flow(
+    withPadding1,
+    asTealBackground,
+  ),
   Header: flow(
     asDefaultLogoStyle,
-    withDesign({ SiteReturn: addClasses('bg-teal-600') }),
+    withDesign({ SiteReturn: asTealBackground }),
   ),
   Menu: flow(
-    addClasses('bg-gray-300'),
+    asPrimaryColorBackground,
     addProps({ noOverlay: true, width: '100%', right: true }),
   ),
 });

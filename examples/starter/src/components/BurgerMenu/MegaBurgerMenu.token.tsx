@@ -13,33 +13,16 @@
  */
 
 import { flow } from 'lodash';
-import { withDesign } from '@bodiless/fclasses';
+import { withMegaMenuDesign } from '@bodiless/organisms';
 
-import { withBaseBurgerMenuStyles, withBaseBurgerSubMenuStyles } from './SimpleBurgerMenu.token';
-
-/**
- * Columns Sub Menu Styles
- * ===========================================
- */
-const asColumnSubMenu = flow(
-  withDesign({
-    Item: withBaseBurgerSubMenuStyles,
-  }),
-  withBaseBurgerSubMenuStyles,
-);
+import { withBaseBurgerMenuStyles, baseBurgerSubMenuStyles } from './SimpleBurgerMenu.token';
 
 /**
  * Mega Menu Styles
  * ===========================================
  */
 const withMegaBurgerMenuStyles = flow(
-  withDesign({
-    Item: withDesign({
-      List: withBaseBurgerSubMenuStyles,
-      Touts: withBaseBurgerSubMenuStyles,
-      Columns: asColumnSubMenu,
-    }),
-  }),
+  withMegaMenuDesign(baseBurgerSubMenuStyles),
   withBaseBurgerMenuStyles,
 );
 

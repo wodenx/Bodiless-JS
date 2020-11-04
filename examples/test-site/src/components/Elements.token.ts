@@ -40,6 +40,7 @@ const asXMargin = addClasses('mx-2');
 const asYMargin = addClasses('my-2');
 const asNegXMargin = addClasses('-mx-1');
 const asNegYMargin = addClasses('-my-1');
+const withPadding1 = addClasses('py-1');
 const withPadding3 = addClasses('p-3');
 const withPadding5 = addClasses('p-5');
 
@@ -50,6 +51,9 @@ const asExceptMobile = addClasses('hidden lg:block');
 /* Primary coloring */
 const asPrimaryColorBackground = addClasses('bg-gray-200');
 const asTextColorPrimary = addClasses('text-black');
+
+/* Coloring */
+const asTealBackground = addClasses('bg-teal-600');
 
 /* Typography */
 const asBold = addClasses('font-bold');
@@ -101,6 +105,7 @@ export {
   asBlockItem,
   asPageContainer,
   asPrimaryColorBackground,
+  asTealBackground,
   asImage,
   asEditableImage,
   asEditableLink,
@@ -114,6 +119,7 @@ export {
   asNegXMargin,
   asNegYMargin,
   asBlockQuote,
+  withPadding1,
   withPadding3,
   withPadding5,
   asResponsive21By9Embed,

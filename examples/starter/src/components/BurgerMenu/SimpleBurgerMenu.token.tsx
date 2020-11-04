@@ -14,6 +14,7 @@
 
 import { flow } from 'lodash';
 import { withDesign, addClasses } from '@bodiless/fclasses';
+import { withSimpleMenuDesign } from '@bodiless/organisms';
 
 import { asBold, withPadding3, asDisabled } from '../Elements.token';
 
@@ -29,7 +30,7 @@ const withBaseBurgerMenuStyles = withDesign({
  * Base Burger Sub Menu Styles
  * ===========================================
  */
-const withBaseBurgerSubMenuStyles = withDesign({
+const baseBurgerSubMenuStyles = {
   Wrapper: withDesign({
     Title: withDesign({
       Label: flow(
@@ -40,23 +41,19 @@ const withBaseBurgerSubMenuStyles = withDesign({
     List: addClasses('first-child:pl-3 flex flex-col'),
   }),
   Item: addClasses('pl-3'),
-});
+};
 
 /**
  * Simple Burger Menu Styles
  * ===========================================
  */
 const withSimpleBurgerMenuStyles = flow(
-  withDesign({
-    Item: withDesign({
-      SubMenu: withBaseBurgerSubMenuStyles,
-    }),
-  }),
+  withSimpleMenuDesign(baseBurgerSubMenuStyles),
   withBaseBurgerMenuStyles,
 );
 
 export default withSimpleBurgerMenuStyles;
 export {
   withBaseBurgerMenuStyles,
-  withBaseBurgerSubMenuStyles,
+  baseBurgerSubMenuStyles,
 };

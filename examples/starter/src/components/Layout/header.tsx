@@ -21,7 +21,7 @@ import {
   Div,
 } from '@bodiless/fclasses';
 import { withNodeKey } from '@bodiless/core';
-import { ResponsiveMegaMenu } from '../Menu';
+import { ResponsiveSimpleMenu } from '../Menu';
 import Logo from './logo';
 
 type HeaderComponents = {
@@ -37,7 +37,7 @@ const headerComponents:HeaderComponents = {
   Wrapper: Div,
   Container: Div,
   MenuContainer: Div,
-  Menu: ResponsiveMegaMenu,
+  Menu: ResponsiveSimpleMenu,
   SiteLogoReturn: Logo,
 };
 const HeaderClean: FC<Props> = ({ components }) => {
