@@ -54,7 +54,7 @@ const asTextColorPrimary = addClasses('text-black');
 const asBold = addClasses('font-bold');
 const asItalic = addClasses('italic');
 const asLink = addClasses('text-blue-700 underline');
-const asActiveMenuLink = addClasses('bg-teal-500');
+const asActiveMenuLink = flow(asBold, addClasses('bg-teal-500'));
 const asStrikeThrough = addClasses('');
 const asSuperScript = addClasses('');
 

@@ -14,7 +14,7 @@
 
 import { flow } from 'lodash';
 import { withDesign, addClasses } from '@bodiless/fclasses';
-import { asActiveMenuLink } from '../Elements.token';
+import { asBold, asActiveMenuLink } from '../Elements.token';
 
 /**
  * Base Menu Styles
@@ -42,7 +42,14 @@ const withBaseSubMenuStyles = withDesign({
     List: addClasses('bg-teal-600 text-white z-10'),
   }),
   Item: addClasses('min-w-100 leading-loose text-sm'),
-  Title: addClasses('hover:bg-teal-500 block w-full px-3'),
+  Title: flow(
+    addClasses('hover:bg-teal-500 block w-full px-3'),
+    withDesign({
+      Link: withDesign({
+        ActiveLink: asActiveMenuLink,
+      }),
+    }),
+  ),
 });
 
 /**
