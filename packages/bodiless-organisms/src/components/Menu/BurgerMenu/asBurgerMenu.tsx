@@ -13,7 +13,7 @@
  */
 
 import React, { FC, ComponentType } from 'react';
-import { useNode, NodeProvider } from '@bodiless/core';
+import { useNode } from '@bodiless/core';
 import { withDesign } from '@bodiless/fclasses';
 
 import { asAccordionWrapper, asAccodionTitle, asAccordionBody } from '../../Accordion';
@@ -24,14 +24,20 @@ type OverviewItem = {
   overview: JSX.Element,
 };
 
+type WithOverviewLinkTitle = {
+  overviewLinkTitle: string
+};
+
 const asBurgerMenuOverviewLink = <P extends object>(Item: ComponentType<P>) => {
-  const ItemWithOverview: ComponentType<P> = (props) => {
-    const { children } = props;
+  const ItemWithOverview: ComponentType<P & WithOverviewLinkTitle> = ({ overviewLinkTitle = 'Overview', ...rest }) => {
     const { node } = useNode();
-    const overview = <NodeProvider node={node}>{children}</NodeProvider>;
-    const sublistProps = { overview };
+    const linkNode = node.child<{ href: string }>('title$link');
+    const overview = linkNode.data.href
+      ? <li><a href={linkNode.data.href}>{ overviewLinkTitle }</a></li>
+      : <></>;
+
     return (
-      <Item {...sublistProps} {...props} />
+      <Item overview={overview} {...rest as P} />
     );
   };
 

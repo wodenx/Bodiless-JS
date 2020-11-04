@@ -13,7 +13,7 @@
  */
 
 import { flow } from 'lodash';
-import { withDesign, addClasses } from '@bodiless/fclasses';
+import { withDesign, addClasses, addProps } from '@bodiless/fclasses';
 import { withSimpleMenuDesign } from '@bodiless/organisms';
 
 import { asBold, withPadding3, asDisabled } from '../Elements.token';
@@ -40,7 +40,10 @@ const baseBurgerSubMenuStyles = {
     }),
     List: addClasses('first-child:pl-3 flex flex-col'),
   }),
-  Item: addClasses('pl-3'),
+  Item: flow(
+    addProps({ overviewLinkTitle: 'Overview' }),
+    addClasses('pl-3'),
+  ),
 };
 
 /**
