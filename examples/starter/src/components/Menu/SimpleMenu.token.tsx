@@ -15,48 +15,54 @@
 import { flow } from 'lodash';
 import { withDesign, addClasses } from '@bodiless/fclasses';
 
-import { asBold, withPadding3, asDisabled } from '../Elements.token';
-
 /**
- * Base Burger Menu Styles
+ * Base Menu Styles
  * ===========================================
  */
-const withBaseBurgerMenuStyles = withDesign({
-  Wrapper: withPadding3,
+const withBaseMenuStyles = withDesign({
+  Wrapper: addClasses('w-full bg-teal-600 text-white'),
+  Item: addClasses('hover:bg-teal-500 min-w-100 leading-loose text-sm'),
+  Title: addClasses('block w-full px-3'),
 });
 
 /**
- * Base Burger Sub Menu Styles
+ * Base Sub Menu Styles
  * ===========================================
  */
-const withBaseBurgerSubMenuStyles = withDesign({
+const withBaseSubMenuStyles = withDesign({
   Wrapper: withDesign({
-    Title: withDesign({
-      Label: flow(
-        asBold,
-        asDisabled,
-      ),
-    }),
-    List: addClasses('first-child:pl-3 flex flex-col'),
+    List: addClasses('bg-teal-600 text-white z-10'),
   }),
-  Item: addClasses('pl-3'),
+  Item: addClasses('min-w-100 leading-loose text-sm'),
+  Title: addClasses('hover:bg-teal-500 block w-full px-3'),
 });
 
 /**
- * Simple Burger Menu Styles
+ * Simple Sub Menu Styles
  * ===========================================
  */
-const withSimpleBurgerMenuStyles = flow(
-  withDesign({
-    Item: withDesign({
-      SubMenu: withBaseBurgerSubMenuStyles,
-    }),
-  }),
-  withBaseBurgerMenuStyles,
+const asSimpleSubMenu = flow(
+  withBaseSubMenuStyles,
 );
 
-export default withSimpleBurgerMenuStyles;
+const asSimpleSubMenuStyles = withDesign({
+  SubMenu: asSimpleSubMenu,
+});
+
+/**
+ * Simple Menu Styles
+ * ===========================================
+ */
+const withSimpleMenuStyles = flow(
+  withDesign({
+    Item: asSimpleSubMenuStyles,
+  }),
+  withBaseMenuStyles,
+);
+
+export default withSimpleMenuStyles;
 export {
-  withBaseBurgerMenuStyles,
-  withBaseBurgerSubMenuStyles,
+  asSimpleSubMenu,
+  withBaseMenuStyles,
+  withBaseSubMenuStyles,
 };

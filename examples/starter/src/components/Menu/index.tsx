@@ -22,8 +22,10 @@ import {
   Div,
 } from '@bodiless/fclasses';
 
-import MainMenu from './MainMenu';
-import BurgerMenu from './BurgerMenu';
+import SimpleMenu from './SimpleMenu';
+import MegaMenu from './MegaMenu';
+
+import { SimpleBurgerMenu, MegaBurgerMenu } from '../BurgerMenu';
 import { breakpoints } from '../Page';
 
 type MenuComponents = {
@@ -46,10 +48,19 @@ const ResponsiveMenuClean = designable(menuComponentsStart)(MenuClean);
 
 const withMenu = (Menu: MenuType) => withDesign<MenuComponents>({ Menu });
 
-const ResponsiveMenu = flow(
-  ifViewportIs(['lg', 'xl', 'xxl'])(withMenu(() => MainMenu)),
-  ifViewportIsNot(['lg', 'xl', 'xxl'])(withMenu(() => BurgerMenu)),
+const ResponsiveSimpleMenu = flow(
+  ifViewportIs(['lg', 'xl', 'xxl'])(withMenu(() => SimpleMenu)),
+  ifViewportIsNot(['lg', 'xl', 'xxl'])(withMenu(() => SimpleBurgerMenu)),
   withPageDimensionsContext({ breakpoints }),
 )(ResponsiveMenuClean);
 
-export default ResponsiveMenu;
+const ResponsiveMegaMenu = flow(
+  ifViewportIs(['lg', 'xl', 'xxl'])(withMenu(() => MegaMenu)),
+  ifViewportIsNot(['lg', 'xl', 'xxl'])(withMenu(() => MegaBurgerMenu)),
+  withPageDimensionsContext({ breakpoints }),
+)(ResponsiveMenuClean);
+
+export {
+  ResponsiveSimpleMenu,
+  ResponsiveMegaMenu,
+};

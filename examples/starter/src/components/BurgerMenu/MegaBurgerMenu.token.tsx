@@ -13,50 +13,34 @@
  */
 
 import { flow } from 'lodash';
-import { withDesign, addClasses } from '@bodiless/fclasses';
+import { withDesign } from '@bodiless/fclasses';
 
-import { asBold, withPadding3, asDisabled } from '../Elements.token';
-
-/**
- * Base Burger Menu Styles
- * ===========================================
- */
-const withBaseBurgerMenuStyles = withDesign({
-  Wrapper: withPadding3,
-});
+import { withBaseBurgerMenuStyles, withBaseBurgerSubMenuStyles } from './SimpleBurgerMenu.token';
 
 /**
- * Base Burger Sub Menu Styles
+ * Columns Sub Menu Styles
  * ===========================================
  */
-const withBaseBurgerSubMenuStyles = withDesign({
-  Wrapper: withDesign({
-    Title: withDesign({
-      Label: flow(
-        asBold,
-        asDisabled,
-      ),
-    }),
-    List: addClasses('first-child:pl-3 flex flex-col'),
+const asColumnSubMenu = flow(
+  withDesign({
+    Item: withBaseBurgerSubMenuStyles,
   }),
-  Item: addClasses('pl-3'),
-});
+  withBaseBurgerSubMenuStyles,
+);
 
 /**
- * Simple Burger Menu Styles
+ * Mega Menu Styles
  * ===========================================
  */
-const withSimpleBurgerMenuStyles = flow(
+const withMegaBurgerMenuStyles = flow(
   withDesign({
     Item: withDesign({
-      SubMenu: withBaseBurgerSubMenuStyles,
+      List: withBaseBurgerSubMenuStyles,
+      Touts: withBaseBurgerSubMenuStyles,
+      Columns: asColumnSubMenu,
     }),
   }),
   withBaseBurgerMenuStyles,
 );
 
-export default withSimpleBurgerMenuStyles;
-export {
-  withBaseBurgerMenuStyles,
-  withBaseBurgerSubMenuStyles,
-};
+export default withMegaBurgerMenuStyles;

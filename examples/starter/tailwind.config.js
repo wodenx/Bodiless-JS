@@ -519,6 +519,7 @@ module.exports = {
   variants: {
     overflow: ['responsive', 'hover', 'focus'],
     position: ['responsive', 'hover', 'focus'],
+    padding: ['responsive', 'first-child'],
   },
 
   corePlugins: {},
@@ -540,5 +541,10 @@ module.exports = {
   plugins: [
     // eslint-disable-next-line
     require('tailwindcss-aspect-ratio'),
+    function ({ addVariant, e }) {
+      addVariant('first-child', ({ modifySelectors, separator }) => {
+        modifySelectors(({ className }) => `.${e(`first-child${separator}${className}`)} >*:first-child`);
+      });
+    },
   ],
 };
