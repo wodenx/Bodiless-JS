@@ -34,9 +34,9 @@ describe('Tout testing', function () {
   const descriptionXpath = '//*[@id="tout-horizontal"]//*[@data-tout-element="body"]//div[@data-slate-editor="true"]';
   const ctaLabelXpath = '//*[@id="tout-horizontal"]//*[@data-tout-element="link"]//div[@data-slate-editor="true"]';
   const imagePlaceholderXpath = '//*[@id="tout-horizontal"]//img[@data-tout-element="image"]';
-  const urlFieldCTAXpath = '//form[@aria-label="Context Menu Link CTA Form"]//input[@id="link-href"]';
-  const linkIconCTAXpath = '//*[@role="toolbar" and @aria-label="Local Context Menu"]//*[@aria-label="Link CTA"]';
-  const checkmarkIconLinkCTAFormXpath = '//form[@aria-label="Context Menu Link CTA Form"]//button[@aria-label="Submit"]';
+  const urlFieldCTAXpath = '//form[@aria-label="Context Menu Edit CTA Form"]//input[@id="link-href"]';
+  const linkIconCTAXpath = '//*[@role="toolbar" and @aria-label="Local Context Menu"]//*[@aria-label="Edit CTA"]';
+  const checkmarkIconLinkCTAFormXpath = '//form[@aria-label="Context Menu Edit CTA Form"]//button[@aria-label="Submit"]';
   const altFieldXpath = '//form[@aria-label="Context Menu Select Image Form"]//input[@id="image-alt"]';
   const checkmarkIconImageFormXpath = '//form[@aria-label="Context Menu Select Image Form"]//button[@aria-label="Submit"]';
   const imageIconXpath = '//*[@role="toolbar" and @aria-label="Local Context Menu"]//*[@aria-label="Select Image"]';
