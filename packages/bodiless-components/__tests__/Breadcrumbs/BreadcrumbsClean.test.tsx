@@ -38,7 +38,8 @@ const withAttrRename = (oldAttr: string, newAttr: string) => (Component: Compone
 
 describe('BreadcrumbsClean', () => {
   it('renders as empty unordered list by default', () => {
-    const wrapper = mount(<BreadcrumbsClean />);
+    const Breadcrumb = flowRight()(BreadcrumbsClean);
+    const wrapper = mount(<Breadcrumb />);
     expect(wrapper.html()).toMatchSnapshot();
   });
   it('allows adding starting trail and design it using design api', () => {
@@ -74,16 +75,18 @@ describe('BreadcrumbsClean', () => {
         },
       },
     ];
-    const Breadcrumb = withDesign({
-      BreadcrumbLink: flowRight(
-        withAttrRename('nodeKey', 'href'),
-        withoutProps('nodeCollection'),
-      ),
-      BreadcrumbTitle: flowRight(
-        withAttrRename('nodeKey', 'aria-label'),
-        withoutProps('nodeCollection'),
-      ),
-    })(BreadcrumbsClean);
+    const Breadcrumb = flowRight(
+      withDesign({
+        BreadcrumbLink: flowRight(
+          withAttrRename('nodeKey', 'href'),
+          withoutProps('nodeCollection'),
+        ),
+        BreadcrumbTitle: flowRight(
+          withAttrRename('nodeKey', 'aria-label'),
+          withoutProps('nodeCollection'),
+        ),
+      }),
+    )(BreadcrumbsClean);
     const wrapper = mount(<Breadcrumb items={items} />);
     expect(wrapper.html()).toMatchSnapshot();
   });
