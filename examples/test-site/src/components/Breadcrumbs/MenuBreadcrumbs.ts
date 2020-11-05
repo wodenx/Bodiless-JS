@@ -14,7 +14,6 @@
 
 import { flow } from 'lodash';
 import { withSidecarNodes, asReadOnly } from '@bodiless/core';
-import { asBodilessLink } from '@bodiless/components';
 import {
   addClasses,
   withDesign,
@@ -31,20 +30,38 @@ import {
 } from '@bodiless/organisms';
 
 import { EditorSimple } from '../Editors';
+import { asEditableLink } from '../Elements.token';
 
-import { withArrowSeparator } from './MenuBreadcrumbs.token';
+import {
+  withArrowSeparator,
+  withEditableStartingTrail,
+  withEditableFinalTrail,
+} from './MenuBreadcrumbs.token';
 
-const withMenuBreadcrumbSchema = withDesign({
-  BreadcrumbLink: flow(
-    replaceWith(
-      withSidecarNodes(
-        asBodilessLink(),
-      )(A),
+const DEFAULT_STARTING_TRAIL_NODE_KEY = 'startingTrail';
+const DEFAULT_FINAL_TRAIL_NODE_KEY = 'finalTrail';
+
+const withMenuBreadcrumbSchema = flow(
+  withDesign({
+    BreadcrumbLink: flow(
+      replaceWith(
+        withSidecarNodes(
+          asEditableLink(),
+        )(A),
+      ),
+      asReadOnly,
     ),
-    asReadOnly,
-  ),
-  BreadcrumbTitle: replaceWith(EditorSimple),
-});
+    BreadcrumbTitle: flow(
+      replaceWith(EditorSimple),
+      asReadOnly,
+    ),
+  }),
+  withEditableStartingTrail({
+    nodeKey: DEFAULT_STARTING_TRAIL_NODE_KEY,
+    nodeCollection: 'site',
+  }, 'Enter item'),
+  withEditableFinalTrail(DEFAULT_FINAL_TRAIL_NODE_KEY, 'Enter item'),
+);
 
 const withMenuBreadcrumbsStyles = flow(
   withDesign({
@@ -81,4 +98,8 @@ const MegaMenuBreadcrumbs = flow(
 )('ul');
 
 export default Breadcrumbs;
-export { MegaMenuBreadcrumbs };
+export {
+  DEFAULT_STARTING_TRAIL_NODE_KEY,
+  DEFAULT_FINAL_TRAIL_NODE_KEY,
+  MegaMenuBreadcrumbs,
+};

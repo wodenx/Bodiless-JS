@@ -16,8 +16,8 @@ import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mount } from 'enzyme';
 import { withDefaultContent, withSidecarNodes } from '@bodiless/core';
-import { asBodilessLink } from '@bodiless/components';
-import { replaceWith, withDesign, withOnlyProps } from '@bodiless/fclasses';
+import { asBodilessLink, asEditable } from '@bodiless/components';
+import { replaceWith, withDesign } from '@bodiless/fclasses';
 import { flowRight } from 'lodash';
 
 import { asBreadcrumbsClean, asMenuBase } from '../src/components/Menu/MegaMenu';
@@ -40,7 +40,9 @@ const createBreadcrumbComponent = ({
     BreadcrumbLink: replaceWith(withSidecarNodes(
       asBodilessLink(),
     ))('a'),
-    BreadcrumbTitle: replaceWith(withOnlyProps('key', 'children')(React.Fragment)),
+    BreadcrumbTitle: replaceWith(
+      asEditable()(React.Fragment),
+    ),
   }),
   asBreadcrumbsClean({
     linkNodeKey: 'title$link',
@@ -49,39 +51,53 @@ const createBreadcrumbComponent = ({
   asMenuBase('testMenu'),
 )('ul');
 
+const generateMegaMenuContent = (component: string) => ({
+  testMenu: {
+    items: [
+      'home',
+      'products',
+    ],
+  },
+  testMenu$home$title$link: {
+    href: '/',
+  },
+  testMenu$home$title$text: {
+    text: 'home',
+  },
+  testMenu$products$title$link: {
+    href: '/products',
+  },
+  testMenu$products$title$text: {
+    text: 'products',
+  },
+  testMenu$products$sublist: {
+    items: [
+      'productA',
+      'productB',
+    ],
+  },
+  'testMenu$products$cham-sublist': {
+    component,
+  },
+  testMenu$products$sublist$productA$title$link: {
+    href: '/products/productA',
+  },
+  testMenu$products$sublist$productA$title$text: {
+    text: 'ProductA',
+  },
+  testMenu$products$sublist$productB$title$link: {
+    href: '/products/productB',
+  },
+  testMenu$products$sublist$productB$title$text: {
+    text: 'ProductB',
+  },
+});
+
 describe('asBreadcrumbsClean', () => {
   it('creates breadcrumbs for 2-level Touts MegaMenu', () => {
     setPagePath('/products/productA');
     const Breadcrumb = createBreadcrumbComponent({
-      content: {
-        testMenu: {
-          items: [
-            'home',
-            'products',
-          ],
-        },
-        testMenu$home$title$link: {
-          href: '/',
-        },
-        testMenu$products$title$link: {
-          href: '/products',
-        },
-        testMenu$products$sublist: {
-          items: [
-            'productA',
-            'productB',
-          ],
-        },
-        'testMenu$products$cham-sublist': {
-          component: 'Touts',
-        },
-        testMenu$products$sublist$productA$title$link: {
-          href: '/products/productA',
-        },
-        testMenu$products$sublist$productB$title$link: {
-          href: '/products/productB',
-        },
-      },
+      content: generateMegaMenuContent('Touts'),
     });
     const wrapper = mount(<Breadcrumb />);
     expect(wrapper.html()).toMatchSnapshot();
@@ -89,35 +105,7 @@ describe('asBreadcrumbsClean', () => {
   it('creates breadcrumbs for 2-level List MegaMenu', () => {
     setPagePath('/products/productA');
     const Breadcrumb = createBreadcrumbComponent({
-      content: {
-        testMenu: {
-          items: [
-            'home',
-            'products',
-          ],
-        },
-        testMenu$home$title$link: {
-          href: '/',
-        },
-        testMenu$products$title$link: {
-          href: '/products',
-        },
-        testMenu$products$sublist: {
-          items: [
-            'productA',
-            'productB',
-          ],
-        },
-        'testMenu$products$cham-sublist': {
-          component: 'List',
-        },
-        testMenu$products$sublist$productA$title$link: {
-          href: '/products/productA',
-        },
-        testMenu$products$sublist$productB$title$link: {
-          href: '/products/productB',
-        },
-      },
+      content: generateMegaMenuContent('List'),
     });
     const wrapper = mount(<Breadcrumb />);
     expect(wrapper.html()).toMatchSnapshot();
@@ -125,35 +113,7 @@ describe('asBreadcrumbsClean', () => {
   it('creates breadcrumbs for 2-level Columns MegaMenu', () => {
     setPagePath('/products/productA');
     const Breadcrumb = createBreadcrumbComponent({
-      content: {
-        testMenu: {
-          items: [
-            'home',
-            'products',
-          ],
-        },
-        testMenu$home$title$link: {
-          href: '/',
-        },
-        testMenu$products$title$link: {
-          href: '/products',
-        },
-        testMenu$products$sublist: {
-          items: [
-            'productA',
-            'productB',
-          ],
-        },
-        'testMenu$products$cham-sublist': {
-          component: 'Columns',
-        },
-        testMenu$products$sublist$productA$title$link: {
-          href: '/products/productA',
-        },
-        testMenu$products$sublist$productB$title$link: {
-          href: '/products/productB',
-        },
-      },
+      content: generateMegaMenuContent('Columns'),
     });
     const wrapper = mount(<Breadcrumb />);
     expect(wrapper.html()).toMatchSnapshot();

@@ -9,4 +9,3 @@ exports[`BreadcrumbsClean allows passing items as a prop 1`] = `"<ul><li><a href
 exports[`BreadcrumbsClean does not render separator after last item when final trail is not set 1`] = `"<ul><li><a href=\\"linkNodeKey1\\"><span aria-label=\\"titleNodeKey1\\"></span></a></li></ul>"`;
 
 exports[`BreadcrumbsClean renders as empty unordered list by default 1`] = `"<ul></ul>"`;
-

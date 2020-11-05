@@ -23,31 +23,40 @@ import { flow } from 'lodash';
 import Layout from '../../../components/Layout';
 import SimpleMenu from '../../../components/Menu/SimpleMenu';
 import MegaMenu from '../../../components/Menu/MegaMenu';
-import MenuBreadcrumbs, { MegaMenuBreadcrumbs } from '../../../components/Breadcrumbs/MenuBreadcrumbs';
+import BaseMenuBreadcrumbs, {
+  DEFAULT_STARTING_TRAIL_NODE_KEY,
+  MegaMenuBreadcrumbs as BaseMegaMenuBreadcrumbs,
+} from '../../../components/Breadcrumbs/MenuBreadcrumbs';
 import {
   withEditableStartingTrail,
   withStartingTrailIcon,
   withNonLinkableItems,
-  withEditableFinalTrail,
+  withNonLinkableStartingTrail,
   withBoldedFinalTrail,
   withVerticalBarSeparator,
   withSlashSeparator,
 } from '../../../components/Breadcrumbs/MenuBreadcrumbs.token';
 import { asHeader2, asHeader1 } from '../../../components/Elements.token';
 
-const STARTING_TRAIL_NODE_KEY = 'startingTrail';
-const FINAL_TRAIL_NODE_KEY = 'finalTrail';
+const withLocalEditableStartingTrail = withEditableStartingTrail(
+  DEFAULT_STARTING_TRAIL_NODE_KEY,
+  'Enter item',
+);
 
-const BreadcrumbWithEditableStartingTrail = withEditableStartingTrail(
-  STARTING_TRAIL_NODE_KEY,
-  'Enter Item',
-)(MenuBreadcrumbs);
+const MenuBreadcrumbs = flow(
+  withLocalEditableStartingTrail,
+)(BaseMenuBreadcrumbs);
+
+const MegaMenuBreadcrumbs = flow(
+  withLocalEditableStartingTrail,
+)(BaseMegaMenuBreadcrumbs);
+
 const BreadcrumbWithStartingTrailIcon = withStartingTrailIcon(MenuBreadcrumbs);
-const BreadcrumbWithNonLinkableItems = withNonLinkableItems(MenuBreadcrumbs);
-const BreadcrumbWithBoldableFinalItem = flow(
-  withEditableFinalTrail(FINAL_TRAIL_NODE_KEY, 'Enter Item'),
-  withBoldedFinalTrail,
+const BreadcrumbWithNonLinkableItems = flow(
+  withNonLinkableItems,
+  withNonLinkableStartingTrail(DEFAULT_STARTING_TRAIL_NODE_KEY, 'Enter item'),
 )(MenuBreadcrumbs);
+const BreadcrumbWithBoldableFinalItem = withBoldedFinalTrail(MenuBreadcrumbs);
 const BreadcrumbWithVerticalBarSeparator = withVerticalBarSeparator(MenuBreadcrumbs);
 const BreadcrumbWithSlashSeparator = withSlashSeparator(MenuBreadcrumbs);
 
@@ -61,7 +70,7 @@ export default (props: any) => (
       <H2>Simple Menu</H2>
       <SimpleMenu nodeKey="simplemenu" />
       <H2>Breadcrumbs with editable starting trail</H2>
-      <BreadcrumbWithEditableStartingTrail nodeKey="simplemenu" className="my-2" />
+      <MenuBreadcrumbs nodeKey="simplemenu" className="my-2" />
       <H2>Breadcrumbs with starting trail icon</H2>
       <BreadcrumbWithStartingTrailIcon nodeKey="simplemenu" className="my-2" />
       <H2>Breadcrumbs with non-linkable items</H2>

@@ -39,6 +39,8 @@ export {
   withoutBreadcrumbFinalTrail,
 } from './Breadcrumbs';
 
+export type { BreadcrumbStoreItemsReducer } from './Breadcrumbs';
+
 export {
   useBreadcrumbStore,
   BreadcrumbStoreProvider,

@@ -14,7 +14,12 @@
 
 import React, { HTMLProps } from 'react';
 import { flow } from 'lodash';
-import type { WithNodeKeyProps } from '@bodiless/core';
+import {
+  WithNodeKeyProps,
+  withSidecarNodes,
+  withNode,
+  withNodeKey,
+} from '@bodiless/core';
 import {
   withBreadcrumbStartingTrail,
   withBreadcrumbFinalTrail,
@@ -24,11 +29,12 @@ import {
   addProps,
   withDesign,
   replaceWith,
+  A,
   Span,
   withOnlyProps,
 } from '@bodiless/fclasses';
 
-import { asBold, asEditable } from '../Elements.token';
+import { asBold, asEditable, asEditableLink } from '../Elements.token';
 
 const withEditableStartingTrail = (
   nodeKeys?: WithNodeKeyProps,
@@ -36,7 +42,41 @@ const withEditableStartingTrail = (
 ) => flow(
   withBreadcrumbStartingTrail,
   withDesign({
-    StartingTrail: asEditable(nodeKeys, placeholder),
+    StartingTrail: replaceWith(
+      flow(
+        asEditable('text', placeholder),
+        addProps({
+          children: 'Home',
+        }),
+        withSidecarNodes(
+          asEditableLink('link'),
+        ),
+        addProps({
+          href: '/',
+        }),
+        withNode,
+        withNodeKey(nodeKeys),
+      )(A),
+    ),
+  }),
+);
+
+const withNonLinkableStartingTrail = (
+  nodeKeys?: WithNodeKeyProps,
+  placeholder?: string,
+) => flow(
+  withBreadcrumbStartingTrail,
+  withDesign({
+    StartingTrail: replaceWith(
+      flow(
+        asEditable('text', placeholder),
+        addProps({
+          children: 'Home',
+        }),
+        withNode,
+        withNodeKey(nodeKeys),
+      )(A),
+    ),
   }),
 );
 
@@ -92,6 +132,7 @@ const withSlashSeparator = withDesign({
 
 export {
   withEditableStartingTrail,
+  withNonLinkableStartingTrail,
   withStartingTrailIcon,
   withNonLinkableItems,
   withEditableFinalTrail,
