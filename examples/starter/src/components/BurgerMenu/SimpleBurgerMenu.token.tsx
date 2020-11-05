@@ -12,9 +12,12 @@
  * limitations under the License.
  */
 
+import React from 'react';
 import { flow } from 'lodash';
-import { withDesign, addClasses } from '@bodiless/fclasses';
 import { withSimpleMenuDesign } from '@bodiless/organisms';
+import {
+  withDesign, addClasses, addProps, A,
+} from '@bodiless/fclasses';
 
 import { asBold, withPadding3, asDisabled } from '../Elements.token';
 
@@ -30,6 +33,11 @@ const withBaseBurgerMenuStyles = withDesign({
  * Base Burger Sub Menu Styles
  * ===========================================
  */
+const OverviewLinkBase = ({ href, ...rest }) => (<A href={href} {...rest}>Overview</A>);
+const OverviewLink = flow(
+  addClasses('pl-3'),
+)(OverviewLinkBase);
+
 const baseBurgerSubMenuStyles = {
   Wrapper: withDesign({
     Title: withDesign({
@@ -38,9 +46,12 @@ const baseBurgerSubMenuStyles = {
         asDisabled,
       ),
     }),
-    List: addClasses('first-child:pl-3 flex flex-col'),
+    List: addClasses('flex flex-col'),
   }),
-  Item: addClasses('pl-3'),
+  Item: flow(
+    addProps({ OverviewLink }),
+    addClasses('pl-3'),
+  ),
 };
 
 /**

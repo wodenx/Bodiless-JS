@@ -12,9 +12,9 @@
  * limitations under the License.
  */
 
-import React, { FC, ComponentType } from 'react';
+import React, { FC, ComponentType, HTMLProps } from 'react';
 import { useNode } from '@bodiless/core';
-import { withDesign } from '@bodiless/fclasses';
+import { withDesign, A } from '@bodiless/fclasses';
 
 import { asAccordionWrapper, asAccodionTitle, asAccordionBody } from '../../Accordion';
 import { withMenuDesign as withSimpleMenuDesign } from '../SimpleMenu';
@@ -24,16 +24,23 @@ type OverviewItem = {
   overview: JSX.Element,
 };
 
-type WithOverviewLinkTitle = {
-  overviewLinkTitle: string
+type WithOverviewLink = {
+  OverviewLink: ComponentType<HTMLProps<HTMLAnchorElement>>
 };
 
+const DefaultOverviewLink: ComponentType<HTMLProps<HTMLAnchorElement>> = (props) => (
+  <A {...props}>Overview</A>
+);
+
 const asBurgerMenuOverviewLink = <P extends object>(Item: ComponentType<P>) => {
-  const ItemWithOverview: ComponentType<P & WithOverviewLinkTitle> = ({ overviewLinkTitle = 'Overview', ...rest }) => {
+  const ItemWithOverview: ComponentType<P & WithOverviewLink> = ({
+    OverviewLink = DefaultOverviewLink,
+    ...rest
+  }) => {
     const { node } = useNode();
     const linkNode = node.child<{ href: string }>('title$link');
     const overview = linkNode.data.href
-      ? <li><a href={linkNode.data.href}>{ overviewLinkTitle }</a></li>
+      ? <li><OverviewLink href={linkNode.data.href} /></li>
       : <></>;
 
     return (
