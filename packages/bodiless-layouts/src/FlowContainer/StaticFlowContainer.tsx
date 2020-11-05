@@ -64,7 +64,7 @@ const StaticFlowContainer: FC<StaticFlowContainerProps> = ({ components }) => {
 StaticFlowContainer.displayName = 'FlowContainer';
 
 const asStaticFlowContainer = flow(
-  designable(flowContainerComponentStart),
+  designable(flowContainerComponentStart, 'FlowContainer'),
 );
 
 export default asStaticFlowContainer(StaticFlowContainer);
