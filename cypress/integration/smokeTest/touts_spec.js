@@ -23,10 +23,10 @@ describe('Tout testing', function () {
   const title = 'AT - Title 1';
   const description = 'AT - Description 1';
   const ctaLabel = 'AT - CTA Link 1';
-  const toutUrl = 'AT-toutUrl1';
+  const toutUrl = '/AT-toutUrl1/';
   const imageAltText = 'AT-1stToutAltText';
   const editedPostfix = ' - edited';
-  const editedToutUrl = '-edited';
+  const editedToutUrl = 'edited/';
   const imagesFolderPath = "images";
   const imageNameOriginal = 'img_615x500.jpg';
   const imageNameUpdated = 'img_615x502.jpg';

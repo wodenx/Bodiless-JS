@@ -21,8 +21,8 @@ describe('Link Toggle smoke tests', function () {
 
 
   const label = 'AT - Label'
-  const url = 'AT-Url'
-  const editedPostfix = '-edited'
+  const url = '/AT-Url/'
+  const editedPostfix = 'edited/'
   const labelXpath = '//*[@data-linktoggle-element="link-toggle"]//*[@class="bodiless-inline-editable"]'
   const labelPreviewXpath = '//*[@data-linktoggle-element="link-toggle"]//span'
   const linkXpath = '//*[@data-linktoggle-element="link-toggle"]//a'

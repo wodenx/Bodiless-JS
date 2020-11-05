@@ -80,9 +80,11 @@ const options: BodilessOptions<Props, LinkData> = {
         <ComponentFormLabel htmlFor="link-href">URL</ComponentFormLabel>
         <ComponentFormText field="href" id="link-href" aria-describedby="description" placeholder="/link" />
         <ComponentFormDescription id="description">
-          Use relative URLs for internal links. Preface the link with `/` to be
-          relative to the root, otherwise the link is relative to the page. Use
-          a fully formed URL for external links, e.g., https://www.example.com.
+          Use a fully formed URL only for external links, e.g., https://www.example.com.
+          Internal links should be specified without a protocol or domain. Internal
+          links beginning with a &lsquo;.&rsquo; will be relative to the current page. Those not
+          beginning with a &lsquo;.&rsquo; will be prefixed with &lsquo;/&rsquo; and be relative to
+          the site root.  All links will have a trailing slash appended.
         </ComponentFormDescription>
         {unwrap && (
         <ComponentFormUnwrapButton type="button" onClick={removeLinkHandler}>
