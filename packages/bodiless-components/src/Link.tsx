@@ -100,4 +100,3 @@ export const asBodilessLink: AsBodilessLink = (
 );
 const Link = asBodilessLink()('a');
 export default Link;
-export type { Data as LinkData };
