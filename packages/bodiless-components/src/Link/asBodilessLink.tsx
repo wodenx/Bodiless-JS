@@ -58,7 +58,9 @@ const useLinkOverrides = (useOverrides: UseLinkOverrides = () => ({})): UseLinkO
 const options: BodilessOptions<Props, LinkData> = {
   icon: 'link',
   name: 'Link',
-  label: 'Link',
+  label: 'Edit',
+  groupLabel: 'Link',
+  groupMerge: 'merge',
   renderForm: ({ componentProps: { unwrap }, closeForm }) => {
     const {
       ComponentFormTitle,

@@ -18,6 +18,7 @@ import Image, {
   TImagePickerUI,
   withImagePlaceholder,
 } from './Image';
+import type { AsBodilessImage } from './Image';
 import NodeViewer from './NodeViewer';
 import withLinkToggle from './LinkToggle';
 import List from './List_DEPRECATED';
@@ -143,3 +144,8 @@ export * from './List';
 export * from './Link';
 
 export type { MetaFormFieldType, YouTubePlayerSettings };
+
+export type {
+  AsBodilessImage,
+  AsBodilessLink,
+};
