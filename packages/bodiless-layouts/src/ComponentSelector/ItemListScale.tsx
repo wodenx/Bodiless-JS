@@ -17,9 +17,10 @@ import React, {
   ReactNode,
   useState,
   Fragment,
+  PropsWithChildren,
 } from 'react';
 import Tooltip from 'rc-tooltip';
-import { DefaultContentNode } from '@bodiless/core';
+import { withNode } from '@bodiless/core';
 import 'rc-tooltip/assets/bootstrap.css';
 import uiContext from './uiContext';
 import { ComponentWithMeta, ItemListProps } from './types';
@@ -29,6 +30,9 @@ enum Scale {
   Half = 2,
   Quarter = 4
 }
+
+const ItemNodeProvider = withNode<PropsWithChildren<{}>, any>(Fragment);
+
 const ItemList: React.FC<ItemListProps> = props => {
   const { components, onSelect } = props;
   const finalUI = useContext(uiContext);
@@ -94,9 +98,9 @@ const ItemList: React.FC<ItemListProps> = props => {
           <div
             className="bl-outerTransform bl-relative bl-w-full bl-bg-white"
           >
-            <Component
-              node={DefaultContentNode.dummy(String(index), [])}
-            />
+            <ItemNodeProvider nodeKey={Component.nodeKey || String(index)}>
+              <Component />
+            </ItemNodeProvider>
           </div>
           <Tooltip
             placement="rightBottom"

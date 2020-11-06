@@ -56,6 +56,10 @@ export type ComponentWithMeta<P> = ComponentType<P> & {
    * Category and value pairs for facets
    */
   categories: Categories;
+  /**
+   * Optionsl nodekey for the data to render
+   */
+  nodeKey?: string;
 };
 export type ItemListProps = {
   components: ComponentWithMeta<any>[];
