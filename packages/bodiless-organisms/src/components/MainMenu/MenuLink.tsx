@@ -40,7 +40,6 @@ export type Props = {
   href?: string,
   isCurrentPage?: boolean,
   unwrap?: Function,
-
 } & DesignableComponentsProps<MenuLinkComponents> & HTMLProps<HTMLElement>;
 
 /**

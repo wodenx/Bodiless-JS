@@ -147,5 +147,4 @@ export type { MetaFormFieldType, YouTubePlayerSettings };
 
 export type {
   AsBodilessImage,
-  AsBodilessLink,
 };
