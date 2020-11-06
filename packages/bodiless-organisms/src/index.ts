@@ -12,6 +12,8 @@
  * limitations under the License.
  */
 
+import './main.css';
+
 export {
   SingleAccordion,
   SingleAccordionClean,
