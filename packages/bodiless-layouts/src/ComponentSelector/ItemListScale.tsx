@@ -17,10 +17,8 @@ import React, {
   ReactNode,
   useState,
   Fragment,
-  PropsWithChildren,
 } from 'react';
 import Tooltip from 'rc-tooltip';
-import { withNode } from '@bodiless/core';
 import 'rc-tooltip/assets/bootstrap.css';
 import uiContext from './uiContext';
 import { ComponentWithMeta, ItemListProps } from './types';
@@ -30,8 +28,6 @@ enum Scale {
   Half = 2,
   Quarter = 4
 }
-
-const ItemNodeProvider = withNode<PropsWithChildren<{}>, any>(Fragment);
 
 const ItemList: React.FC<ItemListProps> = props => {
   const { components, onSelect } = props;
@@ -89,7 +85,7 @@ const ItemList: React.FC<ItemListProps> = props => {
   reduce the result set to less than ${maxComponents} by filtering or searching.`;
 
   const elems: ReactNode[] = components.slice(0, maxComponents).map(
-    (Component: ComponentWithMeta<any>, index: number) => (
+    (Component: ComponentWithMeta<any>) => (
       <finalUI.ItemBoxWrapper style={boxStyle} key={Component.displayName}>
         <finalUI.ItemBox key={Component.displayName}>
           <finalUI.TitleWrapper style={outerStyle}>
@@ -98,9 +94,7 @@ const ItemList: React.FC<ItemListProps> = props => {
           <div
             className="bl-outerTransform bl-relative bl-w-full bl-bg-white"
           >
-            <ItemNodeProvider nodeKey={Component.nodeKey || String(index)}>
-              <Component />
-            </ItemNodeProvider>
+            <Component />
           </div>
           <Tooltip
             placement="rightBottom"

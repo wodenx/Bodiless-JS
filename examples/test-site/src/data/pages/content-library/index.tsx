@@ -20,7 +20,7 @@ import { asEditable } from '@bodiless/components';
 import {
   useNode, withContextActivator, withLocalContextMenu, withDefaultContent, withNode, withNodeKey,
 } from '@bodiless/core';
-import { H1, H2 } from '@bodiless/fclasses';
+import { H1, H2, addProps } from '@bodiless/fclasses';
 import { withContentLibrary } from '@bodiless/layouts';
 import { flow } from 'lodash';
 import { observer } from 'mobx-react-lite';
@@ -72,6 +72,11 @@ const library = {
   },
 };
 
+const useLibraryNode = () => {
+  const { node } = useNode();
+  return { node: node.peer('Page$___content$texts') };
+};
+
 const SnippetPrinter = () => {
   const { node } = useNode<{ text: string}>();
   const { text } = node.data;
@@ -87,9 +92,9 @@ const TextDemo = flow(
   withContextActivator('onClick'),
   withLocalContextMenu,
   withContentLibrary({
-    nodeKey: 'Page$___content$texts',
     DisplayComponent: SnippetPrinter,
   }),
+  addProps({ useLibraryNode }),
   asEditable(undefined, 'Text'),
   withNode,
   withNodeKey('text-library'),

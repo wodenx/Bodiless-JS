@@ -4,6 +4,8 @@ import {
   TMenuOption, withMenuOptions, NodeProvider,
 } from '@bodiless/core';
 import React, { ComponentType, FC } from 'react';
+import { withoutProps } from '@bodiless/fclasses';
+import { flow } from 'lodash';
 
 type ComponentLibraryData = {
   nodeKey: string,
@@ -16,9 +18,12 @@ export type ContentLibrarySelectorProps = {
 };
 
 export type ContentLibraryOptions = {
-  nodeKey: string,
   DisplayComponent?: ComponentType<any>,
   Selector?: ComponentType<ContentLibrarySelectorProps>,
+};
+
+export type ContentLibraryProps = {
+  useLibraryNode: (props: any) => { node: ContentNode<any> },
 };
 
 const DefaultDisplayComponent: FC = () => {
@@ -76,13 +81,13 @@ const copyNode = (source: ContentNode<any>, dest: ContentNode<any>, copyChildren
 
 const withContentLibrary = (options: ContentLibraryOptions) => {
   const {
-    nodeKey: libraryNodeKey,
     Selector = DefaultSelector,
     DisplayComponent = DefaultDisplayComponent,
   } = options;
-  const useMenuOptions = () => {
+  const useMenuOptions = (props: ContentLibraryProps) => {
     const { node: targetNode } = useNode();
-    const libraryNode = targetNode.peer(libraryNodeKey);
+    const { useLibraryNode } = props;
+    const { node: libraryNode } = useLibraryNode(props);
     const keys = childKeys(libraryNode);
     const components: { [key: string]: FC } = keys.reduce((acc, key) => {
       const ComponentWithNode: FC = () => (
@@ -123,7 +128,10 @@ const withContentLibrary = (options: ContentLibraryOptions) => {
     ];
     return menuOptions;
   };
-  return withMenuOptions({ useMenuOptions, name: 'Content Library' });
+  return flow(
+    withoutProps('useLibraryNode'),
+    withMenuOptions<ContentLibraryProps>({ useMenuOptions, name: 'Content Library' }),
+  );
 };
 
 export default withContentLibrary;

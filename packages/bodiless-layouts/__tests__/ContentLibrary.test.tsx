@@ -7,6 +7,7 @@ import {
 import React, { FC, Fragment } from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { flow } from 'lodash';
+import { addProps } from '@bodiless/fclasses';
 import withContentLibrary, { ContentLibrarySelectorProps } from '../src/ContentLibrary/withContentLibrary';
 
 const findContextMenuForm = (wrapper: ReactWrapper) => {
@@ -79,12 +80,15 @@ describe('withContentlibrary', () => {
       foo$bang: { foo: 'bang' },
       foo$bang$bop: { foobang: 'bop' },
     });
+    const useLibraryNode = () => ({ node: useNode().node.peer('foo') });
 
-    const Test = withContentLibrary({
-      nodeKey: 'foo',
-      DisplayComponent: TestDisplayComponent,
-      Selector: TestSelector,
-    })(Fragment);
+    const Test = flow(
+      withContentLibrary({
+        DisplayComponent: TestDisplayComponent,
+        Selector: TestSelector,
+      }),
+      addProps({ useLibraryNode }),
+    )(Fragment);
 
     const wrapper = mount((
       <MockNodeProvider store={store}>
@@ -105,13 +109,14 @@ describe('withContentlibrary', () => {
       foo$bang: { foo: 'bang' },
       foo$bang$bop: { foobang: 'bop' },
     });
+    const useLibraryNode = () => ({ node: useNode().node.peer('foo') });
 
     const Test = flow(
       withContentLibrary({
-        nodeKey: 'foo',
         DisplayComponent: TestDisplayComponent,
         Selector: TestSelector,
       }),
+      addProps({ useLibraryNode }),
       withNode,
       withNodeKey('flaboozle'),
     )(TestDisplayComponent);
