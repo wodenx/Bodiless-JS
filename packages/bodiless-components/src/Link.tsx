@@ -24,7 +24,7 @@ import type { AsBodiless, BodilessOptions } from '@bodiless/core';
 import { flowRight } from 'lodash';
 
 // Type of the data used by this component.
-type Data = {
+export type LinkData = {
   href: string;
 };
 
@@ -32,7 +32,7 @@ type Props = HTMLProps<HTMLAnchorElement> & {
   unwrap?: () => void,
 };
 
-const options: BodilessOptions<Props, Data> = {
+const options: BodilessOptions<Props, LinkData> = {
   icon: 'link',
   name: 'Link',
   label: 'Edit',
@@ -83,7 +83,7 @@ const withHrefTransformer = (Component : ComponentType<Props>) => {
   return TransformedHref;
 };
 
-export type AsBodilessLink = AsBodiless<Props, Data>;
+export type AsBodilessLink = AsBodiless<Props, LinkData>;
 
 export const asBodilessLink: AsBodilessLink = (
   nodeKeys,
@@ -94,7 +94,7 @@ export const asBodilessLink: AsBodilessLink = (
   ifEditable(
     withExtendHandler('onClick', () => (e: MouseEvent) => e.preventDefault()),
   ),
-  asBodilessComponent<Props, Data>(options)(nodeKeys, defaultData, useOverrides),
+  asBodilessComponent<Props, LinkData>(options)(nodeKeys, defaultData, useOverrides),
   withoutProps(['unwrap']),
   withHrefTransformer,
 );

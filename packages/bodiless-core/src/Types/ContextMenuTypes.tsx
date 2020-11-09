@@ -128,6 +128,11 @@ export type TMenuOption = {
    */
   context?: PageEditContextInterface;
   formTitle?: string;
+  /**
+   * If specified, used as the aria label of the button. If not specified
+   * the label will be used.
+   */
+  ariaLabel?: string|(() => string);
 };
 
 export type ButtonVariantProps = HTMLProps<HTMLDivElement> & {

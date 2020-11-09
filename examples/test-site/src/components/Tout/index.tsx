@@ -46,7 +46,7 @@ export const withToutEditors = flow(
     Link: flow(
       withEditorSimple('ctatext', 'CTA'),
       withSidecarNodes(
-        asEditableLink('link', undefined, () => ({ groupLabel: 'CTA', label: 'Link' })),
+        asEditableLink('link', undefined, () => ({ groupLabel: 'CTA' })),
       ),
       ifEditable(asNonDraggable),
     ),

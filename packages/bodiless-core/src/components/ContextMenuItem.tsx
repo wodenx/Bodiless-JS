@@ -33,6 +33,7 @@ const ContextMenuItem = observer((props: IProps) => {
   const isDisabled = option.isDisabled ? (typeof option.isDisabled === 'function' ? option.isDisabled() : option.isDisabled) : false;
   const isHidden = option.isHidden ? (typeof option.isHidden === 'function' ? option.isHidden() : option.isHidden) : false;
   const label = option.label ? (typeof option.label === 'function' ? option.label() : option.label) : '';
+  const ariaLabel = option.ariaLabel ? (typeof option.ariaLabel === 'function' ? option.ariaLabel() : option.ariaLabel) : (label || option.name);
   const icon = option.icon ? (typeof option.icon === 'function' ? option.icon() : option.icon) : '';
   const activateContext = option.activateContext
     ? (typeof option.activateContext === 'function'
@@ -70,7 +71,7 @@ const ContextMenuItem = observer((props: IProps) => {
       const formProps: ContextMenuFormProps = {
         closeForm: onFormClose,
         ui,
-        'aria-label': `Context Menu ${label || option.name} Form`,
+        'aria-label': `Context Menu ${ariaLabel} Form`,
       };
       return (
         <FormWrapper onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}>
@@ -101,7 +102,7 @@ const ContextMenuItem = observer((props: IProps) => {
         isDisabled={isDisabled}
         isFirst={isFirst}
         onClick={onToolbarButtonClick}
-        aria-label={label || option.name}
+        aria-label={ariaLabel || label || option.name}
       >
         <Icon isActive={isActive || isToolTipShown}>{icon}</Icon>
         {

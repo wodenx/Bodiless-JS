@@ -12,9 +12,9 @@
  * limitations under the License.
  */
 
-import { HTMLProps, ComponentType, PropsWithChildren } from 'react';
-import { DesignableComponentsProps, DesignableProps } from '@bodiless/fclasses';
-import { WithNodeProps, EditButtonOptions } from '@bodiless/core';
+import type { HTMLProps, ComponentType, PropsWithChildren } from 'react';
+import type { DesignableComponentsProps, DesignableProps } from '@bodiless/fclasses';
+import type { WithNodeProps, EditButtonOptions } from '@bodiless/core';
 
 export type ItemProps = {
   addItem: () => void,

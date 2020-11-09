@@ -104,7 +104,7 @@ const createMenuOptionHook = <P extends object, D extends object>(
       initialValueHandler,
       submitValueHandler,
     }));
-    const menuOption:TMenuOption = {
+    const menuOption = {
       ...rest,
       handler: () => render,
     };
