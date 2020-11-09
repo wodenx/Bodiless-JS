@@ -12,19 +12,21 @@ import { v4 } from 'uuid';
 import type { Token } from './TokenMap';
 import TokenMap from './TokenMap';
 
-type Tokens = {
+export type Tokens = {
   [key: string]: Token,
 };
 
-type TokenSelectorProps<P> = {
+export type TokenSelectorProps = {
   availableTokens: Tokens,
 };
 
-type TokenSelectorData = {
+export type TokenSelectorData = {
   tokens: string[],
 };
 
-const initialValueHandler = (data: TokenSelectorData) => (data.tokens || []).reduce((acc, next) => ({
+const initialValueHandler = (
+  data: TokenSelectorData,
+) => (data.tokens || []).reduce((acc, next) => ({
   ...acc,
   [next]: true,
 }), {});
@@ -62,7 +64,7 @@ const useCategoryCheckboxes = (map: TokenMap<any>) => {
 
 const useEditButtonOptions = (
   useOverrides: UseBodilessOverrides<any, any> = () => ({}),
-) => <P extends object>(props: P & TokenSelectorProps<P>): EditButtonOptions<any, any> => {
+) => <P extends object>(props: P & TokenSelectorProps): EditButtonOptions<any, any> => {
   const { availableTokens } = props;
   const map = new TokenMap<P>();
   map.add(availableTokens);
@@ -93,7 +95,7 @@ const useEditButtonOptions = (
 
 const withTokensFromData = <P extends TokensProps<P>>(Component: ComponentOrTag<P>) => {
   const WithTokensFromData = (
-    props: P & EditButtonProps<TokenSelectorData> & TokenSelectorProps<P>,
+    props: P & EditButtonProps<TokenSelectorData> & TokenSelectorProps,
   ) => {
     const { componentData, availableTokens, ...rest } = props;
     const { tokens: names } = componentData;

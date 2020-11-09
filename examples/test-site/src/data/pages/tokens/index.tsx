@@ -16,15 +16,18 @@ import { graphql } from 'gatsby';
 import { flow } from 'lodash';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  H1, withTokensFromProps, addProps, withDesign,
+  H1, withTokensFromProps, addProps, withDesign, addClasses,
 } from '@bodiless/fclasses';
 import { ToutClean } from '@bodiless/organisms';
+import { useNode } from '@bodiless/core';
 import Layout from '../../../components/Layout';
-import { asHeader1 } from '../../../components/Elements.token';
+import { asHeader1, asHeader3, asBold } from '../../../components/Elements.token';
 import { asEditableTout } from '../../../components/Tout';
 import withTokenSelector from './withTokenSelector';
 import * as availableTokens from '../../../components/Tout/token';
 import withTypographySelector from './TypographySelector';
+import TokenPanel from './TokenPanel';
+import { Checkbox } from 'informed';
 
 const DemoTokenSelectorTout = flow(
   asEditableTout,
@@ -38,19 +41,36 @@ const DemoTokenSelectorTout = flow(
   addProps({ availableTokens }),
 )(ToutClean);
 
+const withToutTokenNode = (Component: any) => (props: any) => {
+  const { node: currentNode } = useNode();
+  const node = currentNode.peer('Page$selector');
+  return <Component {...props} node={node} />;
+};
+
+const Panel = flow(
+  withToutTokenNode,
+  addProps({ availableTokens }),
+  withDesign({
+    Title: asHeader3,
+    Category: flow(asBold, addClasses('mt-2')),
+    CheckBox: addClasses('mr-2'),
+    Label: addClasses('block'),
+  })
+)(TokenPanel);
+
 const PageTitle = asHeader1(H1);
 export default (props: any) => (
   <Page {...props}>
     <Layout>
       <PageTitle>Tokens!</PageTitle>
       <p>Tools for tokens</p>
-      {/*
-      <div className="w-1/3">
-        <ToutOrientationToggle nodeKey="toggle" />
-      </div>
-      */}
-      <div className="w-1/3">
-        <DemoTokenSelectorTout />
+      <div className="flex">
+        <div className="w-2/3 p-5">
+          <DemoTokenSelectorTout />
+        </div>
+        <div className="w-1/3 p-5">
+          <Panel />
+        </div>
       </div>
     </Layout>
   </Page>
