@@ -16,12 +16,14 @@ import { graphql } from 'gatsby';
 import { flow } from 'lodash';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  H1, withTokensFromProps, addProps, withDesign,
+  H1, withTokensFromProps, addProps, withDesign, replaceWith,
 } from '@bodiless/fclasses';
 import { ToutClean } from '@bodiless/organisms';
 import {
-  withActivateOnEffect,
+  withActivateOnEffect, withNodeKey,
 } from '@bodiless/core';
+import { FlowContainer } from '@bodiless/layouts-ui';
+import { withTitle, withDesc } from '@bodiless/layouts';
 import Layout from '../../../components/Layout';
 import { asHeader1 } from '../../../components/Elements.token';
 import { asEditableTout } from '../../../components/Tout';
@@ -29,6 +31,7 @@ import * as availableTokens from '../../../components/Tout/token';
 import { withTypographyTokenPanel } from './TypographySelector';
 import TokenPanelWrapper, { withTokenPanelPane } from './TokenPanelWrapper';
 import withReactivateOnRemount from './withRectivateOnRemount';
+
 
 const DemoTokenPanelTout = flow(
   withDesign({
@@ -57,6 +60,18 @@ const DemoTokenPanelTout = flow(
 
 const PageTitle = asHeader1(H1);
 
+const DemoFlowContainer = flow(
+  withDesign({
+    Tout: flow(
+      replaceWith(DemoTokenPanelTout),
+      withTitle('Tout'),
+      withDesc('A way to tout a call to Action.'),
+    ),
+  }),
+  addProps({ maxComponents: 1 }),
+  withNodeKey('demo'),
+)(FlowContainer);
+
 export default (props: any) => (
   <Page {...props}>
     <Layout>
@@ -64,7 +79,7 @@ export default (props: any) => (
       <p>Tools for tokens</p>
       <div className="flex">
         <div className="w-2/3 p-5">
-          <DemoTokenPanelTout />
+          <DemoFlowContainer />
         </div>
         <div className="w-1/3 p-5">
           <TokenPanelWrapper />

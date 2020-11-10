@@ -64,7 +64,9 @@ const asToutWithPaddings$ = withDesign({
 });
 
 const asToutTextWhite$ = withDesign({
-  ContentWrapper: addClasses('text-white'),
+  // ContentWrapper: addClasses('text-white'),
+  Title: addClasses('text-white'),
+  Body: addClasses('text-white'),
 });
 
 const asToutHorizontal = asToken('Orientation')(asToutHorizontal$);
