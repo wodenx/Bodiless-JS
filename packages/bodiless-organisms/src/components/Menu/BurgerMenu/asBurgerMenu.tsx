@@ -39,12 +39,11 @@ const asBurgerMenuOverviewLink = <P extends object>(Item: ComponentType<P>) => {
   }) => {
     const { node } = useNode();
     const linkNode = node.child<{ href: string }>('title$link');
-    const overview = linkNode.data.href
-      ? <li><OverviewLink href={linkNode.data.href} /></li>
-      : <></>;
+    const overview = <li><OverviewLink href={linkNode.data.href} /></li>;
+    const overviewProps = linkNode.data.href ? { overview } : undefined;
 
     return (
-      <Item overview={overview} {...rest as P} />
+      <Item {...overviewProps} {...rest as P} />
     );
   };
 

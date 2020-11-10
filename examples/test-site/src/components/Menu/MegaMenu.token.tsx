@@ -14,16 +14,9 @@
 
 import { flow } from 'lodash';
 import { withDesign, addClasses } from '@bodiless/fclasses';
+import { withMegaMenuDesign } from '@bodiless/organisms';
 
 import {
-  asToutWithPaddings,
-  asToutDefaultStyle,
-  asToutHorizontal,
-  asToutTextWhite,
-} from '../Tout/token';
-
-import {
-  asSimpleSubMenu,
   withBaseMenuStyles,
   withBaseSubMenuStyles,
 } from './SimpleMenu.token';
@@ -32,49 +25,29 @@ import {
  * Touts Sub Menu Styles
  * ===========================================
  */
-const withMenuToutStyles = flow(
-  asToutTextWhite,
-  asToutWithPaddings,
-  asToutDefaultStyle,
-  asToutHorizontal,
-);
-
-const withToutStyles = withDesign({
+const asToutsSubmenu = withDesign({
   Item: addClasses('w-1/3'),
 });
-
-const asToutsSubMenu = flow(
-  withToutStyles,
-  withBaseSubMenuStyles,
-);
 
 /**
  * Columns Sub Menu Styles
  * ===========================================
  */
-const withColumnStyles = flow(
-  withDesign({
-    Item: addClasses('hover:bg-teal-500 min-w-100'),
-    Title: addClasses('hover:bg-teal-500 block w-full px-3 pl-5'),
+const asColumnSubMenu = withDesign({
+  Item: withDesign({
+    Title: addClasses('pl-5'),
   }),
-);
-
-const asColumnSubMenu = flow(
-  withDesign({
-    Item: withColumnStyles,
-  }),
-  withBaseSubMenuStyles,
-);
+});
 
 /**
  * Mega Menu Sub Menu Styles
  * ===========================================
  */
-
-const asMegaMenuSubListStyles = withDesign({
-  List: asSimpleSubMenu,
-  Touts: asToutsSubMenu,
-  Columns: asColumnSubMenu,
+const withMegaMenuSubMenuStyles = withDesign({
+  Item: withDesign({
+    Touts: asToutsSubmenu,
+    Columns: asColumnSubMenu,
+  }),
 });
 
 /**
@@ -82,13 +55,9 @@ const asMegaMenuSubListStyles = withDesign({
  * ===========================================
  */
 const withMegaMenuStyles = flow(
-  withDesign({
-    Item: asMegaMenuSubListStyles,
-  }),
+  withMegaMenuSubMenuStyles,
+  withMegaMenuDesign(withBaseSubMenuStyles),
   withBaseMenuStyles,
 );
 
 export default withMegaMenuStyles;
-export {
-  withMenuToutStyles,
-};

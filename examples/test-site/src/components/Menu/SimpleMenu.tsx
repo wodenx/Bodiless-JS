@@ -17,6 +17,7 @@ import { flow } from 'lodash';
 import { asStatic } from '@bodiless/core';
 import {
   addClasses, withDesign, replaceWith, Div,
+  withoutProps,
 } from '@bodiless/fclasses';
 import {
   asMenuLink, asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenuTopNav,
@@ -34,6 +35,7 @@ const asMenuTitle = flow(
 );
 
 const SimpleMenuBase = flow(
+  withoutProps(['design']),
   asSimpleMenuBase(),
   withSimpleMenuDesign({
     Title: asMenuTitle,

@@ -14,6 +14,7 @@
 
 import { flow } from 'lodash';
 import { withDesign, addClasses } from '@bodiless/fclasses';
+import { withSimpleMenuDesign } from '@bodiless/organisms';
 
 /**
  * Base Menu Styles
@@ -38,31 +39,16 @@ const withBaseSubMenuStyles = withDesign({
 });
 
 /**
- * Simple Sub Menu Styles
- * ===========================================
- */
-const asSimpleSubMenu = flow(
-  withBaseSubMenuStyles,
-);
-
-const asSimpleSubMenuStyles = withDesign({
-  SubMenu: asSimpleSubMenu,
-});
-
-/**
  * Simple Menu Styles
  * ===========================================
  */
 const withSimpleMenuStyles = flow(
-  withDesign({
-    Item: asSimpleSubMenuStyles,
-  }),
+  withSimpleMenuDesign(withBaseSubMenuStyles),
   withBaseMenuStyles,
 );
 
 export default withSimpleMenuStyles;
 export {
-  asSimpleSubMenu,
   withBaseMenuStyles,
   withBaseSubMenuStyles,
 };
