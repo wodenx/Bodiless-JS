@@ -31,7 +31,20 @@ import * as availableTokens from '../../../components/Tout/token';
 import { withTypographyTokenPanel } from './TypographySelector';
 import TokenPanelWrapper, { withTokenPanelPane } from './TokenPanelWrapper';
 import withReactivateOnRemount from './withRectivateOnRemount';
+import TokenPrinter from './TokenPrinter';
 
+const Foo = addProps({ tokens: ['c', 'd'] })(TokenPrinter);
+const Bing = addProps({ tokens: ['e', 'f'] })(TokenPrinter);
+const Bar = addProps({ components: { Bing } })(TokenPrinter);
+const Baz = TokenPrinter;
+
+const TokenPrinterWrapper = () => (
+  <pre>
+    <code>
+      <TokenPrinter tokens={['a', 'b']} components={{ Foo, Bar, Baz }} />
+    </code>
+  </pre>
+);
 
 const DemoTokenPanelTout = flow(
   withDesign({
@@ -80,6 +93,7 @@ export default (props: any) => (
       <div className="flex">
         <div className="w-2/3 p-5">
           <DemoFlowContainer />
+          <TokenPrinterWrapper />
         </div>
         <div className="w-1/3 p-5">
           <TokenPanelWrapper />

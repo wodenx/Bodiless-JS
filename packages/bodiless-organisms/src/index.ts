@@ -46,6 +46,10 @@ export {
   asTestableTout,
 } from './components/Touts';
 
+export type {
+  ToutComponents,
+} from './components/Touts';
+
 export {
   Product,
   ProductClean,
