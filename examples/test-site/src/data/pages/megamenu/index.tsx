@@ -59,8 +59,6 @@ const DescList = addClasses('list-disc ml-5')(Ul);
 
 export default (props: any) => (
   <Page {...props}>
-    {/*
-      */}
     <Layout>
       <H1>Menu V2</H1>
       <Description>
@@ -69,7 +67,9 @@ export default (props: any) => (
       </Description>
 
       <H2>Simple Menu</H2>
-      <ResponsiveSimpleMenu nodeKey="list2" />
+      <div>
+        <ResponsiveSimpleMenu nodeKey="list2" />
+      </div>
       <Description>
         This is a simple menu with one level of submenu. Click on a menu item in edit mode
         to display a local context menu. &quot;Add&quot; and &quot;Delete&quot; buttons
@@ -83,7 +83,9 @@ export default (props: any) => (
       <SimpleMenuList nodeKey="list2" />
 
       <H2>Mega Menu</H2>
-      <ResponsiveMegaMenu nodeKey="list1" />
+      <div>
+        <ResponsiveMegaMenu nodeKey="list1" />
+      </div>
       <Description>
         <p>
           This is a &quot;mega&quot; menu.
@@ -118,10 +120,6 @@ export default (props: any) => (
       </Description>
       <H3>Mega Menu as list</H3>
       <MegaMenuList nodeKey="list1" />
-      {/*
-      <H3>Mega Menu Breadcrumbs</H3>
-      <MegaMenuBreadcrumbs nodeKey="list1" />
-      */}
       <DataPreviewContainer>
         <H2>Data</H2>
         <H3>Simple Menu Data</H3>

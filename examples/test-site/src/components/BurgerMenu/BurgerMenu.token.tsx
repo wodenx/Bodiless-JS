@@ -16,7 +16,9 @@ import { flow } from 'lodash';
 import { withDesign, addProps } from '@bodiless/fclasses';
 
 import { asDefaultLogoStyle } from '../Layout/token';
-import { asPrimaryColorBackground, withPadding1, asTealBackground } from '../Elements.token';
+import {
+  asPrimaryColorBackground, withPadding1, asTealBackground, asMobileOnly,
+} from '../Elements.token';
 
 /**
  * Burger Menu Styles
@@ -26,6 +28,7 @@ const withBurgerMenuStyles = withDesign({
   Wrapper: flow(
     withPadding1,
     asTealBackground,
+    asMobileOnly,
   ),
   Header: flow(
     asDefaultLogoStyle,
