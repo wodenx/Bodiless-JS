@@ -92,22 +92,22 @@ const ComponentSelector: React.FC<ComponentSelectorProps> = props => {
     <ComponentDisplayModeProvider mode={ComponentDisplayMode.ComponentSelector}>
       <uiContext.Provider value={finalUI}>
         <finalUI.MasterWrapper>
-
-          <finalUI.FlexSection>
-            <AllCheckbox
-              activeFilter={activeFilters}
-              setActiveFilters={setActiveFilters}
-              activeSearch={activeSearch}
-              setActiveSearch={setActiveSearch}
-            />
-            <FilterWrapper
-              activeFilter={activeFilters}
-              setActiveFilters={setActiveFilters}
-              allfilters={allFilters}
-              filters={filters}
-            />
-          </finalUI.FlexSection>
-
+          {Object.getOwnPropertyNames(allFilters).length > 0 && (
+            <finalUI.FlexSection>
+              <AllCheckbox
+                activeFilter={activeFilters}
+                setActiveFilters={setActiveFilters}
+                activeSearch={activeSearch}
+                setActiveSearch={setActiveSearch}
+              />
+              <FilterWrapper
+                activeFilter={activeFilters}
+                setActiveFilters={setActiveFilters}
+                allfilters={allFilters}
+                filters={filters}
+              />
+            </finalUI.FlexSection>
+          )}
           <finalUI.FlexSectionFull>
             <finalUI.ComponentTitleWrapper>
               Components
