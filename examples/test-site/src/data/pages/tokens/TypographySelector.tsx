@@ -17,6 +17,7 @@ import {
 } from '../../../components/Elements.token';
 import { asToken } from './TokenMap';
 import withTokenSelector from './withTokenSelector';
+import { withTokenPanelPane } from './TokenPanelWrapper';
 
 const availableTokens = {
   asBold: asToken('Style')(asBold),
@@ -40,6 +41,15 @@ const withTypographySelector = (
 ) => flow(
   withTokensFromProps,
   withTokenSelector(nodeKey, defaultData, useOverrides),
+  addProps({ availableTokens }),
+);
+
+export const withTypographyTokenPanel = (
+  nodeKey: WithNodeKeyProps,
+  defaultData?: any,
+) => flow(
+  withTokensFromProps,
+  withTokenPanelPane(nodeKey, defaultData),
   addProps({ availableTokens }),
 );
 

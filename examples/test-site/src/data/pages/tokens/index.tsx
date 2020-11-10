@@ -16,49 +16,47 @@ import { graphql } from 'gatsby';
 import { flow } from 'lodash';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  H1, withTokensFromProps, addProps, withDesign, addClasses,
+  H1, withTokensFromProps, addProps, withDesign,
 } from '@bodiless/fclasses';
 import { ToutClean } from '@bodiless/organisms';
-import { useNode } from '@bodiless/core';
+import {
+  withActivateOnEffect,
+} from '@bodiless/core';
 import Layout from '../../../components/Layout';
-import { asHeader1, asHeader3, asBold } from '../../../components/Elements.token';
+import { asHeader1 } from '../../../components/Elements.token';
 import { asEditableTout } from '../../../components/Tout';
-import withTokenSelector from './withTokenSelector';
 import * as availableTokens from '../../../components/Tout/token';
-import withTypographySelector from './TypographySelector';
-import TokenPanel from './TokenPanel';
-import { Checkbox } from 'informed';
+import { withTypographyTokenPanel } from './TypographySelector';
+import TokenPanelWrapper, { withTokenPanelPane } from './TokenPanelWrapper';
+import withReactivateOnRemount from './withRectivateOnRemount';
 
-const DemoTokenSelectorTout = flow(
+const DemoTokenPanelTout = flow(
+  withDesign({
+    Title: withReactivateOnRemount('title'),
+    Body: withReactivateOnRemount('body'),
+    Image: withReactivateOnRemount('image'),
+    Link: withReactivateOnRemount('link'),
+  }),
   asEditableTout,
   withDesign({
-    Title: withTypographySelector('title-selector', undefined, () => ({ groupLabel: 'Title' })),
-    Body: withTypographySelector('body-selector', undefined, () => ({ groupLabel: 'Body' })),
-    // Link: withTypographySelector('link-selector', undefined, () => ({ groupLabel: 'CTA' })),
+    Title: flow(
+      withTypographyTokenPanel('title-selector'),
+      addProps({ tokenPanelTitle: 'Title Tokens' }),
+    ),
+    Body: flow(
+      withTypographyTokenPanel('body-selector'),
+      addProps({ tokenPanelTitle: 'Body Tokens' }),
+    ),
   }),
   withTokensFromProps,
-  withTokenSelector('selector', undefined, () => ({ groupLabel: 'Tout', groupMerge: 'none' })),
-  addProps({ availableTokens }),
+  withReactivateOnRemount('tout'),
+  withTokenPanelPane('selector'),
+  addProps({ availableTokens, tokenPanelTitle: 'Tout Tokens' }),
+  withActivateOnEffect,
 )(ToutClean);
 
-const withToutTokenNode = (Component: any) => (props: any) => {
-  const { node: currentNode } = useNode();
-  const node = currentNode.peer('Page$selector');
-  return <Component {...props} node={node} />;
-};
-
-const Panel = flow(
-  withToutTokenNode,
-  addProps({ availableTokens }),
-  withDesign({
-    Title: asHeader3,
-    Category: flow(asBold, addClasses('mt-2')),
-    CheckBox: addClasses('mr-2'),
-    Label: addClasses('block'),
-  })
-)(TokenPanel);
-
 const PageTitle = asHeader1(H1);
+
 export default (props: any) => (
   <Page {...props}>
     <Layout>
@@ -66,10 +64,10 @@ export default (props: any) => (
       <p>Tools for tokens</p>
       <div className="flex">
         <div className="w-2/3 p-5">
-          <DemoTokenSelectorTout />
+          <DemoTokenPanelTout />
         </div>
         <div className="w-1/3 p-5">
-          <Panel />
+          <TokenPanelWrapper />
         </div>
       </div>
     </Layout>

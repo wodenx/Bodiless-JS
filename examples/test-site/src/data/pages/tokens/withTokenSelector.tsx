@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { ComponentType } from 'react';
+import { createHash } from 'crypto';
 import {
   useMenuOptionUI, WithNodeKeyProps, withNodeKey, withNode, ifEditable,
   withLocalContextMenu, withContextActivator, withEditButton, withNodeDataHandlers,
@@ -93,7 +94,7 @@ const useEditButtonOptions = (
   return { ...defaults, ...useOverrides(props) };
 };
 
-const withTokensFromData = <P extends TokensProps<P>>(Component: ComponentOrTag<P>) => {
+export const withTokensFromData = <P extends TokensProps<P>>(Component: ComponentOrTag<P>) => {
   const WithTokensFromData = (
     props: P & EditButtonProps<TokenSelectorData> & TokenSelectorProps,
   ) => {
@@ -105,14 +106,21 @@ const withTokensFromData = <P extends TokensProps<P>>(Component: ComponentOrTag<
   return WithTokensFromData;
 };
 
-const withKeyFromData = (C: any) => (p: any) => {
-  // Forces re-mount of the component when data changes.
-  // Necessary to apply the tokens selected by the editor, since
-  // they are only applied at mount.
-  const { componentData } = p;
-  // @TODO Replace this with a hash
-  const key = JSON.stringify(componentData);
-  return <C {...p} key={key} />;
+/**
+ * Forces a remount of the component when its data change.
+ * This allows tokens and designs to be applied dynamically,
+ * since they are only applied in the component constructor.
+ *
+ * @param Component The component to remount
+ */
+export const withKeyFromData = <P extends { componentData: any }>(Component: ComponentType<P>) => {
+  const WithKeyFromData = (props: P) => {
+    const { componentData } = props;
+    const json = JSON.stringify(componentData);
+    const key = createHash('md5').update(json).digest('hex');
+    return <Component {...props} key={key} />;
+  };
+  return WithKeyFromData;
 };
 
 const withTokenSelector = (

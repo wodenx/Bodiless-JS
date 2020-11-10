@@ -2,7 +2,10 @@ import { ContentNode } from '@bodiless/core/src';
 import React, {
   ComponentType, HTMLProps, FC, useCallback, Fragment,
 } from 'react';
-import { DesignableComponentsProps, designable, Div, H4, H5, Label, Input } from '@bodiless/fclasses';
+import {
+  DesignableComponentsProps, designable, Div, H4, H5,
+  Label as StylableLabel, Input,
+} from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { TokenSelectorProps, TokenSelectorData } from './withTokenSelector';
@@ -10,6 +13,7 @@ import TokenMap from './TokenMap';
 
 type TokenPanelComponents = {
   Wrapper: ComponentType<any>,
+  Body: ComponentType<any>,
   Title: ComponentType<any>,
   Category: ComponentType<any>,
   Label: ComponentType<HTMLProps<HTMLLabelElement>>,
@@ -18,13 +22,14 @@ type TokenPanelComponents = {
 
 const tokenPanelComponents: TokenPanelComponents = {
   Wrapper: Div,
+  Body: Div,
   Title: H4,
   Category: H5,
-  Label,
+  Label: StylableLabel,
   CheckBox: Input,
 };
 
-type TokenPanelProps = TokenSelectorProps & {
+export type TokenPanelProps = TokenSelectorProps & {
   node: ContentNode<TokenSelectorData>,
   title?: string,
 } & DesignableComponentsProps<TokenPanelComponents>;
@@ -36,9 +41,9 @@ const TokenPanelBase: FC<TokenPanelProps> = props => {
   const map = new TokenMap<any>();
   map.add(availableTokens);
   const {
-    Wrapper, Title, Label, Category, CheckBox,
+    Wrapper, Title, Label, Category, CheckBox, Body,
   } = components;
-  const { tokens } = node.data;
+  const { tokens = [] } = node.data;
   const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const tokenSet = new Set(node.data.tokens);
     if (e.target.checked) tokenSet.add(e.target.name);
@@ -59,7 +64,9 @@ const TokenPanelBase: FC<TokenPanelProps> = props => {
   return (
     <Wrapper>
       <Title>{title}</Title>
-      {checkboxes}
+      <Body>
+        {checkboxes}
+      </Body>
     </Wrapper>
   );
 };
