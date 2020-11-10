@@ -45,8 +45,8 @@ const withPadding3 = addClasses('p-3');
 const withPadding5 = addClasses('p-5');
 
 /* Responsive design */
-const asMobileOnly = addClasses('block lg:hidden');
-const asExceptMobile = addClasses('hidden lg:block');
+const asMobileOnly = addClasses('lg:hidden');
+const asDesktopOnly = addClasses('hidden lg:flex');
 
 /* Primary coloring */
 const asPrimaryColorBackground = addClasses('bg-gray-200');
@@ -94,7 +94,7 @@ export {
   asAlignRight,
   asAlignCenter,
   asAlignJustify,
-  asExceptMobile,
+  asDesktopOnly,
   asHeader1,
   asHeader2,
   asHeader3,
