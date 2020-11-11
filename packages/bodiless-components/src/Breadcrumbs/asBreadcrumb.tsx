@@ -34,6 +34,19 @@ export type BreadcrumbSettings = {
 };
 
 /**
+ * hook that checks whether the component is rendered the first time
+ *
+ * @returns true when the component is rendered the first time, otherwise false
+ */
+const useIsFirstRender = () => {
+  const isMounted = useRef(false);
+  useEffect(() => {
+    isMounted.current = true;
+  }, []);
+  return !isMounted.current;
+};
+
+/**
  * Creates an HOC which specifies that a wrapped component is a breadcrumb. The HOC
  * will read link and title from the specified nodekeys and will push link and title
  * to the breadcrumb store. Once the wrapped component is unmounted, the corresponding link
@@ -68,7 +81,15 @@ const asBreadcrumb = ({
       parent: current,
       store,
     });
-    store.setItem(item);
+    const isFirstRender = useIsFirstRender();
+    // hit breadcrumb store during first render
+    // so that get breadcrumbs generated during server-side rendering
+    if (isFirstRender) {
+      store.setItem(item);
+    }
+    useEffect(() => {
+      store.setItem(item);
+    }, [titleNode.data, linkNode.data]);
     // deleting item from store on unmount
     useEffect(() => () => {
       store.deleteItem(contextUuidRef.current);

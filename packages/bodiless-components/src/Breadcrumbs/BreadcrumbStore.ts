@@ -44,6 +44,7 @@ export type BreadcrumbItemType = {
   isDescendantOf: (item: BreadcrumbItemType) => boolean;
   isEqual: (item: BreadcrumbItemType | string) => boolean;
   isFirst: () => boolean;
+  isLast: () => boolean;
   getAncestors: () => BreadcrumbItemType[];
   parent: BreadcrumbItemType | undefined;
 };
@@ -125,6 +126,11 @@ export class BreadcrumbItem implements BreadcrumbItemType {
     return this.parent === undefined;
   }
 
+  isLast(): boolean {
+    const lastTrailItem = this._store.breadcrumbTrail[this._store.breadcrumbTrail.length - 1];
+    return this._uuid === lastTrailItem.uuid;
+  }
+
   getAncestors() {
     const ancestors = [];
     for (let current = this._parent;
@@ -168,7 +174,7 @@ export type BreadcrumbStoreType = {
   getPagePath: () => string;
   breadcrumbTrail: BreadcrumbItemType[];
   export: () => BreadcrumbItemType[];
-  hasLastItem: () => boolean;
+  hasCurrentPageItem: () => boolean;
 };
 
 /**
@@ -249,7 +255,7 @@ export class BreadcrumbStore implements BreadcrumbStoreType {
     return Array.from(this.items.values());
   }
 
-  hasLastItem() {
+  hasCurrentPageItem() {
     return this.activeItem !== undefined && this.activeItem.hasPath(this.pagePath);
   }
 }

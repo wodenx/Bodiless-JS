@@ -13,7 +13,7 @@
  */
 
 import Editable, { withPlaceholder, asEditable } from './Editable';
-import { asBodilessLink } from './Link';
+import { asBodilessLink, withoutLinkWhenLinkDataEmpty } from './Link';
 import type { AsBodilessLink } from './Link';
 import Image, {
   asBodilessImage,
@@ -77,6 +77,7 @@ import withBodilessLinkToggle from './withBodilessLinkToggle';
 export {
   withBodilessLinkToggle,
   asBodilessLink,
+  withoutLinkWhenLinkDataEmpty,
   Image,
   asBodilessImage,
   withImagePlaceholder,

@@ -92,8 +92,23 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
  * it renders all list and sublist items but produces no markup.
  */
 const withEmptyMenuMarkup = flow(
-  withSubMenuDesign({
-    Item: replaceWith(Fragment),
+  // can not use withSubMenuDesign({ Item: replaceWith(Fragment) }) here
+  // as far as we will break Columns sublist items
+  // due to design prop removal from Columns.Item element
+  withDesign({
+    Item: withDesign({
+      List: withDesign({
+        Item: replaceWith(Fragment),
+      }),
+      Touts: withDesign({
+        Item: replaceWith(Fragment),
+      }),
+      Columns: withDesign({
+        Item: withDesign({
+          Item: replaceWith(Fragment),
+        }),
+      }),
+    }),
   }),
   withMenuDesign({
     Wrapper: replaceWith(Fragment),

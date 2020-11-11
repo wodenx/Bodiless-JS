@@ -35,13 +35,13 @@ const Container = flow(
 )(Div);
 
 const BaseLayout = ({ children, components }) => {
-  const { Breadcrumb } = components;
+  const { Breadcrumbs } = components;
   return (
     <>
       <SeoHelmet />
       <SiteHeader />
       <Container>
-        { Breadcrumb && <Breadcrumb />}
+        { Breadcrumbs && <Breadcrumbs />}
         {children}
       </Container>
       <SiteFooter />
@@ -52,7 +52,7 @@ const BaseLayout = ({ children, components }) => {
 const isHomePage = () => useNode().node.pagePath === '/';
 
 const Layout = designable({
-  Breadcrumb: flow(
+  Breadcrumbs: flow(
     withNodeKey({ nodeKey: 'MainMenu', nodeCollection: 'site' }),
     addClasses('pt-2'),
     // hide breadcrumbs on home page

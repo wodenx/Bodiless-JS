@@ -13,7 +13,7 @@
  */
 
 import React, { ComponentType, HTMLProps } from 'react';
-import { useNode } from '@bodiless/core';
+import { useNode, withoutProps } from '@bodiless/core';
 import type { WithNodeKeyProps, WithNodeProps } from '@bodiless/core';
 import { asComponent, designable, addProps } from '@bodiless/fclasses';
 import type { DesignableComponentsProps } from '@bodiless/fclasses';
@@ -26,16 +26,21 @@ type BreadcrumbsComponents = {
   StartingTrail: ComponentType<HTMLProps<HTMLSpanElement>>,
   Separator: ComponentType<HTMLProps<HTMLSpanElement>>,
   BreadcrumbWrapper: ComponentType<HTMLProps<HTMLUListElement>>,
-  BreadcrumbItem: ComponentType<HTMLProps<HTMLLIElement>>,
+  BreadcrumbItem: ComponentType<HTMLProps<HTMLLIElement> & {
+    position: number;
+    isCurrentPage: boolean;
+  }>,
   BreadcrumbLink: ComponentType<HTMLProps<HTMLAnchorElement> & WithNodeKeyProps>,
   BreadcrumbTitle: ComponentType<HTMLProps<HTMLSpanElement> & WithNodeKeyProps>,
   FinalTrail: ComponentType<HTMLProps<HTMLSpanElement>>,
 };
 
-type BreadcrumbItemKeys = {
+type CleanBreadcrumbItemType = {
   uuid: string | number;
   title: WithNodeProps;
   link: WithNodeProps;
+  position: number;
+  isCurrentPage: boolean;
 };
 
 /**
@@ -65,7 +70,7 @@ type BreadcrumbsProps = DesignableComponentsProps<BreadcrumbsComponents> & {
   /**
    * list of breadcrumb items to render
    */
-  items?: BreadcrumbItemKeys[],
+  items?: CleanBreadcrumbItemType[],
   /**
    * whether final custom item is enabled and should be rendered
    */
@@ -122,12 +127,15 @@ const BreadcrumbsClean$ = (props: CleanBreadcrumbsProps) => {
     BreadcrumbTitle,
     FinalTrail,
   } = components;
-  const items$ = items.map((item: BreadcrumbItemKeys, index: number) => {
+  const items$ = items.map((item: CleanBreadcrumbItemType, index: number) => {
     const isLastItem = index === (items.length - 1);
+    const { position, isCurrentPage } = item;
+    // increment position by 1 if there is starting trail item
+    const position$ = hasStartingTrail$ ? position + 1 : position;
     if (isLastItem && renderLastItemWithoutLink$) {
       return (
         <React.Fragment key={item.uuid}>
-          <BreadcrumbItem>
+          <BreadcrumbItem position={position$} isCurrentPage={isCurrentPage}>
             <BreadcrumbTitle
               nodeKey={item.title.nodeKey}
               nodeCollection={item.title.nodeCollection}
@@ -138,7 +146,7 @@ const BreadcrumbsClean$ = (props: CleanBreadcrumbsProps) => {
     }
     return (
       <React.Fragment key={item.uuid}>
-        <BreadcrumbItem>
+        <BreadcrumbItem position={position$} isCurrentPage={isCurrentPage}>
           <BreadcrumbLink nodeKey={item.link.nodeKey} nodeCollection={item.link.nodeCollection}>
             <BreadcrumbTitle
               nodeKey={item.title.nodeKey}
@@ -150,12 +158,13 @@ const BreadcrumbsClean$ = (props: CleanBreadcrumbsProps) => {
       </React.Fragment>
     );
   });
+  const finalTrailItemPosition = (hasStartingTrail$ ? 1 : 0) + items$.length + 1;
   return (
     <BreadcrumbWrapper>
       { hasStartingTrail$
         && (
         <>
-          <BreadcrumbItem key="startingTrail">
+          <BreadcrumbItem position={1} isCurrentPage={false} key="startingTrail">
             <StartingTrail />
           </BreadcrumbItem>
           { (items$.length > 0 || hasFinalTrail$)
@@ -168,7 +177,7 @@ const BreadcrumbsClean$ = (props: CleanBreadcrumbsProps) => {
         <>
           { items$.length > 0
             && <Separator key="finalTrailSeparator" />}
-          <BreadcrumbItem key="finalTrail">
+          <BreadcrumbItem key="finalTrail" position={finalTrailItemPosition} isCurrentPage={false}>
             <FinalTrail />
           </BreadcrumbItem>
         </>
@@ -181,7 +190,10 @@ const BreadcrumbStartComponents: BreadcrumbsComponents = {
   StartingTrail: asComponent('span'),
   Separator: asComponent('span'),
   BreadcrumbWrapper: asComponent('ul'),
-  BreadcrumbItem: asComponent('li'),
+  BreadcrumbItem: flowRight(
+    withoutProps(['position', 'isCurrentPage']),
+    asComponent,
+  )('li'),
   BreadcrumbLink: asComponent('a'),
   BreadcrumbTitle: asComponent('span'),
   FinalTrail: asComponent('span'),
@@ -221,8 +233,8 @@ const withBreadcrumbItemsFromStore = (Component: ComponentType<BreadcrumbsProps 
       // automatic eslint fix brings code to unreadable state
       // probably that is an eslint plugin issue
       // the disabled rule is enabled back after reduce
-      .reduce<BreadcrumbItemKeys[]>(
-        (prev, current) => {
+      .reduce<CleanBreadcrumbItemType[]>(
+        (prev, current, index) => {
           if (current === undefined) return prev;
           const linkNodePath = current.link.nodePath.replace(`${basePath}$`, '');
           const titleNodePath = current.title.nodePath.replace(`${basePath}$`, '');
@@ -236,13 +248,15 @@ const withBreadcrumbItemsFromStore = (Component: ComponentType<BreadcrumbsProps 
               nodeKey: titleNodePath,
               nodeCollection,
             },
+            position: index + 1,
+            isCurrentPage: current.isLast() && store.hasCurrentPageItem(),
           });
           return prev;
         }, [],
       );
     /* eslint-enable @typescript-eslint/indent */
     const hasFinalTrail$0 = typeof hasFinalTrail === 'function' ? hasFinalTrail() : hasFinalTrail;
-    const hasFinalTrail$1 = hasFinalTrail$0 && !store.hasLastItem();
+    const hasFinalTrail$1 = hasFinalTrail$0 && !store.hasCurrentPageItem();
     const lastItemWithoutLink = typeof renderLastItemWithoutLink === 'function'
       ? renderLastItemWithoutLink()
       : renderLastItemWithoutLink;
@@ -251,7 +265,9 @@ const withBreadcrumbItemsFromStore = (Component: ComponentType<BreadcrumbsProps 
       items,
       hasFinalTrail: hasFinalTrail$1,
       hasStartingTrail,
-      renderLastItemWithoutLink: lastItemWithoutLink && !hasFinalTrail$1 && store.hasLastItem(),
+      renderLastItemWithoutLink: lastItemWithoutLink
+        && !hasFinalTrail$1
+        && store.hasCurrentPageItem(),
     };
     return <Component {...props$1} />;
   };

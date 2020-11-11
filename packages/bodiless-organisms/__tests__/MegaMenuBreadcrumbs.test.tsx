@@ -118,4 +118,25 @@ describe('asBreadcrumbsClean', () => {
     const wrapper = mount(<Breadcrumb />);
     expect(wrapper.html()).toMatchSnapshot();
   });
+  it('creates breadcrumbs for 3-level Columns MegaMenu', () => {
+    setPagePath('/products/productA/subProduct');
+    const Breadcrumb = createBreadcrumbComponent({
+      content: {
+        ...generateMegaMenuContent('Columns'),
+        testMenu$products$sublist$productA$sublist: {
+          items: [
+            'subProduct',
+          ],
+        },
+        testMenu$products$sublist$productA$sublist$subProduct$title$link: {
+          href: '/products/productA/subProduct',
+        },
+        testMenu$products$sublist$productA$sublist$subProduct$title$text: {
+          text: 'SubProduct',
+        },
+      },
+    });
+    const wrapper = mount(<Breadcrumb />);
+    expect(wrapper.html()).toMatchSnapshot();
+  });
 });

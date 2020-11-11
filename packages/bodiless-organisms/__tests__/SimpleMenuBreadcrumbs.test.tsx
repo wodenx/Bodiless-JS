@@ -15,9 +15,13 @@
 import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mount } from 'enzyme';
-import { withDefaultContent, withSidecarNodes } from '@bodiless/core';
+import { withDefaultContent, withSidecarNodes, ifToggledOn } from '@bodiless/core';
 import { asBodilessLink, asEditable, withBreadcrumbStartingTrail } from '@bodiless/components';
-import { replaceWith, withDesign } from '@bodiless/fclasses';
+import {
+  replaceWith,
+  withDesign,
+  addProps,
+} from '@bodiless/fclasses';
 import { flowRight } from 'lodash';
 import type { BreadcrumbStoreItemsReducer } from '@bodiless/components';
 
@@ -223,6 +227,36 @@ describe('asBreadcrumbsClean', () => {
       content: generate2LevelMenuContent(),
     });
     const wrapper = mount(<Breadcrumb renderLastItemWithoutLink={false} />);
+    expect(wrapper.html()).toMatchSnapshot();
+  });
+  it('allows styling current page item derived from menu', () => {
+    setPagePath('/products/productA');
+    const BaseBreadcrumbs = createBreadcrumbComponent({
+      content: generate2LevelMenuContent(),
+    });
+    const Breadcrumbs = flowRight(
+      withDesign({
+        BreadcrumbItem: ifToggledOn(
+          ({ isCurrentPage }: any) => isCurrentPage,
+        )(addProps({ className: 'font-bold' })),
+      }),
+    )(BaseBreadcrumbs);
+    const wrapper = mount(<Breadcrumbs />);
+    expect(wrapper.html()).toMatchSnapshot();
+  });
+  it('does not apply current page styles to the item which is the last derived from the menu but not current page path', () => {
+    setPagePath('/products/nonExistingProduct');
+    const BaseBreadcrumbs = createBreadcrumbComponent({
+      content: generate2LevelMenuContent(),
+    });
+    const Breadcrumbs = flowRight(
+      withDesign({
+        BreadcrumbItem: ifToggledOn(
+          ({ isCurrentPage }: any) => isCurrentPage,
+        )(addProps({ className: 'font-bold' })),
+      }),
+    )(BaseBreadcrumbs);
+    const wrapper = mount(<Breadcrumbs />);
     expect(wrapper.html()).toMatchSnapshot();
   });
 });
