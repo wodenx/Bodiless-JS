@@ -41,7 +41,11 @@ const menuComponentsStart:MenuComponents = {
 const MenuClean: FC<DesignableComponentsProps<MenuComponents>> = ({ components, ...rest }) => {
   const { Menu } = components;
 
-  return <Menu {...rest} />;
+  return (
+    <nav aria-label="Navigation Menu">
+      <Menu {...rest} />
+    </nav>
+  );
 };
 
 const ResponsiveMenuClean = designable(menuComponentsStart)(MenuClean);

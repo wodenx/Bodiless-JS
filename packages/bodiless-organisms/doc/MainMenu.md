@@ -97,7 +97,7 @@ const withDemoMenuStyles = withDesign({
 // Define Sub Menu Styles
 const asDemoSubMenu = withDesign({
   Wrapper: withDesign({
-  WrapperItem: addClasses('parent_menu_item'),
+    WrapperItem: addClasses('parent_menu_item'),
     List: addClasses('sub_menu_wrapper'),
   }),
   Title: addClasses('sub_menu_title'),
@@ -133,7 +133,7 @@ const withDemoMenuStyles = withDesign({
 // Define Sub Menu Styles
 const asDemoSubMenu = withDesign({
   Wrapper: withDesign({
-  WrapperItem: addClasses('parent_menu_item'),
+    WrapperItem: addClasses('parent_menu_item'),
     List: addClasses('sub_menu_wrapper'),
   }),
   Title: addClasses('sub_menu_title'),

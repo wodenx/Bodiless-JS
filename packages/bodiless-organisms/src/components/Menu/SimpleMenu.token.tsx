@@ -15,8 +15,9 @@
 import { flow } from 'lodash';
 import { useEditContext } from '@bodiless/core';
 import {
-  withDesign, addClasses, addClassesIf, removeClassesIf, stylable,
+  withDesign, addClasses, addProps, addClassesIf, removeClassesIf, stylable,
 } from '@bodiless/fclasses';
+import { withSubListDesign } from '@bodiless/components';
 
 import { useIsMenuOpen } from './withMenuContext';
 /*
@@ -57,6 +58,29 @@ const asStylableList = withDesign({
   Item: stylable,
   Title: stylable,
 });
+
+/**
+ * Accessibility Features
+ * ===========================================
+ */
+const asAccessibleMenu = withDesign({
+  Wrapper: addProps({ role: 'menubar', 'aria-label': 'Navigation Menu' }),
+  Item: addProps({ tabIndex: 0, role: 'menuitem' }),
+});
+
+const asAccessibleSubMenu = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: addProps({ 'aria-haspopup': true }),
+    List: addProps({ role: 'menu', 'aria-label': 'Navigation Sub Menu' }),
+  }),
+  Item: addProps({ role: 'none' }),
+  Title: addProps({ role: 'menuitem' }),
+});
+
+const asAccessibleSimpleMenu = flow(
+  withSubListDesign(1)({ SubMenu: asAccessibleSubMenu }),
+  asAccessibleMenu,
+);
 
 /*
  * Base Menu Styles
@@ -116,6 +140,7 @@ const asSimpleMenuTopNav = flow(
     Item: asSimpleSubMenuStyles,
   }),
   withBaseMenuStyles,
+  asAccessibleSimpleMenu,
 );
 
 export default asSimpleMenuTopNav;
@@ -125,4 +150,6 @@ export {
   asSimpleSubMenu,
   asStylableList,
   asRelative,
+  asAccessibleMenu,
+  asAccessibleSubMenu,
 };
