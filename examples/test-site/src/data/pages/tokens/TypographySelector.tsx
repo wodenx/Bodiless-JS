@@ -1,5 +1,5 @@
 import { WithNodeKeyProps, UseBodilessOverrides } from '@bodiless/core';
-import { addProps, withTokensFromProps } from '@bodiless/fclasses';
+import { addProps, withTokensFromProps, addClasses } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import {
   asBold,
@@ -32,6 +32,7 @@ const availableTokens = {
   asPrimaryColorBackground: asToken('Color')(asPrimaryColorBackground),
   asSuperScript: asToken('Style')(asSuperScript),
   asTextColorPrimary: asToken('Color')(asTextColorPrimary),
+  // asTextWhite: asToken('Color')(addClasses('text-white')),
 };
 
 const withTypographySelector = (

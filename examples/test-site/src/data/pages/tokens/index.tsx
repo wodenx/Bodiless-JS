@@ -64,7 +64,7 @@ const withTokenData = (nodeKey: string) => flow(
 );
 
 const ToutTokenPrinter = flow(
-  withTokenPrinterKeys(['Title', 'Body']),
+  withTokenPrinterKeys(['Title', 'Body', 'Link']),
   withDesign({
     Title: withTokenData('title-selector'),
     Body: withTokenData('body-selector'),
@@ -105,21 +105,21 @@ const DemoTokenPanelTout = flow(
   withDesign({
     Title: flow(
       withTypographyTokenPanel('title-selector'),
-      addProps({ tokenPanelTitle: 'Tkitle Tokens' }),
+      addProps({ tokenPanelTitle: 'Title' }),
     ),
     Body: flow(
       withTypographyTokenPanel('body-selector'),
-      addProps({ tokenPanelTitle: 'Body Tokens' }),
+      addProps({ tokenPanelTitle: 'Body' }),
     ),
     Link: flow(
       withTypographyTokenPanel('link-selector'),
-      addProps({ tokenPanelTitle: 'CTA Tokens' }),
+      addProps({ tokenPanelTitle: 'CTA' }),
     ),
   }),
   withTokensFromProps,
   withReactivateOnRemount('tout'),
   withTokenPanelPane('selector'),
-  addProps({ availableTokens, tokenPanelTitle: 'Tout Tokens' }),
+  addProps({ availableTokens, tokenPanelTitle: 'Tout' }),
   withActivateOnEffect,
 )(ToutClean);
 
