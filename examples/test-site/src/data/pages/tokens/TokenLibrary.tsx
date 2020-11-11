@@ -94,7 +94,7 @@ const useEditButtonOptions = (): EditButtonOptions<any, any> => {
   };
   return {
     name: 'token-library',
-    label: 'Token',
+    label: 'New Token',
     icon: 'extension',
     renderForm,
     initialValueHandler,
