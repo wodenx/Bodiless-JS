@@ -14,14 +14,28 @@
 
 import { flow } from 'lodash';
 import { withMegaMenuDesign } from '@bodiless/organisms';
+import { withDesign, replaceWith, A } from '@bodiless/fclasses';
 
 import { withBaseBurgerMenuStyles, baseBurgerSubMenuStyles } from './SimpleBurgerMenu.token';
+
+const asToutTitle = flow(
+  withDesign({
+    _default: replaceWith(A),
+  }),
+);
 
 /**
  * Mega Menu Styles
  * ===========================================
  */
 const withMegaBurgerMenuStyles = flow(
+  withDesign({
+    Item: withDesign({
+      Touts: withDesign({
+        Title: asToutTitle,
+      }),
+    }),
+  }),
   withMegaMenuDesign(baseBurgerSubMenuStyles),
   withBaseBurgerMenuStyles,
 );
