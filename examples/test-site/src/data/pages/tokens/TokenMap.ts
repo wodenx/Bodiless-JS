@@ -6,6 +6,9 @@ export type HOC<P = any> = (C: ComponentOrTag<P>) => ComponentOrTag<P>;
 export type Token<P = any> = HOC<P> & {
   category?: string;
 };
+export type Tokens<P = any> = {
+  [key: string]: Token<P>,
+};
 
 export const asToken = <P extends object>(category?: string) => (...hocs: HOC<P>[]) => {
   const token: Token<P> = flow(...hocs);
@@ -40,7 +43,7 @@ class TokenMap<P> {
     this.map.set(name, token);
   }
 
-  add(tokens: { [key: string]: Token }) {
+  add(tokens: Tokens) {
     Object.keys(tokens).forEach(
       key => this.set(key, tokens[key]),
     );

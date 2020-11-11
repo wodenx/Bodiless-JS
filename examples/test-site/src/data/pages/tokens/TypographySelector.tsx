@@ -1,6 +1,7 @@
 import { WithNodeKeyProps, UseBodilessOverrides } from '@bodiless/core';
 import { addProps, withTokensFromProps, addClasses } from '@bodiless/fclasses';
 import { flow } from 'lodash';
+import React, { ComponentType } from 'react';
 import {
   asBold,
   asItalic,
@@ -16,8 +17,9 @@ import {
   asTextColorPrimary,
 } from '../../../components/Elements.token';
 import { asToken } from './TokenMap';
-import withTokenSelector from './withTokenSelector';
+import withTokenSelector, { TokenSelectorProps } from './withTokenSelector';
 import { withTokenPanelPane } from './TokenPanelWrapper';
+import { useTokenLibrary } from './TokenLibrary';
 
 const availableTokens = {
   asBold: asToken('Style')(asBold),
@@ -32,7 +34,23 @@ const availableTokens = {
   asPrimaryColorBackground: asToken('Color')(asPrimaryColorBackground),
   asSuperScript: asToken('Style')(asSuperScript),
   asTextColorPrimary: asToken('Color')(asTextColorPrimary),
-  // asTextWhite: asToken('Color')(addClasses('text-white')),
+  // asTextWhite: asToken('Clor')(addClasses('text-white')),
+};
+
+const withDataTokens = (target: string) => <P extends object>(
+  Component: ComponentType<P & TokenSelectorProps>,
+) => {
+  const WithDataTokens = (props: P & TokenSelectorProps) => {
+    const dataTokens = useTokenLibrary(target);
+    const { availableTokens: propTokens, ...rest } = props;
+    return (
+      <Component
+        {...rest as P}
+        availableTokens={{ ...propTokens, ...dataTokens }}
+      />
+    );
+  };
+  return WithDataTokens;
 };
 
 const withTypographySelector = (
@@ -42,6 +60,7 @@ const withTypographySelector = (
 ) => flow(
   withTokensFromProps,
   withTokenSelector(nodeKey, defaultData, useOverrides),
+  withDataTokens('typography'),
   addProps({ availableTokens }),
 );
 
@@ -51,6 +70,7 @@ export const withTypographyTokenPanel = (
 ) => flow(
   withTokensFromProps,
   withTokenPanelPane(nodeKey, defaultData),
+  withDataTokens('typography'),
   addProps({ availableTokens }),
 );
 

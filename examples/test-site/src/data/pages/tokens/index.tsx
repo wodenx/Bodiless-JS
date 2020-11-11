@@ -38,6 +38,7 @@ import TokenPanelWrapper, { withTokenPanelPane } from './TokenPanelWrapper';
 import withReactivateOnRemount from './withRectivateOnRemount';
 import TokenPrinter, { withTokenPrinterKeys } from './TokenPrinter';
 import { withTokenNamesFromData } from './withTokenSelector';
+import TokenLibrary from './TokenLibrary';
 
 const withFlowContainerFirstItemNode = (nodeKey: string) => <P extends object>(
   Component: ComponentType<P & WithNodeKeyProps>,
@@ -141,19 +142,21 @@ const DemoFlowContainer = flow(
 export default (props: any) => (
   <Page {...props}>
     <Layout>
-      <PageTitle>Tokens!</PageTitle>
-      <p>Tools for tokens</p>
-      <div className="flex">
-        <div className="w-2/3 p-5">
-          <ColumnHeader>Component</ColumnHeader>
-          <TokenPrinterAccordion />
-          <DemoFlowContainer />
+      <TokenLibrary>
+        <PageTitle>Tokens!</PageTitle>
+        <p>Tools for tokens</p>
+        <div className="flex">
+          <div className="w-2/3 p-5">
+            <ColumnHeader>Component</ColumnHeader>
+            <TokenPrinterAccordion />
+            <DemoFlowContainer />
+          </div>
+          <div className="w-1/3 p-5">
+            <ColumnHeader>Tokens</ColumnHeader>
+            <TokenPanelWrapper />
+          </div>
         </div>
-        <div className="w-1/3 p-5">
-          <ColumnHeader>Tokens</ColumnHeader>
-          <TokenPanelWrapper />
-        </div>
-      </div>
+      </TokenLibrary>
     </Layout>
   </Page>
 );
