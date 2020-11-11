@@ -11,40 +11,88 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, { ComponentType } from 'react';
 import { graphql } from 'gatsby';
 import { flow } from 'lodash';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  H1, withTokensFromProps, addProps, withDesign, replaceWith,
+  H1, withTokensFromProps, addProps, withDesign, replaceWith, H3, H2, addClasses,
 } from '@bodiless/fclasses';
-import { ToutClean } from '@bodiless/organisms';
 import {
-  withActivateOnEffect, withNodeKey,
+  ToutClean, asAccordionBody, asAccodionTitle, asAccordionWrapper,
+} from '@bodiless/organisms';
+import {
+  withActivateOnEffect, withNodeKey, WithNodeKeyProps, withNode, withNodeDataHandlers,
 } from '@bodiless/core';
 import { FlowContainer } from '@bodiless/layouts-ui';
 import { withTitle, withDesc } from '@bodiless/layouts';
+import { useNode } from '@bodiless/core/src';
 import Layout from '../../../components/Layout';
-import { asHeader1 } from '../../../components/Elements.token';
+import {
+  asHeader1, asPrimaryColorBackground, asHeader3, asHeader2,
+} from '../../../components/Elements.token';
 import { asEditableTout } from '../../../components/Tout';
 import * as availableTokens from '../../../components/Tout/token';
 import { withTypographyTokenPanel } from './TypographySelector';
 import TokenPanelWrapper, { withTokenPanelPane } from './TokenPanelWrapper';
 import withReactivateOnRemount from './withRectivateOnRemount';
-import TokenPrinter from './TokenPrinter';
+import TokenPrinter, { withTokenPrinterKeys } from './TokenPrinter';
+import { withTokenNamesFromData } from './withTokenSelector';
 
-const Foo = addProps({ tokens: ['c', 'd'] })(TokenPrinter);
-const Bing = addProps({ tokens: ['e', 'f'] })(TokenPrinter);
-const Bar = addProps({ components: { Bing } })(TokenPrinter);
-const Baz = TokenPrinter;
+const withFlowContainerFirstItemNode = (nodeKey: string) => <P extends object>(
+  Component: ComponentType<P & WithNodeKeyProps>,
+) => {
+  const ComponentWithNode = withNode(Component);
+  const WithFlowContainerFirstItemNode = (props: P) => {
+    const { node } = useNode<any>();
+    const { items } = node.data;
+    return items[0]?.uuid
+      ? <ComponentWithNode {...props} nodeKey={items[0].uuid} />
+      : <Component {...props} />;
+  };
+  return flow(
+    withNode,
+    withNodeKey(nodeKey),
+  )(WithFlowContainerFirstItemNode);
+};
 
-const TokenPrinterWrapper = () => (
+const withTokenData = (nodeKey: string) => flow(
+  withTokenNamesFromData,
+  withNodeDataHandlers(),
+  withNode,
+  withNodeKey(nodeKey),
+);
+
+const ToutTokenPrinter = flow(
+  withTokenPrinterKeys(['Title', 'Body']),
+  withDesign({
+    Title: withTokenData('title-selector'),
+    Body: withTokenData('body-selector'),
+    Link: withTokenData('link-selector'),
+  }),
+  withTokenData('selector'),
+  withFlowContainerFirstItemNode('demo'),
+)(TokenPrinter);
+
+const TokenPrinterBody = asAccordionBody(() => (
   <pre>
     <code>
-      <TokenPrinter tokens={['a', 'b']} components={{ Foo, Bar, Baz }} />
+      <ToutTokenPrinter />
     </code>
   </pre>
-);
+));
+const TokenPrinterTitle = flow(
+  asPrimaryColorBackground,
+  asHeader3,
+  asAccodionTitle,
+)(H3);
+
+const TokenPrinterAccordion = asAccordionWrapper(() => (
+  <div>
+    <TokenPrinterTitle>Code</TokenPrinterTitle>
+    <TokenPrinterBody />
+  </div>
+));
 
 const DemoTokenPanelTout = flow(
   withDesign({
@@ -57,11 +105,15 @@ const DemoTokenPanelTout = flow(
   withDesign({
     Title: flow(
       withTypographyTokenPanel('title-selector'),
-      addProps({ tokenPanelTitle: 'Title Tokens' }),
+      addProps({ tokenPanelTitle: 'Tkitle Tokens' }),
     ),
     Body: flow(
       withTypographyTokenPanel('body-selector'),
       addProps({ tokenPanelTitle: 'Body Tokens' }),
+    ),
+    Link: flow(
+      withTypographyTokenPanel('link-selector'),
+      addProps({ tokenPanelTitle: 'CTA Tokens' }),
     ),
   }),
   withTokensFromProps,
@@ -72,6 +124,7 @@ const DemoTokenPanelTout = flow(
 )(ToutClean);
 
 const PageTitle = asHeader1(H1);
+const ColumnHeader = flow(asHeader2, addClasses('my-2'))(H2);
 
 const DemoFlowContainer = flow(
   withDesign({
@@ -92,10 +145,12 @@ export default (props: any) => (
       <p>Tools for tokens</p>
       <div className="flex">
         <div className="w-2/3 p-5">
+          <ColumnHeader>Component</ColumnHeader>
+          <TokenPrinterAccordion />
           <DemoFlowContainer />
-          <TokenPrinterWrapper />
         </div>
         <div className="w-1/3 p-5">
+          <ColumnHeader>Tokens</ColumnHeader>
           <TokenPanelWrapper />
         </div>
       </div>

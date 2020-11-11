@@ -24,8 +24,8 @@ class TokenMap<P> {
     const categories = new Set<string>();
     this.map.forEach(value => {
       if (value.category) categories.add(value.category);
+      else categories.add('Other');
     });
-    categories.add('Other');
     return Array.from(categories.values());
   }
 

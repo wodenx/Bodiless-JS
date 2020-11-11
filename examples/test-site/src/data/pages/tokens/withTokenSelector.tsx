@@ -106,6 +106,17 @@ export const withTokensFromData = <P extends TokensProps<P>>(Component: Componen
   return WithTokensFromData;
 };
 
+export const withTokenNamesFromData = <P extends TokensProps<P>>(Component: ComponentOrTag<P>) => {
+  const WithTokenNamesFromData = (
+    props: P & EditButtonProps<TokenSelectorData> & TokenSelectorProps,
+  ) => {
+    const { componentData, ...rest } = props;
+    const { tokens } = componentData;
+    return <Component {...rest as P} tokens={tokens} />;
+  };
+  return WithTokenNamesFromData;
+};
+
 /**
  * Forces a remount of the component when its data change.
  * This allows tokens and designs to be applied dynamically,

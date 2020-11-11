@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { DesignableComponents } from '@bodiless/fclasses';
+import { DesignableComponents, designable } from '@bodiless/fclasses';
 
 type TokenPrinterProps = {
   designKey?: string;
@@ -23,6 +23,7 @@ const TokenPrinter: FC<TokenPrinterProps> = props => {
     const C = components[key];
     return <C designKey={key} depth={depth + 2} />;
   }).filter(Boolean);
+  console.log(rows, designRows);
   if (!rows.length && !designRows.length) return null;
   const designHeader = designRows.length > 0
     ? `${indent(depth + 1)}withDesign({\n` : null;
@@ -39,6 +40,14 @@ const TokenPrinter: FC<TokenPrinterProps> = props => {
       {footer}
     </>
   );
+};
+
+export const withTokenPrinterKeys = (keys: string[]) => {
+  const startComponents = keys.reduce((acc, key) => ({
+    ...acc,
+    [key]: TokenPrinter,
+  }), {});
+  return designable(startComponents);
 };
 
 export default TokenPrinter;
