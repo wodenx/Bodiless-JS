@@ -47,7 +47,8 @@ const withFlowContainerFirstItemNode = (nodeKey: string) => <P extends object>(
   const WithFlowContainerFirstItemNode = (props: P) => {
     const { node } = useNode<any>();
     const { items } = node.data;
-    return items[0]?.uuid
+    const item = items && items[0];
+    return item?.uuid
       ? <ComponentWithNode {...props} nodeKey={items[0].uuid} />
       : <Component {...props} />;
   };
