@@ -23,12 +23,11 @@ import {
   Ul,
   stylable,
 } from '@bodiless/fclasses';
-import { withoutLinkWhenLinkDataEmpty } from '@bodiless/components';
+import { withoutLinkWhenLinkDataEmpty, Breadcrumbs as BreadcrumbsBase } from '@bodiless/components';
 import {
-  asSimpleMenuBase,
-  asSimpleMenuBreadcrumbs,
   asMegaMenuBreadcrumbs,
   asMegaMenuBase,
+  asSimpleMenuBreadcrumbSource,
 } from '@bodiless/organisms';
 
 import { EditorSimple } from '../Editors';
@@ -88,15 +87,15 @@ const withMenuBreadcrumbsStyles = flow(
   withArrowSeparator,
 );
 
+const asBreadcrumbSource = asSimpleMenuBreadcrumbSource({
+  linkNodeKey: 'title$link',
+  titleNodeKey: 'title$text',
+});
+
 const Breadcrumbs = flow(
-  asSimpleMenuBase(),
-  asSimpleMenuBreadcrumbs({
-    linkNodeKey: 'title$link',
-    titleNodeKey: 'title$text',
-  }),
   withMenuBreadcrumbSchema,
   withMenuBreadcrumbsStyles,
-)('ul');
+)(BreadcrumbsBase);
 
 const MegaMenuBreadcrumbs = flow(
   asMegaMenuBase(),
@@ -110,6 +109,7 @@ const MegaMenuBreadcrumbs = flow(
 
 export default Breadcrumbs;
 export {
+  asBreadcrumbSource,
   DEFAULT_STARTING_TRAIL_NODE_KEY,
   DEFAULT_FINAL_TRAIL_NODE_KEY,
   MegaMenuBreadcrumbs,

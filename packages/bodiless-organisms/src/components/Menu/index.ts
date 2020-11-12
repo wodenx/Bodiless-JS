@@ -22,6 +22,7 @@ import {
   asMenuBase as asSimpleMenuBase,
   withMenuDesign as withSimpleMenuDesign,
   asBreadcrumbsClean as asSimpleMenuBreadcrumbs,
+  asBreadcrumbSource as asSimpleMenuBreadcrumbSource,
 } from './SimpleMenu';
 
 import { useIsMenuOpen } from './withMenuContext';
@@ -43,6 +44,7 @@ export {
   asSimpleMenuBase,
   withSimpleMenuDesign,
   asSimpleMenuBreadcrumbs,
+  asSimpleMenuBreadcrumbSource,
 };
 
 export {

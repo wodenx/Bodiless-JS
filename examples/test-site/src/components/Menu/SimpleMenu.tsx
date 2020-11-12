@@ -23,6 +23,7 @@ import {
 import { asMenuTitle } from './MegaMenu';
 import withSimpleMenuStyles from './SimpleMenu.token';
 import { asDesktopOnly } from '../Elements.token';
+import { asBreadcrumbSource } from '../Breadcrumbs/MenuBreadcrumbs';
 
 const SimpleMenuBase = flow(
   withoutProps(['design']),
@@ -34,6 +35,7 @@ const SimpleMenuBase = flow(
 
 const SimpleMenu = flow(
   withSimpleMenuStyles,
+  asBreadcrumbSource,
   asSimpleMenuTopNav,
   asDesktopOnly,
 )(SimpleMenuBase);
