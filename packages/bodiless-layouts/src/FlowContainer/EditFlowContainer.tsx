@@ -105,7 +105,7 @@ const asEditFlowContainer = flowRight(
   designable(EditFlowContainerComponents, 'FlowContainer'),
   withMenuOptions({
     useMenuOptions,
-    name: 'FlowContainer',
+    name: 'Flow Container',
   }),
   observer,
 );
