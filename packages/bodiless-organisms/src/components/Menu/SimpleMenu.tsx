@@ -103,6 +103,14 @@ const withEmptyMenuMarkup = flow(
   }),
 );
 
+const asBreadcrumbSource = (settings: BreadcrumbSettings) => flow(
+  withMenuDesign({
+    Item: flow(
+      asBreadcrumb(settings),
+    ),
+  }),
+);
+
 /**
  * Creates a HOC which can be applied to a mega menu to make it into a site's breadcrumbs
  *
@@ -112,14 +120,10 @@ const withEmptyMenuMarkup = flow(
  */
 const asBreadcrumbsClean = (settings: BreadcrumbSettings) => flow(
   withEmptyMenuMarkup,
-  withMenuDesign({
-    Item: flow(
-      asBreadcrumb(settings),
-    ),
-  }),
+  asBreadcrumbSource(settings),
   withBreadcrumbs,
 );
 
 export {
-  asMenuBase, asBreadcrumbsClean, withMenuDesign, asMenuSubList,
+  asMenuBase, asBreadcrumbsClean, asBreadcrumbSource, withMenuDesign, asMenuSubList,
 };
