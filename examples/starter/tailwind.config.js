@@ -358,11 +358,7 @@ module.exports = {
     |
     */
 
-    maxHeight: {
-      // Used to limit the maximum height of menu.
-      // See src/components/Menus/token.tsx for usage.
-      'menu-row': '1.75rem',
-    },
+    // maxHeight: {},
 
     /*
     |---------------------------------------------------------------------------

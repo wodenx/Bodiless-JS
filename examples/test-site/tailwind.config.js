@@ -182,10 +182,9 @@ module.exports = {
     |
     */
 
-    backgroundColor: theme => ({
-      ...theme('colors'),
-      'burger-menu': '#D7D7D7',
-    }),
+    // backgroundColor: theme => ({
+    //   ...theme('colors'),
+    // }),
 
     /*
     |---------------------------------------------------------------------------
@@ -361,10 +360,7 @@ module.exports = {
     |
     */
 
-    maxHeight: {
-      // Used to limit the maximum height of menu
-      'menu-row': '1.75rem',
-    },
+    // maxHeight: {},
 
     /*
     |---------------------------------------------------------------------------
