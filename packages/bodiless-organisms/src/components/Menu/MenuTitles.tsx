@@ -16,12 +16,13 @@ import { flow, identity } from 'lodash';
 import {
   withNode, withNodeKey, withSidecarNodes,
 } from '@bodiless/core';
-import { replaceWith, HOC, stylable } from '@bodiless/fclasses';
 import {
-  asBodilessLink, withBodilessLinkToggle,
+  replaceWith, HOC, stylable, Span, A,
+} from '@bodiless/fclasses';
+import {
+  asBodilessLink, withBodilessLinkToggle, useBreadcrumbContext, useBreadcrumbStore,
 } from '@bodiless/components';
 import { ToutClean } from '../Touts';
-import MenuLink from './MenuLink';
 
 export const asMenuTout = (withToutEditors: any) => flow(
   replaceWith(ToutClean),
@@ -30,10 +31,25 @@ export const asMenuTout = (withToutEditors: any) => flow(
   withNodeKey('title'),
 );
 
-export const asMenuLink = (asEditable: HOC) => flow(
-  replaceWith(MenuLink),
+enum TrailStatus { Current, Active, Inactive }
+
+const useTrailStatus = (): TrailStatus => {
+  const item = useBreadcrumbContext();
+  const store = useBreadcrumbStore();
+  if (item && store) {
+    // if (store.hasCurrentPageItem()) return TrailStatus.Current;
+    if (store.breadcrumbTrail.find(tItem => tItem.isEqual(item))) return TrailStatus.Active;
+  }
+  return TrailStatus.Inactive;
+}
+
+export const useIsActiveTrail = () => useTrailStatus() === TrailStatus.Active;
+export const useIsCurrentPage = () => useTrailStatus() === TrailStatus.Current;
+
+export const asMenuLink = (asEditable: HOC, asOff: HOC = replaceWith(Span)) => flow(
+  replaceWith(A),
   withSidecarNodes(
-    withBodilessLinkToggle(asBodilessLink)('link'),
+    withBodilessLinkToggle(asBodilessLink, asOff)('link'),
   ),
   stylable,
   asEditable,

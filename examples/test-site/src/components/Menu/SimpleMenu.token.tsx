@@ -16,14 +16,26 @@ import { flow } from 'lodash';
 import { withDesign, addClasses } from '@bodiless/fclasses';
 import { withSimpleMenuDesign } from '@bodiless/organisms';
 
+import { useIsCurrentPage, useIsActiveTrail } from '@bodiless/organisms/src/components/Menu/MenuTitles';
+
+import { ifToggledOn } from '@bodiless/core';
+
+const withTitleStyles = flow(
+  addClasses('hover:bg-teal-500 block w-full px-3'),
+  withDesign({
+    Link: ifToggledOn(useIsActiveTrail)(addClasses('text-orange-700')),
+    _default: ifToggledOn(useIsActiveTrail)(addClasses('text-orange-700')),
+  })
+);
+
 /**
  * Base Menu Styles
  * ===========================================
  */
 const withBaseMenuStyles = withDesign({
   Wrapper: addClasses('w-full bg-teal-600 text-white'),
-  Item: addClasses('hover:bg-teal-500 leading-loose text-sm'),
-  Title: addClasses('block w-full px-3'),
+  Item: addClasses('leading-loose text-sm'),
+  Title: withTitleStyles,
 });
 
 /**
@@ -35,7 +47,7 @@ const withBaseSubMenuStyles = withDesign({
     List: addClasses('bg-teal-600 text-white z-10'),
   }),
   Item: addClasses('leading-loose text-sm'),
-  Title: addClasses('hover:bg-teal-500 block w-full px-3'),
+  Title: withTitleStyles,
 });
 
 /**
