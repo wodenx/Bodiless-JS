@@ -31,20 +31,28 @@ export const asMenuTout = (withToutEditors: any) => flow(
   withNodeKey('title'),
 );
 
-enum TrailStatus { Current, Active, Inactive }
+enum TrailStatus { Active, Inactive }
 
 const useTrailStatus = (): TrailStatus => {
   const item = useBreadcrumbContext();
   const store = useBreadcrumbStore();
   if (item && store) {
-    // if (store.hasCurrentPageItem()) return TrailStatus.Current;
     if (store.breadcrumbTrail.find(tItem => tItem.isEqual(item))) return TrailStatus.Active;
   }
   return TrailStatus.Inactive;
-}
+};
 
+/**
+ * Hook which can be used to determine if a menu item is part of
+ * the current active breadcrumb trail.
+ *
+ * This hook is only accurate if
+ * - The menu is inside a BreadcrumbStoreProvider.
+ * - The menu item has been wrapped in asBreadcrumb
+ *
+ * @return true if the item is in the active trail, false otherwise.
+ */
 export const useIsActiveTrail = () => useTrailStatus() === TrailStatus.Active;
-export const useIsCurrentPage = () => useTrailStatus() === TrailStatus.Current;
 
 export const asMenuLink = (asEditable: HOC, asOff: HOC = replaceWith(Span)) => flow(
   replaceWith(A),
