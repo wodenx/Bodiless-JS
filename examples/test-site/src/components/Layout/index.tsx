@@ -18,6 +18,7 @@ import {
   Div, designable, addClasses, replaceWith,
 } from '@bodiless/fclasses';
 import { useNode, withNodeKey, ifToggledOn } from '@bodiless/core';
+import { withBreadcrumbStore } from '@bodiless/components';
 import Header from './header';
 import Footer from './footer';
 import SeoHelmet from './meta';
@@ -25,7 +26,6 @@ import { asPageContainer, asYMargin } from '../Elements.token';
 import { asSiteHeader, asSiteFooter } from './token';
 
 import { MegaMenuBreadcrumbs } from '../Breadcrumbs/MenuBreadcrumbs';
-import { withBreadcrumbStore } from '@bodiless/components/src/Breadcrumbs/withBreadcrumbs';
 
 const SiteHeader = asSiteHeader(Header);
 const SiteFooter = asSiteFooter(Footer);

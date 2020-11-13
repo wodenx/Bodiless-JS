@@ -13,6 +13,10 @@
  */
 
 export {
+  withBreadcrumbStore,
+} from './withBreadcrumbs';
+
+export {
   default as asBreadcrumb,
   useBreadcrumbContext,
 } from './asBreadcrumb';

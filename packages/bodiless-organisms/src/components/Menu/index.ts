@@ -33,6 +33,7 @@ import asMegaMenuTopNav from './MegaMenu.token';
 export {
   asMenuTout,
   asMenuLink,
+  useIsActiveTrail,
 } from './MenuTitles';
 
 export {
