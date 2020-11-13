@@ -17,16 +17,22 @@ import {
   A,
   designable,
   DesignableComponentsProps,
+  addClasses,
 } from '@bodiless/fclasses';
+import { useBreadcrumbStore, useBreadcrumbContext } from '@bodiless/components';
+import { observer } from 'mobx-react-lite';
+import { flow } from 'lodash';
 
 type MenuLinkComponents = {
   Link: ComponentType<any>,
   ActiveLink: ComponentType<any>,
+  ActiveTrailLink: ComponentType<any>,
 };
 
 const menulinkComponents: MenuLinkComponents = {
   Link: A,
   ActiveLink: A,
+  ActiveTrailLink: addClasses('text-orange-700')(A),
 };
 
 const isCurrentPage = (href: string | undefined) => {
@@ -62,13 +68,23 @@ export type Props = {
  * @constructor
  */
 const MenuLinkBase: FC<Props> = ({ components, unwrap, ...rest }) => {
-  const { Link, ActiveLink } = components;
+  const { Link, ActiveLink, ActiveTrailLink } = components;
   const { href } = rest;
-  // Note isCurrentPage is standing in for whatever algorithm you use to match the
-  // href to the current browser location.
-  return isCurrentPage(href) ? (<ActiveLink {...rest} />) : (<Link {...rest} />);
+  const item = useBreadcrumbContext();
+  const store = useBreadcrumbStore();
+
+  if (isCurrentPage(href)) {
+    return <ActiveLink {...rest} />;
+  }
+  if (item && store && store.breadcrumbTrail.find(tItem => tItem.isEqual(item))) {
+    return <ActiveTrailLink {...rest} />;
+  }
+  return <Link {...rest} />;
 };
 
-const MenuLink = designable(menulinkComponents)(MenuLinkBase);
+const MenuLink = flow(
+  observer,
+  designable(menulinkComponents),
+)(MenuLinkBase);
 
 export default MenuLink;
