@@ -119,6 +119,22 @@ const withEmptyMenuMarkup = flow(
 );
 
 /**
+ * Creates a HOC which can be applied to a base menu to make it into a data source for
+ * the site's breadcrumbs.
+ *
+ * @param settings The title and link nodekeys defining where to locate the link and title nodes.
+ *
+ * @return  HOC for providing breadcrumb data from this menu.
+ */
+const asBreadcrumbSource = (settings: BreadcrumbSettings) => flow(
+  withMenuDesign({
+    Item: flow(
+      asBreadcrumb(settings),
+    ),
+  }),
+);
+
+/**
  * Creates a HOC which can be applied to a base menu to make it into a site's breadcrumbs
  *
  * @param settings The title and link nodekeys defining where to locate the link and title nodes.
@@ -127,15 +143,11 @@ const withEmptyMenuMarkup = flow(
  */
 const asBreadcrumbsClean = (settings: BreadcrumbSettings) => flow(
   withEmptyMenuMarkup,
-  withMenuDesign({
-    Item: flow(
-      asBreadcrumb(settings),
-    ),
-  }),
+  asBreadcrumbSource(settings),
   withBreadcrumbs,
 );
 
 export {
   asMenuSubList, asMenuBase, withMenuDesign,
-  asBreadcrumbsClean,
+  asBreadcrumbsClean, asBreadcrumbSource,
 };

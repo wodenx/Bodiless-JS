@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import { flow } from 'lodash';
 import {
   Div, designable, addClasses, replaceWith,
@@ -25,6 +25,7 @@ import { asPageContainer, asYMargin } from '../Elements.token';
 import { asSiteHeader, asSiteFooter } from './token';
 
 import { MegaMenuBreadcrumbs } from '../Breadcrumbs/MenuBreadcrumbs';
+import { withBreadcrumbStore } from '@bodiless/components/src/Breadcrumbs/withBreadcrumbs';
 
 const SiteHeader = asSiteHeader(Header);
 const SiteFooter = asSiteFooter(Footer);
@@ -34,16 +35,20 @@ const Container = flow(
   asYMargin,
 )(Div);
 
+const BreadcrumbProvider = withBreadcrumbStore(Fragment);
+
 const BaseLayout = ({ children, components }) => {
   const { Breadcrumbs } = components;
   return (
     <>
       <SeoHelmet />
-      <SiteHeader />
-      <Container>
-        { Breadcrumbs && <Breadcrumbs />}
-        {children}
-      </Container>
+      <BreadcrumbProvider>
+        <SiteHeader />
+        <Container>
+          { Breadcrumbs && <Breadcrumbs />}
+          {children}
+        </Container>
+      </BreadcrumbProvider>
       <SiteFooter />
     </>
   );

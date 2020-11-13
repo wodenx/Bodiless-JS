@@ -147,11 +147,13 @@ export default (props: any) => (
         <BreadcrumbWithHiddenCurrentPageItem nodeKey="simplemenu" className="my-2" />
       </BreadcrumbProvider>
       <H2>MegaMenu</H2>
-      <MegaMenu nodeKey="megamenu" className="my-2" />
-      <H2>MegaMenu breadcrumbs</H2>
-      <MegaMenuBreadcrumbs nodeKey="megamenu" className="my-2" />
-      <H2>MegaMenu breadcrumbs with non-editable starting trail and non-linkable Middle Trail group</H2>
-      <MegaMenuBreadcrumbWithNonLinkableItems nodeKey="megamenu" className="my-2" />
+      <BreadcrumbProvider>
+        <MegaMenu nodeKey="megamenu" className="my-2" />
+        <H2>MegaMenu breadcrumbs</H2>
+        <MegaMenuBreadcrumbs nodeKey="megamenu" className="my-2" />
+        <H2>MegaMenu breadcrumbs with non-editable starting trail and non-linkable Middle Trail group</H2>
+        <MegaMenuBreadcrumbWithNonLinkableItems nodeKey="megamenu" className="my-2" />
+      </BreadcrumbProvider>
     </Layout>
   </Page>
 );
