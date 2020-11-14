@@ -22,6 +22,7 @@ import {
 } from '@bodiless/core';
 import { H1, H2, addProps } from '@bodiless/fclasses';
 import { withContentLibrary } from '@bodiless/layouts';
+import { ComponentSelector } from '@bodiless/layouts-ui';
 import { flow } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import Layout from '../../../components/Layout';
@@ -82,7 +83,7 @@ const SnippetPrinter = () => {
   const { text } = node.data;
 
   return (
-    <span>
+    <span className="bl-text-primary">
       {`${text.substr(0, 30)}...`}
     </span>
   );
@@ -93,6 +94,7 @@ const TextDemo = flow(
   withLocalContextMenu,
   withContentLibrary({
     DisplayComponent: SnippetPrinter,
+    Selector: ComponentSelector,
   }),
   addProps({ useLibraryNode }),
   asEditable(undefined, 'Text'),

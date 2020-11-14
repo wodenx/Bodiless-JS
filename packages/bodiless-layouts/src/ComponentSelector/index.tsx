@@ -16,6 +16,7 @@ import React, { ReactElement, useState } from 'react';
 import PropTypes from 'prop-types';
 import { pickBy } from 'lodash';
 
+import { useMenuOptionUI } from '@bodiless/core';
 import { AllCheckbox, FilterWrapper } from './FilterWrapper';
 import SearchWrapper from './SearchWrapper';
 import ItemList from './ItemListScale';
@@ -67,10 +68,6 @@ const ComponentSelector: React.FC<ComponentSelectorProps> = props => {
   const [activeFilters, setActiveFilters] = useState([]);
   const [activeSearch, setActiveSearch] = useState('');
 
-  function useUI(): FinalUI {
-    return { ...defaultUI, ...ui };
-  }
-
   if (mandatoryCategories) {
     applyMandatoryCategories(allComponents, mandatoryCategories);
   }
@@ -86,8 +83,7 @@ const ComponentSelector: React.FC<ComponentSelectorProps> = props => {
   );
   const allFilters = getFiltersByComponentList(allComponents);
 
-  const finalUI = useUI();
-
+  const finalUI:FinalUI = { ...defaultUI, ...useMenuOptionUI(), ...ui };
   return (
     <ComponentDisplayModeProvider mode={ComponentDisplayMode.ComponentSelector}>
       <uiContext.Provider value={finalUI}>

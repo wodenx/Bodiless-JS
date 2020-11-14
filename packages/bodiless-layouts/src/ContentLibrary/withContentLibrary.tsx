@@ -1,11 +1,13 @@
 import {
   useNode,
-  ContentNode, useMenuOptionUI, useContextMenuForm,
+  ContentNode, useContextMenuForm,
   TMenuOption, withMenuOptions, NodeProvider,
 } from '@bodiless/core';
 import React, { ComponentType, FC } from 'react';
 import { withoutProps } from '@bodiless/fclasses';
 import { flow } from 'lodash';
+import ComponentSelector from '../ComponentSelector';
+import type { ComponentSelectorProps } from '../ComponentSelector/types';
 
 type ComponentLibraryData = {
   nodeKey: string,
@@ -19,7 +21,7 @@ export type ContentLibrarySelectorProps = {
 
 export type ContentLibraryOptions = {
   DisplayComponent?: ComponentType<any>,
-  Selector?: ComponentType<ContentLibrarySelectorProps>,
+  Selector?: ComponentType<ComponentSelectorProps>,
 };
 
 export type ContentLibraryProps = {
@@ -35,27 +37,27 @@ const DefaultDisplayComponent: FC = () => {
   );
 };
 
-const DefaultSelector: FC<ContentLibrarySelectorProps> = ({ components }) => {
-  const {
-    ComponentFormLabel,
-    ComponentFormRadio,
-    ComponentFormRadioGroup,
-  } = useMenuOptionUI();
-  const radios = Object.keys(components).map(key => {
-    const ComponentWithNode = components[key];
-    return (
-      <ComponentFormLabel key={key}>
-        <ComponentFormRadio value={key} name={key} />
-        <ComponentWithNode />
-      </ComponentFormLabel>
-    );
-  });
-  return (
-    <ComponentFormRadioGroup field="nodeKey">
-      {radios}
-    </ComponentFormRadioGroup>
-  );
-};
+// const DefaultSelector: FC<ContentLibrarySelectorProps> = ({ components }) => {
+//   const {
+//     ComponentFormLabel,
+//     ComponentFormRadio,
+//     ComponentFormRadioGroup,
+//   } = useMenuOptionUI();
+//   const radios = Object.keys(components).map(key => {
+//     const ComponentWithNode = components[key];
+//     return (
+//       <ComponentFormLabel key={key}>
+//         <ComponentFormRadio value={key} name={key} />
+//         <ComponentWithNode />
+//       </ComponentFormLabel>
+//     );
+//   });
+//   return (
+//     <ComponentFormRadioGroup field="nodeKey">
+//       {radios}
+//     </ComponentFormRadioGroup>
+//   );
+// };
 
 const childKeys = (node: ContentNode<any>) => {
   const aParent = node.path;
@@ -81,8 +83,8 @@ const copyNode = (source: ContentNode<any>, dest: ContentNode<any>, copyChildren
 
 const withContentLibrary = (options: ContentLibraryOptions) => {
   const {
-    Selector = DefaultSelector,
     DisplayComponent = DefaultDisplayComponent,
+    Selector = ComponentSelector,
   } = options;
   const useMenuOptions = (props: ContentLibraryProps) => {
     const { node: targetNode } = useNode();
@@ -98,15 +100,33 @@ const withContentLibrary = (options: ContentLibraryOptions) => {
       return { ...acc, [key]: ComponentWithNode };
     }, {});
 
-    const renderForm = () => (
-      <Selector components={components} />
-    );
     const submitValues = ({ nodeKey }: ComponentLibraryData) => {
       if (nodeKey && components[nodeKey]) {
         copyNode(libraryNode.child(nodeKey), targetNode, true);
       }
     };
-    const form = useContextMenuForm({ renderForm, submitValues });
+
+    const componentSelectorComponents = Object.keys(components).map(key => {
+      // const c = components[key].bind({});
+      const c = components[key];
+      c.displayName = key;
+      return c;
+    });
+
+    const renderForm = ({ closeForm }:any) => {
+      const onSelect = (event: any, componentName: string) => {
+        submitValues({ nodeKey: componentName });
+        closeForm(null);
+      };
+      return (
+        <Selector
+          closeForm={closeForm}
+          onSelect={onSelect}
+          components={componentSelectorComponents}
+        />
+      );
+    };
+    const form = useContextMenuForm({ renderForm, submitValues, hasSubmit: false });
     const menuOptions: TMenuOption[] = [
       {
         name: 'content-library',
