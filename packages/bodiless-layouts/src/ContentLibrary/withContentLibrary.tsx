@@ -7,21 +7,12 @@ import React, { ComponentType, FC } from 'react';
 import { withoutProps } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import ComponentSelector from '../ComponentSelector';
-import type { ComponentSelectorProps } from '../ComponentSelector/types';
-
-type ComponentLibraryData = {
-  nodeKey: string,
-};
-
-export type ContentLibrarySelectorProps = {
-  components: {
-    [key: string]: ComponentType,
-  },
-};
+import type { ComponentSelectorProps, Meta, ComponentWithMeta } from '../ComponentSelector/types';
 
 export type ContentLibraryOptions = {
   DisplayComponent?: ComponentType<any>,
   Selector?: ComponentType<ComponentSelectorProps>,
+  useMeta?: (node: ContentNode<any>) => Partial<Meta>,
 };
 
 export type ContentLibraryProps = {
@@ -36,28 +27,6 @@ const DefaultDisplayComponent: FC = () => {
     </>
   );
 };
-
-// const DefaultSelector: FC<ContentLibrarySelectorProps> = ({ components }) => {
-//   const {
-//     ComponentFormLabel,
-//     ComponentFormRadio,
-//     ComponentFormRadioGroup,
-//   } = useMenuOptionUI();
-//   const radios = Object.keys(components).map(key => {
-//     const ComponentWithNode = components[key];
-//     return (
-//       <ComponentFormLabel key={key}>
-//         <ComponentFormRadio value={key} name={key} />
-//         <ComponentWithNode />
-//       </ComponentFormLabel>
-//     );
-//   });
-//   return (
-//     <ComponentFormRadioGroup field="nodeKey">
-//       {radios}
-//     </ComponentFormRadioGroup>
-//   );
-// };
 
 const childKeys = (node: ContentNode<any>) => {
   const aParent = node.path;
@@ -86,47 +55,49 @@ const withContentLibrary = (options: ContentLibraryOptions) => {
     DisplayComponent = DefaultDisplayComponent,
     Selector = ComponentSelector,
   } = options;
+
   const useMenuOptions = (props: ContentLibraryProps) => {
     const { node: targetNode } = useNode();
     const { useLibraryNode } = props;
     const { node: libraryNode } = useLibraryNode(props);
     const keys = childKeys(libraryNode);
-    const components: { [key: string]: FC } = keys.reduce((acc, key) => {
-      const ComponentWithNode: FC = () => (
-        <NodeProvider node={libraryNode.child(key)}>
+
+    const components: ComponentWithMeta[] = keys.map(key => {
+      const node = libraryNode.child(key);
+      const ComponentWithNode: ComponentWithMeta = () => (
+        <NodeProvider node={node}>
           <DisplayComponent />
         </NodeProvider>
       );
-      return { ...acc, [key]: ComponentWithNode };
-    }, {});
+      ComponentWithNode.displayName = key;
+      ComponentWithNode.title = key;
+      ComponentWithNode.description = key;
 
-    const submitValues = ({ nodeKey }: ComponentLibraryData) => {
-      if (nodeKey && components[nodeKey]) {
-        copyNode(libraryNode.child(nodeKey), targetNode, true);
+      if (options.useMeta) {
+        const meta = options.useMeta(node);
+        // If createMeta returns null or undefined, it means do not use this node.
+        if (!meta) return null;
+        Object.assign(ComponentWithNode, meta);
       }
-    };
-
-    const componentSelectorComponents = Object.keys(components).map(key => {
-      // const c = components[key].bind({});
-      const c = components[key];
-      c.displayName = key;
-      return c;
-    });
+      return ComponentWithNode;
+    }).filter(Boolean) as ComponentWithMeta[];
 
     const renderForm = ({ closeForm }:any) => {
-      const onSelect = (event: any, componentName: string) => {
-        submitValues({ nodeKey: componentName });
+      const onSelect = ([name]: string[]) => {
+        if (name) {
+          copyNode(libraryNode.child(name), targetNode, true);
+        }
         closeForm(null);
       };
       return (
         <Selector
           closeForm={closeForm}
           onSelect={onSelect}
-          components={componentSelectorComponents}
+          components={components}
         />
       );
     };
-    const form = useContextMenuForm({ renderForm, submitValues, hasSubmit: false });
+    const form = useContextMenuForm({ renderForm, hasSubmit: false });
     const menuOptions: TMenuOption[] = [
       {
         name: 'content-library',

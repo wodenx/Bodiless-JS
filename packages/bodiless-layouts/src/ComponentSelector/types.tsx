@@ -12,34 +12,33 @@
  * limitations under the License.
  */
 
-import {
-  ComponentType, HTMLProps, MouseEvent, ReactNode,
-} from 'react';
-import { FormApi, FormState, FieldProps } from 'informed';
+import type { ComponentType, HTMLProps } from 'react';
+import { FieldProps } from 'informed';
 
-export type AllowedComponent = ComponentWithMeta<any>;
-export type RenderList = (options: {
-  formState: FormState<any>;
-  formApi: FormApi<any>;
-  components: AllowedComponent[];
-  onSelect: onSelectType;
-}) => ReactNode;
-export type ComponentSelectorProps = {
-  components: (ComponentType<any> | string)[];
-  renderList?: RenderList;
-  onSelect(event: MouseEvent, componentName: string): void;
-  closeForm?(e: any): void;
+export type ComponentSelectorProps = ItemListProps & {
+  /**
+   * Calback to close the form.
+   */
+  closeForm?: () => void;
+  /**
+   * Styled components to use in the component selector UI.
+   */
   ui?: ComponentSelectorUI;
+  /**
+   * List of categories which should always be shown in the filters.
+   */
   mandatoryCategories?: string[];
 };
-export type onSelectType = (
-  event: MouseEvent,
-  componentName: string,
-) => void | boolean;
+
 export type Categories = {
   [key: string]: string[];
 };
-export type ComponentWithMeta<P> = ComponentType<P> & {
+
+/**
+ * Component metadata used to search, filter and display
+ * information about a component,
+ */
+export type Meta = {
   /**
    * default static prop for react component to distingush it in the render tree
    */
@@ -55,16 +54,26 @@ export type ComponentWithMeta<P> = ComponentType<P> & {
   /**
    * Category and value pairs for facets
    */
-  categories: Categories;
-  /**
-   * Optionsl nodekey for the data to render
-   */
-  nodeKey?: string;
+  categories?: Categories;
 };
+
+export type ComponentWithMeta<P = any> = ComponentType<P> & Meta;
+export type ComponentWithPartialMeta<P = any> = ComponentType<P> & Partial<Meta>;
+
+/**
+ * Props passed to the list of items within the component selector.
+ */
 export type ItemListProps = {
-  components: ComponentWithMeta<any>[];
-  onSelect: onSelectType;
+  /**
+   * An array of components with metadata (at leassts displayName, title, description)
+   */
+  components: ComponentWithMeta[],
+  /**
+   * Callback when one or more components are selected.
+   */
+  onSelect: (names: string[]) => void,
 };
+
 export type FinalUI = {
   // A div that wraps everything
   MasterWrapper: ComponentType<HTMLProps<HTMLDivElement>> | string;

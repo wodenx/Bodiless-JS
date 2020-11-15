@@ -3,12 +3,14 @@ import {
   PageContextProvider,
   withNodeKey,
   withNode,
+  ContentNode,
 } from '@bodiless/core';
 import React, { FC, Fragment } from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { flow } from 'lodash';
 import { addProps } from '@bodiless/fclasses';
-import withContentLibrary, { ContentLibrarySelectorProps } from '../src/ContentLibrary/withContentLibrary';
+import type { Meta, ComponentSelectorProps, ComponentWithMeta } from '../src/ComponentSelector/types';
+import withContentLibrary from '../src/ContentLibrary/withContentLibrary';
 
 const findContextMenuForm = (wrapper: ReactWrapper) => {
   const provider = wrapper.find(PageContextProvider);
@@ -17,7 +19,7 @@ const findContextMenuForm = (wrapper: ReactWrapper) => {
   const option = getMenuOptions!().find(op => op.name === 'content-library');
   // @ts-ignore we don't need to pass an event to the handler.
   const render = option.handler();
-  const formWrapper = mount(<>{render()}</>);
+  const formWrapper = mount(<>{render({ closeForm: jest.fn() })}</>);
   return formWrapper;
 };
 
@@ -64,14 +66,69 @@ describe('withContentlibrary', () => {
     return <span data-display-component {...node.data} />;
   };
 
-  const TestSelector: FC<ContentLibrarySelectorProps> = ({ components }) => (
+  const TestSelector: FC<ComponentSelectorProps> = ({ components }) => (
     <>
-      {Object.keys(components).map(key => {
-        const Component = components[key];
-        return <Component key={key} />;
-      })}
+      {components.map((Component: ComponentWithMeta<any>) => (
+        <Component key={Component.displayName} />
+      ))}
     </>
   );
+
+  it('Applies default metadata correctly', () => {
+    const store = createMockStore({
+      foo$bar: { foo: 'bar' },
+    });
+    const useLibraryNode = () => ({ node: useNode().node.peer('foo') });
+    const Test = flow(
+      withContentLibrary({
+        DisplayComponent: TestDisplayComponent,
+        Selector: TestSelector,
+      }),
+      addProps({ useLibraryNode }),
+    )(Fragment);
+    const wrapper = mount((
+      <MockNodeProvider store={store}>
+        <Test />
+      </MockNodeProvider>
+    ));
+    const form = findContextMenuForm(wrapper);
+    const [component] = form.find(TestSelector).prop('components');
+    expect(component.displayName).toBe('bar');
+    expect(component.title).toBe('bar');
+    expect(component.description).toBe('bar');
+  });
+
+  it('Applies metadata correctly', () => {
+    const store = createMockStore({
+      foo$bar: { foo: 'bizzle' },
+    });
+    const useLibraryNode = () => ({ node: useNode().node.peer('foo') });
+    const useMeta = (node: ContentNode<any>): Partial<Meta> => ({
+      title: `Title: ${node.data.foo}`,
+      description: `Description: ${node.data.foo}`,
+      categories: {
+        a: ['b', 'c'],
+      },
+    });
+    const Test = flow(
+      withContentLibrary({
+        DisplayComponent: TestDisplayComponent,
+        Selector: TestSelector,
+        useMeta,
+      }),
+      addProps({ useLibraryNode }),
+    )(Fragment);
+    const wrapper = mount((
+      <MockNodeProvider store={store}>
+        <Test />
+      </MockNodeProvider>
+    ));
+    const form = findContextMenuForm(wrapper);
+    const [component] = form.find(TestSelector).prop('components');
+    expect(component.title).toBe('Title: bizzle');
+    expect(component.description).toBe('Description: bizzle');
+    expect(component?.categories?.a).toEqual(['b', 'c']);
+  });
 
   it('Lists child keys correctly', () => {
     const store = createMockStore({
@@ -127,8 +184,9 @@ describe('withContentlibrary', () => {
       </MockNodeProvider>
     ));
     const formWrapper = findContextMenuForm(wrapper);
-    const { submitValues } = formWrapper.props();
-    submitValues({ nodeKey: 'bar' });
+    const selector = formWrapper.find(TestSelector);
+    const { onSelect } = selector.props();
+    onSelect(['bar']);
     expect(store.actions.setNode).toBeCalledWith(['root', 'flaboozle'], {
       foo: 'bar',
     });
