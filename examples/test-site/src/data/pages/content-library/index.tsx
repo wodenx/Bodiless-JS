@@ -103,6 +103,12 @@ const useTextLibraryNode = () => {
   return { node: node.peer('Page$___content$texts') };
 };
 
+const useTextLibraryOverrides = () => ({
+  groupLabel: 'Text',
+  formTitle: 'Text Library',
+  formDescription: 'Select the text you would like to use...',
+});
+
 const TextDisplay = () => {
   const { node } = useNode<{ text: string}>();
   const { text } = node.data;
@@ -120,6 +126,7 @@ const TextDemo = flow(
     DisplayComponent: TextDisplay,
     Selector: ComponentSelector,
     useLibraryNode: useTextLibraryNode,
+    useOverrides: useTextLibraryOverrides,
   }),
   asEditable(undefined, 'Click me to see library button'),
   withNode,

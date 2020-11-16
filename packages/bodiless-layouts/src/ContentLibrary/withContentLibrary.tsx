@@ -1,14 +1,9 @@
-// @TODO: Use component selector
-// @TODO: Allow filtering of content
-// @TODO: Add overrides
-// @TODO: Abstract button-with-group
-// @TODO: Test compound nodes
-import {
-  useNode,
-  ContentNode, useContextMenuForm,
-  TMenuOption, withMenuOptions, NodeProvider, EditButtonOptions,
-} from '@bodiless/core';
 import React, { ComponentType, FC, useRef } from 'react';
+import {
+  useNode, ContentNode, useContextMenuForm,
+  createMenuOptionGroup, withMenuOptions, NodeProvider,
+} from '@bodiless/core';
+import type { OptionGroupDefinition } from '@bodiless/core';
 import ComponentSelector from '../ComponentSelector';
 import type { ComponentSelectorProps, Meta, ComponentWithMeta } from '../ComponentSelector/types';
 
@@ -17,7 +12,7 @@ export type ContentLibraryOptions = {
   DisplayComponent?: ComponentType<any>,
   Selector?: ComponentType<ComponentSelectorProps>,
   useMeta?: (node: ContentNode<any>) => Partial<Meta>|null,
-  useOverrides?: (props: any) => Partial<EditButtonOptions<any, any>>,
+  useOverrides?: (props: any) => OptionGroupDefinition,
 };
 
 const DefaultDisplayComponent: FC = () => {
@@ -57,6 +52,7 @@ const withContentLibrary = (options: ContentLibraryOptions) => {
     Selector = ComponentSelector,
     useLibraryNode,
     useMeta,
+    useOverrides = () => {},
   } = options;
 
   const useMenuOptions = (props: any) => {
@@ -104,30 +100,25 @@ const withContentLibrary = (options: ContentLibraryOptions) => {
       );
     };
     const form = useContextMenuForm({ renderForm, hasSubmit: false });
-    const menuOptions: TMenuOption[] = [
-      {
-        name: 'content-library',
-        group: 'content-library-group',
-        label: 'Library',
-        icon: 'account_balance',
-        local: true,
-        global: false,
-        handler: () => form,
-        formTitle: 'Content Library',
-        formDescription: 'Select the content you wish to insert.',
-        isHidden: !componentsRef.current.length,
-      },
-      {
-        name: 'content-library-group',
-        label: 'Content',
-        groupMerge: 'merge',
-        global: false,
-        local: true,
-        Component: 'group',
-        isHidden: !componentsRef.current.length,
-      },
-    ];
-    return menuOptions;
+    const baseOption: OptionGroupDefinition = {
+      name: 'content-library',
+      group: 'content-library-group',
+      label: 'Library',
+      groupLabel: 'Content',
+      groupMerge: 'merge',
+      icon: 'account_balance',
+      local: true,
+      global: false,
+      formTitle: 'Content Library',
+      formDescription: 'Select the content you wish to insert.',
+      isHidden: !componentsRef.current.length,
+    };
+    const finalOption = {
+      ...baseOption,
+      ...useOverrides(props),
+      handler: () => form,
+    };
+    return createMenuOptionGroup(finalOption);
   };
   return withMenuOptions({ useMenuOptions, name: 'Content Library' });
 };
