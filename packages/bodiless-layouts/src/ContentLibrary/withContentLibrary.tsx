@@ -89,7 +89,7 @@ const withContentLibrary = (options: ContentLibraryOptions) => {
         }
         return ComponentWithNode;
       }).filter(Boolean) as ComponentWithMeta[];
-    };
+    }
 
     const renderForm = ({ closeForm }:any) => {
       const onSelect = ([name]: string[]) => {
