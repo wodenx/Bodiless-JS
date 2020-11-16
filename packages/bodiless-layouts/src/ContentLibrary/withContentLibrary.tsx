@@ -16,7 +16,7 @@ export type ContentLibraryOptions = {
   useLibraryNode: (props: any) => { node: ContentNode<any> },
   DisplayComponent?: ComponentType<any>,
   Selector?: ComponentType<ComponentSelectorProps>,
-  useMeta?: (node: ContentNode<any>) => Partial<Meta>,
+  useMeta?: (node: ContentNode<any>) => Partial<Meta>|null,
   useOverrides?: (props: any) => Partial<EditButtonOptions<any, any>>,
 };
 

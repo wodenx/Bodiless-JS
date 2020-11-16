@@ -102,7 +102,7 @@ describe('withContentlibrary', () => {
       foo$bar: { foo: 'bizzle' },
     });
     const useLibraryNode = () => ({ node: useNode().node.peer('foo') });
-    const useMeta = (node: ContentNode<any>): Partial<Meta> => ({
+    const useMeta = (node: ContentNode<any>) => ({
       title: `Title: ${node.data.foo}`,
       description: `Description: ${node.data.foo}`,
       categories: {
@@ -156,6 +156,33 @@ describe('withContentlibrary', () => {
     expect(spans.at(1).prop('foo')).toBe('baz');
     expect(spans.at(2).prop('foo')).toBe('bang');
     expect(spans).toHaveLength(3);
+  });
+
+  it('Allows filtering of content nodes', () => {
+    const store = createMockStore({
+      foo$bar: { foo: 'bizzle' },
+      foo$baz: { foo: 'bazzle' },
+    });
+    const useLibraryNode = () => ({ node: useNode().node.peer('foo') });
+    const useMeta = (node: ContentNode<any>) => (
+      node.data.foo === 'bizzle' ? null : {}
+    );
+    const Test = withContentLibrary({
+      DisplayComponent: TestDisplayComponent,
+      Selector: TestSelector,
+      useMeta,
+      useLibraryNode,
+    })(Fragment);
+    const wrapper = mount((
+      <MockNodeProvider store={store}>
+        <Test />
+      </MockNodeProvider>
+    ));
+    const form = findContextMenuForm(wrapper);
+    const components = form.find(TestSelector).prop('components');
+    expect(components.length).toBe(1);
+    expect(components.find(c => c.displayName === 'bar')).toBeUndefined();
+    expect(components.find(c => c.displayName === 'baz')).toBeDefined();
   });
 
   it('Copies content correctly', () => {
