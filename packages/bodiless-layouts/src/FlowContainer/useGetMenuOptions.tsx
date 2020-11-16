@@ -92,7 +92,7 @@ const useCloneButton = (
   );
 
   return {
-    name: 'copy',
+    name: 'copy-item',
     label: 'Copy',
     icon: 'content_copy',
     global: false,
