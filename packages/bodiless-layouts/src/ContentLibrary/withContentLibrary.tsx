@@ -3,7 +3,7 @@ import {
   ContentNode, useContextMenuForm,
   TMenuOption, withMenuOptions, NodeProvider,
 } from '@bodiless/core';
-import React, { ComponentType, FC } from 'react';
+import React, { ComponentType, FC, useRef } from 'react';
 import { withoutProps } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import ComponentSelector from '../ComponentSelector';
@@ -62,25 +62,29 @@ const withContentLibrary = (options: ContentLibraryOptions) => {
     const { node: libraryNode } = useLibraryNode(props);
     const keys = childKeys(libraryNode);
 
-    const components: ComponentWithMeta[] = keys.map(key => {
-      const node = libraryNode.child(key);
-      const ComponentWithNode: ComponentWithMeta = () => (
-        <NodeProvider node={node}>
-          <DisplayComponent />
-        </NodeProvider>
-      );
-      ComponentWithNode.displayName = key;
-      ComponentWithNode.title = key;
-      ComponentWithNode.description = key;
+    // We save the components in a ref so as not to re-mount them on every render.
+    const componentsRef = useRef<ComponentWithMeta[]>([]);
+    if (componentsRef.current.length === 0) {
+      componentsRef.current = keys.map(key => {
+        const node = libraryNode.child(key);
+        const ComponentWithNode: ComponentWithMeta = () => (
+          <NodeProvider node={node}>
+            <DisplayComponent />
+          </NodeProvider>
+        );
+        ComponentWithNode.displayName = key;
+        ComponentWithNode.title = key;
+        ComponentWithNode.description = key;
 
-      if (options.useMeta) {
-        const meta = options.useMeta(node);
-        // If createMeta returns null or undefined, it means do not use this node.
-        if (!meta) return null;
-        Object.assign(ComponentWithNode, meta);
-      }
-      return ComponentWithNode;
-    }).filter(Boolean) as ComponentWithMeta[];
+        if (options.useMeta) {
+          const meta = options.useMeta(node);
+          // If createMeta returns null or undefined, it means do not use this node.
+          if (!meta) return null;
+          Object.assign(ComponentWithNode, meta);
+        }
+        return ComponentWithNode;
+      }).filter(Boolean) as ComponentWithMeta[];
+    };
 
     const renderForm = ({ closeForm }:any) => {
       const onSelect = ([name]: string[]) => {
@@ -93,7 +97,7 @@ const withContentLibrary = (options: ContentLibraryOptions) => {
         <Selector
           closeForm={closeForm}
           onSelect={onSelect}
-          components={components}
+          components={componentsRef.current}
         />
       );
     };
