@@ -5,7 +5,7 @@ import {
   withNode,
   ContentNode,
 } from '@bodiless/core';
-import React, { FC, Fragment } from 'react';
+import React, { FC } from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { flow } from 'lodash';
 import type { ComponentSelectorProps, ComponentWithMeta } from '../src/ComponentSelector/types';
@@ -60,7 +60,7 @@ describe('withContentlibrary', () => {
     mockIsEdit.mockRestore();
   });
 
-  const TestDisplayComponent = () => {
+  const TestComponent = () => {
     const { node } = useNode();
     return <span data-display-component {...node.data} />;
   };
@@ -80,11 +80,10 @@ describe('withContentlibrary', () => {
     const useLibraryNode = () => ({ node: useNode().node.peer('foo') });
     const Test = flow(
       withContentLibrary({
-        DisplayComponent: TestDisplayComponent,
         Selector: TestSelector,
         useLibraryNode,
       }),
-    )(Fragment);
+    )(TestComponent);
     const wrapper = mount((
       <MockNodeProvider store={store}>
         <Test />
@@ -111,12 +110,11 @@ describe('withContentlibrary', () => {
     });
     const Test = flow(
       withContentLibrary({
-        DisplayComponent: TestDisplayComponent,
         Selector: TestSelector,
         useMeta,
         useLibraryNode,
       }),
-    )(Fragment);
+    )(TestComponent);
     const wrapper = mount((
       <MockNodeProvider store={store}>
         <Test />
@@ -140,11 +138,10 @@ describe('withContentlibrary', () => {
 
     const Test = flow(
       withContentLibrary({
-        DisplayComponent: TestDisplayComponent,
         Selector: TestSelector,
         useLibraryNode,
       }),
-    )(Fragment);
+    )(TestComponent);
 
     const wrapper = mount((
       <MockNodeProvider store={store}>
@@ -168,11 +165,10 @@ describe('withContentlibrary', () => {
       node.data.foo === 'bizzle' ? null : {}
     );
     const Test = withContentLibrary({
-      DisplayComponent: TestDisplayComponent,
       Selector: TestSelector,
       useMeta,
       useLibraryNode,
-    })(Fragment);
+    })(TestComponent);
     const wrapper = mount((
       <MockNodeProvider store={store}>
         <Test />
@@ -196,13 +192,12 @@ describe('withContentlibrary', () => {
 
     const Test = flow(
       withContentLibrary({
-        DisplayComponent: TestDisplayComponent,
         Selector: TestSelector,
         useLibraryNode,
       }),
       withNode,
       withNodeKey('flaboozle'),
-    )(TestDisplayComponent);
+    )(TestComponent);
 
     const wrapper = mount((
       <MockNodeProvider store={store}>

@@ -120,6 +120,7 @@ const TextDisplay = () => {
 };
 
 const TextDemo = flow(
+  asEditable(undefined, 'Click me to see library button'),
   withContextActivator('onClick'),
   withLocalContextMenu,
   withContentLibrary({
@@ -128,7 +129,6 @@ const TextDemo = flow(
     useLibraryNode: useTextLibraryNode,
     useOverrides: useTextLibraryOverrides,
   }),
-  asEditable(undefined, 'Click me to see library button'),
   withNode,
   withNodeKey('text'),
 )('span');
@@ -147,15 +147,9 @@ const useImageMeta = (node: ContentNode<any>) => {
   };
 };
 
-const ImageDisplay = flow(
-  asEditableImage(),
-  asReadOnly,
-)('img');
-
 const ImageDemo = flow(
   asEditableImage(),
   withContentLibrary({
-    DisplayComponent: ImageDisplay,
     Selector: ComponentSelector,
     useLibraryNode: useImageLibraryNode,
     useMeta: useImageMeta,

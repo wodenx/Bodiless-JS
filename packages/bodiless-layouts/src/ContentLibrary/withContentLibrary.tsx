@@ -1,4 +1,4 @@
-import React, { ComponentType, FC, useRef } from 'react';
+import React, { ComponentType, useRef } from 'react';
 import {
   useNode, ContentNode, useContextMenuForm,
   createMenuOptionGroup, withMenuOptions, NodeProvider,
@@ -12,16 +12,7 @@ export type ContentLibraryOptions = {
   DisplayComponent?: ComponentType<any>,
   Selector?: ComponentType<ComponentSelectorProps>,
   useMeta?: (node: ContentNode<any>) => Partial<Meta>|null,
-  useOverrides?: (props: any) => OptionGroupDefinition,
-};
-
-const DefaultDisplayComponent: FC = () => {
-  const { node } = useNode();
-  return (
-    <>
-      {node.path.join('$')}
-    </>
-  );
+  useOverrides?: (props: any) => Partial<OptionGroupDefinition>,
 };
 
 const childKeys = (node: ContentNode<any>) => {
@@ -46,9 +37,11 @@ const copyNode = (source: ContentNode<any>, dest: ContentNode<any>, copyChildren
   }
 };
 
-const withContentLibrary = (options: ContentLibraryOptions) => {
+const withContentLibrary = (options: ContentLibraryOptions) => (
+  Component: ComponentType,
+) => {
   const {
-    DisplayComponent = DefaultDisplayComponent,
+    DisplayComponent = Component,
     Selector = ComponentSelector,
     useLibraryNode,
     useMeta,
@@ -120,7 +113,7 @@ const withContentLibrary = (options: ContentLibraryOptions) => {
     };
     return createMenuOptionGroup(finalOption);
   };
-  return withMenuOptions({ useMenuOptions, name: 'Content Library' });
+  return withMenuOptions({ useMenuOptions, name: 'Content Library' })(Component);
 };
 
 export default withContentLibrary;
