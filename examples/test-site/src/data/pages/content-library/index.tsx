@@ -20,7 +20,7 @@ import { asEditable } from '@bodiless/components';
 import {
   useNode, withContextActivator, withLocalContextMenu, withDefaultContent, withNode, withNodeKey,
 } from '@bodiless/core';
-import { H1, H2, addProps } from '@bodiless/fclasses';
+import { H1, H2 } from '@bodiless/fclasses';
 import { withContentLibrary } from '@bodiless/layouts';
 import { ComponentSelector } from '@bodiless/layouts-ui';
 import { flow } from 'lodash';
@@ -95,8 +95,8 @@ const TextDemo = flow(
   withContentLibrary({
     DisplayComponent: SnippetPrinter,
     Selector: ComponentSelector,
+    useLibraryNode,
   }),
-  addProps({ useLibraryNode }),
   asEditable(undefined, 'Text'),
   withNode,
   withNodeKey('text-library'),

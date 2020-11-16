@@ -8,7 +8,6 @@ import {
 import React, { FC, Fragment } from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { flow } from 'lodash';
-import { addProps } from '@bodiless/fclasses';
 import type { Meta, ComponentSelectorProps, ComponentWithMeta } from '../src/ComponentSelector/types';
 import withContentLibrary from '../src/ContentLibrary/withContentLibrary';
 
@@ -83,8 +82,8 @@ describe('withContentlibrary', () => {
       withContentLibrary({
         DisplayComponent: TestDisplayComponent,
         Selector: TestSelector,
+        useLibraryNode,
       }),
-      addProps({ useLibraryNode }),
     )(Fragment);
     const wrapper = mount((
       <MockNodeProvider store={store}>
@@ -115,8 +114,8 @@ describe('withContentlibrary', () => {
         DisplayComponent: TestDisplayComponent,
         Selector: TestSelector,
         useMeta,
+        useLibraryNode,
       }),
-      addProps({ useLibraryNode }),
     )(Fragment);
     const wrapper = mount((
       <MockNodeProvider store={store}>
@@ -143,8 +142,8 @@ describe('withContentlibrary', () => {
       withContentLibrary({
         DisplayComponent: TestDisplayComponent,
         Selector: TestSelector,
+        useLibraryNode,
       }),
-      addProps({ useLibraryNode }),
     )(Fragment);
 
     const wrapper = mount((
@@ -172,8 +171,8 @@ describe('withContentlibrary', () => {
       withContentLibrary({
         DisplayComponent: TestDisplayComponent,
         Selector: TestSelector,
+        useLibraryNode,
       }),
-      addProps({ useLibraryNode }),
       withNode,
       withNodeKey('flaboozle'),
     )(TestDisplayComponent);

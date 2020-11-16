@@ -19,7 +19,7 @@ export type ComponentSelectorProps = ItemListProps & {
   /**
    * Calback to close the form.
    */
-  closeForm?: () => void;
+  closeForm?: (e?: any) => void;
   /**
    * Styled components to use in the component selector UI.
    */

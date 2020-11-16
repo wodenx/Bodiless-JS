@@ -75,7 +75,7 @@ describe('useGetMenuOptions', () => {
     expect(componentSelectorForm).toHaveBeenCalledTimes(1);
     expect((componentSelectorForm as jest.Mock).mock.calls[0][0].components).toEqual(components);
     const action = (componentSelectorForm as jest.Mock).mock.calls[0][1];
-    action(null, selection);
+    action([selection]);
   }
 
   function expectDataHandlerCall(method: Function, args: any[]) {

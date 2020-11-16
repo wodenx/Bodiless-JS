@@ -56,13 +56,13 @@ const useComponentSelectorActions = (
   const { insertFlowContainerItem, updateFlowContainerItem } = handlers;
   const { setId } = useActivateOnEffect();
 
-  const insertItem: ComponentSelectorProps['onSelect'] = (event, componentName) => {
+  const insertItem: ComponentSelectorProps['onSelect'] = ([componentName]) => {
     const { uuid } = insertFlowContainerItem(componentName, currentItem);
     // Set the new id so it will activate on creation.
     setId(uuid);
   };
 
-  const replaceItem: ComponentSelectorProps['onSelect'] = (event, componentName) => {
+  const replaceItem: ComponentSelectorProps['onSelect'] = ([componentName]) => {
     if (currentItem) {
       const newItem: FlowContainerItem = { ...currentItem, type: componentName };
       updateFlowContainerItem(newItem);

@@ -6,22 +6,18 @@
 import {
   useNode,
   ContentNode, useContextMenuForm,
-  TMenuOption, withMenuOptions, NodeProvider,
+  TMenuOption, withMenuOptions, NodeProvider, EditButtonOptions,
 } from '@bodiless/core';
 import React, { ComponentType, FC, useRef } from 'react';
-import { withoutProps } from '@bodiless/fclasses';
-import { flow } from 'lodash';
 import ComponentSelector from '../ComponentSelector';
 import type { ComponentSelectorProps, Meta, ComponentWithMeta } from '../ComponentSelector/types';
 
 export type ContentLibraryOptions = {
+  useLibraryNode: (props: any) => { node: ContentNode<any> },
   DisplayComponent?: ComponentType<any>,
   Selector?: ComponentType<ComponentSelectorProps>,
   useMeta?: (node: ContentNode<any>) => Partial<Meta>,
-};
-
-export type ContentLibraryProps = {
-  useLibraryNode: (props: any) => { node: ContentNode<any> },
+  useOverrides?: (props: any) => Partial<EditButtonOptions<any, any>>,
 };
 
 const DefaultDisplayComponent: FC = () => {
@@ -59,11 +55,12 @@ const withContentLibrary = (options: ContentLibraryOptions) => {
   const {
     DisplayComponent = DefaultDisplayComponent,
     Selector = ComponentSelector,
+    useLibraryNode,
+    useMeta,
   } = options;
 
-  const useMenuOptions = (props: ContentLibraryProps) => {
+  const useMenuOptions = (props: any) => {
     const { node: targetNode } = useNode();
-    const { useLibraryNode } = props;
     const { node: libraryNode } = useLibraryNode(props);
     const keys = childKeys(libraryNode);
 
@@ -81,8 +78,8 @@ const withContentLibrary = (options: ContentLibraryOptions) => {
         ComponentWithNode.title = key;
         ComponentWithNode.description = key;
 
-        if (options.useMeta) {
-          const meta = options.useMeta(node);
+        if (useMeta) {
+          const meta = useMeta(node);
           // If createMeta returns null or undefined, it means do not use this node.
           if (!meta) return null;
           Object.assign(ComponentWithNode, meta);
@@ -128,10 +125,7 @@ const withContentLibrary = (options: ContentLibraryOptions) => {
     ];
     return menuOptions;
   };
-  return flow(
-    withoutProps('useLibraryNode'),
-    withMenuOptions<ContentLibraryProps>({ useMenuOptions, name: 'Content Library' }),
-  );
+  return withMenuOptions({ useMenuOptions, name: 'Content Library' });
 };
 
 export default withContentLibrary;
