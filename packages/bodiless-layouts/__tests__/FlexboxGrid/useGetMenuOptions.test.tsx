@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import React, { Fragment, FC, MouseEvent } from 'react';
+import React, { Fragment, FC } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { shallow } from 'enzyme';
 import { useEditContext, TMenuOption } from '@bodiless/core';
