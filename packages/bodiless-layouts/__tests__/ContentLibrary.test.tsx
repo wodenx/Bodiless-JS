@@ -8,7 +8,7 @@ import {
 import React, { FC, Fragment } from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { flow } from 'lodash';
-import type { Meta, ComponentSelectorProps, ComponentWithMeta } from '../src/ComponentSelector/types';
+import type { ComponentSelectorProps, ComponentWithMeta } from '../src/ComponentSelector/types';
 import withContentLibrary from '../src/ContentLibrary/withContentLibrary';
 
 const findContextMenuForm = (wrapper: ReactWrapper) => {
