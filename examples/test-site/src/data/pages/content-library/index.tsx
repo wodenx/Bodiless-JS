@@ -20,7 +20,7 @@ import path from 'path';
 import { asEditable } from '@bodiless/components';
 import {
   useNode, withContextActivator, withLocalContextMenu, withDefaultContent,
-  withNode, withNodeKey, ContentNode, asReadOnly,
+  withNode, withNodeKey, ContentNode,
 } from '@bodiless/core';
 import { H1, H2, addClasses } from '@bodiless/fclasses';
 import { withContentLibrary } from '@bodiless/layouts';
