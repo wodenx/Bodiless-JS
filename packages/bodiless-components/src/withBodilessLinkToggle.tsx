@@ -22,6 +22,7 @@ import { replaceWith, withDesign, HOC } from '@bodiless/fclasses';
 import type { AsBodilessLink } from './Link';
 import {
   withChameleonComponentFormControls, applyChameleon, withChameleonContext, useChameleonContext,
+  withDeleteNodeOnUnwrap,
 } from './Chameleon';
 
 const SafeFragment = withOnlyProps('key', 'children')(Fragment);
@@ -73,7 +74,10 @@ const withBodilessLinkToggle = (
     withChameleonContext('link-toggle'),
     withChameleonComponentFormControls,
     withSidecarNodes(
-      asEditableLink(nodeKey, defaultData, useOverrides$),
+      flowRight(
+        ifEditable(withDeleteNodeOnUnwrap(nodeKey)),
+        asEditableLink(nodeKey, defaultData, useOverrides$),
+      ),
     ),
     applyChameleon,
   );
