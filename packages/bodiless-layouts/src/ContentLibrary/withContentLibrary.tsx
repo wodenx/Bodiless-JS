@@ -108,19 +108,23 @@ const withContentLibrary = (options: ContentLibraryOptions) => {
       {
         name: 'content-library',
         group: 'content-library-group',
-        label: 'Content',
+        label: 'Library',
         icon: 'account_balance',
         local: true,
         global: false,
         handler: () => form,
+        formTitle: 'Content Library',
+        formDescription: 'Select the content you wish to insert.',
+        isHidden: !componentsRef.current.length,
       },
       {
         name: 'content-library-group',
-        label: 'Library',
+        label: 'Content',
         groupMerge: 'merge',
         global: false,
         local: true,
         Component: 'group',
+        isHidden: !componentsRef.current.length,
       },
     ];
     return menuOptions;

@@ -102,9 +102,6 @@ const ComponentSelector: React.FC<ComponentSelectorProps> = props => {
             </finalUI.FlexSection>
           )}
           <finalUI.FlexSectionFull>
-            <finalUI.ComponentTitleWrapper>
-              Components
-            </finalUI.ComponentTitleWrapper>
             <SearchWrapper
               activeSearch={activeSearch}
               setActiveSearch={setActiveSearch}

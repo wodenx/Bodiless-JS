@@ -15,22 +15,31 @@
 import React, { Fragment } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
+import path from 'path';
 
 import { asEditable } from '@bodiless/components';
 import {
-  useNode, withContextActivator, withLocalContextMenu, withDefaultContent, withNode, withNodeKey,
+  useNode, withContextActivator, withLocalContextMenu, withDefaultContent,
+  withNode, withNodeKey, ContentNode, asReadOnly,
 } from '@bodiless/core';
-import { H1, H2 } from '@bodiless/fclasses';
+import { H1, H2, addClasses } from '@bodiless/fclasses';
 import { withContentLibrary } from '@bodiless/layouts';
 import { ComponentSelector } from '@bodiless/layouts-ui';
 import { flow } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import Layout from '../../../components/Layout';
 
-import { asHeader1, asHeader2 } from '../../../components/Elements.token';
+// @ts-ignore Can't find module
+import Window from './window.png';
+// @ts-ignore Can't find module
+import Door from './door.png';
+// @ts-ignore Can't find module
+import Balcony from './balcony.png';
+
+import { asHeader1, asHeader2, asEditableImage } from '../../../components/Elements.token';
 
 const Title = asHeader1(H1);
-const SectionTitle = asHeader2(H2);
+const SectionTitle = flow(addClasses('mt-5'), asHeader2)(H2);
 
 const PageKeys = observer(() => {
   const { node } = useNode();
@@ -49,7 +58,7 @@ const PageKeys = observer(() => {
   );
 });
 
-const library = {
+const content = {
   ___content$texts$office: {
     text: `
       That is a good problem to have game-plan, or clear blue
@@ -71,20 +80,35 @@ const library = {
       contain terms different from this Agreement are offered by that Contributor.
     `,
   },
+  ___content$images$window: {
+    src: Window,
+    alt: 'A view from the window',
+  },
+  ___content$images$door: {
+    src: Door,
+  },
+  ___content$images$balcony: {
+    src: Balcony,
+    alt: 'A balcony with arches',
+  },
+  ___content$images$skip: {
+    text: 'not an image',
+  },
 };
 
-const useLibraryNode = () => {
+const LibraryContent = withDefaultContent(content)(Fragment);
+
+const useTextLibraryNode = () => {
   const { node } = useNode();
   return { node: node.peer('Page$___content$texts') };
 };
 
-const SnippetPrinter = () => {
+const TextDisplay = () => {
   const { node } = useNode<{ text: string}>();
   const { text } = node.data;
-
   return (
     <span className="bl-text-primary">
-      {`${text.substr(0, 30)}...`}
+      {text}
     </span>
   );
 };
@@ -93,16 +117,45 @@ const TextDemo = flow(
   withContextActivator('onClick'),
   withLocalContextMenu,
   withContentLibrary({
-    DisplayComponent: SnippetPrinter,
+    DisplayComponent: TextDisplay,
     Selector: ComponentSelector,
-    useLibraryNode,
+    useLibraryNode: useTextLibraryNode,
   }),
-  asEditable(undefined, 'Text'),
+  asEditable(undefined, 'Click me to see library button'),
   withNode,
-  withNodeKey('text-library'),
+  withNodeKey('text'),
 )('span');
 
-const LibraryContent = withDefaultContent(library)(Fragment);
+const useImageLibraryNode = () => {
+  const { node } = useNode();
+  return { node: node.peer('Page$___content$images') };
+};
+
+const useImageMeta = (node: ContentNode<any>) => {
+  const { data } = node;
+  if (!data.src) return null;
+  return {
+    title: path.basename(data.src),
+    description: data.alt || '<no alt>',
+  };
+};
+
+const ImageDisplay = flow(
+  asEditableImage(),
+  asReadOnly,
+)('img');
+
+const ImageDemo = flow(
+  asEditableImage(),
+  withContentLibrary({
+    DisplayComponent: ImageDisplay,
+    Selector: ComponentSelector,
+    useLibraryNode: useImageLibraryNode,
+    useMeta: useImageMeta,
+  }),
+  withNode,
+  withNodeKey('image'),
+)('img');
 
 export default (props: any) => (
   <Page {...props}>
@@ -110,7 +163,9 @@ export default (props: any) => (
       <LibraryContent>
         <Title>Content Library</Title>
         <SectionTitle>Text with library</SectionTitle>
-        <p><TextDemo /></p>
+        <div className="p-2 border w-1/3 border-black"><TextDemo /></div>
+        <SectionTitle>Image with library</SectionTitle>
+        <div className="w-1/3"><ImageDemo /></div>
         <SectionTitle>Page Node Keys</SectionTitle>
         <PageKeys />
       </LibraryContent>
