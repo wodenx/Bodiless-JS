@@ -57,9 +57,9 @@ const GitButtons: FC = () => {
   return <></>;
 };
 
-const ShowDesignKeys = (process.env.NODE_ENV !== 'production' || process.env.BODILESS_DEBUG === '1')
-  ? withShowDesignKeys()(Fragment)
-  : Fragment;
+const ShowDesignKeys = (
+  process.env.NODE_ENV === 'development' || process.env.BODILESS_DEBUG === '1'
+) ? withShowDesignKeys()(Fragment) : Fragment;
 
 const Page: FC<Props> = observer(({ children, ui, ...rest }) => {
   const { PageEditor: Editor, ContextWrapper: Wrapper } = getUI(ui);
@@ -87,7 +87,9 @@ const Page: FC<Props> = observer(({ children, ui, ...rest }) => {
   }
   return (
     <GatsbyNodeProvider {...rest}>
-      <StaticPage>{children}</StaticPage>
+      <ShowDesignKeys>
+        <StaticPage>{children}</StaticPage>
+      </ShowDesignKeys> 
     </GatsbyNodeProvider>
   );
 });
