@@ -80,7 +80,7 @@ const SubList$: FC<SubListProps> = ({
   );
 };
 
-const SubList = designable(startComponents)(SubList$);
+const SubList = designable(startComponents, 'SubList')(SubList$);
 
 /**
  * Converts a component or tag to a "bodiless" list. The component itself (usually
