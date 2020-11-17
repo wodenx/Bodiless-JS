@@ -103,7 +103,7 @@ const ComponentSelector: React.FC<ComponentSelectorProps> = props => {
         <finalUI.MasterWrapper>
           <finalUI.FlexSection>
             <finalUI.ComponentLinkWrapper
-              disabled={activeFilters.length === 0}
+              disabled={activeFilters.length === 0 && activeSearch.trim().length === 0}
               onClick={() => {
                 if (activeFilters.length !== 0 || activeSearch.length !== 0) {
                   setActiveSearch('');
