@@ -16,8 +16,7 @@ import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 
 import Layout from '../../../components/Layout';
-import MainMenu from '../../../components/Menus/MainMenu';
-import BurgerMenu from '../../../components/Menus/BurgerMenu';
+import { ResponsiveSimpleMenu } from '../../../components/Menu';
 
 export default (props: any) => (
   <Page {...props}>
@@ -29,8 +28,7 @@ export default (props: any) => (
         </p>
       </div>
       <div className="ml-10">
-        <BurgerMenu nodeKey="my-menu" />
-        <MainMenu nodeKey="my-menu" />
+        <ResponsiveSimpleMenu nodeKey="my-menu" />
       </div>
     </Layout>
   </Page>
