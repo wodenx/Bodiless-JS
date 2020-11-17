@@ -203,7 +203,7 @@ const BreadcrumbStartComponents: BreadcrumbsComponents = {
  * Clean component that renders breadcrumbs.
  * @see BreadcrumbsComponents for a list of design components.
  */
-const BreadcrumbsClean = designable(BreadcrumbStartComponents)(BreadcrumbsClean$);
+const BreadcrumbsClean = designable(BreadcrumbStartComponents, 'Breadcrumbs')(BreadcrumbsClean$);
 
 /**
  * HOC that populates a breadcrumb based component with data from breadcrumb store.

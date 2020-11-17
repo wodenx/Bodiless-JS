@@ -23,7 +23,7 @@ import type {
   StylableProps,
 } from './FClasses';
 
-import addProps from './addProps';
+import addProps, { addPropsIf } from './addProps';
 import {
   asComponent,
   applyDesign,
@@ -51,8 +51,11 @@ import Fragment from './Fragment';
 
 export * from './StyledHTML';
 
+export { withShowDesignKeys } from './Context';
+
 export {
   addProps,
+  addPropsIf,
   stylable,
   addClasses,
   removeClasses,
