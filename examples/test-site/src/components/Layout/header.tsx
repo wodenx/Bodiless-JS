@@ -21,6 +21,7 @@ import {
   Div,
 } from '@bodiless/fclasses';
 import { withNodeKey } from '@bodiless/core';
+import { SimpleSearchBox } from '../Search';
 import ResponsiveMenu from '../Menus';
 import Logo from './logo';
 
@@ -30,6 +31,7 @@ type HeaderComponents = {
   MenuContainer: ComponentType<any>,
   Menu: ComponentType<any>,
   SiteLogoReturn: ComponentType<any>,
+  Search: ComponentType<any>,
 };
 export type Props = DesignableComponentsProps<HeaderComponents> & HTMLProps<HTMLElement>;
 
@@ -39,6 +41,7 @@ const headerComponents:HeaderComponents = {
   MenuContainer: Div,
   Menu: ResponsiveMenu,
   SiteLogoReturn: Logo,
+  Search: SimpleSearchBox,
 };
 const HeaderClean: FC<Props> = ({ components }) => {
   const {
@@ -53,6 +56,7 @@ const HeaderClean: FC<Props> = ({ components }) => {
     <Wrapper>
       <Container>
         <SiteLogoReturn />
+        <SimpleSearchBox placeholder="Search" />
       </Container>
       <MenuContainer>
         <Menu />
@@ -62,7 +66,7 @@ const HeaderClean: FC<Props> = ({ components }) => {
 };
 
 const asSiteHeader = flow(
-  designable(headerComponents),
+  designable(headerComponents, 'Header'),
   withDesign({
     Menu: withNodeKey({ nodeKey: 'MainMenu', nodeCollection: 'site' }),
   }),

@@ -12,27 +12,5 @@
  * limitations under the License.
  */
 
-import { flowRight } from 'lodash';
-import Helmet from 'react-helmet';
-import {
-  asBodilessHelmet,
-  withEvent,
-} from '@bodiless/components';
-
-const SiteGTMHelmetEvent = flowRight(
-  asBodilessHelmet('datalayer'),
-  withEvent(
-    'digitalData',
-    {
-      event: 'Page Loaded',
-      page: {
-        country: 'US',
-        language: 'EN',
-        hostname: 'bodilessjs.com',
-      },
-    },
-    'page-loaded',
-  ),
-)(Helmet);
-
-export default SiteGTMHelmetEvent;
+export { SearchBox, SearchResult } from './components/Search';
+export { withSearchResult, useSearchResultContext } from './components/SearchContextProvider';

@@ -14,11 +14,13 @@
 
 import Editable, { withPlaceholder, asEditable } from './Editable';
 import { asBodilessLink } from './Link';
+import type { AsBodilessLink } from './Link';
 import Image, {
   asBodilessImage,
   TImagePickerUI,
   withImagePlaceholder,
 } from './Image';
+import type { AsBodilessImage } from './Image';
 import NodeViewer from './NodeViewer';
 import withLinkToggle from './LinkToggle';
 import List from './List_DEPRECATED';
@@ -34,7 +36,7 @@ import {
 import withMetaForm, { withMetaSnippet } from './Meta/withMetaForm';
 import type { FieldType as MetaFormFieldType } from './Meta/withMetaForm';
 import asBodilessHelmet from './Helmet/Helmet';
-import withEvent from './GTM/gtm';
+import withDataLayerItem, { withDefaultDataLayer, withDataLayerScript } from './GTM/gtm';
 import { withToggle, withToggleTo, withToggleButton } from './Toggle';
 import withEditPlaceholder from './Placeholder';
 import { TagButtonProps, withTagButton, useTagsAccessors } from './TagButton';
@@ -101,7 +103,6 @@ export {
   withMetaHtml,
   asBodilessHelmet,
   withEditPlaceholder,
-  withEvent,
   withTagButton,
   TagButtonProps,
   asTaggableItem,
@@ -136,9 +137,17 @@ export {
   withMetaSnippet,
   asBreadcrumb,
   useBreadcrumbContext,
+  withDataLayerItem,
+  withDefaultDataLayer,
+  withDataLayerScript,
 };
 
 export * from './Chameleon/index';
 export * from './List';
 
 export type { MetaFormFieldType, YouTubePlayerSettings };
+
+export type {
+  AsBodilessImage,
+  AsBodilessLink,
+};
