@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 import { pickBy } from 'lodash';
 
 import { useMenuOptionUI } from '@bodiless/core';
-import { AllCheckbox, FilterWrapper } from './FilterWrapper';
+import FilterWrapper from './FilterWrapper';
 import SearchWrapper from './SearchWrapper';
 import ItemList from './ItemList';
 import { getFiltersByComponentList } from './getFiltersByComponentList';
@@ -28,13 +28,19 @@ import {
   FinalUI,
   ItemListProps,
 } from './types';
-import { ComponentDisplayModeProvider, ComponentDisplayMode } from '../FlowContainer/ComponentDisplayMode';
+import {
+  ComponentDisplayModeProvider,
+  ComponentDisplayMode,
+} from '../FlowContainer/ComponentDisplayMode';
 
 export { defaultUI } from './uiContext';
 
 export { uiContext };
 
-const applyMandatoryCategories = (components: any, mandatoryCategories: string[]) => {
+const applyMandatoryCategories = (
+  components: any,
+  mandatoryCategories: string[],
+) => {
   mandatoryCategories.forEach(mandatoryCategory => {
     components.forEach((component: any) => {
       if (!(mandatoryCategory in component.categories)) {
@@ -59,7 +65,10 @@ const reduceFilters = (filters: any, components: any) => pickBy(
 
 const ComponentSelector: React.FC<ComponentSelectorProps> = props => {
   const {
-    components: allComponents, ui, onSelect, mandatoryCategories,
+    components: allComponents,
+    ui,
+    onSelect,
+    mandatoryCategories,
   } = props;
 
   const [activeFilters, setActiveFilters] = useState([]);
@@ -87,12 +96,17 @@ const ComponentSelector: React.FC<ComponentSelectorProps> = props => {
         <finalUI.MasterWrapper>
           {Object.getOwnPropertyNames(allFilters).length > 0 && (
             <finalUI.FlexSection>
-              <AllCheckbox
-                activeFilter={activeFilters}
-                setActiveFilters={setActiveFilters}
-                activeSearch={activeSearch}
-                setActiveSearch={setActiveSearch}
-              />
+              <finalUI.ComponentLinkWrapper
+                disabled={activeFilters.length === 0}
+                onClick={() => {
+                  if (activeFilters.length !== 0 || activeSearch.length !== 0) {
+                    setActiveSearch('');
+                    setActiveFilters([]);
+                  }
+                }}
+              >
+                Clear
+              </finalUI.ComponentLinkWrapper>
               <FilterWrapper
                 activeFilter={activeFilters}
                 setActiveFilters={setActiveFilters}
@@ -106,12 +120,8 @@ const ComponentSelector: React.FC<ComponentSelectorProps> = props => {
               activeSearch={activeSearch}
               setActiveSearch={setActiveSearch}
             />
-            <ItemList
-              onSelect={onSelect}
-              components={newCompRender}
-            />
+            <ItemList onSelect={onSelect} components={newCompRender} />
           </finalUI.FlexSectionFull>
-
         </finalUI.MasterWrapper>
       </uiContext.Provider>
     </ComponentDisplayModeProvider>

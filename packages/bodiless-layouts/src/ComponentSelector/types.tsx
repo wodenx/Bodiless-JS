@@ -13,7 +13,6 @@
  */
 
 import type { ComponentType, HTMLProps } from 'react';
-import { FieldProps } from 'informed';
 
 export type ComponentSelectorProps = ItemListProps & {
   /**
@@ -87,8 +86,6 @@ export type FinalUI = {
   ComponentSelectorWrapper: ComponentType<HTMLProps<HTMLDivElement>> | string;
   // A input that will wrap the close menu icon
   SubmitButton: ComponentType<HTMLProps<HTMLButtonElement>> | string;
-  // A div the will wrap the AllCheckbox
-  AllCheckboxWrapper: ComponentType<HTMLProps<HTMLDivElement>> | string;
   // A div that will wrap all Accordion
   AccordionWrapper: ComponentType<HTMLProps<HTMLDivElement>> | string;
   // A div the will wrap the AccordionCheckbox
@@ -98,7 +95,7 @@ export type FinalUI = {
   // A label that will be displayed by the AccordionCheckbox
   AccordionCheckboxLabel: ComponentType<HTMLProps<HTMLLabelElement>> | string;
   // A input that will be displayed by the Accordion Label
-  AccordionCheckBox: ComponentType<FieldProps<any, any>> | string;
+  AccordionCheckBox: ComponentType<HTMLProps<HTMLInputElement>> | string;
   // A div that will wrap the search bar
   SearchBarWrapper: ComponentType<HTMLProps<HTMLDivElement>> | string;
   // A styled text input
@@ -125,6 +122,9 @@ export type FinalUI = {
   TitleWrapper: ComponentType<HTMLProps<HTMLSpanElement>> | string;
   // An h3 that wraps the component title element of a component box
   ComponentTitleWrapper: ComponentType<HTMLProps<HTMLHeadingElement>> | string;
+  // A link element.
+  ComponentLinkWrapper: ComponentType<HTMLProps<HTMLAnchorElement>> | string;
+
   // A span that wraps the icon element of a component box
   IconWrapper: ComponentType<HTMLProps<HTMLSpanElement>> | string;
   // A div that wraps the component description
