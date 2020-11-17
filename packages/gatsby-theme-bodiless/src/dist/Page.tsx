@@ -89,7 +89,7 @@ const Page: FC<Props> = observer(({ children, ui, ...rest }) => {
     <GatsbyNodeProvider {...rest}>
       <ShowDesignKeys>
         <StaticPage>{children}</StaticPage>
-      </ShowDesignKeys> 
+      </ShowDesignKeys>
     </GatsbyNodeProvider>
   );
 });
