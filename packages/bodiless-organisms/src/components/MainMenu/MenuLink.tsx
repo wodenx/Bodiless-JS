@@ -58,6 +58,6 @@ const MenuLinkBase: FC<Props> = ({
   return isCurrentPage$ ? (<ActiveLink {...rest} />) : (<Link {...rest} />);
 };
 
-const MenuLink = designable(menulinkComponents)(MenuLinkBase);
+const MenuLink = designable(menulinkComponents, 'MenuLink')(MenuLinkBase);
 
 export default MenuLink;
