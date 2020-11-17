@@ -14,11 +14,15 @@
 
 import React, { HTMLProps, ComponentType } from 'react';
 import {
+  createMenuOptionGroup,
   useMenuOptionUI,
   asBodilessComponent,
   withoutProps,
   ifEditable,
   withExtendHandler,
+  useNode,
+  withMenuOptions,
+  OptionGroupDefinition,
 } from '@bodiless/core';
 import type { AsBodiless, BodilessOptions } from '@bodiless/core';
 import { flowRight } from 'lodash';
@@ -31,6 +35,41 @@ export type LinkData = {
 type Props = HTMLProps<HTMLAnchorElement> & {
   unwrap?: () => void,
 };
+
+/**
+ * @private
+ *
+ * Hook to get the follow link button menu option group.
+ */
+const useFollowLinkButton = () => {
+  const { node } = useNode<LinkData>();
+  const handler = () => {
+    if (node.data.href && window !== undefined) {
+      window.location.href = node.data.href;
+    }
+  };
+  const option: OptionGroupDefinition = {
+    icon: 'launch',
+    label: 'Go',
+    name: 'link-go',
+    groupMerge: 'merge',
+    groupLabel: 'Link',
+    local: true,
+    global: false,
+    handler,
+    isHidden: !node.data.href,
+  };
+  return createMenuOptionGroup(option);
+};
+
+/**
+ * @private
+ *
+ * HOC which adds a "Go" button to a bodiless link when in edit mode.
+ */
+const withFollowLinkButton = ifEditable(
+  withMenuOptions({ useMenuOptions: useFollowLinkButton, peer: true, name: 'Follow Link' }),
+);
 
 const options: BodilessOptions<Props, LinkData> = {
   icon: 'link',
@@ -96,6 +135,7 @@ export const asBodilessLink: AsBodilessLink = (
   ),
   asBodilessComponent<Props, LinkData>(options)(nodeKeys, defaultData, useOverrides),
   withoutProps(['unwrap']),
+  withFollowLinkButton,
   withHrefTransformer,
 );
 const Link = asBodilessLink()('a');
