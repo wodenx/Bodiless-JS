@@ -14,7 +14,25 @@
 
 import { flow } from 'lodash';
 import { withDesign, addClasses } from '@bodiless/fclasses';
-import { withSimpleMenuDesign } from '@bodiless/organisms';
+import { withSimpleMenuDesign, useIsActiveTrail } from '@bodiless/organisms';
+
+import { ifToggledOn } from '@bodiless/core';
+import { asBold } from '../Elements.token';
+import { asUnderline } from '../ElementDefault.token';
+
+/**
+ * Title Styles
+ * ===========================================
+ */
+const withTitleStyles = addClasses('hover:bg-teal-500 block w-full px-3');
+
+const withActiveTitleStyles = ifToggledOn(useIsActiveTrail)(
+  addClasses('bg-teal-500'), asBold, asUnderline,
+);
+
+const withActiveSubTitleStyles = ifToggledOn(useIsActiveTrail)(
+  addClasses('bg-teal-500'), asBold,
+);
 
 /**
  * Base Menu Styles
@@ -22,8 +40,8 @@ import { withSimpleMenuDesign } from '@bodiless/organisms';
  */
 const withBaseMenuStyles = withDesign({
   Wrapper: addClasses('w-full bg-teal-600 text-white'),
-  Item: addClasses('hover:bg-teal-500 leading-loose text-sm'),
-  Title: addClasses('block w-full px-3'),
+  Item: addClasses('leading-loose text-sm'),
+  Title: flow(withTitleStyles, withActiveTitleStyles),
 });
 
 /**
@@ -35,7 +53,7 @@ const withBaseSubMenuStyles = withDesign({
     List: addClasses('bg-teal-600 text-white z-10'),
   }),
   Item: addClasses('leading-loose text-sm'),
-  Title: addClasses('hover:bg-teal-500 block w-full px-3'),
+  Title: flow(withTitleStyles, withActiveSubTitleStyles),
 });
 
 /**
