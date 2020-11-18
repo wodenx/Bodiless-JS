@@ -14,12 +14,16 @@
 
 import React, { FC, ComponentType } from 'react';
 import { flow } from 'lodash';
-import { withPageDimensionsContext, ifViewportIs, ifViewportIsNot } from '@bodiless/components';
+import {
+  withPageDimensionsContext, ifViewportIs, ifViewportIsNot, asHiddenBreadcrumbSource,
+} from '@bodiless/components';
 import {
   withDesign,
   designable,
   DesignableComponentsProps,
   Div,
+  Fragment,
+  replaceWith,
 } from '@bodiless/fclasses';
 
 import SimpleMenu from './SimpleMenu';
@@ -29,20 +33,29 @@ import { SimpleBurgerMenu, MegaBurgerMenu } from '../BurgerMenu';
 import { breakpoints } from '../Page';
 
 type MenuComponents = {
+  SSRBreadcrumbSource: ComponentType<any>,
   Menu: ComponentType<any>,
 };
 
-type MenuType = (Menu: ComponentType<any>) => ComponentType<any>;
-
 const menuComponentsStart:MenuComponents = {
+  SSRBreadcrumbSource: Fragment,
   Menu: Div,
 };
 
+const canUseDOM = () => !!(
+  typeof window !== 'undefined'
+  && window.document
+  && window.document.createElement
+);
+
+const isSSR = () => !canUseDOM();
+
 const MenuClean: FC<DesignableComponentsProps<MenuComponents>> = ({ components, ...rest }) => {
-  const { Menu } = components;
+  const { Menu, SSRBreadcrumbSource } = components;
 
   return (
     <nav aria-label="Navigation Menu">
+      {isSSR() && <SSRBreadcrumbSource {...rest} />}
       <Menu {...rest} />
     </nav>
   );
@@ -50,17 +63,23 @@ const MenuClean: FC<DesignableComponentsProps<MenuComponents>> = ({ components, 
 
 const ResponsiveMenuClean = designable(menuComponentsStart)(MenuClean);
 
-const withMenu = (Menu: MenuType) => withDesign<MenuComponents>({ Menu });
+const withMenu = (Menu: ComponentType<any>) => withDesign<MenuComponents>({
+  Menu: replaceWith(Menu),
+  SSRBreadcrumbSource: flow(
+    replaceWith(Menu),
+    asHiddenBreadcrumbSource,
+  ),
+});
 
 const ResponsiveSimpleMenu = flow(
-  ifViewportIs(['lg', 'xl', 'xxl'])(withMenu(() => SimpleMenu)),
-  ifViewportIsNot(['lg', 'xl', 'xxl'])(withMenu(() => SimpleBurgerMenu)),
+  ifViewportIs(['lg', 'xl', 'xxl'])(withMenu(SimpleMenu)),
+  ifViewportIsNot(['lg', 'xl', 'xxl'])(withMenu(SimpleBurgerMenu)),
   withPageDimensionsContext({ breakpoints }),
 )(ResponsiveMenuClean);
 
 const ResponsiveMegaMenu = flow(
-  ifViewportIs(['lg', 'xl', 'xxl'])(withMenu(() => MegaMenu)),
-  ifViewportIsNot(['lg', 'xl', 'xxl'])(withMenu(() => MegaBurgerMenu)),
+  ifViewportIs(['lg', 'xl', 'xxl'])(withMenu(MegaMenu)),
+  ifViewportIsNot(['lg', 'xl', 'xxl'])(withMenu(MegaBurgerMenu)),
   withPageDimensionsContext({ breakpoints }),
 )(ResponsiveMenuClean);
 

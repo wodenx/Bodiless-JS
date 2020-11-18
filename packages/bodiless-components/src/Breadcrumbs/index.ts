@@ -48,6 +48,7 @@ export type { BreadcrumbStoreItemsReducer } from './Breadcrumbs';
 export {
   useBreadcrumbStore,
   BreadcrumbStoreProvider,
+  asHiddenBreadcrumbSource,
 } from './BreadcrumbStoreProvider';
 
 export { default as withBreadcrumbs } from './withBreadcrumbs';

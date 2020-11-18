@@ -16,13 +16,10 @@ import { flow } from 'lodash';
 
 import {
   withDesign,
-  replaceWith,
-  Fragment,
 } from '@bodiless/fclasses';
 import { WithNodeKeyProps } from '@bodiless/core';
 import {
-  asBreadcrumb, withBreadcrumbs, withSubListDesign,
-  asBodilessList, asChameleonSubList,
+  asBreadcrumb, asBodilessList, asChameleonSubList,
 } from '@bodiless/components';
 import type { BreadcrumbSettings } from '@bodiless/components';
 
@@ -85,39 +82,6 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   withMenuContext,
 );
 
-// Now we create breadcrumbs
-
-/**
- * HOC that can be applied to a mega menu based component,
- * it renders all list and sublist items but produces no markup.
- */
-const withEmptyMenuMarkup = flow(
-  // can not use withSubMenuDesign({ Item: replaceWith(Fragment) }) here
-  // as far as we will break Columns sublist items
-  // due to design prop removal from Columns.Item element
-  withDesign({
-    Item: withDesign({
-      List: withDesign({
-        Item: replaceWith(Fragment),
-      }),
-      Touts: withDesign({
-        Item: replaceWith(Fragment),
-      }),
-      Columns: withDesign({
-        Item: withDesign({
-          Item: replaceWith(Fragment),
-        }),
-      }),
-    }),
-  }),
-  withMenuDesign({
-    Wrapper: replaceWith(Fragment),
-  }),
-  withSubListDesign(1)({
-    _default: replaceWith(Fragment),
-  }),
-);
-
 /**
  * Creates a HOC which can be applied to a base menu to make it into a data source for
  * the site's breadcrumbs.
@@ -134,20 +98,6 @@ const asBreadcrumbSource = (settings: BreadcrumbSettings) => flow(
   }),
 );
 
-/**
- * Creates a HOC which can be applied to a base menu to make it into a site's breadcrumbs
- *
- * @param settings The title and link nodekeys defining where to locate the link and title nodes.
- *
- * @return  HOC for composing a clean (unstyled) site breadcrumb component.
- */
-const asBreadcrumbsClean = (settings: BreadcrumbSettings) => flow(
-  withEmptyMenuMarkup,
-  asBreadcrumbSource(settings),
-  withBreadcrumbs,
-);
-
 export {
-  asMenuSubList, asMenuBase, withMenuDesign,
-  asBreadcrumbsClean, asBreadcrumbSource,
+  asMenuSubList, asMenuBase, withMenuDesign, asBreadcrumbSource,
 };

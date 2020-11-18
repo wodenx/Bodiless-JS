@@ -18,8 +18,6 @@ import {
   withDesign,
   Design,
   stylable,
-  replaceWith,
-  Fragment,
 } from '@bodiless/fclasses';
 import {
   WithNodeKeyProps,
@@ -27,7 +25,7 @@ import {
 import {
   asBodilessList,
   withSubListDesign, withSubLists, asSubList, withDeleteNodeOnUnwrap,
-  asBreadcrumb, withBreadcrumbs,
+  asBreadcrumb,
 } from '@bodiless/components';
 import type { BreadcrumbSettings } from '@bodiless/components';
 
@@ -83,26 +81,6 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   withMenuContext,
 );
 
-/**
- * HOC that can be applied to a menu based component,
- * it renders all list and sublist items but produces no markup.
- */
-const withEmptyMenuMarkup = flow(
-  withDesign({
-    Item: withDesign({
-      SubMenu: withDesign({
-        Item: replaceWith(Fragment),
-      }),
-    }),
-  }),
-  withMenuDesign({
-    Wrapper: replaceWith(Fragment),
-  }),
-  withSubListDesign(1)({
-    _default: replaceWith(Fragment),
-  }),
-);
-
 const asBreadcrumbSource = (settings: BreadcrumbSettings) => flow(
   withMenuDesign({
     Item: flow(
@@ -111,19 +89,6 @@ const asBreadcrumbSource = (settings: BreadcrumbSettings) => flow(
   }),
 );
 
-/**
- * Creates a HOC which can be applied to a mega menu to make it into a site's breadcrumbs
- *
- * @param settings The title and link nodekeys defining where to locate the link and title nodes.
- *
- * @return  HOC for composing a clean (unstyled) site breadcrumb component.
- */
-const asBreadcrumbsClean = (settings: BreadcrumbSettings) => flow(
-  withEmptyMenuMarkup,
-  asBreadcrumbSource(settings),
-  withBreadcrumbs,
-);
-
 export {
-  asMenuBase, asBreadcrumbsClean, asBreadcrumbSource, withMenuDesign, asMenuSubList,
+  asMenuBase, asBreadcrumbSource, withMenuDesign, asMenuSubList,
 };
