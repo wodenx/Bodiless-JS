@@ -12,13 +12,14 @@
  * limitations under the License.
  */
 
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import {
   withSidecarNodes, ifReadOnly, ifEditable, withOnlyProps,
 } from '@bodiless/core';
 import type { UseBodilessOverrides, EditButtonProps } from '@bodiless/core';
 import { flowRight, identity, flow } from 'lodash';
-import { replaceWith, withDesign, HOC, withoutProps } from '@bodiless/fclasses';
+import { replaceWith, withDesign, withoutProps } from '@bodiless/fclasses';
+import type { HOC } from '@bodiless/fclasses';
 import type { AsBodilessLink } from './Link';
 import {
   withChameleonComponentFormControls, applyChameleon, withChameleonContext, useChameleonContext,
