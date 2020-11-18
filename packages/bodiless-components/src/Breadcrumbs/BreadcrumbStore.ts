@@ -45,6 +45,7 @@ export type BreadcrumbItemType = {
   isEqual: (item: BreadcrumbItemType | string) => boolean;
   isFirst: () => boolean;
   isLast: () => boolean;
+  isActive: () => boolean;
   getAncestors: () => BreadcrumbItemType[];
   parent: BreadcrumbItemType | undefined;
 };
@@ -86,6 +87,12 @@ export class BreadcrumbItem implements BreadcrumbItemType {
     this._title = title;
     this._link = link;
     this._store = store;
+  }
+
+  isActive(): boolean {
+    return Boolean(
+      this._store.breadcrumbTrail.find(tItem => tItem.isEqual(this)),
+    );
   }
 
   isSubpathOf(item: BreadcrumbItemType | string) {

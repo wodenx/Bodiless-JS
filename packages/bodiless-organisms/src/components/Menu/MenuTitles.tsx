@@ -20,7 +20,7 @@ import {
   replaceWith, HOC, stylable, Span, A,
 } from '@bodiless/fclasses';
 import {
-  asBodilessLink, withBodilessLinkToggle, useBreadcrumbContext, useBreadcrumbStore,
+  asBodilessLink, withBodilessLinkToggle, useBreadcrumbContext,
 } from '@bodiless/components';
 import { ToutClean } from '../Touts';
 
@@ -30,17 +30,6 @@ export const asMenuTout = (withToutEditors: any) => flow(
   withNode,
   withNodeKey('title'),
 );
-
-enum TrailStatus { Active, Inactive }
-
-const useTrailStatus = (): TrailStatus => {
-  const item = useBreadcrumbContext();
-  const store = useBreadcrumbStore();
-  if (item && store) {
-    if (store.breadcrumbTrail.find(tItem => tItem.isEqual(item))) return TrailStatus.Active;
-  }
-  return TrailStatus.Inactive;
-};
 
 /**
  * Hook which can be used to determine if a menu item is part of
@@ -52,7 +41,7 @@ const useTrailStatus = (): TrailStatus => {
  *
  * @return true if the item is in the active trail, false otherwise.
  */
-export const useIsActiveTrail = () => useTrailStatus() === TrailStatus.Active;
+export const useIsActiveTrail = () => useBreadcrumbContext()?.isActive();
 
 export const asMenuLink = (asEditable: HOC, asOff: HOC = replaceWith(Span)) => flow(
   replaceWith(A),
