@@ -12,13 +12,13 @@
  * limitations under the License.
  */
 
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import {
   withSidecarNodes, ifReadOnly, ifEditable, withOnlyProps,
 } from '@bodiless/core';
 import type { UseBodilessOverrides, EditButtonProps } from '@bodiless/core';
 import { flowRight, identity, flow } from 'lodash';
-import { replaceWith, withDesign, HOC } from '@bodiless/fclasses';
+import { replaceWith, withDesign, HOC, withoutProps } from '@bodiless/fclasses';
 import type { AsBodilessLink } from './Link';
 import {
   withChameleonComponentFormControls, applyChameleon, withChameleonContext, useChameleonContext,
@@ -26,7 +26,7 @@ import {
 } from './Chameleon';
 
 const SafeFragment = withOnlyProps('key', 'children')(Fragment);
-const SafeSpan = withOnlyProps('key', 'chidren', 'onClick')('span');
+const SafeSpan = withoutProps('href')('span');
 
 const extendOverrides = <P extends object, D extends object>(
   useOverrides: UseBodilessOverrides<P, D> = () => ({}),
