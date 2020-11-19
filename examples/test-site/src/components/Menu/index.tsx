@@ -15,8 +15,9 @@
 import React, { FC, ComponentType } from 'react';
 import { flow } from 'lodash';
 import {
-  withPageDimensionsContext, ifViewportIs, ifViewportIsNot, asHiddenBreadcrumbSource,
+  withPageDimensionsContext, ifViewportIsNot, asHiddenBreadcrumbSource,
   withRemoveOnEffect,
+  ifViewportIs,
 } from '@bodiless/components';
 import {
   withDesign,
@@ -27,12 +28,12 @@ import {
   replaceWith,
 } from '@bodiless/fclasses';
 
+import { withNode } from '@bodiless/core';
 import SimpleMenu from './SimpleMenu';
 import MegaMenu from './MegaMenu';
 
 import { SimpleBurgerMenu, MegaBurgerMenu } from '../BurgerMenu';
 import { breakpoints } from '../Page';
-import { withNode } from '@bodiless/core';
 
 type MenuComponents = {
   SSRBreadcrumbSource: ComponentType<any>,
@@ -73,17 +74,15 @@ const withMenus = ({ DesktopMenu, MobileMenu }: Partial<MenuComponents>) => flow
   withDesign({
     SSRBreadcrumbSource: flow(
       replaceWith(DesktopMenu),
-      // asHiddenBreadcrumbSource,
+      asHiddenBreadcrumbSource,
     ),
     DesktopMenu: flow(
       replaceWith(DesktopMenu),
-      // addClasses('hidden lg:block'),
-      // ifViewportIsNot(['lg', 'xl', 'xxl'])(withRemoveOnEffect),
+      ifViewportIsNot(['lg', 'xl', 'xxl'])(withRemoveOnEffect),
     ),
     MobileMenu: flow(
       replaceWith(MobileMenu),
-      // addClasses('lg:hidden xl:hidden 2xl:hidden'),
-      // ifViewportIs(['lg', 'xl', 'xxl'])(withRemoveOnEffect),
+      ifViewportIs(['lg', 'xl', 'xxl'])(withRemoveOnEffect),
     ),
   }),
   withPageDimensionsContext({ breakpoints }),
