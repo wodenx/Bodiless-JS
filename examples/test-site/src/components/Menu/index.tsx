@@ -16,6 +16,7 @@ import React, { FC, ComponentType } from 'react';
 import { flow } from 'lodash';
 import {
   withPageDimensionsContext, ifViewportIs, ifViewportIsNot, asHiddenBreadcrumbSource,
+  withRemoveOnEffect,
 } from '@bodiless/components';
 import {
   withDesign,
@@ -31,15 +32,18 @@ import MegaMenu from './MegaMenu';
 
 import { SimpleBurgerMenu, MegaBurgerMenu } from '../BurgerMenu';
 import { breakpoints } from '../Page';
+import { withNode } from '@bodiless/core';
 
 type MenuComponents = {
   SSRBreadcrumbSource: ComponentType<any>,
-  Menu: ComponentType<any>,
+  MobileMenu: ComponentType<any>,
+  DesktopMenu: ComponentType<any>,
 };
 
 const menuComponentsStart:MenuComponents = {
   SSRBreadcrumbSource: Fragment,
-  Menu: Div,
+  DesktopMenu: Div,
+  MobileMenu: Div,
 };
 
 const canUseDOM = () => !!(
@@ -50,38 +54,51 @@ const canUseDOM = () => !!(
 
 const isSSR = () => !canUseDOM();
 
-const MenuClean: FC<DesignableComponentsProps<MenuComponents>> = ({ components, ...rest }) => {
-  const { Menu, SSRBreadcrumbSource } = components;
+const ResponsiveMenuBase: FC<DesignableComponentsProps<MenuComponents>> = props => {
+  const { components, ...rest } = props;
+  const { MobileMenu, DesktopMenu, SSRBreadcrumbSource } = components;
 
   return (
     <nav aria-label="Navigation Menu">
       {isSSR() && <SSRBreadcrumbSource {...rest} />}
-      <Menu {...rest} />
+      <MobileMenu {...rest} />
+      <DesktopMenu {...rest} />
     </nav>
   );
 };
 
-const ResponsiveMenuClean = designable(menuComponentsStart)(MenuClean);
+const ResponsiveMenuClean = designable<any>(menuComponentsStart)(ResponsiveMenuBase);
 
-const withMenu = (Menu: ComponentType<any>) => withDesign<MenuComponents>({
-  Menu: replaceWith(Menu),
-  SSRBreadcrumbSource: flow(
-    replaceWith(Menu),
-    asHiddenBreadcrumbSource,
-  ),
-});
-
-const ResponsiveSimpleMenu = flow(
-  ifViewportIs(['lg', 'xl', 'xxl'])(withMenu(SimpleMenu)),
-  ifViewportIsNot(['lg', 'xl', 'xxl'])(withMenu(SimpleBurgerMenu)),
+const withMenus = ({ DesktopMenu, MobileMenu }: Partial<MenuComponents>) => flow(
+  withDesign({
+    SSRBreadcrumbSource: flow(
+      replaceWith(DesktopMenu),
+      // asHiddenBreadcrumbSource,
+    ),
+    DesktopMenu: flow(
+      replaceWith(DesktopMenu),
+      // addClasses('hidden lg:block'),
+      // ifViewportIsNot(['lg', 'xl', 'xxl'])(withRemoveOnEffect),
+    ),
+    MobileMenu: flow(
+      replaceWith(MobileMenu),
+      // addClasses('lg:hidden xl:hidden 2xl:hidden'),
+      // ifViewportIs(['lg', 'xl', 'xxl'])(withRemoveOnEffect),
+    ),
+  }),
   withPageDimensionsContext({ breakpoints }),
-)(ResponsiveMenuClean);
+  withNode,
+);
 
-const ResponsiveMegaMenu = flow(
-  ifViewportIs(['lg', 'xl', 'xxl'])(withMenu(MegaMenu)),
-  ifViewportIsNot(['lg', 'xl', 'xxl'])(withMenu(MegaBurgerMenu)),
-  withPageDimensionsContext({ breakpoints }),
-)(ResponsiveMenuClean);
+const ResponsiveSimpleMenu = withMenus({
+  DesktopMenu: SimpleMenu,
+  MobileMenu: SimpleBurgerMenu,
+})(ResponsiveMenuClean);
+
+const ResponsiveMegaMenu = withMenus({
+  DesktopMenu: MegaMenu,
+  MobileMenu: MegaBurgerMenu,
+})(ResponsiveMenuClean);
 
 export {
   ResponsiveSimpleMenu,

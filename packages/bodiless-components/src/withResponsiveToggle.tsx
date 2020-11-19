@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 
+import React, { ComponentType, useEffect, useState } from 'react';
 import { ifToggledOn, ifToggledOff } from '@bodiless/core';
 import { usePageDimensionsContext } from './PageDimensionsProvider';
 
@@ -20,10 +21,40 @@ const useResponsiveToggle = (sizes: string[] | string) => () => {
   return Array.isArray(sizes) ? sizes.includes(size) : sizes === size;
 };
 
+/**
+ * Flow toggle which applies the supplied hocs if the viewport matches a specified
+ * set of sizes.
+ *
+ * @param sizes A list of viewport sizes as defined by the `PageDimensionContext`
+ */
 const ifViewportIs = (sizes: string[] | string) => ifToggledOn(useResponsiveToggle(sizes));
+
+/**
+ * Flow toggle which applies the supplied hocs if the viewport does not match
+ * a specified set of sizes.
+ *
+ * @param sizes A list of viewport sizes as defined by the `PageDimensionContext`
+ */
 const ifViewportIsNot = (sizes: string[] | string) => ifToggledOff(useResponsiveToggle(sizes));
+
+/**
+ * Helper hoc which removes the wrapped component on effect. Useful to remove a component
+ * from the browser DOM at certain viewports, but still render the component during SSR
+ * (to prevent problems with DOM reconciliation and flicker).
+ *
+ * @param Component The component to remove
+ */
+const withRemoveOnEffect = <P extends object>(Component: ComponentType<P>) => {
+  const WithRemoveOnEffect = (props: P) => {
+    const [hidden, setHidden] = useState(false);
+    useEffect(() => setHidden(true), []);
+    return hidden ? null : <Component {...props} />;
+  };
+  return WithRemoveOnEffect;
+};
 
 export {
   ifViewportIs,
   ifViewportIsNot,
+  withRemoveOnEffect,
 };
