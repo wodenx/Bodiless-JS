@@ -27,7 +27,7 @@ export const getAbsoluteNodeKey = (basePath: Path, contentPath: Path) => {
   const delimiter = '$';
   const basePathArray = Array.isArray(basePath) ? basePath : basePath.split(delimiter);
   const contentPathArray = Array.isArray(contentPath) ? contentPath : contentPath.split(delimiter);
-  return basePathArray.concat(contentPathArray).join('$');
+  return basePathArray.concat(contentPathArray).join(delimiter);
 };
 
 // TODO: this class should expose a method that allows to check if node has value in store
