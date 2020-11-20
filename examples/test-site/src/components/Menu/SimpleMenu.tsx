@@ -20,6 +20,7 @@ import {
   asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenuTopNav,
 } from '@bodiless/organisms';
 
+import { asHiddenBreadcrumbSource } from '@bodiless/components';
 import { asMenuTitle } from './MegaMenu';
 import withSimpleMenuStyles from './SimpleMenu.token';
 import { asDesktopOnly } from '../Elements.token';
@@ -33,9 +34,14 @@ const SimpleMenuBase = flow(
   }),
 )('ul') as ComponentType<any>;
 
+const SimpleMenuSSRBreadcrumbSource = flow(
+  asBreadcrumbSource(true),
+  asHiddenBreadcrumbSource,
+)(SimpleMenuBase);
+
 const SimpleMenu = flow(
   withSimpleMenuStyles,
-  asBreadcrumbSource,
+  asBreadcrumbSource(),
   asSimpleMenuTopNav,
   asDesktopOnly,
 )(SimpleMenuBase);
@@ -51,4 +57,5 @@ export default SimpleMenu;
 export {
   SimpleMenuBase,
   SimpleMenuList,
+  SimpleMenuSSRBreadcrumbSource,
 };

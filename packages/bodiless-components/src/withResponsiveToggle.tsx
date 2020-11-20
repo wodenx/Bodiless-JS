@@ -48,7 +48,7 @@ const withRemoveOnEffect = <P extends object>(Component: ComponentType<P>) => {
   const WithRemoveOnEffect = (props: P) => {
     const [hidden, setHidden] = useState(false);
     useEffect(() => setHidden(true), []);
-    return hidden ? null : <Component {...props} />;
+    return hidden ? <></> : <Component {...props} />;
   };
   return WithRemoveOnEffect;
 };

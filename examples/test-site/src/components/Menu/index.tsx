@@ -15,7 +15,7 @@
 import React, { FC, ComponentType } from 'react';
 import { flow } from 'lodash';
 import {
-  withPageDimensionsContext, ifViewportIsNot, asHiddenBreadcrumbSource,
+  withPageDimensionsContext, ifViewportIsNot,
   withRemoveOnEffect,
   ifViewportIs,
 } from '@bodiless/components';
@@ -29,8 +29,8 @@ import {
 } from '@bodiless/fclasses';
 
 import { withNode } from '@bodiless/core';
-import SimpleMenu from './SimpleMenu';
-import MegaMenu from './MegaMenu';
+import SimpleMenu, { SimpleMenuSSRBreadcrumbSource } from './SimpleMenu';
+import MegaMenu, { MegaMenuSSRBreadcrumbSource } from './MegaMenu';
 
 import { SimpleBurgerMenu, MegaBurgerMenu } from '../BurgerMenu';
 import { breakpoints } from '../Page';
@@ -62,20 +62,19 @@ const ResponsiveMenuBase: FC<DesignableComponentsProps<MenuComponents>> = props 
   return (
     <nav aria-label="Navigation Menu">
       {isSSR() && <SSRBreadcrumbSource {...rest} />}
-      <MobileMenu {...rest} />
       <DesktopMenu {...rest} />
+      <MobileMenu {...rest} />
     </nav>
   );
 };
 
 const ResponsiveMenuClean = designable<any>(menuComponentsStart)(ResponsiveMenuBase);
 
-const withMenus = ({ DesktopMenu, MobileMenu }: Partial<MenuComponents>) => flow(
+const withMenus = ({
+  DesktopMenu, MobileMenu, SSRBreadcrumbSource,
+}: Partial<MenuComponents>) => flow(
   withDesign({
-    SSRBreadcrumbSource: flow(
-      replaceWith(DesktopMenu),
-      asHiddenBreadcrumbSource,
-    ),
+    SSRBreadcrumbSource: replaceWith(SSRBreadcrumbSource),
     DesktopMenu: flow(
       replaceWith(DesktopMenu),
       ifViewportIsNot(['lg', 'xl', 'xxl'])(withRemoveOnEffect),
@@ -92,11 +91,13 @@ const withMenus = ({ DesktopMenu, MobileMenu }: Partial<MenuComponents>) => flow
 const ResponsiveSimpleMenu = withMenus({
   DesktopMenu: SimpleMenu,
   MobileMenu: SimpleBurgerMenu,
+  SSRBreadcrumbSource: SimpleMenuSSRBreadcrumbSource,
 })(ResponsiveMenuClean);
 
 const ResponsiveMegaMenu = withMenus({
   DesktopMenu: MegaMenu,
   MobileMenu: MegaBurgerMenu,
+  SSRBreadcrumbSource: MegaMenuSSRBreadcrumbSource,
 })(ResponsiveMenuClean);
 
 export {

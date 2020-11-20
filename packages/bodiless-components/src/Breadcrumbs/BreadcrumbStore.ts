@@ -172,6 +172,10 @@ export class BreadcrumbItem implements BreadcrumbItemType {
   setLink(link: BreadcrumbItemLink) {
     this._link = link;
   }
+
+  toString() {
+    return `[${this.link.data}${this.isActive() ? '***' : ''}](${this.uuid})`;
+  }
 }
 
 export type BreadcrumbStoreType = {
@@ -264,5 +268,9 @@ export class BreadcrumbStore implements BreadcrumbStoreType {
 
   hasCurrentPageItem() {
     return this.activeItem !== undefined && this.activeItem.hasPath(this.pagePath);
+  }
+
+  toString() {
+    return this.breadcrumbTrail.map(i => i.toString()).join('--');
   }
 }

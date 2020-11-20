@@ -13,10 +13,9 @@
  */
 
 import React, {
-  createContext, useContext, ComponentType, useRef, useEffect,
+  createContext, useContext, ComponentType, useEffect, useLayoutEffect,
 } from 'react';
 import { useNode } from '@bodiless/core';
-import { v4 } from 'uuid';
 import { observer } from 'mobx-react-lite';
 import { BreadcrumbItem } from './BreadcrumbStore';
 import type { BreadcrumbItemType } from './BreadcrumbStore';
@@ -31,19 +30,7 @@ export const BreadcrumbContextProvider = breadcrumbContext.Provider;
 export type BreadcrumbSettings = {
   linkNodeKey: string,
   titleNodeKey: string,
-};
-
-/**
- * hook that checks whether the component is rendered the first time
- *
- * @returns true when the component is rendered the first time, otherwise false
- */
-const useIsFirstRender = () => {
-  const isMounted = useRef(false);
-  useEffect(() => {
-    isMounted.current = true;
-  }, []);
-  return !isMounted.current;
+  isSSR?: boolean,
 };
 
 /**
@@ -59,17 +46,18 @@ const useIsFirstRender = () => {
 const asBreadcrumb = ({
   linkNodeKey,
   titleNodeKey,
+  isSSR = false,
 }: BreadcrumbSettings) => <P extends object>(Component: ComponentType<P>) => {
   const AsBreadcrumb = observer((props: P) => {
     const { node } = useNode();
     const titleNode = node.child<object>(titleNodeKey);
     const linkNode = node.child<LinkData>(linkNodeKey);
-    const contextUuidRef = useRef(v4());
+    const id = node.path.join('$');
     const store = useBreadcrumbStore();
     if (store === undefined) return <Component {...props} />;
     const current = useBreadcrumbContext();
     const item = new BreadcrumbItem({
-      uuid: contextUuidRef.current,
+      uuid: id,
       title: {
         data: titleNode.data,
         nodePath: [...node.path, titleNodeKey].join('$'),
@@ -81,18 +69,16 @@ const asBreadcrumb = ({
       parent: current,
       store,
     });
-    const isFirstRender = useIsFirstRender();
-    // hit breadcrumb store during first render
-    // so that get breadcrumbs generated during server-side rendering
-    if (isFirstRender) {
+    // During SSR we need to populate the store on render, bc effects are not executed.
+    if (isSSR) {
       store.setItem(item);
     }
-    useEffect(() => {
+    useLayoutEffect(() => {
       store.setItem(item);
     }, [titleNode.data, linkNode.data]);
     // deleting item from store on unmount
     useEffect(() => () => {
-      store.deleteItem(contextUuidRef.current);
+      store.deleteItem(id);
     }, []);
     return (
       <BreadcrumbContextProvider value={item}>

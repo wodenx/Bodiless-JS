@@ -23,6 +23,7 @@ import {
   asMenuLink, asMegaMenuTopNav,
 } from '@bodiless/organisms';
 
+import { asHiddenBreadcrumbSource } from '@bodiless/components';
 import { withEditorSimple } from '../Editors';
 import withMegaMenuStyles from './MegaMenu.token';
 import { asEditableTout } from '../Tout';
@@ -63,6 +64,11 @@ const MegaMenuBase = flow(
   }),
 )('ul') as ComponentType<any>;
 
+const MegaMenuSSRBreadcrumbSource = flow(
+  asMegaMenuBreadcrumbSource(true),
+  asHiddenBreadcrumbSource,
+)(MegaMenuBase);
+
 const MegaMenu = flow(
   withDesign({
     Item: withDesign({
@@ -71,7 +77,7 @@ const MegaMenu = flow(
       }),
     }),
   }),
-  asMegaMenuBreadcrumbSource,
+  asMegaMenuBreadcrumbSource(),
   withMegaMenuStyles,
   asMegaMenuTopNav,
   asDesktopOnly,
@@ -89,4 +95,5 @@ export {
   MegaMenuList,
   asMenuTitle,
   MegaMenuBase,
+  MegaMenuSSRBreadcrumbSource,
 };
