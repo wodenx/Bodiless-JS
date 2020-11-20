@@ -1,4 +1,4 @@
-import React, { ComponentType, useMemo } from 'react';
+import React, { ComponentType } from 'react';
 import {
   useNode, ContentNode, useContextMenuForm,
   createMenuOptionGroup, withMenuOptions, NodeProvider,
@@ -55,8 +55,7 @@ const withContentLibrary = (options: ContentLibraryOptions) => (
     const { node: libraryNode } = useLibraryNode(props);
     const keys = childKeys(libraryNode);
 
-    // We save the components in a ref so as not to re-mount them on every render.
-    const components = useMemo(() => keys.map(key => {
+    const components = keys.map(key => {
       const node = libraryNode.child(key);
       const ComponentWithNode: ComponentWithMeta = () => (
         <NodeProvider node={node}>
@@ -74,7 +73,7 @@ const withContentLibrary = (options: ContentLibraryOptions) => (
         Object.assign(ComponentWithNode, meta);
       }
       return ComponentWithNode;
-    }).filter(Boolean) as ComponentWithMeta[], [keys]);
+    }).filter(Boolean) as ComponentWithMeta[];
 
     const renderForm = ({ closeForm }:any) => {
       const onSelect = ([name]: string[]) => {
