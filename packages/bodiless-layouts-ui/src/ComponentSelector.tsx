@@ -44,7 +44,7 @@ const CheckBox = ({
 export const ui: ComponentSelectorUI = {
   MasterWrapper: addClasses('bl-flex bl-form-wrapper')(Div),
   FlexSection: addClasses('bl-pt-grid-2')(Div),
-  FlexSectionFull: addClasses('bl-pt-grid- bl-w-full')(Div),
+  FlexSectionFull: addClasses('bl-pt-grid-2 bl-w-full')(Div),
   FlowContainerEmpty: addClasses(
     'bl-border-2 bl-border-dashed bl-text-gray-600',
   )(Div),
