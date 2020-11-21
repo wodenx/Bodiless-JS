@@ -71,7 +71,6 @@ import PageDimensionsProvider, {
 import {
   ifViewportIs,
   ifViewportIsNot,
-  withRemoveOnEffect,
 } from './withResponsiveToggle';
 import withBodilessLinkToggle from './withBodilessLinkToggle';
 
@@ -134,7 +133,6 @@ export {
   BreakpointsType,
   ifViewportIs,
   ifViewportIsNot,
-  withRemoveOnEffect,
   withMetaForm,
   withMetaSnippet,
   withDataLayerItem,

@@ -15,9 +15,7 @@
 import React, { FC, ComponentType } from 'react';
 import { flow } from 'lodash';
 import {
-  withPageDimensionsContext, ifViewportIsNot,
-  withRemoveOnEffect,
-  ifViewportIs,
+  withPageDimensionsContext, ifViewportIs,
 } from '@bodiless/components';
 import {
   withDesign,
@@ -25,6 +23,7 @@ import {
   DesignableComponentsProps,
   Div,
   replaceWith,
+  replaceOnEffect,
 } from '@bodiless/fclasses';
 
 import { withNode } from '@bodiless/core';
@@ -47,12 +46,11 @@ const menuComponentsStart:MenuComponents = {
 const ResponsiveMenuBase: FC<DesignableComponentsProps<MenuComponents>> = props => {
   const { components, ...rest } = props;
   const { MobileMenu, DesktopMenu } = components;
-
   return (
-    <nav aria-label="Navigation Menu">
-      <DesktopMenu {...rest} />
+    <>
       <MobileMenu {...rest} />
-    </nav>
+      <DesktopMenu {...rest} />
+    </>
   );
 };
 
@@ -60,20 +58,20 @@ const ResponsiveMenuClean = designable<any>(menuComponentsStart)(ResponsiveMenuB
 
 const withMenus = ({
   DesktopMenu, MobileMenu,
-}: Partial<MenuComponents>) => flow(
-  withDesign({
-    DesktopMenu: flow(
-      replaceWith(DesktopMenu),
-      ifViewportIsNot(['lg', 'xl', 'xxl'])(withRemoveOnEffect),
-    ),
-    MobileMenu: flow(
-      replaceWith(MobileMenu),
-      ifViewportIs(['lg', 'xl', 'xxl'])(withRemoveOnEffect),
-    ),
-  }),
-  withPageDimensionsContext({ breakpoints }),
-  withNode,
-);
+}: MenuComponents) => {
+  const ProperMenu = ifViewportIs(['lg', 'xl', 'xxl'])(
+    replaceWith(DesktopMenu),
+  )(MobileMenu);
+  return flow(
+    withDesign({
+      DesktopMenu: replaceWith(DesktopMenu),
+      MobileMenu: replaceWith(MobileMenu),
+    }),
+    replaceOnEffect(ProperMenu),
+    withPageDimensionsContext({ breakpoints }),
+    withNode,
+  );
+};
 
 const ResponsiveSimpleMenu = withMenus({
   DesktopMenu: SimpleMenu,
