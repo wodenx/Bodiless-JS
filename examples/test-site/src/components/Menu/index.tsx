@@ -24,44 +24,32 @@ import {
   designable,
   DesignableComponentsProps,
   Div,
-  Fragment,
   replaceWith,
 } from '@bodiless/fclasses';
 
 import { withNode } from '@bodiless/core';
-import SimpleMenu, { SimpleMenuSSRBreadcrumbSource } from './SimpleMenu';
-import MegaMenu, { MegaMenuSSRBreadcrumbSource } from './MegaMenu';
+import SimpleMenu from './SimpleMenu';
+import MegaMenu from './MegaMenu';
 
 import { SimpleBurgerMenu, MegaBurgerMenu } from '../BurgerMenu';
 import { breakpoints } from '../Page';
 
 type MenuComponents = {
-  SSRBreadcrumbSource: ComponentType<any>,
   MobileMenu: ComponentType<any>,
   DesktopMenu: ComponentType<any>,
 };
 
 const menuComponentsStart:MenuComponents = {
-  SSRBreadcrumbSource: Fragment,
   DesktopMenu: Div,
   MobileMenu: Div,
 };
 
-const canUseDOM = () => !!(
-  typeof window !== 'undefined'
-  && window.document
-  && window.document.createElement
-);
-
-const isSSR = () => !canUseDOM();
-
 const ResponsiveMenuBase: FC<DesignableComponentsProps<MenuComponents>> = props => {
   const { components, ...rest } = props;
-  const { MobileMenu, DesktopMenu, SSRBreadcrumbSource } = components;
+  const { MobileMenu, DesktopMenu } = components;
 
   return (
     <nav aria-label="Navigation Menu">
-      {isSSR() && <SSRBreadcrumbSource {...rest} />}
       <DesktopMenu {...rest} />
       <MobileMenu {...rest} />
     </nav>
@@ -71,10 +59,9 @@ const ResponsiveMenuBase: FC<DesignableComponentsProps<MenuComponents>> = props 
 const ResponsiveMenuClean = designable<any>(menuComponentsStart)(ResponsiveMenuBase);
 
 const withMenus = ({
-  DesktopMenu, MobileMenu, SSRBreadcrumbSource,
+  DesktopMenu, MobileMenu,
 }: Partial<MenuComponents>) => flow(
   withDesign({
-    SSRBreadcrumbSource: replaceWith(SSRBreadcrumbSource),
     DesktopMenu: flow(
       replaceWith(DesktopMenu),
       ifViewportIsNot(['lg', 'xl', 'xxl'])(withRemoveOnEffect),
@@ -91,13 +78,11 @@ const withMenus = ({
 const ResponsiveSimpleMenu = withMenus({
   DesktopMenu: SimpleMenu,
   MobileMenu: SimpleBurgerMenu,
-  SSRBreadcrumbSource: SimpleMenuSSRBreadcrumbSource,
 })(ResponsiveMenuClean);
 
 const ResponsiveMegaMenu = withMenus({
   DesktopMenu: MegaMenu,
   MobileMenu: MegaBurgerMenu,
-  SSRBreadcrumbSource: MegaMenuSSRBreadcrumbSource,
 })(ResponsiveMenuClean);
 
 export {

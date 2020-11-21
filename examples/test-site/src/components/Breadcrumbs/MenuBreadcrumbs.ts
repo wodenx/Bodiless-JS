@@ -86,10 +86,9 @@ const withMenuBreadcrumbsStyles = flow(
   withArrowSeparator,
 );
 
-const asBreadcrumbSource = (isSSR = false) => asSimpleMenuBreadcrumbSource({
+const asBreadcrumbSource = asSimpleMenuBreadcrumbSource({
   linkNodeKey: 'title$link',
   titleNodeKey: 'title$text',
-  isSSR,
 });
 
 const Breadcrumbs = flow(
@@ -97,10 +96,9 @@ const Breadcrumbs = flow(
   withMenuBreadcrumbsStyles,
 )(BreadcrumbsBase);
 
-const asMegaMenuBreadcrumbSource = (isSSR = false) => asMegaMenuBreadcrumbSourceBase({
+const asMegaMenuBreadcrumbSource = asMegaMenuBreadcrumbSourceBase({
   linkNodeKey: 'title$link',
   titleNodeKey: 'title$text',
-  isSSR,
 });
 
 const MegaMenuBreadcrumbs = flow(

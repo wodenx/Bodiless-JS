@@ -15,13 +15,12 @@
 import { flow } from 'lodash';
 
 import {
-  withDesign,
+  withDesign, HOC,
 } from '@bodiless/fclasses';
 import { WithNodeKeyProps } from '@bodiless/core';
 import {
-  asBreadcrumb, asBodilessList, asChameleonSubList,
+  asBodilessList, asChameleonSubList, asBreadcrumbSource as asBreadcrumbSourceBase,
 } from '@bodiless/components';
-import type { BreadcrumbSettings } from '@bodiless/components';
 
 import { asMenuSubList } from './SimpleMenu';
 import { asStylableList } from './SimpleMenu.token';
@@ -53,11 +52,11 @@ const withSubMenuDesign = (design: any) => {
  *
  * @param design The design object or HOC to be applied.
 */
-const withMenuDesign = (design: any) => {
+const withMenuDesign = (design: any): HOC => {
   const withDesign$ = typeof design === 'function' ? design : withDesign(design);
   return flow(
-    withSubMenuDesign(withDesign$),
-    withDesign$,
+    withSubMenuDesign(withDesign$) as HOC,
+    withDesign$ as HOC,
   );
 };
 
@@ -82,6 +81,8 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   withMenuContext,
 );
 
+const asBreadcrumbSource = asBreadcrumbSourceBase(withMenuDesign);
+
 /**
  * Creates a HOC which can be applied to a base menu to make it into a data source for
  * the site's breadcrumbs.
@@ -90,14 +91,6 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
  *
  * @return  HOC for providing breadcrumb data from this menu.
  */
-const asBreadcrumbSource = (settings: BreadcrumbSettings) => flow(
-  withMenuDesign({
-    Item: flow(
-      asBreadcrumb(settings),
-    ),
-  }),
-);
-
 export {
   asMenuSubList, asMenuBase, withMenuDesign, asBreadcrumbSource,
 };

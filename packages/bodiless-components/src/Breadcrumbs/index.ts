@@ -19,6 +19,7 @@ export {
 export {
   default as asBreadcrumb,
   useBreadcrumbContext,
+  asBreadcrumbSource,
 } from './asBreadcrumb';
 
 export type {
@@ -48,7 +49,6 @@ export type { BreadcrumbStoreItemsReducer } from './Breadcrumbs';
 export {
   useBreadcrumbStore,
   BreadcrumbStoreProvider,
-  asHiddenBreadcrumbSource,
 } from './BreadcrumbStoreProvider';
 
 export { default as withBreadcrumbs } from './withBreadcrumbs';

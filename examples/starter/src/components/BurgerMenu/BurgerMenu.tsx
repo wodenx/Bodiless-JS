@@ -15,7 +15,7 @@
 import { flow } from 'lodash';
 import { asStatic } from '@bodiless/core';
 import { withDesign, replaceWith } from '@bodiless/fclasses';
-import { BurgerMenuClean, asMegaBurgerMenu, asSimpleBurgerMenu } from '@bodiless/organisms';
+import { BurgerMenuClean, asMegaBurgerMenu, asSimpleBurgerMenu, asMegaMenuBreadcrumbSource } from '@bodiless/organisms';
 
 import Logo from '../Layout/logo';
 
@@ -31,7 +31,8 @@ import './burger-menu.css';
 const MegaBurgerMenuBody = flow(
   asMegaBurgerMenu,
   withMegaBurgerMenuStyles,
-  asStatic,
+  asMegaMenuBreadcrumbSource,
+  // asStatic,
 )(MegaMenuBase);
 
 const BurgerMenuBody = flow(

@@ -25,9 +25,8 @@ import {
 import {
   asBodilessList,
   withSubListDesign, withSubLists, asSubList, withDeleteNodeOnUnwrap,
-  asBreadcrumb,
+  asBreadcrumbSource as asBreadcrumbSourceBase,
 } from '@bodiless/components';
-import type { BreadcrumbSettings } from '@bodiless/components';
 
 import { asStylableList } from './SimpleMenu.token';
 import withMenuContext from './withMenuContext';
@@ -81,13 +80,7 @@ const asMenuBase = (nodeKeys?: WithNodeKeyProps) => flow(
   withMenuContext,
 );
 
-const asBreadcrumbSource = (settings: BreadcrumbSettings) => flow(
-  withMenuDesign({
-    Item: flow(
-      asBreadcrumb(settings),
-    ),
-  }),
-);
+const asBreadcrumbSource = asBreadcrumbSourceBase(withMenuDesign);
 
 export {
   asMenuBase, asBreadcrumbSource, withMenuDesign, asMenuSubList,

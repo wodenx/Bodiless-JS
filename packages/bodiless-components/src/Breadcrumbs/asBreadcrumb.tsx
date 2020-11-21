@@ -13,13 +13,14 @@
  */
 
 import React, {
-  createContext, useContext, ComponentType, useEffect, useLayoutEffect,
+  createContext, useContext, ComponentType, useLayoutEffect,
 } from 'react';
 import { useNode } from '@bodiless/core';
 import { observer } from 'mobx-react-lite';
+import { flow } from 'lodash';
 import { BreadcrumbItem } from './BreadcrumbStore';
 import type { BreadcrumbItemType } from './BreadcrumbStore';
-import { useBreadcrumbStore } from './BreadcrumbStoreProvider';
+import { useBreadcrumbStore, asHiddenBreadcrumbSource } from './BreadcrumbStoreProvider';
 import type { LinkData } from '../Link';
 
 const breadcrumbContext = createContext<BreadcrumbItemType | undefined>(undefined);
@@ -27,10 +28,15 @@ const breadcrumbContext = createContext<BreadcrumbItemType | undefined>(undefine
 export const useBreadcrumbContext = () => useContext(breadcrumbContext);
 export const BreadcrumbContextProvider = breadcrumbContext.Provider;
 
+const isSSR = () => !(
+  typeof window !== 'undefined'
+  && window.document
+  && window.document.createElement
+);
+
 export type BreadcrumbSettings = {
   linkNodeKey: string,
   titleNodeKey: string,
-  isSSR?: boolean,
 };
 
 /**
@@ -46,7 +52,6 @@ export type BreadcrumbSettings = {
 const asBreadcrumb = ({
   linkNodeKey,
   titleNodeKey,
-  isSSR = false,
 }: BreadcrumbSettings) => <P extends object>(Component: ComponentType<P>) => {
   const AsBreadcrumb = observer((props: P) => {
     const { node } = useNode();
@@ -70,16 +75,17 @@ const asBreadcrumb = ({
       store,
     });
     // During SSR we need to populate the store on render, bc effects are not executed.
-    if (isSSR) {
+    if (isSSR()) {
       store.setItem(item);
+    } else {
+      useLayoutEffect(() => {
+        store.setItem(item);
+      }, [titleNode.data, linkNode.data]);
+      // deleting item from store on unmount
+      useLayoutEffect(() => () => {
+        store.deleteItem(id);
+      }, []);
     }
-    useLayoutEffect(() => {
-      store.setItem(item);
-    }, [titleNode.data, linkNode.data]);
-    // deleting item from store on unmount
-    useEffect(() => () => {
-      store.deleteItem(id);
-    }, []);
     return (
       <BreadcrumbContextProvider value={item}>
         <Component {...props} />
@@ -89,4 +95,30 @@ const asBreadcrumb = ({
   return AsBreadcrumb;
 };
 
+const asBreadcrumbSource = (withMenuDesign: Function) => (
+  settings: BreadcrumbSettings,
+) => <P extends object>(
+  Component: ComponentType<P>,
+) => {
+  const Source = withMenuDesign({
+    Item: asBreadcrumb(settings),
+  })(Component);
+
+  const SSRSource = flow(
+    withMenuDesign({
+      Item: asBreadcrumb(settings),
+    }),
+    asHiddenBreadcrumbSource,
+  )(Component);
+
+  const AsBreadcrumbSource = (props: P) => (
+    <>
+      {isSSR() && <SSRSource {...props} />}
+      <Source {...props} />
+    </>
+  );
+  return AsBreadcrumbSource;
+};
+
 export default asBreadcrumb;
+export { asBreadcrumbSource };
