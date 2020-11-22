@@ -12,76 +12,33 @@
  * limitations under the License.
  */
 
-import React, { FC, ComponentType } from 'react';
-import { flow } from 'lodash';
-import {
-  withPageDimensionsContext, ifViewportIs,
-} from '@bodiless/components';
-import {
-  withDesign,
-  designable,
-  DesignableComponentsProps,
-  Div,
-  replaceWith,
-  replaceOnEffect,
-} from '@bodiless/fclasses';
-
+import { flow, pick } from 'lodash';
+import { withDesign, replaceWith } from '@bodiless/fclasses';
 import { withNode } from '@bodiless/core';
+import { withResponsiveVariants } from '@bodiless/components';
+
 import SimpleMenu from './SimpleMenu';
 import MegaMenu from './MegaMenu';
-
 import { SimpleBurgerMenu, MegaBurgerMenu } from '../BurgerMenu';
-import { breakpoints } from '../Page';
+import { breakpoints as allBreakpoints } from '../Page';
 
-type MenuComponents = {
-  MobileMenu: ComponentType<any>,
-  DesktopMenu: ComponentType<any>,
-};
+const breakpoints = pick(allBreakpoints, 'lg');
 
-const menuComponentsStart:MenuComponents = {
-  DesktopMenu: Div,
-  MobileMenu: Div,
-};
+const ResponsiveSimpleMenu = flow(
+  withResponsiveVariants({ breakpoints }),
+  withDesign({
+    lg: replaceWith(SimpleMenu),
+  }),
+  withNode,
+)(SimpleBurgerMenu);
 
-const ResponsiveMenuBase: FC<DesignableComponentsProps<MenuComponents>> = props => {
-  const { components, ...rest } = props;
-  const { MobileMenu, DesktopMenu } = components;
-  return (
-    <>
-      <MobileMenu {...rest} />
-      <DesktopMenu {...rest} />
-    </>
-  );
-};
-
-const ResponsiveMenuClean = designable<any>(menuComponentsStart)(ResponsiveMenuBase);
-
-const withMenus = ({
-  DesktopMenu, MobileMenu,
-}: MenuComponents) => {
-  const ProperMenu = ifViewportIs(['lg', 'xl', 'xxl'])(
-    replaceWith(DesktopMenu),
-  )(MobileMenu);
-  return flow(
-    withDesign({
-      DesktopMenu: replaceWith(DesktopMenu),
-      MobileMenu: replaceWith(MobileMenu),
-    }),
-    replaceOnEffect(ProperMenu),
-    withPageDimensionsContext({ breakpoints }),
-    withNode,
-  );
-};
-
-const ResponsiveSimpleMenu = withMenus({
-  DesktopMenu: SimpleMenu,
-  MobileMenu: SimpleBurgerMenu,
-})(ResponsiveMenuClean);
-
-const ResponsiveMegaMenu = withMenus({
-  DesktopMenu: MegaMenu,
-  MobileMenu: MegaBurgerMenu,
-})(ResponsiveMenuClean);
+const ResponsiveMegaMenu = flow(
+  withResponsiveVariants({ breakpoints }),
+  withDesign({
+    lg: replaceWith(MegaMenu),
+  }),
+  withNode,
+)(MegaBurgerMenu);
 
 export {
   ResponsiveSimpleMenu,
