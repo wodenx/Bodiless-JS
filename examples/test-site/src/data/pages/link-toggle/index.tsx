@@ -36,6 +36,7 @@ export const LinkToggle = flowRight(
 const stripSlashOverrides = {
   normalizeHref: (href?: string) => new DefaultNormalHref(href, { trailingSlash: false })
     .toString(),
+  instructions: 'This href will have trailing slashes stripped',
 };
 const Stripslashlink = asBodilessLink(
   'strip-slash', undefined, () => stripSlashOverrides,
@@ -43,6 +44,7 @@ const Stripslashlink = asBodilessLink(
 
 const doNotNormalizeOverrides = {
   normalizeHref: (href?: string) => href,
+  instructions: 'This href will be saved as is.',
 };
 const DoNotNormalizeLink = asBodilessLink(
   'do-not-normalize', undefined, () => doNotNormalizeOverrides,

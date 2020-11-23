@@ -22,6 +22,7 @@ import {
   UseBodilessOverrides,
   useNode,
   ifToggledOn,
+  EditButtonOptions,
 } from '@bodiless/core';
 import type { AsBodiless, BodilessOptions } from '@bodiless/core';
 import { flowRight, identity } from 'lodash';
@@ -43,9 +44,18 @@ type Props = HTMLProps<HTMLAnchorElement> & {
 
 type ExtraLinkOptions = {
   normalizeHref: HrefNormalizer,
+  instructions?: string,
 };
 
 type UseLinkOverrides = UseBodilessOverrides<Props, LinkData, ExtraLinkOptions>;
+
+const DEFAULT_INSTRUCTIONS = `
+  Use a fully formed URL only for external links, e.g., https://www.example.com.
+  Internal links should be specified without a protocol or domain. Internal
+  links beginning with a &lsquo;.&rsquo; will be relative to the current page. Those not
+  beginning with a &lsquo;.&rsquo; will be prefixed with &lsquo;/&rsquo; and be relative to
+  the site root.  All links will have a trailing slash appended.
+`;
 
 const useLinkOverrides = (useOverrides: UseLinkOverrides = () => ({})): UseLinkOverrides => (
   props => {
@@ -53,11 +63,48 @@ const useLinkOverrides = (useOverrides: UseLinkOverrides = () => ({})): UseLinkO
     const {
       submitValueHandler: submitValueHandler$ = identity,
       normalizeHref = (href?: string) => new DefaultNormalHref(href).toString(),
+      instructions = DEFAULT_INSTRUCTIONS,
     } = overrides;
     const submitValueHandler = ({ href }: LinkData) => submitValueHandler$({
       href: normalizeHref(href),
     });
-    return { ...overrides, normalizeHref, submitValueHandler };
+    const finalOverrides: Partial<EditButtonOptions<Props, LinkData>> & ExtraLinkOptions = {
+      ...overrides,
+      normalizeHref,
+      submitValueHandler,
+      renderForm: ({ componentProps: { unwrap }, closeForm }) => {
+        const {
+          ComponentFormTitle,
+          ComponentFormLabel,
+          ComponentFormText,
+          ComponentFormUnwrapButton,
+          ComponentFormDescription,
+        } = useMenuOptionUI();
+        const removeLinkHandler = (event: React.MouseEvent) => {
+          event.preventDefault();
+          if (unwrap) {
+            unwrap();
+          }
+          closeForm(event);
+        };
+        return (
+          <>
+            <ComponentFormTitle>Link</ComponentFormTitle>
+            <ComponentFormLabel htmlFor="link-href">URL</ComponentFormLabel>
+            <ComponentFormText field="href" id="link-href" aria-describedby="description" placeholder="/link" />
+            <ComponentFormDescription id="description">
+              {instructions}
+            </ComponentFormDescription>
+            {unwrap && (
+            <ComponentFormUnwrapButton type="button" onClick={removeLinkHandler}>
+              Remove Link
+            </ComponentFormUnwrapButton>
+            )}
+          </>
+        );
+      },
+    };
+    return finalOverrides;
   }
 );
 
@@ -67,41 +114,8 @@ const options: BodilessOptions<Props, LinkData> = {
   label: 'Edit',
   groupLabel: 'Link',
   groupMerge: 'merge',
-  renderForm: ({ componentProps: { unwrap }, closeForm }) => {
-    const {
-      ComponentFormTitle,
-      ComponentFormLabel,
-      ComponentFormText,
-      ComponentFormUnwrapButton,
-      ComponentFormDescription,
-    } = useMenuOptionUI();
-    const removeLinkHandler = (event: React.MouseEvent) => {
-      event.preventDefault();
-      if (unwrap) {
-        unwrap();
-      }
-      closeForm(event);
-    };
-    return (
-      <>
-        <ComponentFormTitle>Link</ComponentFormTitle>
-        <ComponentFormLabel htmlFor="link-href">URL</ComponentFormLabel>
-        <ComponentFormText field="href" id="link-href" aria-describedby="description" placeholder="/link" />
-        <ComponentFormDescription id="description">
-          Use a fully formed URL only for external links, e.g., https://www.example.com.
-          Internal links should be specified without a protocol or domain. Internal
-          links beginning with a &lsquo;.&rsquo; will be relative to the current page. Those not
-          beginning with a &lsquo;.&rsquo; will be prefixed with &lsquo;/&rsquo; and be relative to
-          the site root.  All links will have a trailing slash appended.
-        </ComponentFormDescription>
-        {unwrap && (
-        <ComponentFormUnwrapButton type="button" onClick={removeLinkHandler}>
-          Remove Link
-        </ComponentFormUnwrapButton>
-        )}
-      </>
-    );
-  },
+  // The actual form is provided by useLinkOverrides above.
+  renderForm: () => <></>,
   global: false,
   local: true,
   defaultData: {
