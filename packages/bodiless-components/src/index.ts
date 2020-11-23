@@ -17,6 +17,7 @@ import Image, {
   asBodilessImage,
   TImagePickerUI,
   withImagePlaceholder,
+  DropZonePlugin as ImageDropZone,
 } from './Image';
 import type { AsBodilessImage } from './Image';
 import NodeViewer from './NodeViewer';
@@ -76,6 +77,7 @@ export {
   withBodilessLinkToggle,
   Image,
   asBodilessImage,
+  ImageDropZone,
   withImagePlaceholder,
   TImagePickerUI,
   Editable,
