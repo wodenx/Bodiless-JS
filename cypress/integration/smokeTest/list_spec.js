@@ -226,11 +226,11 @@ describe('List (text and link versions) testing', function () {
   it('list: 2.8 - checking clicking the links in a link list and a link sublist items in Preview Mode', () => {
     cy.xpath(topLinkListItem[0])
       .click();
-    cy.url().should('include',  `${listItemUrl}-1/${editedPostfix}/`);
+    cy.url().should('eq', Cypress.config().baseUrl + `/${listItemUrl}-1/${editedPostfix}/`);
     cy.visit('/list/');
     cy.xpath(topLinkListItem1Sublist[0])
       .click();
-    cy.url().should('include',  `${listItemUrl}-1-1/${editedPostfix}/`);
+    cy.url().should('eq', Cypress.config().baseUrl + `/${listItemUrl}-1-1/${editedPostfix}/`);
     cy.visit('/list/');
   })
 
