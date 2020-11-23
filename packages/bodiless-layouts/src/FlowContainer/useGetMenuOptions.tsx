@@ -22,6 +22,8 @@ import type { FlowContainerDataHandlers, FlowContainerItemHandlers } from './mod
 import { useFlowContainerDataHandlers, useItemHandlers } from './model';
 import { ComponentSelectorProps } from '../ComponentSelector/types';
 import componentSelectorForm from '../ComponentSelector/componentSelectorForm';
+import { FALLBACK_SNAP_CLASSNAME } from './SortableChild';
+import { defaultSnapData } from './utils/appendTailwindWidthClass';
 
 type Handlers = FlowContainerDataHandlers & FlowContainerItemHandlers;
 
@@ -51,13 +53,22 @@ const withNoDesign = (props:EditFlowContainerProps):EditFlowContainerProps => ({
  */
 const useComponentSelectorActions = (
   handlers: Handlers,
+  props: EditFlowContainerProps,
   currentItem?: FlowContainerItem,
 ) => {
+  const {
+    getDefaultWidth = () => FALLBACK_SNAP_CLASSNAME,
+    snapData = defaultSnapData,
+  } = props;
   const { insertFlowContainerItem, updateFlowContainerItem } = handlers;
   const { setId } = useActivateOnEffect();
 
+  const wrapperProps = {
+    className: getDefaultWidth(snapData),
+  };
+
   const insertItem: ComponentSelectorProps['onSelect'] = (event, componentName) => {
-    const { uuid } = insertFlowContainerItem(componentName, currentItem);
+    const { uuid } = insertFlowContainerItem(componentName, currentItem, wrapperProps);
     // Set the new id so it will activate on creation.
     setId(uuid);
   };
@@ -136,7 +147,7 @@ const useAddButton = (
 ) => {
   const { maxComponents = Infinity } = props;
   const context = useEditContext();
-  const { insertItem } = useComponentSelectorActions(handlers, item);
+  const { insertItem } = useComponentSelectorActions(handlers, props, item);
   const { getItems } = handlers;
   const isHidden = item
     ? useCallback(() => !context.isEdit || getItems().length >= maxComponents, [maxComponents])
@@ -161,7 +172,7 @@ const useSwapButton = (
   item: FlowContainerItem,
 ) => {
   const context = useEditContext();
-  const { replaceItem } = useComponentSelectorActions(handlers, item);
+  const { replaceItem } = useComponentSelectorActions(handlers, props, item);
   return {
     name: 'swap',
     label: 'Swap',
