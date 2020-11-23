@@ -22,6 +22,7 @@ import { withBreadcrumbStore } from '@bodiless/components';
 import Header from './header';
 import Footer from './footer';
 import SeoHelmet from './meta';
+import { SocialShareHelmet } from '../SocialShare';
 import { asPageContainer, asYMargin } from '../Elements.token';
 import { asSiteHeader, asSiteFooter } from './token';
 
@@ -43,6 +44,7 @@ const BaseLayout = ({ children, components }) => {
     <>
       <SeoHelmet />
       <BreadcrumbProvider>
+        <SocialShareHelmet />
         <SiteHeader />
         <Container>
           { Breadcrumbs && <Breadcrumbs />}
