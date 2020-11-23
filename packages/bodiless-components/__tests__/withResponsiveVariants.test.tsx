@@ -31,9 +31,10 @@ describe('withResponsiveVariants', () => {
   const Small = () => <span id="small">small</span>;
   const Medium = () => <span id="medium">medium</span>;
   const Large = () => <span id="large">large</span>;
+  const breakpoints = { sm: 0, md: 100, lg: 200 };
 
   const Test = flow(
-    withResponsiveVariants({ sm: 0, md: 100, lg: 200 }),
+    withResponsiveVariants({ breakpoints }),
     withDesign({
       md: replaceWith(Medium),
       lg: replaceWith(Large),
