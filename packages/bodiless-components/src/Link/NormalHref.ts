@@ -100,7 +100,12 @@ class DefaultNormalHref implements NormalHref {
   }
 
   toString(): string {
-    if (this.isExternal) return this.url.toString();
+    if (this.isExternal) {
+      if (this.url.pathname === '/' && !this.options.trailingSlash) {
+        return this.url.toString().slice(0, -1);
+      }
+      return this.url.toString();
+    }
     return `${this.pathname}${this.url.search}${this.url.hash}` || '#';
   }
 
