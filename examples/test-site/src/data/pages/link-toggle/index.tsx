@@ -38,14 +38,14 @@ const stripSlashOverrides = {
     .toString(),
 };
 const Stripslashlink = asBodilessLink(
-  'strip-slash', undefined, () => stripSlashOverrides
+  'strip-slash', undefined, () => stripSlashOverrides,
 )(A);
 
 const doNotNormalizeOverrides = {
   normalizeHref: (href?: string) => href,
 };
 const DoNotNormalizeLink = asBodilessLink(
-  'do-not-normalize', undefined, () => doNotNormalizeOverrides
+  'do-not-normalize', undefined, () => doNotNormalizeOverrides,
 )(A);
 
 const Title = asHeader1(H1);
