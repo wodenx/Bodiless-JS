@@ -15,8 +15,11 @@ type FinalComponents<P> = {
 /**
  * Generates an HOC which makes the underlying component designable at diferent
  * breakpoints. This allows responsive rendering or swapping a component entirely
- * depending on viewport size. In general, you should not use this to provide
- * different styling at different viewports: do that with media queries instead.
+ * depending on viewport size.
+ *
+ * In general, you should not use this to provide different styling at different
+ * viewports: do that with media queries. Instead, use this if you want to produce
+ * different *markup* at different viewports.
  *
  * Note that all variants will be rendered during SSR, and then replaced in the
  * browser with the one appropriate to the current viewport.  To avoid flicker when a

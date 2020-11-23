@@ -54,13 +54,15 @@ const asBreadcrumb = ({
   titleNodeKey,
 }: BreadcrumbSettings) => <P extends object>(Component: ComponentType<P>) => {
   const AsBreadcrumb = observer((props: P) => {
+    const current = useBreadcrumbContext();
+    const store = useBreadcrumbStore();
     const { node } = useNode();
+    if (store === undefined) return <Component {...props} />;
     const titleNode = node.child<object>(titleNodeKey);
     const linkNode = node.child<LinkData>(linkNodeKey);
+    // We need an id which will be the same for all breadcrumb sources which
+    // render the same data.  Node path works well for this.
     const id = node.path.join('$');
-    const store = useBreadcrumbStore();
-    if (store === undefined) return <Component {...props} />;
-    const current = useBreadcrumbContext();
     const item = new BreadcrumbItem({
       uuid: id,
       title: {
@@ -78,6 +80,9 @@ const asBreadcrumb = ({
     if (isSSR()) {
       store.setItem(item);
     } else {
+      // Normally, conditional hooks violate the "rules of hooks", but here
+      // the condition evaluates the same in a given render environment, and
+      // we can't/shouldn't call useLayoutEffect during SSR.
       useLayoutEffect(() => {
         store.setItem(item);
       }, [titleNode.data, linkNode.data]);
@@ -95,6 +100,16 @@ const asBreadcrumb = ({
   return AsBreadcrumb;
 };
 
+/**
+ * Use this HOC to wrap a menu so as to generate data for breadcrumbs
+ * and menu trails. Must be rendered within a BreadcrumbStoreContext
+ *
+ * @param Component
+ * The component providing the menu data structure.
+ *
+ * @return
+ * A version of the component which populates an enclosing
+ */
 const asBreadcrumbSource = (withMenuDesign: Function) => (
   settings: BreadcrumbSettings,
 ) => <P extends object>(
