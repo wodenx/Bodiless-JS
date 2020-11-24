@@ -24,6 +24,9 @@ import { useMenuOptions, useGetItemUseGetMenuOptions } from '../../src/FlowConta
 
 jest.mock('../../src/ComponentSelector/componentSelectorForm');
 jest.mock('../../src/FlowContainer/model');
+jest.mock('../../src/FlowContainer/SortableChild', () => ({
+  FALLBACK_SNAP_CLASSNAME: 'w-full',
+}));
 
 const editContext = {
   activate: jest.fn(),
