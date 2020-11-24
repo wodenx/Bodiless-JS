@@ -52,8 +52,8 @@ type UseLinkOverrides = UseBodilessOverrides<Props, LinkData, ExtraLinkOptions>;
 const DEFAULT_INSTRUCTIONS = `
   Use a fully formed URL only for external links, e.g., https://www.example.com.
   Internal links should be specified without a protocol or domain. Internal
-  links beginning with a &lsquo;.&rsquo; will be relative to the current page. Those not
-  beginning with a &lsquo;.&rsquo; will be prefixed with &lsquo;/&rsquo; and be relative to
+  links beginning with a './' will be relative to the current page. Those not
+  beginning with a './' will be prefixed with '/' and be relative to
   the site root.  All links will have a trailing slash appended.
 `;
 
