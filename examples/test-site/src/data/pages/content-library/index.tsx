@@ -143,7 +143,7 @@ const useImageMeta = (node: ContentNode<any>) => {
   if (!data.src) return null;
   return {
     title: path.basename(data.src),
-    description: data.alt || '<no alt>',
+    description: data.alt || '',
   };
 };
 
