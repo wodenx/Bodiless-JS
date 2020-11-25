@@ -67,7 +67,7 @@ const useComponentSelectorActions = (
     className: getDefaultWidth(snapData),
   };
 
-  const insertItem: ComponentSelectorProps['onSelect'] = (event, componentName) => {
+  const insertItem: ComponentSelectorProps['onSelect'] = ([componentName]) => {
     const { uuid } = insertFlowContainerItem(componentName, currentItem, wrapperProps);
     // Set the new id so it will activate on creation.
     setId(uuid);
