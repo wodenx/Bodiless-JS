@@ -21,6 +21,7 @@ import SimpleMenu from './SimpleMenu';
 import MegaMenu from './MegaMenu';
 import { SimpleBurgerMenu, MegaBurgerMenu } from '../BurgerMenu';
 import { breakpoints as allBreakpoints } from '../Page';
+import { asDesktopOnly, asMobileOnly } from '../Elements.token';
 
 const breakpoints = pick(allBreakpoints, 'lg');
 
@@ -35,7 +36,8 @@ const ResponsiveSimpleMenu = flow(
 const ResponsiveMegaMenu = flow(
   withResponsiveVariants({ breakpoints }),
   withDesign({
-    lg: replaceWith(MegaMenu),
+    lg: flow(replaceWith(MegaMenu), asDesktopOnly),
+    _default: withDesign({ Wrapper: asMobileOnly }),
   }),
   withNode,
 )(MegaBurgerMenu);

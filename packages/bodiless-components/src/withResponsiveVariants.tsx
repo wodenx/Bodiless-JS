@@ -3,9 +3,7 @@ import {
   Design, DesignableComponents, DesignableComponentsProps, designable,
 } from '@bodiless/fclasses';
 import { flow } from 'lodash';
-import type { PageDimensionsProviderProps } from './PageDimensionsProvider';
-import { ifViewportIs } from './withResponsiveToggle';
-import { withPageDimensionsContext } from './PageDimensionsProvider';
+import { withPageDimensionsContext, PageDimensionsProviderProps, usePageDimensionsContext } from './PageDimensionsProvider';
 
 type FinalComponents<P> = {
   SSRComponent: ComponentType<P>,
@@ -38,11 +36,12 @@ const withResponsiveVariants = (
   Component: ComponentType<P>,
 ) => {
   const applyDesign = (design: Design<DesignableComponents>) => {
-    // During SSR we render all the variants
     const components: DesignableComponents = Object.keys(design).reduce((comps, key) => ({
       ...comps,
       [key]: design[key]!(Component),
     }), { _default: Component });
+
+    // During SSR we render all the variants
     const SSRComponent = (props: P) => {
       const variants = Object.keys(components).map(key => {
         const Variant = components[key];
@@ -53,8 +52,12 @@ const withResponsiveVariants = (
 
     // In the browser (on effect) we replace with a component which renders
     // the proper variant for the viewport.
-    const hocs = Object.keys(design).map(key => ifViewportIs(key)(design[key]!));
-    const ProperComponent = flow(...hocs)(Component);
+    const ProperComponent = (props: P) => {
+      const { size } = usePageDimensionsContext();
+      // eslint-disable-next-line no-underscore-dangle
+      const FinalComponent = components[size] || components._default;
+      return <FinalComponent {...props} />;
+    };
     return { SSRComponent, ProperComponent };
   };
 

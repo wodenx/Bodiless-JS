@@ -27,7 +27,6 @@ import { withEditorSimple } from '../Editors';
 import withMegaMenuStyles from './MegaMenu.token';
 import { asEditableTout } from '../Tout';
 import { asToutMainMenu } from '../Tout/token';
-import { asDesktopOnly } from '../Elements.token';
 import { asMegaMenuBreadcrumbSource } from '../Breadcrumbs/MenuBreadcrumbs';
 
 const withTitleEditor = withEditorSimple('text', 'Menu Item');
@@ -74,7 +73,6 @@ const MegaMenu = flow(
   asMegaMenuBreadcrumbSource,
   withMegaMenuStyles,
   asMegaMenuTopNav,
-  asDesktopOnly,
 )(MegaMenuBase);
 
 const MegaMenuList = flow(

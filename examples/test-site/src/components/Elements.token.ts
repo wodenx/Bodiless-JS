@@ -13,7 +13,7 @@
  */
 
 import { flow } from 'lodash';
-import { addClasses } from '@bodiless/fclasses';
+import { addClasses, removeClasses } from '@bodiless/fclasses';
 import {
   asBodilessLink,
   asEditable as asEditableCore,
@@ -46,7 +46,10 @@ const withPadding5 = addClasses('p-5');
 
 /* Responsive design */
 const asMobileOnly = addClasses('lg:hidden');
-const asDesktopOnly = addClasses('hidden lg:flex');
+const asDesktopOnly = flow(
+  addClasses('hidden lg:flex'),
+  removeClasses('flex'),
+);
 
 /* Primary coloring */
 const asPrimaryColorBackground = addClasses('bg-gray-200');
