@@ -15,8 +15,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { pickBy } from 'lodash';
-
-import { useMenuOptionUI } from '@bodiless/core';
+import { useMenuOptionUI, useLocalStorage } from '@bodiless/core';
 import FilterWrapper from './FilterWrapper';
 import SearchWrapper from './SearchWrapper';
 import ItemList from './ItemList';
@@ -63,6 +62,22 @@ const reduceFilters = (filters: any, components: any) => pickBy(
     .every((component: any) => (category in component.categories)),
 );
 
+/*
+ * Implementation of djb2 xor algorithm to hash strings.
+ *
+ * @see http://www.cse.yorku.ca/~oz/hash.html
+ * @see https://gist.github.com/eplawless/52813b1d8ad9af510d85
+ */
+const hash = (str : string) => {
+  let h = 5381;
+  for (let i = 0; i < str.length; i += 1) {
+    // eslint-disable-next-line no-bitwise
+    h = h * 33 ^ str.charCodeAt(i);
+  }
+  // eslint-disable-next-line no-bitwise
+  return h >>> 0;
+};
+
 const ComponentSelector: React.FC<ComponentSelectorProps> = props => {
   const {
     components: allComponents,
@@ -71,7 +86,12 @@ const ComponentSelector: React.FC<ComponentSelectorProps> = props => {
     mandatoryCategories,
   } = props;
 
-  const [activeFilters, setActiveFilters] = useState([]);
+  const allComponentsNames = allComponents.map(Component => (
+    typeof Component === 'string' ? Component : Component.displayName));
+  const keySuffix = hash(allComponentsNames.sort().join().trim());
+
+  const localStorageKey = `bodiless.componentLibrary.activeFilters.${keySuffix}`;
+  const [activeFilters, setActiveFilters] = useLocalStorage(localStorageKey, []);
   const [activeSearch, setActiveSearch] = useState('');
 
   if (mandatoryCategories) {
@@ -83,11 +103,12 @@ const ComponentSelector: React.FC<ComponentSelectorProps> = props => {
     activeFilters,
     activeSearch,
   );
+  const allFilters = getFiltersByComponentList(allComponents);
+
   const filters = reduceFilters(
     getFiltersByComponentList(newCompRender),
     newCompRender,
   );
-  const allFilters = getFiltersByComponentList(allComponents);
 
   const finalUI:FinalUI = { ...defaultUI, ...useMenuOptionUI(), ...ui };
   return (
