@@ -73,7 +73,7 @@ const useComponentSelectorActions = (
     setId(uuid);
   };
 
-  const replaceItem: ComponentSelectorProps['onSelect'] = (event, componentName) => {
+  const replaceItem: ComponentSelectorProps['onSelect'] = ([componentName]) => {
     if (currentItem) {
       const newItem: FlowContainerItem = { ...currentItem, type: componentName };
       updateFlowContainerItem(newItem);
@@ -162,6 +162,7 @@ const useAddButton = (
     name,
     handler: () => componentSelectorForm(props, insertItem),
     activateContext: false,
+    formTitle: 'Insert Component',
     isHidden,
   };
 };
@@ -182,6 +183,7 @@ const useSwapButton = (
     handler: () => componentSelectorForm(props, replaceItem),
     activateContext: false,
     isHidden: useCallback(() => !context.isEdit, []),
+    formTitle: 'Replace Component',
   };
 };
 
