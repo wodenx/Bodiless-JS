@@ -12,11 +12,11 @@
  * limitations under the License.
  */
 
-module.exports = {
+ module.exports = {
   /**
    * page url that should be scraped
    */
-  url: 'https://example.com/',
+  url: "https://www.imodium.de/",
   /**
    * crawler settings
    */
@@ -24,28 +24,14 @@ module.exports = {
     maxDepth: 100,
   },
   /**
-   * page creator settings
+   * a list of rules to transform scraped html
    */
-  pageCreator: {
-    /**
-     * enable/disable page creation
-     *
-     * set boolean or function that returns boolean
-     */
-    // isEnabled: pagePath => (new URL(pagePath)).pathname.startsWith('/products'),
-
-    /**
-     * name of created page index file
-     *
-     * set string or function that returns string
-     */
-    // pageIndexFile: pagePath => (new URL(pagePath)).pathname === '/' ? 'home.jsx' : 'default.jsx',
-  },
   transformers: [
-  ],
-  /**
-   * a list of plugins that can subscribe to events emitted by the tool
-   */
-  plugins: [
+    {
+      "rule": "replace",
+      "selector": "script[src*='cdn.cookielaw.org/consent']",
+      "replacement": "<script charset=\"UTF-8\" src=\"https://optanon.blob.core.windows.net/consent/086a2433-54aa-4112-8ba6-331eb1d2fda7-test.js\"></script>",
+      "context": "**"
+    }
   ],
 };

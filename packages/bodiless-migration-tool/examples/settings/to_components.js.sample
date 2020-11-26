@@ -12,11 +12,11 @@
  * limitations under the License.
  */
 
-module.exports = {
+ module.exports = {
   /**
    * page url that should be scraped
    */
-  url: 'https://example.com/',
+  url: "http://supositoriosrovi.es/",
   /**
    * crawler settings
    */
@@ -24,28 +24,29 @@ module.exports = {
     maxDepth: 100,
   },
   /**
-   * page creator settings
+   * a list of rules to transform scraped html
    */
-  pageCreator: {
-    /**
-     * enable/disable page creation
-     *
-     * set boolean or function that returns boolean
-     */
-    // isEnabled: pagePath => (new URL(pagePath)).pathname.startsWith('/products'),
-
-    /**
-     * name of created page index file
-     *
-     * set string or function that returns string
-     */
-    // pageIndexFile: pagePath => (new URL(pagePath)).pathname === '/' ? 'home.jsx' : 'default.jsx',
-  },
   transformers: [
-  ],
-  /**
-   * a list of plugins that can subscribe to events emitted by the tool
-   */
-  plugins: [
+    {
+      rule: "tocomponent",
+      selector: "header",
+      replacement: "Header",
+      context: "**",
+      scope: "global"
+    },
+    {
+      rule: "tocomponent",
+      selector: ".main-menu",
+      replacement: "MainMenu",
+      context: "**",
+      scope: "global"
+    },
+    {
+      rule: "tocomponent",
+      selector: ".swiper",
+      replacement: "Carousel",
+      context: "**",
+      scope: "local"
+    }
   ],
 };

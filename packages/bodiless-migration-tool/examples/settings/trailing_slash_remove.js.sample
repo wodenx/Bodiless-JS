@@ -12,40 +12,16 @@
  * limitations under the License.
  */
 
-module.exports = {
+ module.exports = {
   /**
    * page url that should be scraped
    */
-  url: 'https://example.com/',
+  url: "https://pariet10.ru/",
   /**
    * crawler settings
    */
   crawler: {
     maxDepth: 100,
   },
-  /**
-   * page creator settings
-   */
-  pageCreator: {
-    /**
-     * enable/disable page creation
-     *
-     * set boolean or function that returns boolean
-     */
-    // isEnabled: pagePath => (new URL(pagePath)).pathname.startsWith('/products'),
-
-    /**
-     * name of created page index file
-     *
-     * set string or function that returns string
-     */
-    // pageIndexFile: pagePath => (new URL(pagePath)).pathname === '/' ? 'home.jsx' : 'default.jsx',
-  },
-  transformers: [
-  ],
-  /**
-   * a list of plugins that can subscribe to events emitted by the tool
-   */
-  plugins: [
-  ],
+  trailingSlash: "remove",
 };
