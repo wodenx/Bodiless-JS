@@ -1,7 +1,7 @@
 import React, { ComponentType } from 'react';
 import {
   useNode, ContentNode, useContextMenuForm,
-  createMenuOptionGroup, withMenuOptions, NodeProvider,
+  createMenuOptionGroup, withMenuOptions, NodeProvider, MenuOptionsDefinition,
 } from '@bodiless/core';
 import type { OptionGroupDefinition } from '@bodiless/core';
 import { observer } from 'mobx-react-lite';
@@ -9,13 +9,13 @@ import { flow } from 'lodash';
 import ComponentSelector from '../ComponentSelector';
 import type { ComponentSelectorProps, Meta, ComponentWithMeta } from '../ComponentSelector/types';
 
-export type ContentLibraryOptions = {
+export type ContentLibraryOptions<P = any> = {
   useLibraryNode: (props: any) => { node: ContentNode<any> },
   DisplayComponent?: ComponentType<any>,
   Selector?: ComponentType<ComponentSelectorProps>,
   useMeta?: (node: ContentNode<any>) => Partial<Meta>|null,
   useOverrides?: (props: any) => Partial<OptionGroupDefinition>,
-};
+} & Omit<MenuOptionsDefinition<P>, 'useMenuOptions'>;
 
 const childKeys = (node: ContentNode<any>) => {
   const aParent = node.path;
@@ -111,8 +111,13 @@ const withContentLibrary = (options: ContentLibraryOptions) => (
     };
     return createMenuOptionGroup(finalOption);
   };
+  const {
+    name = 'Content Library', id, type, peer = false,
+  } = options;
   return flow(
-    withMenuOptions({ useMenuOptions, name: 'Content Library' }),
+    withMenuOptions({
+      useMenuOptions, name, peer, id, type,
+    }),
     observer,
   )(Component);
 };
