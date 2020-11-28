@@ -60,12 +60,19 @@ const asStylableList = withDesign({
   Title: stylable,
 });
 
-const asNav = <P extends object>(Component: ComponentType<P>) => {
-  const Nav = (props: P) => (
-    <nav aria-label="Navigation Menu">
-      <Component {...props} />
-    </nav>
-  );
+type WithAriaLabel = {
+  'aria-label'?: string,
+};
+
+const asNav = <P extends WithAriaLabel>(Component: ComponentType<P>) => {
+  const Nav = (props: P) => {
+    const { 'aria-label': ariaLabel = 'Navigation Menu' } = props;
+    return (
+      <nav aria-label={ariaLabel}>
+        <Component {...props} />
+      </nav>
+    );
+  };
   return Nav;
 };
 
