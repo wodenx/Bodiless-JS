@@ -23,30 +23,42 @@ import {
 import { asUnderline } from '../ElementDefault.token';
 
 /**
+ * Colors
+ * ===========================================
+ */
+
+const withMenuBackground = asTealBackground;
+const withActiveMenuBackground = asLightTealBackground;
+const withHoverMenuBackground = asLightTealBackgroundOnHover;
+const withMenuForeground = asTextWhite;
+
+/**
  * Title Styles
  * ===========================================
  */
+
 const withTitleStyles = flow(
-  asLightTealBackgroundOnHover,
+  withHoverMenuBackground,
   addClasses('block w-full px-3'),
 );
 
 const withActiveTitleStyles = ifToggledOn(useIsActiveTrail)(
-  asLightTealBackground, asBold, asUnderline,
+  withActiveMenuBackground, asBold, asUnderline,
 );
 
 const withActiveSubTitleStyles = ifToggledOn(useIsActiveTrail)(
-  asLightTealBackground, asBold,
+  withActiveMenuBackground, asBold,
 );
 
 /**
  * Base Menu Styles
  * ===========================================
  */
+
 const withBaseMenuStyles = withDesign({
   Wrapper: flow(
-    asTealBackground,
-    asTextWhite,
+    withMenuBackground,
+    withMenuForeground,
     addClasses('w-full'),
   ),
   Item: addClasses('leading-loose text-sm'),
@@ -57,11 +69,12 @@ const withBaseMenuStyles = withDesign({
  * Base Sub Menu Styles
  * ===========================================
  */
+
 const withBaseSubMenuStyles = withDesign({
   Wrapper: withDesign({
     List: flow(
-      asTealBackground,
-      asTextWhite,
+      withMenuBackground,
+      withMenuForeground,
       addClasses('z-10'),
     ),
   }),
@@ -73,6 +86,7 @@ const withBaseSubMenuStyles = withDesign({
  * Simple Menu Styles
  * ===========================================
  */
+
 const withSimpleMenuStyles = flow(
   withSimpleMenuDesign(withBaseSubMenuStyles),
   withBaseMenuStyles,
