@@ -27,6 +27,7 @@
     "@bodiless/organisms": "^0.0.61",
     "@bodiless/richtext": "^0.0.61",
     "@bodiless/richtext-ui": "^0.0.61",
+    "@bodiless/search": "^0.0.61",
     "@bodiless/ui": "^0.0.61",
     "cross-env": "^5.2.0",
     "docsify-cli": "^4.3.0",
