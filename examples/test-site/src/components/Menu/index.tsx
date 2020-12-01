@@ -14,9 +14,9 @@
 
 import { flow, pick } from 'lodash';
 import { withDesign, replaceWith } from '@bodiless/fclasses';
-import { withNode } from '@bodiless/core';
 import { withResponsiveVariants } from '@bodiless/components';
 
+import { ComponentType } from 'react';
 import SimpleMenu from './SimpleMenu';
 import MegaMenu from './MegaMenu';
 import { SimpleBurgerMenu, MegaBurgerMenu } from '../BurgerMenu';
@@ -25,24 +25,16 @@ import { asDesktopOnly, asMobileOnly } from '../Elements.token';
 
 const breakpoints = pick(allBreakpoints, 'lg');
 
-const ResponsiveSimpleMenu = flow(
+const asResponsiveMenu = (DesktopMenu: ComponentType) => flow(
   withResponsiveVariants({ breakpoints }),
+  // Note, it's important to apply responsive CSS to the 2 menus in order to
+  // avoid flicker on the static site. The menu for the inactive breakpoint
+  // is rendered during SSR and unmounted as a side effect after rehydration.
   withDesign({
-    lg: replaceWith(SimpleMenu),
-  }),
-  withNode,
-)(SimpleBurgerMenu);
-
-const ResponsiveMegaMenu = flow(
-  withResponsiveVariants({ breakpoints }),
-  withDesign({
-    lg: flow(replaceWith(MegaMenu), asDesktopOnly),
     _default: withDesign({ Wrapper: asMobileOnly }),
+    lg: flow(replaceWith(DesktopMenu), asDesktopOnly),
   }),
-  withNode,
-)(MegaBurgerMenu);
+);
 
-export {
-  ResponsiveSimpleMenu,
-  ResponsiveMegaMenu,
-};
+export const ResponsiveSimpleMenu = asResponsiveMenu(SimpleMenu)(SimpleBurgerMenu);
+export const ResponsiveMegaMenu = asResponsiveMenu(MegaMenu)(MegaBurgerMenu);

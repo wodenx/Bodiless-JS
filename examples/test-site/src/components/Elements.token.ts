@@ -56,7 +56,10 @@ const asPrimaryColorBackground = addClasses('bg-gray-200');
 const asTextColorPrimary = addClasses('text-black');
 
 /* Coloring */
+const asTextWhite = addClasses('text-white');
 const asTealBackground = addClasses('bg-teal-600');
+const asLightTealBackground = addClasses('bg-teal-500');
+const asLightTealBackgroundOnHover = addClasses('hover:bg-teal-500');
 
 /* Typography */
 const asBold = addClasses('font-bold');
@@ -108,6 +111,8 @@ export {
   asPageContainer,
   asPrimaryColorBackground,
   asTealBackground,
+  asLightTealBackground,
+  asLightTealBackgroundOnHover,
   asImage,
   asEditableImage,
   asEditableLink,
@@ -117,6 +122,7 @@ export {
   asDesktopOnly,
   asSuperScript,
   asTextColorPrimary,
+  asTextWhite,
   asXMargin,
   asYMargin,
   asNegXMargin,

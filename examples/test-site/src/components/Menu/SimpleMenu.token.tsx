@@ -17,21 +17,26 @@ import { withDesign, addClasses } from '@bodiless/fclasses';
 import { withSimpleMenuDesign, useIsActiveTrail } from '@bodiless/organisms';
 
 import { ifToggledOn } from '@bodiless/core';
-import { asBold } from '../Elements.token';
+import {
+  asBold, asLightTealBackgroundOnHover, asLightTealBackground, asTealBackground, asTextWhite,
+} from '../Elements.token';
 import { asUnderline } from '../ElementDefault.token';
 
 /**
  * Title Styles
  * ===========================================
  */
-const withTitleStyles = addClasses('hover:bg-teal-500 block w-full px-3');
+const withTitleStyles = flow(
+  asLightTealBackgroundOnHover,
+  addClasses('block w-full px-3'),
+);
 
 const withActiveTitleStyles = ifToggledOn(useIsActiveTrail)(
-  addClasses('bg-teal-500'), asBold, asUnderline,
+  asLightTealBackground, asBold, asUnderline,
 );
 
 const withActiveSubTitleStyles = ifToggledOn(useIsActiveTrail)(
-  addClasses('bg-teal-500'), asBold,
+  asLightTealBackground, asBold,
 );
 
 /**
@@ -39,7 +44,11 @@ const withActiveSubTitleStyles = ifToggledOn(useIsActiveTrail)(
  * ===========================================
  */
 const withBaseMenuStyles = withDesign({
-  Wrapper: addClasses('w-full bg-teal-600 text-white'),
+  Wrapper: flow(
+    asTealBackground,
+    asTextWhite,
+    addClasses('w-full'),
+  ),
   Item: addClasses('leading-loose text-sm'),
   Title: flow(withTitleStyles, withActiveTitleStyles),
 });
@@ -50,7 +59,11 @@ const withBaseMenuStyles = withDesign({
  */
 const withBaseSubMenuStyles = withDesign({
   Wrapper: withDesign({
-    List: addClasses('bg-teal-600 text-white z-10'),
+    List: flow(
+      asTealBackground,
+      asTextWhite,
+      addClasses('z-10'),
+    ),
   }),
   Item: addClasses('leading-loose text-sm'),
   Title: flow(withTitleStyles, withActiveSubTitleStyles),

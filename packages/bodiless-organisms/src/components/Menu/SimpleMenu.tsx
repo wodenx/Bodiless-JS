@@ -18,6 +18,7 @@ import {
   withDesign,
   Design,
   stylable,
+  HOC,
 } from '@bodiless/fclasses';
 import {
   WithNodeKeyProps,
@@ -52,7 +53,7 @@ const asMenuSubList = flow(
  *
  * @param design
  */
-const withMenuDesign = (design: Design<any>) => {
+const withMenuDesign = (design: Design<any>|HOC) => {
   const withDesign$ = typeof design === 'function' ? design : withDesign(design);
   return flow(
     withSubListDesign(1)({
