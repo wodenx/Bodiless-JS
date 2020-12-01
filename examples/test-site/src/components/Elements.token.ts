@@ -65,6 +65,7 @@ const asLightTealBackgroundOnHover = addClasses('hover:bg-teal-500');
 const asBold = addClasses('font-bold');
 const asItalic = addClasses('italic');
 const asLink = addClasses('text-blue-700 underline');
+const asActiveMenuLink = flow(asBold, addClasses('bg-teal-500'));
 const asStrikeThrough = addClasses('');
 const asSuperScript = addClasses('');
 
@@ -97,6 +98,7 @@ export {
   asItalic,
   asUnderline,
   asLink,
+  asActiveMenuLink,
   asStrikeThrough,
   asAlignLeft,
   asAlignRight,
