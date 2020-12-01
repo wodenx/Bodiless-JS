@@ -13,7 +13,7 @@
  */
 
 import { flow } from 'lodash';
-import { withSidecarNodes, asReadOnly } from '@bodiless/core';
+import { withSidecarNodes, asReadOnly, withNode } from '@bodiless/core';
 import {
   addClasses,
   withDesign,
@@ -86,20 +86,26 @@ const withMenuBreadcrumbsStyles = flow(
   withArrowSeparator,
 );
 
-const asBreadcrumbSource = asSimpleMenuBreadcrumbSource({
-  linkNodeKey: 'title$link',
-  titleNodeKey: 'title$text',
-});
+const asBreadcrumbSource = flow(
+  asSimpleMenuBreadcrumbSource({
+    linkNodeKey: 'title$link',
+    titleNodeKey: 'title$text',
+  }),
+  withNode,
+);
 
 const Breadcrumbs = flow(
   withMenuBreadcrumbSchema,
   withMenuBreadcrumbsStyles,
 )(BreadcrumbsBase);
 
-const asMegaMenuBreadcrumbSource = asMegaMenuBreadcrumbSourceBase({
-  linkNodeKey: 'title$link',
-  titleNodeKey: 'title$text',
-});
+const asMegaMenuBreadcrumbSource = flow(
+  asMegaMenuBreadcrumbSourceBase({
+    linkNodeKey: 'title$link',
+    titleNodeKey: 'title$text',
+  }),
+  withNode,
+);
 
 const MegaMenuBreadcrumbs = flow(
   withMenuBreadcrumbSchema,
