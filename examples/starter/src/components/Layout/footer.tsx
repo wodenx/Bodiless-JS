@@ -65,7 +65,7 @@ const FooterClean: FC<DesignableProps> = ({ components }) => {
         <SiteTitleCopyright>
           ©
           <SiteTitleCopyrightEditable />
-          &nbsp;2019-
+          &nbsp;
           {year}
         </SiteTitleCopyright>
         <SiteCopyright>
