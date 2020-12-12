@@ -33,6 +33,8 @@ class MockContentNode implements ContentNode<Data> {
 
   keys = [];
 
+  childKeys = [];
+
   path = [];
 
   child = jest.fn();

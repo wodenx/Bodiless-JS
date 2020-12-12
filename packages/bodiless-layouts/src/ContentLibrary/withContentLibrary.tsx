@@ -17,25 +17,12 @@ export type ContentLibraryOptions = {
   useOverrides?: (props: any) => Partial<OptionGroupDefinition>,
 };
 
-const childKeys = (node: ContentNode<any>) => {
-  const aParent = node.path;
-  const aCandidates = node.keys.map(key => key.split('$'));
-  return Object.keys(aCandidates.reduce(
-    (acc, next) => {
-      if (next.length <= aParent.length) return acc;
-      for (let i = 0; i < aParent.length; i += 1) {
-        if (aParent[i] !== next[i]) return acc;
-      }
-      return { ...acc, [next[aParent.length]]: true };
-    },
-    {},
-  ));
-};
-
-const copyNode = (source: ContentNode<any>, dest: ContentNode<any>, copyChildren: boolean) => {
+export const copyNode = (
+  source: ContentNode<any>, dest: ContentNode<any>, copyChildren: boolean,
+) => {
   dest.setData(source.data);
   if (copyChildren) {
-    childKeys(source).forEach(key => copyNode(source.child(key), dest.child(key), true));
+    source.childKeys.forEach(key => copyNode(source.child(key), dest.child(key), true));
   }
 };
 
@@ -53,7 +40,7 @@ const withContentLibrary = (options: ContentLibraryOptions) => (
   const useMenuOptions = (props: any) => {
     const { node: targetNode } = useNode();
     const { node: libraryNode } = useLibraryNode(props);
-    const keys = childKeys(libraryNode);
+    const keys = libraryNode.childKeys;
 
     const components = keys.map(key => {
       const node = libraryNode.child(key);

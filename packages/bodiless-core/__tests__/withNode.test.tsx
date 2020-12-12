@@ -31,6 +31,8 @@ class MockContentNode<D extends object> implements ContentNode<D> {
 
   keys = [];
 
+  childKeys = [];
+
   hasError = jest.fn();
 
   baseResourcePath: string = '/';

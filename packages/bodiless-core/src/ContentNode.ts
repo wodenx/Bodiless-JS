@@ -48,6 +48,7 @@ export type ContentNode<D> = {
   setData: (data: D) => void;
   delete: (path?: Path) => void;
   keys: string[];
+  childKeys: string[];
   path: string[];
   pagePath: string;
   baseResourcePath: string;
@@ -116,6 +117,21 @@ export class DefaultContentNode<D extends object> implements ContentNode<D> {
   get keys() {
     const { getKeys } = this.getters;
     return getKeys();
+  }
+
+  get childKeys() {
+    const aParent = this.path;
+    const aCandidates = this.keys.map(key => key.split('$'));
+    return Object.keys(aCandidates.reduce(
+      (acc, next) => {
+        if (next.length <= aParent.length) return acc;
+        for (let i = 0; i < aParent.length; i += 1) {
+          if (aParent[i] !== next[i]) return acc;
+        }
+        return { ...acc, [next[aParent.length]]: true };
+      },
+      {},
+    ));
   }
 
   get hasError() {

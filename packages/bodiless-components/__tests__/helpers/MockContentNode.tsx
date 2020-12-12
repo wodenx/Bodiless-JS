@@ -15,6 +15,8 @@ class MockContentNode<D> implements ContentNode<D> {
 
   keys = [];
 
+  childKeys = [];
+
   path = [];
 
   pagePath = '';
