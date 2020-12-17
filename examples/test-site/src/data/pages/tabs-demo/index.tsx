@@ -22,7 +22,8 @@ import {
 import { flow } from 'lodash';
 import { withDesign } from '@bodiless/fclasses';
 import Layout from '../../../components/Layout';
-import { asBodilessTabs, MockTabs } from './asBodilessTabs';
+import asBodilessTabs from './asBodilessTabs';
+import MockTabs from './MockTabs';
 
 const EditableTabs = flow(
   asBodilessTabs('listData'),
