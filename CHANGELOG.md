@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.66](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.65...v0.0.66) (2020-12-29)
+
+
+### Bug Fixes
+
+* **components:** Image component - Fix Unhandled Rejection ([#776](https://github.com/johnsonandjohnson/bodiless-js/issues/776)) ([2ca8653](https://github.com/johnsonandjohnson/bodiless-js/commit/2ca86534434122eea44f85f258abeabd0525a868))
+
+
+### Features
+
+* **components:** Implement responsive search box ([#766](https://github.com/johnsonandjohnson/bodiless-js/issues/766)) ([e1bac0b](https://github.com/johnsonandjohnson/bodiless-js/commit/e1bac0ba40b57d4c209a68bdf113d23e53742350))
+* **richtext:** paste links into richtext ([#769](https://github.com/johnsonandjohnson/bodiless-js/issues/769)) ([db78b74](https://github.com/johnsonandjohnson/bodiless-js/commit/db78b74426b1185788dc23b867664180bb388f24))
+
+
+
+
+
+## [0.0.65](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.64...v0.0.65) (2020-12-23)
+
+
+### Bug Fixes
+
+* **test-site:** homepage hero image is not displayed in edit mode ([#741](https://github.com/johnsonandjohnson/bodiless-js/issues/741)) ([4c90827](https://github.com/johnsonandjohnson/bodiless-js/commit/4c90827f0b139d735a55a1031701d0184d7f7ac9))
+
+
+
+
+
+## [0.0.64](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.63...v0.0.64) (2020-12-16)
+
+
+### Bug Fixes
+
+* replace colon in json file names ([#751](https://github.com/johnsonandjohnson/bodiless-js/issues/751)) ([a453af5](https://github.com/johnsonandjohnson/bodiless-js/commit/a453af5e513d955a35e65f6dd222982710eac0fc))
+
+
+### Features
+
+* Modify new page creation ([#673](https://github.com/johnsonandjohnson/bodiless-js/issues/673)) ([7af4642](https://github.com/johnsonandjohnson/bodiless-js/commit/7af46424eee422b4c4d6b3a55f25d0c80eac4d61))
+* **CI/CD:** Change default branch ([#740](https://github.com/johnsonandjohnson/bodiless-js/issues/740)) ([e86fbd4](https://github.com/johnsonandjohnson/bodiless-js/commit/e86fbd4ed4831f132fd0630167ab32ef8f3ef59d))
+
+
+
+
+
 ## [0.0.63](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.62...v0.0.63) (2020-12-08)
 
 
