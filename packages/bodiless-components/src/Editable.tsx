@@ -32,7 +32,7 @@ type EditableOverrides = {
   sanitizer?: (text: string) => string,
 };
 
-type UseEditableOverrides = (props: EditableProps) => EditableOverrides;
+export type UseEditableOverrides = (props: EditableProps) => EditableOverrides;
 
 type EditableProps = {
   placeholder?: string,
