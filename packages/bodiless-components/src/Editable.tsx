@@ -13,7 +13,7 @@
  */
 
 import React, {
-  ComponentType as CT, ClipboardEvent, ComponentType, useState, useRef,
+  ComponentType as CT, ClipboardEvent, ComponentType, useState, useRef, useCallback,
 } from 'react';
 import ContentEditable from 'react-contenteditable';
 import { observer } from 'mobx-react-lite';
@@ -61,20 +61,19 @@ const EditableText = observer((props: EditableProps) => {
   const text = (node.data.text !== undefined ? node.data.text : props.children) || '';
   const [hasFocus, setFocus] = useState(false);
   const ref = useRef<HTMLElement>(null);
-  const onChange = () => {
+  const onChange = useCallback(() => {
     const newText = ref.current?.innerHTML || '';
-    const plainText = newText.replace(/(<([^>]+)>)/gi, '');
-    node.setData({ text: plainText });
-  };
-  const onFocus = () => { setFocus(true); };
-  const onBlur = () => { setFocus(false); };
-  const pasteAsPlainText = (event: ClipboardEvent<HTMLDivElement>) => {
+    node.setData({ text: newText });
+  }, [node, ref]);
+  const onFocus = useCallback(() => { setFocus(true); }, [setFocus]);
+  const onBlur = useCallback(() => { setFocus(false); }, [setFocus]);
+  const pasteAsPlainText = useCallback((event: ClipboardEvent<HTMLDivElement>) => {
     if (event.clipboardData) {
       event.preventDefault();
       const pasteText = event!.clipboardData.getData('text/plain');
       document.execCommand('insertHTML', false, pasteText);
     }
-  };
+  }, []);
   return (
     <ContentEditable
       innerRef={ref}
