@@ -16,10 +16,9 @@ import React from 'react';
 import { Link, graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 
-import { Editable, withPlaceholder } from '@bodiless/components';
-import { RichText } from '@bodiless/richtext-ui';
+import { Editable } from '@bodiless/components';
 import {
-  designable, startWith, withDesign, 
+  designable, startWith, withDesign,
 } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import Layout from '../../../components/Layout';
@@ -28,7 +27,7 @@ const ProblemComponentInnerBase = ({ components: C }: any) => (
   <C.Component>Problem</C.Component>
 );
 const ProblemComponentInner = designable({ Component: 'div' as any }, 'ProblemInner')(
-  ProblemComponentInnerBase
+  ProblemComponentInnerBase,
 );
 
 const ProblemComponentBase = ({ components: C }: any) => (
