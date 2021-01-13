@@ -16,8 +16,35 @@ import React from 'react';
 import { Link, graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 
-import { Editable } from '@bodiless/components';
+import { Editable, withPlaceholder } from '@bodiless/components';
+import { RichText } from '@bodiless/richtext-ui';
+import {
+  designable, startWith, withDesign, addProps,
+} from '@bodiless/fclasses';
+import { flow } from 'lodash';
+import { withNodeKey } from '@bodiless/core';
 import Layout from '../../../components/Layout';
+
+const ProblemRichText = flow(
+  withDesign({
+    Italic: addProps({ id: 'problem' }),
+  }),
+  withPlaceholder('Problem'),
+  withNodeKey('problem'),
+)(RichText);
+
+const ProblemComponentBase = ({ components: C }: any) => (
+  <C.Wrapper>
+    <ProblemRichText />
+  </C.Wrapper>
+);
+
+const ProblemComponent = flow(
+  designable({ Wrapper: 'div' as any }, 'Problem'),
+  withDesign({
+    Wrapper: startWith('h1' as any),
+  }),
+)(ProblemComponentBase);
 
 export default (props: any) => (
   <Page {...props}>
@@ -33,6 +60,7 @@ export default (props: any) => (
       <div className="m-2 p-2 w-1/3 h-12 border-blue border">
         <Editable nodeKey="sitedatapage" nodeCollection="site" placeholder="Site level data..." />
       </div>
+      <ProblemComponent />
     </Layout>
   </Page>
 );
