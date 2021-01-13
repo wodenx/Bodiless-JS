@@ -19,23 +19,21 @@ import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { Editable, withPlaceholder } from '@bodiless/components';
 import { RichText } from '@bodiless/richtext-ui';
 import {
-  designable, startWith, withDesign, addProps,
+  designable, startWith, withDesign, 
 } from '@bodiless/fclasses';
 import { flow } from 'lodash';
-import { withNodeKey } from '@bodiless/core';
 import Layout from '../../../components/Layout';
 
-const ProblemRichText = flow(
-  withDesign({
-    Italic: addProps({ id: 'problem' }),
-  }),
-  withPlaceholder('Problem'),
-  withNodeKey('problem'),
-)(RichText);
+const ProblemComponentInnerBase = ({ components: C }: any) => (
+  <C.Component>Problem</C.Component>
+);
+const ProblemComponentInner = designable({ Component: 'div' as any }, 'ProblemInner')(
+  ProblemComponentInnerBase
+);
 
 const ProblemComponentBase = ({ components: C }: any) => (
   <C.Wrapper>
-    <ProblemRichText />
+    <ProblemComponentInner />
   </C.Wrapper>
 );
 
