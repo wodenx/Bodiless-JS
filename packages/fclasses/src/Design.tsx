@@ -85,7 +85,11 @@ export const replaceable = <P extends object> (Component:ComponentType<P>) => {
   const Replaceable = (props:P) => {
     const UpstreamComponent = useContext(DesignContext);
     const FinalComponent = UpstreamComponent || Component;
-    return <FinalComponent {...props} />;
+    return (
+      <DesignContext.Provider value={undefined}>
+        <FinalComponent {...props} />
+      </DesignContext.Provider>
+    );
   };
   return Replaceable;
 };
