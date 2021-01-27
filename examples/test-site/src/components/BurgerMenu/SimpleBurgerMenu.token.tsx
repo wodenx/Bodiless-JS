@@ -49,7 +49,7 @@ const baseBurgerSubMenuStyles = {
     List: addClasses('flex flex-col'),
   }),
   Item: flow(
-    addProps({ OverviewLink }),
+    // addProps({ OverviewLink }),
     addClasses('pl-3'),
   ),
 };

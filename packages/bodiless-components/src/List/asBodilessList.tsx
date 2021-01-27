@@ -73,7 +73,7 @@ const SubList$: FC<SubListProps> = ({
   return (
     <WrapperItem {...rest}>
       <Title>{title}</Title>
-      <List overview={overview}>
+      <List>
         {children}
       </List>
     </WrapperItem>
@@ -110,11 +110,20 @@ const asSubListWrapper = (Component: any) => withDesign<SubListComponents>({
   WrapperItem: replaceWith(Component),
 })(SubList);
 
+// @TODO Type this properly
+const withInsertChildren = (Component: any) => ({ insertChildren, children, ...rest }: any) => (
+  <Component {...rest}>
+    {insertChildren}
+    {children}
+  </Component>
+);
+
 /**
  * HOC which can be applied to a list item to convert it to a sublist.
  */
 const asSubList = (useOverrides?: UseListOverrides) => flow(
   asBodilessList('sublist', undefined, useOverrides),
+  withInsertChildren,
   withDesign({
     Wrapper: asSubListWrapper,
   }),

@@ -56,6 +56,7 @@ const BasicList: FC<Props> = ({
   components,
   unwrap,
   onDelete,
+  children,
   ...rest
 }) => {
   const {
@@ -63,11 +64,23 @@ const BasicList: FC<Props> = ({
     Item,
     Title,
   } = components;
+  console.log('children', children);
 
   const { addItem, deleteItem } = useItemsMutators({ unwrap, onDelete });
   const { getItems } = useItemsAccessors();
   const itemData = getItems();
   const canDelete = () => Boolean(getItems().length > 1 || unwrap);
+
+  const childItems = React.Children.map(children, child => (
+    <Item
+      // @TODO should we disable the add button, or should it add an item after all children?
+      addItem={() => undefined}
+      deleteItem={() => undefined}
+      canDelete={() => false}
+    >
+      {child}
+    </Item>
+  ));
 
   // Iterate over all items in the list creating list items.
   const items = itemData.map(item => (
@@ -84,7 +97,9 @@ const BasicList: FC<Props> = ({
   ));
   return (
     <Wrapper {...rest}>
+      {childItems}
       {items}
+      {/* @TODO Do we also need to have a way to append static items? */}
     </Wrapper>
   );
 };

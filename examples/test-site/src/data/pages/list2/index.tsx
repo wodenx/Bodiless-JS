@@ -37,6 +37,7 @@ const SuperSimpleList = flow(
   }),
 )('ul');
 
+
 const Wrapper = addClasses('w-1/2 p-5')(Div);
 const Title = asHeader1(H1);
 const SectionHeader = asHeader3(H3);
@@ -54,6 +55,14 @@ export default (props: any) => (
           <SectionHeader>Simple List</SectionHeader>
           <p>This list has one level with editable but non linkable titles.</p>
           <SuperSimpleList nodeKey="list0" />
+        </Wrapper>
+        <Wrapper>
+          <SectionHeader>Simple List with children</SectionHeader>
+          <p>This list has one level with editable but non linkable titles.</p>
+          <SuperSimpleList nodeKey="list0-1">
+            <span key="fixed-1">Fixed Child 1</span>
+            <span key="fixed-2">Fixed Child 2</span>
+          </SuperSimpleList>
         </Wrapper>
         <Wrapper>
           <SectionHeader>Basic Compound List</SectionHeader>
