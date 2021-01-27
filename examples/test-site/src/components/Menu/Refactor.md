@@ -18,35 +18,43 @@ Improved DX and reduced LOE for activating navigation.
 Note - in the docs below, methods which are defined at brand level have a `$` prefix
 
 ### Create the base schema
+
+Define the schema for menu titles. This is only required if you don't want to
+use the default editors. Note that we do not add node keys here. They will be
+added automatically.
+
+```js
+export const $withMenuTitleSchema = flow(
+  withDesign({
+    // Replace the link editor with a cusgtom one
+    Link: flow(reset, withBodilessLinkToggle(asBodilessLink, Div)()),
+    // Extend the text editor
+    Text: asAutoSuperscript,
+  }),
+);
+```
+
+Define the menu schema:
+
 ```js
 const $withBrandMenuSchema = flow(
-  // First apply a basic token from @bodiess/navigation to make a <ul> into a menu:
-  asMenu, 
-  // Now add submenus.  Each of these takes optional HOC(s) to apply to the title
-  withListSubMenu(
-    // Specifying title is optional - this is the default.
-    // Brands should export these tokens if customized `$asBrandMenuLink = asMenuLink(...)`
-    asMenuLink(
-      // Note asMenuLInk will need to be refactored to accept both editors.
-      // Or maybe use a withDesign pattern? Create a designable, editable link
-      asEditable('text', 'Menu Item'),
-      withBodilessLinkToggle(asBodilessLink, Div)('link'),
-    )
-  ),
-  // Only add additional submenu types if needed
-  withToutSubMenu(
-    // Again, specifying the title explicitly is optional
-    asMenuTout(
-      // Specifying the editors is also optionsl.  We should have a bodiless
-      // or canvasx default "withToutEditors".
-      $withToutEditors,
-    )
-  ),
-  withColumnSubMenu(
-    // Again, editors are optional.  If supplied, they apply
-    // to both column headers and column items.
-    asMenuLink($withTextEditor, $withLinkEditor),
-  ),
+  // Make a menu with default title schema
+  asMenu('MainMenu'),
+  // Add submenus.  Each has default title schema
+  withListSubMenu,
+  withColumnSubMenu,
+  // The
+  withToutSubMenu(withToutEditors),
+  withDesign({
+    Title: $withMenuTitleSchema,
+  })
+  withDesign({
+    Item: withExtendedDesign()
+  })
+  // See below for 
+  withMenuDesign()({
+    Title: $withMenuTitleSchema,
+  }),
 );
 ```
 
@@ -97,19 +105,21 @@ In the above, each of the `$with...Styles` hocs applies a simple list design, th
 the one for colukmn lists also has to design its sublist, eg.
 ```js
 const $asColumnMenuWrapper = withDesign({
-  // We need to document clearly that the "Wrapper" of a sublist has 2 parts,
-  // The <li> which is the outer wrapper and the <ul> which is the List.
-  WrapperItem: withSublistPadding,
-  List: withBullets,
 }),
 
 const $withTopNavColumnStyles = withDesign({
-  Wrapper: $asColumnMenuWrapper;
+  Wrapper: withDesign({
+    // We need to document clearly that the "Wrapper" of a sublist has 2 parts,
+    // The <li> which is the outer wrapper and the <ul> which is the List.
+    WrapperItem: withSublistPadding,
+    List: withBullets,
+  }),
   Item: withDesign({
-    Wrapper: $asColumnSubMenuWrapper,
+    Wrapper: ...
     Item: ...,
     Title: ...,
-  })
+  }),
+  ...
 });
 ```
 > Note, when creating a compound design token like this, it makes sense to export
@@ -149,7 +159,7 @@ const $withActiveTitleStyles = flow(
 That's a lot of boilerplate, so let's consider a shorthand similar to what
 was suggested above for the default top nav styles:
 ```js
-const $withActiveTrailStyles = withMenuDesign('List', 'Columns')(withDesign({
+const $withActiveTrailStyles = withMenuDesign('List', 'Columns')({
   Title: $asActiveTitle,
 });
 ```
@@ -254,9 +264,6 @@ are prefixed with double `$$`.
 #### Swapping out a title editor
 
 ```js
-// Define o custom editor
-const $$MyEditor = withNodeKey('text')($$MyEditorBase);
-
 const $$withMyEditor = flow(
   withMenuDesign('List', 'Columns')({
     Title: withDesign({
@@ -323,11 +330,34 @@ const $$asSiteLayout = withDesign({
 
 ## Breadcrumbs
 
+The primary goals here are:
+- Clearly separate schema from styling
+- Provide defaults so that the most common use-cases require minimal configuration
+- Populate the breadcrumb store by default for all menus.
+
 ### Breadcrumb source
 
 The current [asBreadcrumbSource](https://github.com/johnsonandjohnson/Bodiless-JS/blob/master/packages/bodiless-components/src/Breadcrumbs/asBreadcrumb.tsx#L113-L136) should be folded into the
 basic `asMenu` hoc which is exported by @bodiless/navigation. This means it may need to be
 decomposed so that the application of `asBreadcrumb` to submenu items happens as part of the new `with...SubMenu` hoc's (so as to allow building up a menu with different submenu types).
+
+We also want to avoid having to replicate the schema for breadcrumbs and menu items
+In order to avoid having to specify the schema for breadcrumbs and menu items separately, let's give the
+asMenuLink and asMenuTout hoc's signatures like:
+
+```js
+type MenuTitleSchema = {
+  nodeKeys?: {
+    title?: string,
+    link?: string,
+    text?: string,
+  },
+  asEditableLink?,
+};
+```
+
+
+
 
 The
 [Breadcrumb Store Provider](https://github.com/johnsonandjohnson/Bodiless-JS/blob/master/examples/test-site/src/components/Layout/index.tsx#L46)
@@ -335,13 +365,15 @@ should be dealt with in scope of creating a designable Layout component
 
 ### Breadcrumb component 
 
-Here, the primary consideration is to separate schema from styling.
+Here, the primary consideration is to separate schema from styling, and to provide
+defaults so that the most common use-cases require minimal configuration. 
+which are currently site-level to the package.
 
 - Remove
   [the pre-connected `Breadcrumbs` component](https://github.com/johnsonandjohnson/Bodiless-JS/blob/master/packages/bodiless-components/src/Breadcrumbs/Breadcrumbs.tsx#L312-L315)
   and instead export an `asMenuBreadcrumbs` which is basically just
-  ```
-  flow(
+  ```js
+  const asMenuBreadcrumbs = flow(
     withBreadcrumbItemsFromStore,
     observer,
   );
@@ -351,14 +383,77 @@ Here, the primary consideration is to separate schema from styling.
 ## Suggested Bodiless Refactors
 
 ```js
-const asMenu = (nodeKeys?: WithNodeKeyProps) => flow(
-  asBodilessList(nodeKeys, undefined, () => ({ groupLabel: 'Menu Item' })),
+const withMenuTitleEditors = design => {
+  
+
+}
+const asMenuTout = ({ linkNodeKey = 'link', textNodeKey = 'text' }) => {
+  // We apply the node keys ourselves
+  const transformDesign = design => {
+    const Link = flow(
+      replaceable,
+      withSidecarNodes(
+        design.Link || withBodilessLinkToggle(asBodilessLink, Div)(),
+        withNodeKey(linkNodeKey),
+      ),
+    );
+    const Title = flow(
+      replaceable,
+      design.Text || asEditable(undefined, 'Menu Item'),
+      withNodeKey(textNodeKey),
+    );
+    return { ...design, Link, Title };
+  };
+  const ToutClean
+  return startWith(flow(
+    replaceable
+    startWith(({ design, ...rest}) => <ToutClean design={transformDesign(design)} {...rest} />);
+    withNode,
+    withNodekey('title'),
+  )(ToutClean));
+}
+
+const MenuLinkBase = ({ components:C, ...rest }) => <C.Link {...rest}><C.Text /></C.Link>;
+const MenuLink = ({ linkNodeKey = 'link', textNodeKey = 'text' }) => {
+  const applyDesign = design => {
+    const Link = flow(
+      replaceable,
+      withSidecarNodes(
+        design.Link || withBodilessLinkToggle(asBodilessLink, Div)(),
+        withNodeKey(linkNodeKey),
+      ),
+    )(A);
+    const Title = flow(
+      replaceable,
+      design.Title || asEditable(undefined, 'Menu Item'),
+      withNodeKey(textNodeKey),
+    )(Fragment);
+    return { Link, Text };
+  };
+  return startWith(flow(
+    designable(applyDesign, 'MenuLink'),
+    stylable,
+    withNode,
+    withNodeKey('title'),
+  )(MenuLinkBase));
+};
+const asMenu = (nodeKeys?: WithNodeKeyProps, defaultData, useOverrides) => flow(
+  asBodilessList(
+    nodeKeys,
+    defaultData,
+    (props) => ({ groupLabel: 'Menu Item', ...useOverrides(props) })
+  ),
   asStylableList,
   withDesign({
     Item: asChameleonSubList(() => ({ formTitle: 'Sub-Menu Type' })),
   }),
   withMenuContext,
-  asBreadcrumbSource, // Version which only applies asBreadcrumb to top level items.
+  asBreadcrumbSource, // Version which only handles the wrapper
+  withDesign({
+    Title: flow(
+      as
+    )
+  })
 );
 
 const withSubMenuDesign = design => withDesign({
@@ -390,9 +485,133 @@ const withColumnSubMenu = withSubMenuDesign({
     }),
   ),
 });
+
+// In fclasses?
+type SlotComponents = {
+  Component: ComponentType<any>,
+};
+type SlotProps = {
+  components: SlotComponents,
+};
+const Slot = ({ components: C, ...rest}: SlotProps) => <C.Component {...rest} />;
+
+type MenuLinkComponents = {
+  Link: CT<any>,
+  Text: CT<any>,
+};
+
+const $withItemSchema = withDesign({
+  Title: flow(
+    asMenuLink,
+    withDesign({})
+  )
+})
+
+
+// This is inside asMenu, withLinkSubMenu, etc...
+const withDefaultItem = withDesign({
+  Title: flow(
+    asMenuLink,
+    withDesign({
+      LinkEditor: asBodilessLinkToggle(asBodilessLink)(),
+      TextEditor: asEditable(undefined, 'Menu Item'),
+    }),
+  ),
+  Item: asBreadcrumb({ linkNodeKey: 'title$link', titleNodeKey: 'title$text' })
+});
+
+const $withBrandMenuEditors = withDesign({
+  Title: withDesign({
+    // Here we extend the default editor
+    TextEditor: asAutoSuperscript,
+    // Here we replace the default editor
+    // Note - we don't provide a nodeKey - that will be provided
+    // by the default 
+    LinkEditor: flow(reset, asCustomEditableLink())
+  })
+});
+
+const $withMenuSchema = flow(
+  // Provide the nodeKey for the whole menu.
+  asMenu('MainMenu'),
+  // Add menu editors if necessary.
+  $withBrandMenuEditors,
+  // This runs 
+  withListSubMenu,
+  withToutSubMenu,
+  withSubMenuDesign({
+    List
+  })
+  $withExtendedTitleEditor,
+  $withReplaceLinkEditor
+)
+
+flow(
+  asMenu(),
+  withDefaultItem,
+
+  // Or
+  withDesign({
+    Title: withDesign({
+      Link: reset(asSpecialEditable()),
+      Text: reset(asSpecialEditableLink()),
+    }),
+  })
+)
+
+const asMenuTout = (withToutEditors, nodeKeys)
+
+const asMenuLink = (nodeKeys = _.keyBy('link', 'text')) => {
+  const applyDesign = design => {
+    const Component flow(
+      withSidecarNodes(flow(
+        design.Link,
+        withNodeKey(nodeKeys.link),
+      ),
+      stylable,
+      design.Text,
+      withNodeKey(nodeKeys.text),
+      withNode,
+      withNodeKey('title'),
+    )(A),
+    return { Component };
+  };
+  return designable<MenuLinkComponents>(applyDesign)(Slot);
+}
 ```
 
 ## Minimal Implementation
 
 Below is a minimal implementation for a brand which uses only column menus and list submenus
 with the default schema:git l
+
+```js
+flow(
+  withDesign({ Title: addClasses('foo') }),
+  withSchema({ Title: asEditableA }),
+  withDesign({ Title: addClasses('bar' )},
+  resetSchema({ Title: asEditableB }),
+)
+is the same as
+flow(
+  withDesign({ Title: asEditableB }),
+  withDesign({ Title: addClasses('foo') }),
+  withDesign({ Title: addClasses('bar' )},
+)
+but
+flow(
+  withDesign({ Title: addClasses('foo') }),
+  withSchema({ Title: asEditableA }),
+  withDesign({ Title: addClasses('bar' )},
+  withSchema({ Title: withDefaultTitleContent }),
+)
+is the same as
+flow(
+  withDesign({ Title: asEditableA }),
+  withDesign({ Title: withDefaultTitleContent }),
+  withDesign({ Title: addClasses('foo') }),
+  withDesign({ Title: addClasses('bar' )},
+)
+
+)
+````
