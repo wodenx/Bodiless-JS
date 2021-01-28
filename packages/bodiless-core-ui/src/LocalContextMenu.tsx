@@ -53,6 +53,7 @@ const LocalTooltip: FC<ReactTooltip['props']> = props => (
 
 const GroupTitle = flow(
   removeClasses('bl-mb-grid-2 bl-min-w-xl-grid-1'),
+  addClasses('hover:bl-text-green'),
 )(ComponentFormTitle);
 
 const ContextMenuGroup: FC<IContextMenuItemProps> = ({ option, children }) => {
@@ -60,10 +61,13 @@ const ContextMenuGroup: FC<IContextMenuItemProps> = ({ option, children }) => {
     typeof option.isHidden === 'function' ? option.isHidden() : option.isHidden
   ));
   if (hidden) return null;
+  const { context } = option;
+  console.log('context', context);
+  const onClick = context ? { onClick: () => context.activate() } : {};
   return (
     <div className={groupClasses}>
       {option && option.label && (
-        <GroupTitle>{option.label}</GroupTitle>
+        <GroupTitle {...onClick}>{option.label}</GroupTitle>
       )}
       <div className="flex">
         {children}
