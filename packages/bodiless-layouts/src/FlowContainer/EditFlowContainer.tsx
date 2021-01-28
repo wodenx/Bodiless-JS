@@ -88,7 +88,6 @@ const EditFlowContainer: FC<EditFlowContainerProps> = (props:EditFlowContainerPr
             );
           },
         )}
-        <div className="clear-both" />
       </Wrapper>
     </ComponentDisplayModeProvider>
   );

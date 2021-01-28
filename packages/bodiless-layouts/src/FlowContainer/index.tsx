@@ -37,9 +37,9 @@ const FlowContainerBasic: FC<EditFlowContainerProps> = props => {
 
 const FlowContainerDesignable = flow(
   observer,
-  // withDesign({
-  //   Wrapper: addClasses('flex flex-wrap'),
-  // }),
+  withDesign({
+    Wrapper: addClasses('flex flex-wrap'),
+  }),
 )(FlowContainerBasic);
 
 const withMandatoryCategories = (categories: string[]) => addProps({

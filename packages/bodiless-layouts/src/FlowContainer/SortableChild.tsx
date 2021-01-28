@@ -36,7 +36,6 @@ const SortableChild = observer((props: SortableChildProps) => {
     className: classNameProp = '',
     ui,
     children,
-    index,
     ...restProps
   } = props;
 
@@ -62,11 +61,10 @@ const SortableChild = observer((props: SortableChildProps) => {
   // of the selected classes.
   const onResizeStop: ResizeCallback = useCallback((e, dir, ref) => {
     setSnapWidth(undefined);
-    const { className: className$ } = snapData({
+    const { className } = snapData({
       className: widthClasses,
       width: ref.style.width ? parseInt(ref.style.width, 10) : startingWidth,
     });
-    const className = (index === 0) ? `${className$} float-left` : className$;
     if (onResizeStopProp) onResizeStopProp({ className });
   }, [widthClasses, startingWidth, onResizeStopProp]);
 
