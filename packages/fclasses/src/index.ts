@@ -40,7 +40,6 @@ import {
 import type {
   Design,
   DesignableProps,
-  DesignElement,
   DesignableComponentsProps,
   DesignableComponents,
 } from './Design';
@@ -86,7 +85,6 @@ export type {
   StylableProps,
   Design,
   DesignableProps,
-  DesignElement,
   DesignableComponentsProps,
   DesignableComponents,
   HOC,
