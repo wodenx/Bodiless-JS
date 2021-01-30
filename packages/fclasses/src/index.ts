@@ -81,6 +81,8 @@ export {
   withDisplayName,
 };
 
+export * from './Tokens';
+
 export type {
   StylableProps,
   Design,

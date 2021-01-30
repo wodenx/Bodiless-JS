@@ -19,6 +19,12 @@ type TokenMeta = {
   }
 };
 
+type TokenDef<P> = {
+  meta?: TokenMeta,
+  filter?: TokenFilter<P>,
+  hoc?: Token<P>
+};
+
 /**
  * A component with metadata supplied by one or more tokens.
  */
@@ -84,7 +90,7 @@ const withMeta = <P extends object>(meta: TokenMeta): Token<P> => Component => {
  *
  * @return token metadata.
  */
-const addMeta = (meta: TokenMeta): TokenMeta => ({ ...meta });
+const addMeta = <P extends object>(meta: TokenMeta): TokenDef<P> => ({ meta: { ...meta } });
 
 /**
  * Takes a category and creates a function which adds a term to the token in
@@ -93,7 +99,7 @@ const addMeta = (meta: TokenMeta): TokenMeta => ({ ...meta });
  * @param category The name of the category to add
  * @return A function which takes a term and returns token metadata including that term.
  */
-addMeta.term = (category: string) => (term: string): TokenMeta => ({
+addMeta.term = <P extends object>(category: string) => (term: string): TokenDef<P> => addMeta({
   categories: {
     [category]: [term],
   },
@@ -104,7 +110,7 @@ addMeta.term = (category: string) => (term: string): TokenMeta => ({
  *
  * @param title
  */
-addMeta.title = (title: string): TokenMeta => ({ title });
+addMeta.title = <P extends object>(title: string): TokenDef<P> => addMeta({ title });
 
 /**
  * Adds a description to the token metadata.
@@ -114,36 +120,48 @@ addMeta.title = (title: string): TokenMeta => ({ title });
 addMeta.desc = (description: string): TokenMeta => ({ description });
 
 /**
- * Composes one or more HOC's into a single token.
+ * Composes one or more token definitions into a single token.
  *
- * A Token may have attached metadata which is supplied by including
- *
- * metadata objects in the list of HOCs. Metadata attached to the token
- * (and to any tokens of which it is composed) will be aggregated and attached
- * to any component to which this token is applied.
- *
- * HOCs will be composed left-to-right (in lodash "flow" order). To compose
+ * Tokens will be composed left-to-right (in lodash "flow" order). To compose
  * right-to-left use `flowTokensRight`.
  *
  * Tokens created with this utility have the optional `meta` property and
  * `filter` method added.
  *
  * @see TokenProps
+ * @see TokenDefinition
  *
- * @param hocs List of token HOCs and/or token metadata to compose.
+ * @param hocs List of token HOCs and/or token definitions to compose.
  *
- * @return A composed token.
+ * @return A composed tokenif .
  */
-const asToken = <P extends object>(...hocs: (Token<P>|TokenMeta)[]): TokenWithMeta<P> => {
-  const hocList: Token<P>[] = hocs.filter(h => typeof h === 'function') as Token<P>[];
-  const metaBits = hocs.filter(h => typeof h !== 'function') as TokenMeta[];
+const asToken = <P extends object>(...args: (Token<P>|TokenDef<P>)[]): TokenWithMeta<P> => {
+  // Normalize the arguments to a list of TokenDef objects.
+  const defs: TokenDef<P>[] = args.map(
+    hoc => (typeof hoc === 'function' ? { hoc } : hoc) as TokenDef<P>,
+  );
+
+  // Build the list of constituent hocs.
+  const hocs = defs
+    .reduce((acc, def) => {
+      const { hoc, filter } = def;
+      const nextHocs = hoc ? [...acc, hoc] : acc;
+      if (!filter) return nextHocs;
+      return nextHocs
+        .filter(filter)
+        .map(h => (h.filter ? h.filter(filter) : h));
+    }, [] as Token<P>[]);
+
+  // Build the metadata
+  const metaBits: TokenMeta[] = defs
+    .map(def => def.meta as TokenMeta)
+    .filter(Boolean);
   const meta = mergeWith({}, ...metaBits, mergeMeta);
-  hocList.push(withMeta(meta));
-  const token = flow(...hocList.map(hoc => preserveMeta(hoc))) as TokenWithMeta<P>;
+  hocs.push(withMeta(meta));
+
+  const token = flow(...hocs.map(hoc => preserveMeta(hoc))) as TokenWithMeta<P>;
   token.meta = meta;
-  token.filter = test => asToken(...hocList
-    .filter(test)
-    .map(hoc => (hoc.filter ? hoc.filter(test) : hoc)));
+  token.filter = (filter) => asToken(...hocs, { filter });
   return token;
 };
 

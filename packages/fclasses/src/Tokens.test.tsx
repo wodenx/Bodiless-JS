@@ -148,7 +148,7 @@ describe('asToken', () => {
 
     it('Filters flat tokens', () => {
       const asTest = asToken(asFoo, asBar);
-      const asFiltered = asTest.filter(filter);
+      const asFiltered = asToken(asTest, { filter });
       const Test = asTest(Base);
       const Filtered = asFiltered(Base);
       expect(Test.categories).toEqual({
@@ -177,7 +177,7 @@ describe('asToken', () => {
         addProp('nestedFoo'),
       );
       const asTest = asToken(withNestedFoo, asBar);
-      const asFiltered = asTest.filter(filter);
+      const asFiltered = asToken(asTest, { filter });
       const Test = asTest(Base);
       const Filtered = asFiltered(Base);
       expect(Test.categories).toEqual({
