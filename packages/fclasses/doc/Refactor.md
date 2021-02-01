@@ -30,9 +30,15 @@ type WithDesign<P extends DesignableComponentsProps<C>, C extends DesignableComp
   => HOC<P>;
 ```
 
-## Reset
+## 1.0 Reset
 
 Providing a null value for any key in the design removes that key from the design.
+
+```js
+withDesign({
+  Foo: null,
+});
+```
 
 - For components with *fixed* designs (that is, components which have a set of starting
 components specified in `designable`), this results in the designable component
@@ -44,6 +50,8 @@ receiving a component for that key.
 
 - It is possible to *further* design a key which has been removed.  This will behave
 as if all previously applied designs for that key had not been added.
+
+
 
 ### Examples
 
@@ -143,6 +151,33 @@ results in
 }}>
 ```
 
+### `replaceDesign`
+
+We expect a common use-case to be replacing all tokens for an existing key.
+```js
+flow(
+  withDesign({
+    Foo: null,
+  }),
+  withDesign({
+    Foo: withReplacedToken,
+  }),
+);
+```
+To facilitate this, let's add a `replaceDesign` function, so you could accomplsh
+the above with simpy:
+```js
+replaceDesign({
+  Foo: withReplacedToken.
+});
+```
+`replaceDesign` would only affect keys specified.  Other keys in the existing design
+would be unaltered.
+
+
+
+
+
 ## Schema
 
 In order to promote separation of schema and styling, we introduce new
@@ -230,8 +265,7 @@ or should it actually remove all design
 ## Spread Design
 
 There are many cases where it is useful to apply the same token(s) to
-all keys in a design.  Let's create a spreadDesign and spreadSchema
-utilities  which do this
+multiple keys in a design.  Let's create a spreadDesign helper for this:
 
 ```js
 flow(
@@ -240,7 +274,7 @@ flow(
     Body: asBody,
     ExtraComopnent: startWith('p'),
   }),
-  spreadSchema(asEditable),
+  spreadDesign()(asEditable),
 )
 ```
 results in 
@@ -255,57 +289,121 @@ results in
 }}>
 ```
 
-## Tokens
+## Tokens (https://github.com/johnsonandjohnson/Bodiless-JS/issues/826).
 
-We want to facilitate adding metadata when tokens are created.
+We want to facilitate adding metadata when tokens are created, as well as
+provide a mechanism to reset selected aspects of composed tokens (as an
+alternative to recomposition).
+
 This will have several benefits:
-- make composing flow containers easier (tokens will
-come with necessary metadata for componetn picker),
+- make composing flow containers easier (tokens will come with necessary
+  metadata for componetn picker),
 - allow storybook or storybook-like UI's for browsing tokens,
 - encourage design-system thinking when creating tokens.
+- provide a mechanism for altering composed tokens, which (used judiciously)
+  should simplify customizations.
 
-The main thing stopping us now from adding metadata when
-tokens are defined is that the metadata is not propagated
-when tokens are composed.  So let's create our own utility
-for composing tokens:
+The main thing stopping us now from adding metadata when tokens are defined is
+that the metadata is not propagated when tokens are composed. So let's create
+our own utility for composing tokens:
 
 ```ts
-asToken(meta: TokenMeta)(...hocs: HOC[]): Token
+asToken(...tokenDefs: Token|MetaToken): Token
 ```
-This will produce a token NOC which preserves metadata associated with
+This will produce a Token NOC which preserves metadata associated with
 the component it wraps, aggregates any metadata *added* by any of the
-enclosed HOCs, and finally adds the metadata provided as a first argument.
+enclosed HOCs.
+
+We also introduce the concept of a "metatoken".  This is an object which
+can be used when composing a token to add metadata or control the way the
+token behaves.
+
+A metatoken can have two properties:
+- meta: An object defining token metadata. This metadata will be attached to
+  the token itself, and also to any component to which the token is applied.
+- filter: A callback which will be used to filter constituents of any token(s)
+  with which this token is composed.  This allows, for example, creating a token
+  which removes any color tokens previously applied and adds a new one.
 
 ### Examples
 
 Given
 
 ```js
-const asBold = asToken({
-  Typography: ['Bold']
-}(
+const asBold = asToken(
   addClasses('font-bold'),
+  meta.term('TextStyle')('Bold'), // Same as { meta: { categories: { Style: 'Bold' } } }
 );
 
-// This is an alternate way of providing the metadata.
-const asBlue = asToken()(
-  withFacet('Color')('Blue'),
-  addClasses('text-blue'),
+const asTextBlue = asToken(
+  addClasses('text-blue-500'),
+  meta.term('TextColor')('Blue'),
 );
 
-const asHeader1 = asToken({
-  Header: ['H1'],
-  Title: 'Header 1',
-})(
-  asBold,
-  asBlue,
+const asTextRed = asToken(
+  addClasses('text-red-500'),
+  meta.term('TextColor')('Red'),
 );
 
-
-const asProductTitle = asToken({
-  Title: 'Product Title',
-})(
-  asHeader1,
-  addProps({ itemprop: 'name' }),
+const asBgYellow = asToken(
+  addClasses('bg-yellow-500'),
+  meta.term('BgColor')('Yellow'), 
 )
 
+const asHeader1 = asToken(
+  asTextBlue,
+  asBold,
+  asBgYellow,
+  withTerm('Header')('H1'),
+);
+
+...
+
+const Header1 = asHeader1(H1);
+
+<Header1 /> === <h1 className="text-blue bg-yellow-500 font-bold" />
+
+BrandH1.categories === {
+  TextColor: ['Blue'],
+  BgColor: ['Yellow'],
+  TextStyle: ['Bold'],
+  Header: ['H1'],
+};
+
+const asRedHeader1 = asToken(
+  asHeader1.meta, // We are creating a variant of asHeader1, so propagate its meta.
+  asHeader1,
+  // Note this filter must be applied *after* asHeader1.
+  meta.category.reset('TextColor') // Same as { meta: { filter: t => !t.meta.categores.inclues('TextColor') } }
+  asTextRed,
+);
+...
+asRedHeader1.meta = {
+  categories: {
+    Header: 'H1',
+  },
+};
+```
+
+const RedHeader1 = asRedHeader1(H1);
+
+<RedHeader1 /> === <h1 className="font-bold text-red-500 bg-yellow-500" />
+
+ReadHeader1.categories === {
+  TextColor: ['Red'],
+  BgColor: ['Yellow'],
+  TextStyle: ['Bold'],
+  Header: ['H1'],
+};
+```
+
+Note that while metadata from all constituent tokens are aggregated and attached
+to the component to which a composed token is applied, the tomposed token
+itself does not have the metadata of its constituents; if it did, it would be
+much harder to filter. Think of the metadata attached to a Token as that portion
+of the final metadata which it will contribute.
+
+It's easy enough to get the aggregated metadata, eg:
+```
+const finalMeta = pick(myToken(Fragment), 'categories', 'title', ...);
+```
