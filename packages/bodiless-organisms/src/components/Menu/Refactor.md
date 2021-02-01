@@ -14,11 +14,8 @@ Improved DX and reduced LOE for activating navigation.
 - remove react-burger-menu library and replace with custom implementation.
 
 > The specifications below are predicated on some lower level refactoring in
-  in the (design
-  api)[https://github.com/wodenx/Bodiless-JS/blob/doc/post-pilot/packages/fclasses/doc/Refactor.md]
-  and
-  [asEditable](https://github.com/johnsonandjohnson/Bodiless-JS/issues/797).
-
+  in the [design api](https://github.com/wodenx/Bodiless-JS/blob/doc/post-pilot/packages/fclasses/doc/Refactor.md#tokens-httpsgithubcomjohnsonandjohnsonbodiless-jsissues826)
+  
 ## Example API (brand level)
 
 > In the docs below, tokens which are defined at brand level have a `$` prefix.
