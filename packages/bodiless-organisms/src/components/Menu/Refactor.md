@@ -224,10 +224,39 @@ cosnt $asBrandBurgerMenu = flow(
 > component and the actual menu respectively. We should rename these
 to `Nav` (for the `<nav>` wrapper) and `Menu` (for the actual menu).
 
+### Additional Burger Menu Considerations
+- Refactor the way the overview link is added along
+  [these lines](https://github.com/wodenx/Bodiless-JS/commit/26806e75bff973a2f8d231a458760cee1f33c676).
+- Replace the existing burger menu implementation based on react-burger-menu
+  with the one developed in scope of the pilots.
+- We need a way to add additional menus/lists to the burger menu. Probably
+  this can be done by embedding the main menu in another list, eg:
+
+  ```js
+  const asCustomBurgerMenu = (Menu) => (props) => {
+    <ul>
+      <li><Menu /></li>
+      <li>{...extraMenus}</li>
+    </ul>
+  };
+  ```
+
+  Alternatively we could inject our custom menus into the main menu using the
+  [same pattern as the overview link]((https://github.com/wodenx/Bodiless-JS/commit/26806e75bff973a2f8d231a458760cee1f33c676).
+
+  ```js
+  const asCustomBurgerMenu = (Menu) => (props) => {
+    <Menu>
+      {...extraMenus}
+    </Menu>
+  }
+  ```
+
 ### Responsive variants
 
 After creating `$asBrandBurgerMenu` and `$asBrandTopNav` above, we're left
 with the following, which is probably fine.
+
 ```js
 cosnt $withBrandMenuVariants = asToken(
   withResponsiveVariants({
@@ -342,6 +371,9 @@ should be dealt with in scope of creating a designable Layout component
 Here, the primary consideration is to separate schema from styling, and to provide
 defaults so that the most common use-cases require minimal configuration. 
 which are currently site-level to the package.
+
+> Note: we need to preseve all existing design keys in the current breadcrumb
+> component
 
 - Remove
   [the pre-connected `Breadcrumbs` component](https://github.com/johnsonandjohnson/Bodiless-JS/blob/master/packages/bodiless-components/src/Breadcrumbs/Breadcrumbs.tsx#L312-L315)
