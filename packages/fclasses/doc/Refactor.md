@@ -363,7 +363,7 @@ const Header1 = asHeader1(H1);
 
 <Header1 /> === <h1 className="text-blue bg-yellow-500 font-bold" />
 
-BrandH1.categories === {
+Header1.categories === {
   TextColor: ['Blue'],
   BgColor: ['Yellow'],
   TextStyle: ['Bold'],
@@ -383,7 +383,7 @@ asRedHeader1.meta = {
     Header: 'H1',
   },
 };
-```
+...
 
 const RedHeader1 = asRedHeader1(H1);
 
