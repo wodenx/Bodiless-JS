@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
 import {
-  isArray, mergeWith, union, flow, identity,
+  isArray, mergeWith, union, flow as flowBase, identity,
 } from 'lodash';
 
 /**
@@ -171,7 +171,7 @@ const filterMembers = <P extends object>(tokens: Token<P>[]): Token<P>[] => {
  * Composes one or more tokens into a single token.
  *
  * Tokens will be composed left-to-right (in lodash "flow" order). To compose
- * right-to-left use `flowTokensRight`.
+ * right-to-left use `Tokens.flowRight`.
  *
  * You can also attach metadata to this token by provding plain TokenMeta
  * objects as arguments in addition to tokens.
@@ -185,7 +185,7 @@ const filterMembers = <P extends object>(tokens: Token<P>[]): Token<P>[] => {
  * @return
  * A composed token.
  */
-const create = <P extends object>(...args: TokenDef<P>[]): Token<P> => {
+const flow = <P extends object>(...args: TokenDef<P>[]): Token<P> => {
   const metaBits: TokenMeta[] = args.filter(a => !isToken(a)) as TokenMeta[];
   const meta = mergeWith({}, ...metaBits, mergeMeta);
   const members: Token<P>[] = [
@@ -194,7 +194,7 @@ const create = <P extends object>(...args: TokenDef<P>[]): Token<P> => {
   ];
   const hocs = filterMembers(members);
   const hocs$ = hocs.map(t => preserveMeta(t));
-  return Object.assign(flow(hocs$), { meta, members, hocs });
+  return Object.assign(flowBase(hocs$), { meta, members, hocs });
 };
 
 /**
@@ -207,7 +207,7 @@ const create = <P extends object>(...args: TokenDef<P>[]): Token<P> => {
  * @return A composed token.
  */
 const flowRight = <P extends object>(...hocs: Token<P>[]) => (
-  create(...hocs.reverse())
+  flow(...hocs.reverse())
 );
 
 /**
@@ -248,5 +248,5 @@ export type {
 };
 
 export default {
-  create, filter, flowRight, meta,
+  flow, filter, flowRight, meta,
 };

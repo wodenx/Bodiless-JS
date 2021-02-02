@@ -12,7 +12,7 @@ const addProp = (name?: string, value?: string): Token => Comp => (props: any) =
   return <Comp {...propsToAdd} {...props} />;
 };
 
-describe('Tokens.create', () => {
+describe('Tokens.flow', () => {
   describe('addProp helper', () => {
     const Base = () => <></>;
     it('Adds a prop', () => {
@@ -43,7 +43,7 @@ describe('Tokens.create', () => {
   describe('HOC order', () => {
     const Base = () => <></>;
     it('Applies hocs left to right', () => {
-      const asTest = Tokens.create(
+      const asTest = Tokens.flow(
         addProp('foo'),
         addProp('foo', 'bar'),
       );
@@ -53,10 +53,10 @@ describe('Tokens.create', () => {
     });
 
     it('Applies hocs left to right including nested tokens', () => {
-      const asFoo = Tokens.create(
+      const asFoo = Tokens.flow(
         addProp('foo'),
       );
-      const asTest = Tokens.create(
+      const asTest = Tokens.flow(
         asFoo,
         addProp('foo', 'bar'),
       );
@@ -70,7 +70,7 @@ describe('Tokens.create', () => {
     it('Propagates original metadata', () => {
       const Base = () => <></>;
       Base.title = 'BaseTitle';
-      const asPropagate = Tokens.create(addProp('prop'));
+      const asPropagate = Tokens.flow(addProp('prop'));
       const Wrong = addProp()(Base);
       expect(Wrong.title).toBeUndefined();
       const Right = asPropagate(Base);
@@ -78,7 +78,7 @@ describe('Tokens.create', () => {
     });
 
     it('Propagates added metadata', () => {
-      const withNewMeta = Tokens.create(
+      const withNewMeta = Tokens.flow(
         Tokens.meta.term('Type')('New'),
         addProp(),
       );
@@ -89,7 +89,7 @@ describe('Tokens.create', () => {
     it('Merges categories', () => {
       const Base = () => <></>;
       Base.categories = { Type: ['Base'] };
-      const asTest = Tokens.create(
+      const asTest = Tokens.flow(
         Tokens.meta.term('Type')('Foo'),
       );
       const Test = asTest(Base);
@@ -99,7 +99,7 @@ describe('Tokens.create', () => {
     it('Overwrites titles', () => {
       const Base = () => <></>;
       Base.title = 'BaseTitle';
-      const asTest = Tokens.create(
+      const asTest = Tokens.flow(
         { title: 'Foo' },
       );
       const Test = asTest(Base);
@@ -107,10 +107,10 @@ describe('Tokens.create', () => {
     });
 
     it('Adds metaata from nested tokens', () => {
-      const asFoo = Tokens.create(Tokens.meta.term('Type')('Foo'));
-      const asBar = Tokens.create(Tokens.meta.term('Type')('Bar'));
-      const asBaz = Tokens.create(asBar, Tokens.meta.term('Type')('Baz'));
-      const asTest = Tokens.create(
+      const asFoo = Tokens.flow(Tokens.meta.term('Type')('Foo'));
+      const asBar = Tokens.flow(Tokens.meta.term('Type')('Bar'));
+      const asBaz = Tokens.flow(asBar, Tokens.meta.term('Type')('Baz'));
+      const asTest = Tokens.flow(
         asFoo,
         asBaz,
         { title: 'Test' },
@@ -126,13 +126,13 @@ describe('Tokens.create', () => {
 
   describe('Filtering', () => {
     const Base = () => <></>;
-    const asFoo = Tokens.create(
+    const asFoo = Tokens.flow(
       Tokens.meta.term('Type')('Filtered'),
       Tokens.meta.term('Name')('Foo'),
       addProp('foo'),
     );
 
-    const asBar = Tokens.create(
+    const asBar = Tokens.flow(
       Tokens.meta.term('Type')('Unfiltered'),
       Tokens.meta.term('Name')('Bar'),
       addProp('bar'),
@@ -141,8 +141,8 @@ describe('Tokens.create', () => {
     const filter = Tokens.filter(t => !t.meta?.categories?.Type?.includes('Filtered'));
 
     it('Filters flat tokens', () => {
-      const asTest = Tokens.create(asFoo, asBar);
-      const asFiltered = Tokens.create(asTest, filter);
+      const asTest = Tokens.flow(asFoo, asBar);
+      const asFiltered = Tokens.flow(asTest, filter);
       const Test = asTest(Base);
       const Filtered = asFiltered(Base);
       expect(Test.categories).toEqual({
@@ -165,13 +165,13 @@ describe('Tokens.create', () => {
     });
 
     it('Filters nested tokens', () => {
-      const withNestedFoo = Tokens.create(
+      const withNestedFoo = Tokens.flow(
         asFoo,
         Tokens.meta.term('Name')('NestedFoo'),
         addProp('nestedFoo'),
       );
-      const asTest = Tokens.create(withNestedFoo, asBar);
-      const asFiltered = Tokens.create(asTest, filter);
+      const asTest = Tokens.flow(withNestedFoo, asBar);
+      const asFiltered = Tokens.flow(asTest, filter);
       const Test = asTest(Base);
       const Filtered = asFiltered(Base);
       expect(Test.categories).toEqual({
@@ -196,8 +196,8 @@ describe('Tokens.create', () => {
     });
 
     it('Propagates a filter', () => {
-      const asBarNotFoo = Tokens.create(filter, asBar);
-      const asTest = Tokens.create(asFoo, asBarNotFoo);
+      const asBarNotFoo = Tokens.flow(filter, asBar);
+      const asTest = Tokens.flow(asFoo, asBarNotFoo);
       const Test = asTest(Base);
       expect(Test.categories).toEqual({
         Type: ['Unfiltered'],
