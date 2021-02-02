@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
 import {
-  flow, isArray, mergeWith, union,
+  isArray, mergeWith, union, flow, identity,
 } from 'lodash';
 
 /**
@@ -19,150 +19,182 @@ type TokenMeta = {
   }
 };
 
-type TokenDef<P> = {
-  meta?: TokenMeta,
-  filter?: TokenFilter<P>,
-  hoc?: Token<P>
-};
-
 /**
- * A component with metadata supplied by one or more tokens.
+ * Type of component with metadata supplied by one or more tokens.
  */
 type ComponentWithMeta<P = any> = ComponentType<P> & TokenMeta;
 
-type HOCBase<P = any, Q = P> = ((c:ComponentWithMeta<P>|string) => ComponentWithMeta<Q>);
+/**
+ * Type of a component with meta or a JSX element.
+ */
+type ComponentOrTag<P> = ComponentWithMeta<P>|keyof JSX.IntrinsicElements;
+
+/**
+ * Type of a higher order component
+ */
+type HOC<P = any, Q = P> = (C:ComponentOrTag<P>) => ComponentWithMeta<Q>;
+
+/**
+ * Properties of tokens.
+ */
 type TokenProps<P> = {
   /**
-   * A method which produces a new Token by removing composed tokens which match
-   * specified criteria. Filtering is recursive, so that composed tokens which
-   * have a filter method will themselves be filtered.
+   * The filter (if any) which should be applied when this token is composed.
    */
-  filter: (test: TokenFilter<P>) => TokenWithMeta<P>,
+  filter?: TokenFilterTest<P>,
+  /**
+   * The tokens and/or filters which compose this token.
+   */
+  members?: Token<P>[],
   /**
    * The metadata attached to this token. This metadata will be merged recursively with
    * any metadata provided by any other tokens which this token composes, and attached to any
    * component to which this token is applied.
    */
-  meta: TokenMeta,
+  meta?: TokenMeta,
 };
 
 /**
- * A "Token" is an HOC with optional metadata.
+ * Type of a "Token", which is an HOC with optional metadata and filtering.
  *
  * Tokens may be composed of other tokens using the `asToken` utility.
  */
-type Token<P = any, Q = P> = HOCBase<P, Q> & Partial<TokenProps<P>>;
+type Token<P = any, Q = P> = HOC<P, Q> & TokenProps<P>;
 
 /**
  * Type of the filter function which should be passed to the Token#filter method.
  */
-type TokenFilter<P> = (hoc: Token<P>) => boolean;
+type TokenFilterTest<P> = (hoc: Token<P>) => boolean;
 
-type TokenWithMeta<P = any, Q = P> = HOCBase<P, Q> & TokenProps<P>;
+/**
+ * Type of the parameters to asToken.  Overloaded to accept metadata
+ * objects in addition to tokens.
+ */
+type TokenDef<P> = Token<P>|TokenMeta;
+
+const isToken = (def: TokenDef<any>) => typeof def === 'function';
 
 // Custom merge behavior for token categories.
 function mergeMeta(objValue:any, srcValue:any) {
   if (isArray(objValue)) {
-    // @TODO This should probably be union...
     return union(objValue, srcValue);
   }
   return undefined;
 }
 
+/**
+ * @private
+ * Enhances an HOC so as to reserve metadata attached to the component it wraps.
+ */
 const preserveMeta = <P extends object>(hoc: Token<P>): Token<P> => Component => {
   const NewComponent = hoc(Component);
   const finalMeta = mergeWith({}, Component, NewComponent, mergeMeta);
   return Object.assign(NewComponent, finalMeta);
 };
 
-const withMeta = <P extends object>(meta: TokenMeta): Token<P> => Component => {
+/**
+ * @private
+ * Attaches metadata to a component.
+ *
+ * @param meta The metadata to attach.
+ */
+const withMeta = <P extends object>(meta: TokenMeta): HOC<P> => Component => {
   const WithMeta = (props: P) => <Component {...props} />;
   return Object.assign(WithMeta, meta);
 };
 
-/**
- * Utility which can be used to add metadata when composing tokens with `asToken`.
- * Metadata added in this fashion will be applied to the composed token. Note that
- * metadata from all composed tokens will be added to the target component when
- * a token is applied.
- *
- * @param meta The token metadata to add.
- *
- * @return token metadata.
- */
-const addMeta = <P extends object>(meta: TokenMeta): TokenDef<P> => ({ meta: { ...meta } });
+type TokenWithParents<P> = Token<P> & {
+  parents?: Token<P>[],
+};
 
 /**
- * Takes a category and creates a function which adds a term to the token in
- * that category.
+ * @private
  *
- * @param category The name of the category to add
- * @return A function which takes a term and returns token metadata including that term.
+ * Flattens an array of tokens recursively. Each token in the flattened array has
+ * an additional "parents" property listing the tokens to which it belongs.
+ * @param tokens The list of tokens to flatten
+ * @param parents The current list of parents
  */
-addMeta.term = <P extends object>(category: string) => (term: string): TokenDef<P> => addMeta({
-  categories: {
-    [category]: [term],
-  },
-});
+const flattenTokens = <P extends object>(
+  tokens: Token<P>[] = [], parents: Token<P>[] = [],
+): TokenWithParents<P>[] => tokens.reduce(
+    (acc, token) => [
+      ...acc,
+      ...flattenTokens(token.members, [...parents, token]),
+      // exclude any token with members, bc we will already be applying the members.
+      ...token.members ? [] : [Object.assign(token, { parents })],
+    ],
+    [] as TokenWithParents<P>[],
+  );
 
 /**
- * Adds a title to the token metadata.
+ * @private
  *
- * @param title
+ * Generates a token fiter which applies to a token and any of its parents.
+ * Used to ensure that a token is removed if any of its parents match
+ * the filter criteria.
+ *
+ * @param filter
+ * The token filter to apply
+ *
+ * @return
+ * A TokenFilter which which applies the supplied filter to a Token and
+ * all its parents.
  */
-addMeta.title = <P extends object>(title: string): TokenDef<P> => addMeta({ title });
+const createTokenAndParentFilter = <P extends object>(
+  filter: TokenFilterTest<P>,
+): TokenFilterTest<P> => (token: TokenWithParents<P>): boolean => (token.parents || []).reduce(
+    (result, parent) => result && filter(parent),
+    filter(token),
+  );
 
 /**
- * Adds a description to the token metadata.
- *
- * @param description The description to add.
+ * Recursively filters a list of tokens by applying any filters
+ * @param tokens The list of tokens to filter.
+ * @return A flat list of filtered tokens
  */
-addMeta.desc = (description: string): TokenMeta => ({ description });
+const filterMembers = <P extends object>(tokens: Token<P>[]): Token<P>[] => {
+  const filtered: HOC<P>[] = [];
+  let rest = flattenTokens(tokens).reverse();
+  while (rest.length > 0) {
+    const [next, ...nextRest] = rest;
+    rest = nextRest;
+    if (next.filter) {
+      rest = rest.filter(createTokenAndParentFilter(next.filter));
+    }
+    filtered.push(next);
+  }
+  return filtered.reverse();
+};
 
 /**
- * Composes one or more token definitions into a single token.
+ * Composes one or more tokens into a single token.
  *
  * Tokens will be composed left-to-right (in lodash "flow" order). To compose
  * right-to-left use `flowTokensRight`.
  *
- * Tokens created with this utility have the optional `meta` property and
- * `filter` method added.
+ * You can also attach metadata to this token by provding plain TokenMeta
+ * objects as arguments in addition to tokens.
  *
  * @see TokenProps
  * @see TokenDefinition
  *
- * @param hocs List of token HOCs and/or token definitions to compose.
+ * @param tokens
+ * List of tokens and token metadata objects to compose.
  *
- * @return A composed tokenif .
+ * @return
+ * A composed token.
  */
-const asToken = <P extends object>(...args: (Token<P>|TokenDef<P>)[]): TokenWithMeta<P> => {
-  // Normalize the arguments to a list of TokenDef objects.
-  const defs: TokenDef<P>[] = args.map(
-    hoc => (typeof hoc === 'function' ? { hoc } : hoc) as TokenDef<P>,
-  );
-
-  // Build the list of constituent hocs.
-  const hocs = defs
-    .reduce((acc, def) => {
-      const { hoc, filter } = def;
-      const nextHocs = hoc ? [...acc, hoc] : acc;
-      if (!filter) return nextHocs;
-      return nextHocs
-        .filter(filter)
-        .map(h => (h.filter ? h.filter(filter) : h));
-    }, [] as Token<P>[]);
-
-  // Build the metadata
-  const metaBits: TokenMeta[] = defs
-    .map(def => def.meta as TokenMeta)
-    .filter(Boolean);
+const create = <P extends object>(...args: TokenDef<P>[]): Token<P> => {
+  const metaBits: TokenMeta[] = args.filter(a => !isToken(a)) as TokenMeta[];
   const meta = mergeWith({}, ...metaBits, mergeMeta);
-  hocs.push(withMeta(meta));
-
-  const token = flow(...hocs.map(hoc => preserveMeta(hoc))) as TokenWithMeta<P>;
-  token.meta = meta;
-  token.filter = (filter) => asToken(...hocs, { filter });
-  return token;
+  const members: Token<P>[] = [
+    ...args.filter(a => isToken(a)) as Token<P>[],
+    withMeta(meta),
+  ];
+  const hocs = filterMembers(members);
+  const hocs$ = hocs.map(t => preserveMeta(t));
+  return Object.assign(flow(hocs$), { meta, members, hocs });
 };
 
 /**
@@ -174,11 +206,47 @@ const asToken = <P extends object>(...args: (Token<P>|TokenDef<P>)[]): TokenWith
  *
  * @return A composed token.
  */
-const flowTokensRight = <P extends object>(...hocs: Token<P>[]) => (
-  asToken(...hocs.reverse())
+const flowRight = <P extends object>(...hocs: Token<P>[]) => (
+  create(...hocs.reverse())
 );
 
-export type {
-  Token, TokenFilter, TokenMeta, ComponentWithMeta,
+/**
+ * Creates a token filter (a special kind of token which, when composed with other tokens,
+ * filters out those which match a provided test function.
+ *
+ * @param filter
+ * The test functino which will be used to determine whether tokens
+ * should be filtered.
+ *
+ * @returns
+ * A token filter.
+ */
+const filter = <P extends object>(test: TokenFilterTest<P>): Token<P> => (
+  Object.assign(identity, { filter: test })
+);
+
+/**
+ * Utilities for adding metadata to tokens.
+ */
+const meta = {
+  term: (c: string) => (t: string) => ({
+    categories: {
+      [c]: [t],
+    },
+  }),
+  cat: (c: string) => ({
+    categories: {
+      [c]: [],
+    },
+  }),
+  title: (title: string) => ({ title }),
 };
-export { addMeta, asToken, flowTokensRight };
+
+export type {
+  HOC, TokenFilterTest, Token, TokenDef,
+  TokenMeta, ComponentWithMeta, ComponentOrTag,
+};
+
+export default {
+  create, filter, flowRight, meta,
+};

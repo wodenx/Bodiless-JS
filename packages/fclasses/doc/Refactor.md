@@ -303,27 +303,45 @@ This will have several benefits:
 - provide a mechanism for altering composed tokens, which (used judiciously)
   should simplify customizations.
 
-The main thing stopping us now from adding metadata when tokens are defined is
-that the metadata is not propagated when tokens are composed. So let's create
-our own utility for composing tokens:
+To accomplish the above, we create our own utilties for composing tokens.
 
 ```ts
-asToken(...tokenDefs: Token|MetaToken): Token
+Tokens.flow(...tokenDefs: Token|TokenMeta): Token
+Tokens.flowRight(...)
 ```
-This will produce a Token NOC which preserves metadata associated with
-the component it wraps, aggregates any metadata *added* by any of the
-enclosed HOCs.
 
-We also introduce the concept of a "metatoken".  This is an object which
-can be used when composing a token to add metadata or control the way the
-token behaves.
+These differ from normal lodash `flow` and `flowRight` in a few key ways:
+- They propagate metadata (static properties) attached to a component through
+  the chain of HOC's.
+- The "Token" type of the parameter is constrained to be an HOC. We
+  also intruduce a special kind of Token known as a "Filter".  See more
+  below.
+- Their parameters are overloaded to accept a "TokenMeta" object
+  which consists of metadata which should be attached to the token.
 
-A metatoken can have two properties:
-- meta: An object defining token metadata. This metadata will be attached to
-  the token itself, and also to any component to which the token is applied.
-- filter: A callback which will be used to filter constituents of any token(s)
-  with which this token is composed.  This allows, for example, creating a token
-  which removes any color tokens previously applied and adds a new one.
+### Metadata and Filters
+
+Token metadata are properties which can be attached to tokens to help
+organize them and understand their structure. When a token is applied,
+its metadata will also be attached to the component to which it is applied.
+If a composed token is applied, metadata from all constituents will be
+aggregated and attached to the target component.
+
+In addition to a normal HOC, a Token can also be a "filter".  A filter is
+a token which, when composed with other tokens, causes any of those tokens
+which match certain criteria to be removed.  Filters can be defined to
+test the metadata attached to other tokens. So, for exmple, you can compose
+a token which removes all 'Color' tokens and adds a new one.
+
+> Note that while metadata from all constituent tokens are aggregated and attached
+> to the component to which a composed token is applied, the tomposed token
+> itself does not have the metadata of its constituents; if it did, it would be
+> much harder to filter. Think of the metadata attached to a Token as that portion
+> of the final metadata which it will contribute.
+> It's easy enough to get the aggregated metadata, eg:
+> ```
+> const finalMeta = pick(myToken(Fragment), 'categories', 'title', ...);
+> ```
 
 ### Examples
 
@@ -332,38 +350,40 @@ Given
 ```js
 const asBold = asToken(
   addClasses('font-bold'),
-  meta.term('TextStyle')('Bold'), // Same as { meta: { categories: { Style: 'Bold' } } }
+  Tokens.meta.term('TextStyle')('Bold'), // Same as { meta: { categories: { Style: 'Bold' } } }
 );
 
 const asTextBlue = asToken(
   addClasses('text-blue-500'),
-  meta.term('TextColor')('Blue'),
+  Tokens.meta.term('TextColor')('Blue'),
 );
 
 const asTextRed = asToken(
   addClasses('text-red-500'),
-  meta.term('TextColor')('Red'),
+  Tokens.meta.term('TextColor')('Red'),
 );
 
 const asBgYellow = asToken(
   addClasses('bg-yellow-500'),
-  meta.term('BgColor')('Yellow'), 
+  Tokens.meta.term('BgColor')('Yellow'), 
 )
 
 const asHeader1 = asToken(
   asTextBlue,
   asBold,
   asBgYellow,
-  withTerm('Header')('H1'),
+  Tokens.meta.term('Header')('H1'),
 );
 
-...
+```
+We have
 
+```
 const Header1 = asHeader1(H1);
 
 <Header1 /> === <h1 className="text-blue bg-yellow-500 font-bold" />
 
-Header1.categories === {
+BrandH1.categories === {
   TextColor: ['Blue'],
   BgColor: ['Yellow'],
   TextStyle: ['Bold'],
@@ -373,8 +393,9 @@ Header1.categories === {
 const asRedHeader1 = asToken(
   asHeader1.meta, // We are creating a variant of asHeader1, so propagate its meta.
   asHeader1,
-  // Note this filter must be applied *after* asHeader1.
-  meta.category.reset('TextColor') // Same as { meta: { filter: t => !t.meta.categores.inclues('TextColor') } }
+  // The following creates a "filter" token. Note this must be applied after asHeader1
+  Tokens.meta.filter(t => t.meta.categories.includes('TextColor')),
+  // Replace the color with red.  Note this must be applied after the filter.
   asTextRed,
 );
 ...
@@ -383,7 +404,6 @@ asRedHeader1.meta = {
     Header: 'H1',
   },
 };
-...
 
 const RedHeader1 = asRedHeader1(H1);
 
@@ -395,15 +415,4 @@ ReadHeader1.categories === {
   TextStyle: ['Bold'],
   Header: ['H1'],
 };
-```
-
-Note that while metadata from all constituent tokens are aggregated and attached
-to the component to which a composed token is applied, the tomposed token
-itself does not have the metadata of its constituents; if it did, it would be
-much harder to filter. Think of the metadata attached to a Token as that portion
-of the final metadata which it will contribute.
-
-It's easy enough to get the aggregated metadata, eg:
-```
-const finalMeta = pick(myToken(Fragment), 'categories', 'title', ...);
 ```

@@ -1,10 +1,8 @@
 import React, { Fragment } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mount } from 'enzyme';
-import {
-  asToken, addMeta,
-} from './Tokens';
-import type { Token, TokenFilter } from './Tokens';
+import Tokens from './Tokens';
+import type { Token } from './Tokens';
 
 const addProp = (name?: string, value?: string): Token => Comp => (props: any) => {
   if (!name) return <Comp {...props} />;
@@ -14,9 +12,7 @@ const addProp = (name?: string, value?: string): Token => Comp => (props: any) =
   return <Comp {...propsToAdd} {...props} />;
 };
 
-const withType = addMeta.term('Type');
-
-describe('asToken', () => {
+describe('Tokens.create', () => {
   describe('addProp helper', () => {
     const Base = () => <></>;
     it('Adds a prop', () => {
@@ -47,7 +43,7 @@ describe('asToken', () => {
   describe('HOC order', () => {
     const Base = () => <></>;
     it('Applies hocs left to right', () => {
-      const asTest = asToken(
+      const asTest = Tokens.create(
         addProp('foo'),
         addProp('foo', 'bar'),
       );
@@ -57,10 +53,10 @@ describe('asToken', () => {
     });
 
     it('Applies hocs left to right including nested tokens', () => {
-      const asFoo = asToken(
+      const asFoo = Tokens.create(
         addProp('foo'),
       );
-      const asTest = asToken(
+      const asTest = Tokens.create(
         asFoo,
         addProp('foo', 'bar'),
       );
@@ -74,7 +70,7 @@ describe('asToken', () => {
     it('Propagates original metadata', () => {
       const Base = () => <></>;
       Base.title = 'BaseTitle';
-      const asPropagate = asToken(addProp('prop'));
+      const asPropagate = Tokens.create(addProp('prop'));
       const Wrong = addProp()(Base);
       expect(Wrong.title).toBeUndefined();
       const Right = asPropagate(Base);
@@ -82,8 +78,8 @@ describe('asToken', () => {
     });
 
     it('Propagates added metadata', () => {
-      const withNewMeta = asToken(
-        withType('New'),
+      const withNewMeta = Tokens.create(
+        Tokens.meta.term('Type')('New'),
         addProp(),
       );
       const Test = withNewMeta(Fragment);
@@ -93,8 +89,8 @@ describe('asToken', () => {
     it('Merges categories', () => {
       const Base = () => <></>;
       Base.categories = { Type: ['Base'] };
-      const asTest = asToken(
-        addMeta.term('Type')('Foo'),
+      const asTest = Tokens.create(
+        Tokens.meta.term('Type')('Foo'),
       );
       const Test = asTest(Base);
       expect(Test.categories).toEqual({ Type: ['Base', 'Foo'] });
@@ -103,22 +99,22 @@ describe('asToken', () => {
     it('Overwrites titles', () => {
       const Base = () => <></>;
       Base.title = 'BaseTitle';
-      const asTest = asToken(
-        addMeta({ title: 'Foo' }),
+      const asTest = Tokens.create(
+        { title: 'Foo' },
       );
       const Test = asTest(Base);
       expect(Test.title).toBe('Foo');
     });
 
     it('Adds metaata from nested tokens', () => {
-      const asFoo = asToken(withType('Foo'));
-      const asBar = asToken(withType('Bar'));
-      const asBaz = asToken(asBar, withType('Baz'));
-      const asTest = asToken(
+      const asFoo = Tokens.create(Tokens.meta.term('Type')('Foo'));
+      const asBar = Tokens.create(Tokens.meta.term('Type')('Bar'));
+      const asBaz = Tokens.create(asBar, Tokens.meta.term('Type')('Baz'));
+      const asTest = Tokens.create(
         asFoo,
         asBaz,
-        addMeta.title('Test'),
-        withType('Test'),
+        { title: 'Test' },
+        Tokens.meta.term('Type')('Test'),
       );
       const Test = asTest(Fragment);
       expect(Test.title).toBe('Test');
@@ -130,25 +126,23 @@ describe('asToken', () => {
 
   describe('Filtering', () => {
     const Base = () => <></>;
-    const asFoo = asToken(
-      addMeta.term('Type')('Filtered'),
-      addMeta.term('Name')('Foo'),
+    const asFoo = Tokens.create(
+      Tokens.meta.term('Type')('Filtered'),
+      Tokens.meta.term('Name')('Foo'),
       addProp('foo'),
     );
 
-    const asBar = asToken(
-      addMeta.term('Type')('Unfiltered'),
-      addMeta.term('Name')('Bar'),
+    const asBar = Tokens.create(
+      Tokens.meta.term('Type')('Unfiltered'),
+      Tokens.meta.term('Name')('Bar'),
       addProp('bar'),
     );
 
-    const filter:TokenFilter<any> = h => (
-      !h.meta?.categories?.Type?.includes('Filtered')
-    );
+    const filter = Tokens.filter(t => !t.meta?.categories?.Type?.includes('Filtered'));
 
     it('Filters flat tokens', () => {
-      const asTest = asToken(asFoo, asBar);
-      const asFiltered = asToken(asTest, { filter });
+      const asTest = Tokens.create(asFoo, asBar);
+      const asFiltered = Tokens.create(asTest, filter);
       const Test = asTest(Base);
       const Filtered = asFiltered(Base);
       expect(Test.categories).toEqual({
@@ -171,13 +165,13 @@ describe('asToken', () => {
     });
 
     it('Filters nested tokens', () => {
-      const withNestedFoo = asToken(
+      const withNestedFoo = Tokens.create(
         asFoo,
-        addMeta.term('Name')('NestedFoo'),
+        Tokens.meta.term('Name')('NestedFoo'),
         addProp('nestedFoo'),
       );
-      const asTest = asToken(withNestedFoo, asBar);
-      const asFiltered = asToken(asTest, { filter });
+      const asTest = Tokens.create(withNestedFoo, asBar);
+      const asFiltered = Tokens.create(asTest, filter);
       const Test = asTest(Base);
       const Filtered = asFiltered(Base);
       expect(Test.categories).toEqual({
@@ -198,6 +192,20 @@ describe('asToken', () => {
       expect(wrapperF.find(Base).props()).toEqual({
         bar: 'bar',
         nestedFoo: 'nestedFoo',
+      });
+    });
+
+    it('Propagates a filter', () => {
+      const asBarNotFoo = Tokens.create(filter, asBar);
+      const asTest = Tokens.create(asFoo, asBarNotFoo);
+      const Test = asTest(Base);
+      expect(Test.categories).toEqual({
+        Type: ['Unfiltered'],
+        Name: ['Bar'],
+      });
+      const wrapperF = mount(<Test />);
+      expect(wrapperF.find(Base).props()).toEqual({
+        bar: 'bar',
       });
     });
   });
