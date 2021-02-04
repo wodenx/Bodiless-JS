@@ -29,9 +29,9 @@ component changes.
 
 ## Tokens
 
-In general, we express a design token as a React higer-order component (HOC).
-Applying the HOC to a component is equivalent to styling that component
-with a token:
+In bodiless, you implement design tokens as React higer-order components (HOC).
+Applying the HOC to a component is equivalent to styling that component with a
+token:
 
 ```js
 const ComponentWithStyles = withMyStyles(Component);
@@ -48,7 +48,8 @@ const withComposedToken = flow(
   withToken2,
 );
 ```
-HoweverBodiless provides a token composition utility which adds some
+
+However, Bodiless provides a token composition utility which adds some
 additional functionality:
 
 - The ability to attach metadata to a token.
@@ -57,27 +58,31 @@ additional functionality:
 
 This is intended to promote design-system thinking when defining
 tokens, by encouraging us to think about the structure and organization
-of tokens as we implement them.  IT also facilitates implementation of
+of tokens as we implement them.  It also facilitates implementation of
 tools which allow browsing the design system (eg StorybooK), and eases
 the process of extending or customizing composed tokens without fully
 recomposing them.
 
-The token composition utilites are int
-and `flowRight`:
+In general, you can use `asToken` to compose tokens the same way you
+would use Lodash flow, eg:
 
-```ts
-Tokens.flow(...tokenDefs: Token|TokenMeta): Token
-Tokens.flowRight(...)
+```js
+const withComposedToken = asToken(
+  withToken1,
+  withToken2,
+);
 ```
 
-These differ from normal lodash `flow` and `flowRight` in a few key ways:
-- They propagate metadata (static properties) attached to a component through
+However, there are a few key differences:
+
+- Metadata (static properties) attached to a component ar prpagated through
   the chain of HOC's.
-- The "Token" type of the parameter is constrained to be an HOC. We
-  also intruduce a special kind of Token known as a "Filter".  See more
+- If you are using Typescript, the type of the parameters is constrained to be an
+  HOC, except...
+- There is an optional overload to accept a "TokenMeta" object which consists of
+  metadata which should be attached to the token.
+- We intruduce a special kind of Token known as a "Filter". See more
   below.
-- Their parameters are overloaded to accept a "TokenMeta" object
-  which consists of metadata which should be attached to the token.
 
 ### Metadata and Filters
 
@@ -85,19 +90,20 @@ Token metadata are properties which can be attached to tokens to help
 organize them and understand their structure. When a token is applied,
 its metadata will also be attached to the component to which it is applied.
 If a composed token is applied, metadata from all constituents will be
-aggregated and attached to the target component.  For example:
+aggregated and attached to the target component. See below for some examples.
 
-In addition to a normal HOC, a Token can also be a "filter".  A filter is
-a token which, when composed with other tokens, causes any of those tokens
-which match certain criteria to be removed.  Filters can be defined to
-test the metadata attached to other tokens. So, for exmple, you can compose
-a token which removes all 'Color' tokens and adds a new one.
+In addition to a normal HOC, a Token can also be a "filter". A filter is a token
+which, when composed with other tokens, *removes* any which match certain
+criteria. Filters are usually defined to test the metadata attached to other
+tokens. So, for exmple, you can compose a token which removes all 'Color' tokens
+and adds a new one.
 
 > Note that while metadata from all constituent tokens are aggregated and attached
 > to the component to which a composed token is applied, the tomposed token
 > itself does not have the metadata of its constituents; if it did, it would be
 > much harder to filter. Think of the metadata attached to a Token as that portion
 > of the final metadata which it will contribute.
+>
 > It's easy enough to get the aggregated metadata, eg:
 > ```
 > const finalMeta = pick(myToken(Fragment), 'categories', 'title', ...);
@@ -110,72 +116,100 @@ Given
 ```js
 const asBold = asToken(
   addClasses('font-bold'),
-  Tokens.meta.term('TextStyle')('Bold'), // Same as { meta: { categories: { Style: 'Bold' } } }
+  { categories: { Style: ['Bold'] } },
 );
 
 const asTextBlue = asToken(
   addClasses('text-blue-500'),
-  Tokens.meta.term('TextColor')('Blue'),
+  { categories: { TextColor: ['Blue'] } },
 );
 
 const asTextRed = asToken(
   addClasses('text-red-500'),
-  Tokens.meta.term('TextColor')('Red'),
+  { categories: { TextColor: ['Red'] } },
 );
+// Same as:
+// const asTextRed = asToken(addClasses('text-red-500'));
+// asTextRed.meta = { categories: { TextColor: ['Red'] } };
 
 const asBgYellow = asToken(
   addClasses('bg-yellow-500'),
-  Tokens.meta.term('BgColor')('Yellow'), 
+  { categories: { BgColor: ['Yellow'] } },
 )
 
 const asHeader1 = asToken(
   asTextBlue,
   asBold,
   asBgYellow,
-  Tokens.meta.term('Header')('H1'),
+  { categories: { Header: ['H1'] } },
 );
 
+const Header1 = asHeader1(H1);  // `H1` is a version of 'h1' stylable with fclasses, see below.
 ```
-We have
 
-```
-const Header1 = asHeader1(H1);
+Then
+
+```js
 
 <Header1 /> === <h1 className="text-blue bg-yellow-500 font-bold" />
 
-BrandH1.categories === {
+// The component itself includes aggreaged metadata from all composed tokens...
+Header1.categories === {
   TextColor: ['Blue'],
   BgColor: ['Yellow'],
   TextStyle: ['Bold'],
   Header: ['H1'],
 };
 
+// ... but the token itself does not.
+asHeader1.meta === {
+  categories: {
+    Header: ['H1'],
+  }
+}
+```
+
+And given
+
+```js
 const asRedHeader1 = asToken(
-  asHeader1.meta, // We are creating a variant of asHeader1, so propagate its meta.
   asHeader1,
+  asHeader1.meta, // We are creating a variant of asHeader1, so propagate its meta.
   // The following creates a "filter" token. Note this must be applied after asHeader1
-  Tokens.meta.filter(t => t.meta.categories.includes('TextColor')),
+  withTokenFilter(t => !t.meta.categories.includes('TextColor')),
   // Replace the color with red.  Note this must be applied after the filter.
   asTextRed,
 );
-...
-asRedHeader1.meta = {
+
+const RedHeader1 = asRedHeader1(H1);
+```
+
+then
+
+```jsx
+<RedHeader1 /> === <h1 className="font-bold text-red-500 bg-yellow-500" />
+
+// Our new token has the metadata of `asHeader1` only because we propagated it explicitly.
+asRedHeader1.meta === {
   categories: {
-    Header: 'H1',
+    Header: ['H1'],
   },
 };
 
-const RedHeader1 = asRedHeader1(H1);
-
-<RedHeader1 /> === <h1 className="font-bold text-red-500 bg-yellow-500" />
-
-ReadHeader1.categories === {
+RedHeader1.categories === {
   TextColor: ['Red'],
   BgColor: ['Yellow'],
   TextStyle: ['Bold'],
   Header: ['H1'],
 };
 ```
+
+> **Order is important**
+>
+> As you can see from the examples above, the order in
+> which you compose tokens can be significant, especially when applying filters.
+> `asToken` composes tokens in left-to-right order (Lodash `flow` as opposed to
+> `flowRight`).
 
 ## Styling Elements with FClasses
 

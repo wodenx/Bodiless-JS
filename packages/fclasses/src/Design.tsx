@@ -24,7 +24,7 @@ import { HOC } from './FClasses';
 import { addPropsIf } from './addProps';
 import { useShowDesignKeys } from './Context';
 import { withDisplayName } from './hoc-util';
-import Tokens from './Tokens';
+import { asToken } from './Tokens';
 
 /**
  * This is the type to use for the components prop of a component with a fluid design.
@@ -167,7 +167,7 @@ export const withDesign = <C extends DesignableComponents>(design: Design<C>) =>
         const wrappedDesign = keysToWrap.reduce(
           (acc, key) => ({
             ...acc,
-            [key]: Tokens.flow(
+            [key]: asToken(
               design[key]! as Token<P>,
               designFromProps[key]! as Token<P>,
             ),
@@ -248,7 +248,7 @@ const extendDesign$ = <C extends DesignableComponents> (design: Design<C>) => (
       (acc, key) => ({
         ...acc,
         [key]: acc[key]
-          ? Tokens.flow(acc[key]! as Token<any>, design[key]! as Token<any>)
+          ? asToken(acc[key]! as Token<any>, design[key]! as Token<any>)
           : design[key],
       }),
       baseDesign,
@@ -358,7 +358,7 @@ const varyDesign$ = <C extends DesignableComponents> (design:Design<C>):HOD<C> =
               // We know this keys exist be cause we are iterating them
               {
                 ...innerAcc,
-                [baseKey + key]: Tokens.flow(
+                [baseKey + key]: asToken(
                   baseDesign[baseKey]! as Token<any>,
                   design[key]! as Token<any>,
                 ),

@@ -76,7 +76,7 @@ const isToken = (def: TokenDef<any>) => typeof def === 'function';
 
 // Custom merge behavior for token categories.
 function mergeMeta(objValue:any, srcValue:any) {
-  if (isArray(objValue)) {
+  if (isArray(objValue) && isArray(srcValue)) {
     return union(objValue, srcValue);
   }
   return undefined;
@@ -170,8 +170,7 @@ const filterMembers = <P extends object>(tokens: Token<P>[]): Token<P>[] => {
 /**
  * Composes one or more tokens into a single token.
  *
- * Tokens will be composed left-to-right (in lodash "flow" order). To compose
- * right-to-left use `Tokens.flowRight`.
+ * Tokens will be composed left-to-right (in lodash "flow" order).
  *
  * You can also attach metadata to this token by provding plain TokenMeta
  * objects as arguments in addition to tokens.
@@ -185,7 +184,7 @@ const filterMembers = <P extends object>(tokens: Token<P>[]): Token<P>[] => {
  * @return
  * A composed token.
  */
-const flow = <P extends object>(...args: TokenDef<P>[]): Token<P> => {
+const asToken = <P extends object>(...args: TokenDef<P>[]): Token<P> => {
   const metaBits: TokenMeta[] = args.filter(a => !isToken(a)) as TokenMeta[];
   const meta = mergeWith({}, ...metaBits, mergeMeta);
   const members: Token<P>[] = [
@@ -198,19 +197,6 @@ const flow = <P extends object>(...args: TokenDef<P>[]): Token<P> => {
 };
 
 /**
- * Composes tokens right-to-left (similar to lodash `flowRight`.
- *
- * @see asToken
- *
- * @param hocs List of token HOCs and/or token metadata to compose.
- *
- * @return A composed token.
- */
-const flowRight = <P extends object>(...hocs: Token<P>[]) => (
-  flow(...hocs.reverse())
-);
-
-/**
  * Creates a token filter (a special kind of token which, when composed with other tokens,
  * filters out those which match a provided test function.
  *
@@ -221,14 +207,14 @@ const flowRight = <P extends object>(...hocs: Token<P>[]) => (
  * @returns
  * A token filter.
  */
-const filter = <P extends object>(test: TokenFilterTest<P>): Token<P> => (
+const withTokenFilter = <P extends object>(test: TokenFilterTest<P>): Token<P> => (
   Object.assign(identity, { filter: test })
 );
 
 /**
  * Utilities for adding metadata to tokens.
  */
-const meta = {
+asToken.meta = {
   term: (c: string) => (t: string) => ({
     categories: {
       [c]: [t],
@@ -239,7 +225,6 @@ const meta = {
       [c]: [],
     },
   }),
-  title: (title: string) => ({ title }),
 };
 
 export type {
@@ -247,6 +232,4 @@ export type {
   TokenMeta, ComponentWithMeta, ComponentOrTag,
 };
 
-export default {
-  flow, filter, flowRight, meta,
-};
+export { asToken, withTokenFilter };
