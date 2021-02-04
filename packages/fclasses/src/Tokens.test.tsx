@@ -108,7 +108,7 @@ describe('flow', () => {
       expect(Test.title).toBe('Foo');
     });
 
-    it('Adds metaata from nested tokens', () => {
+    it('Adds metadata from nested tokens', () => {
       const asFoo = asToken(meta.term('Type')('Foo'));
       const asBar = asToken(meta.term('Type')('Bar'));
       const asBaz = asToken(asBar, meta.term('Type')('Baz'));
