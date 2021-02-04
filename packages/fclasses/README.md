@@ -99,7 +99,7 @@ tokens. So, for exmple, you can compose a token which removes all 'Color' tokens
 and adds a new one.
 
 > Note that while metadata from all constituent tokens are aggregated and attached
-> to the component to which a composed token is applied, the tomposed token
+> to the component to which a composed token is applied, the composed token
 > itself does not have the metadata of its constituents; if it did, it would be
 > much harder to filter. Think of the metadata attached to a Token as that portion
 > of the final metadata which it will contribute.
