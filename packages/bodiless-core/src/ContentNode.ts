@@ -14,6 +14,7 @@
 
 import { observable, action } from 'mobx';
 import { isString } from 'util';
+import { identity } from 'lodash';
 
 class DummyContentNodeStore {
   @observable data = {};
@@ -53,6 +54,13 @@ export type ContentNode<D> = {
   child<E extends object>(path: string): ContentNode<E>;
   peer<E extends object>(path: Path): ContentNode<E>;
   hasError: () => boolean;
+  proxy: (processors: Processors<D>) => ContentNode<D>;
+};
+
+type Processors<D> = {
+  getData?: (data: D) => D,
+  setData?: (data: D) => D,
+  getKeys?: (keys: string[]) => string,
 };
 
 export class DefaultContentNode<D extends object> implements ContentNode<D> {
@@ -121,6 +129,34 @@ export class DefaultContentNode<D extends object> implements ContentNode<D> {
 
   getActions() {
     return this.actions;
+  }
+
+  proxy(processors: Processors<D>): ContentNode<D> {
+    const {
+      getData, setData, getKeys,
+    }: Required<Processors<D>> = {
+      getData: identity,
+      setData: identity,
+      getKeys: identity,
+      ...processors,
+    };
+    const handlers = {
+      get: function get(target: ContentNode<D>, prop: keyof ContentNode<D>) {
+        switch (prop) {
+          case 'data':
+            return getData(target.data);
+          case 'keys':
+            return getKeys(target.keys);
+          case 'setData':
+            return (data: D) => target.setData(setData(data));
+          case 'peer':
+            return (path: Path) => target.peer<any>(path).proxy(processors);
+          default:
+            return target[prop];
+        }
+      },
+    };
+    return new Proxy(this, handlers);
   }
 
   static dummy(path = 'root', initialData = {}) {
