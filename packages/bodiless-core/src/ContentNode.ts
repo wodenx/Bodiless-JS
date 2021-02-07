@@ -157,7 +157,7 @@ export class DefaultContentNode<D extends object> implements ContentNode<D> {
       ...processors,
     };
     const handlers = {
-      get: function get(target: ContentNode<D>, prop: keyof ContentNode<D>) {
+      get: function get(target: ContentNode<D>, prop: keyof ContentNode<D>, receiver: any) {
         switch (prop) {
           case 'data':
             return getData(target.data);
@@ -168,7 +168,8 @@ export class DefaultContentNode<D extends object> implements ContentNode<D> {
           case 'peer':
             return (path: Path) => target.peer<any>(path).proxy(processors);
           default:
-            return target[prop];
+            // return target[prop];
+            return Reflect.get(target, prop, receiver);
         }
       },
     };

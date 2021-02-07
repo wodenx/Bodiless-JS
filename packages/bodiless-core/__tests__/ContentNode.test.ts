@@ -95,7 +95,16 @@ describe('ContentNode', () => {
     expect(actions.setNode.mock.calls[0][1]).toEqual(data);
   });
 
-  describe.only('ContentNode.proxy', () => {
+  it('Returns child keys properly', () => {
+    const { actions, getters } = mockStore();
+    getters.getKeys.mockReturnValue(
+      ['foo', 'bar', 'foo$baz', 'foo$bing', 'foo$baz$bat'],
+    );
+    const node = new DefaultContentNode(actions, getters, 'foo');
+    expect(node.childKeys).toEqual(['baz', 'bing']);
+  });
+
+  describe('ContentNode.proxy', () => {
     beforeEach(() => { jest.clearAllMocks(); });
     const content: { [k: string]: any } = {
       Root$foo: { value: 'FooValue' },
@@ -117,7 +126,7 @@ describe('ContentNode', () => {
         const r = test.data;
         expect(r).toEqual({ extra: 'Extra' });
       });
-  
+
       it('Passes data for descendents through a processor', () => {
         const parent = rootNode.proxy(processors);
         const child = parent.child('foo');
@@ -143,10 +152,58 @@ describe('ContentNode', () => {
         expect(getters.getKeys).toBeCalledTimes(1);
       });
     });
+
+    describe('setData', () => {
+      const processors = {
+        setData: jest.fn().mockImplementation((data: any) => ({ ...data, extra: 'Extra' })),
+      };
+      const rootNode = new DefaultContentNode(actions, getters, 'Root');
+
+      it('Passes data through a processor', () => {
+        const test = rootNode.proxy(processors);
+        test.setData({ value: 'RootValue' });
+        expect(actions.setNode).toBeCalledWith(['Root'], { value: 'RootValue', extra: 'Extra' });
+      });
+
+      it('Passes data for descendents through a processor', () => {
+        const parent = rootNode.proxy(processors);
+        const child = parent.child('child');
+        child.setData({ value: 'ChildData' });
+        expect(actions.setNode).toBeCalledWith(['Root', 'child'], { value: 'ChildData', extra: 'Extra' });
+        actions.setNode.mockClear();
+        const grand = child.child('grand');
+        grand.setData({ value: 'GrandValue' });
+        expect(actions.setNode).toBeCalledWith(['Root', 'child', 'grand'], { value: 'GrandValue', extra: 'Extra' });
+      });
+
+      it('Applies multiple processors', () => {
+        const processors2 = {
+          setData: jest.fn().mockImplementation((data: any) => ({ ...data, extra2: 'extra2' })),
+        };
+        const parent = rootNode.proxy(processors);
+        const child = parent.child('child').proxy(processors2);
+        child.setData({ value: 'ChildValue' });
+        expect(actions.setNode).toBeCalledWith(['Root', 'child'], { value: 'ChildValue', extra: 'Extra', extra2: 'extra2' });
+      });
+
+      it('Does not alter other methods', () => {
+        const node = rootNode.proxy(processors).child('foo');
+        node.setData({ vaue: 'Foo' });
+        expect(node.keys).toEqual(Object.keys(content));
+        expect(node.data).toEqual(content.Root$foo);
+      });
+    });
+  
     describe('getKeys', () => {
       const processors = {
         getKeys: jest.fn().mockImplementation(
           (keys: string[]) => keys.filter(k => k !== 'Root$foo$bar'),
+        ),
+      };
+
+      const processors2 = {
+        getKeys: jest.fn().mockImplementation(
+          (keys: string[]) => [...keys, 'Root$foo$bing'],
         ),
       };
       const rootNode = new DefaultContentNode(actions, getters, 'Root');
@@ -167,14 +224,9 @@ describe('ContentNode', () => {
       });
 
       it('Applies multiple processors', () => {
-        const processors2 = {
-          getKeys: jest.fn().mockImplementation(
-            (keys: string[]) => [...keys, 'Root$bing'],
-          ),
-        };
         const parent = rootNode.proxy(processors);
         const child = parent.child('foo').proxy(processors2);
-        expect(child.keys).toEqual(['Root$foo', 'Root$baz', 'Root$bing']);
+        expect(child.keys).toEqual(['Root$foo', 'Root$baz', 'Root$foo$bing']);
       });
 
       it('Does not alter other methods', () => {
@@ -182,6 +234,13 @@ describe('ContentNode', () => {
         node.setData({ value: 'New' });
         expect(actions.setNode).toBeCalledWith(['Root', 'baz'], { value: 'New' });
         expect(node.data).toEqual(content.Root$baz);
+      });
+
+      it('Returns child keys properly', () => {
+        const node = rootNode.proxy(processors);
+        expect(node.childKeys).toEqual(['foo', 'baz']);
+        const child = node.proxy(processors2).child('foo');
+        expect(child.childKeys).toEqual(['bing']);
       });
     });
   });
