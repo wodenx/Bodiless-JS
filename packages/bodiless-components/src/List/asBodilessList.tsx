@@ -21,7 +21,7 @@ import React, {
 import { flow, identity } from 'lodash';
 import {
   replaceWith, withDesign, asComponent, DesignableComponentsProps, designable, HOC,
-  withoutProps,
+  withoutProps, stylable,
 } from '@bodiless/fclasses';
 
 import withListButtons from './withListButtons';
@@ -131,5 +131,12 @@ const withSimpleSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
     }) as HOC
 );
 
+// TODO: Should this be a part of asBodilessList?
+const asStylableList = withDesign({
+  Wrapper: stylable,
+  Item: stylable,
+  Title: stylable,
+});
+
 export default asBodilessList;
-export { asSubList, withSimpleSubListDesign };
+export { asSubList, withSimpleSubListDesign, asStylableList };
