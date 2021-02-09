@@ -24,7 +24,7 @@ import withMenuContext from './withMenuContext';
 const asBodilessMenu = <P extends object>(
   nodeKeys?: WithNodeKeyProps,
   defaultData?: ListDefaultDataType,
-  useOverrides?: UseListOverrides<P>,
+  useOverrides: UseListOverrides<P> = () => ({}),
 ) => flow(
     asBodilessList(
       nodeKeys,
