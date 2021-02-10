@@ -15,6 +15,7 @@
 import { ReactNode } from 'react';
 import { FormBodyProps as ContextMenuFormBodyProps } from '../contextMenuForm';
 import { TMenuOption } from './ContextMenuTypes';
+import { MenuOptionsDefinition } from 'src';
 
 type EditDataHandler<D> = {
   initialValueHandler?: (values: any) => D;
@@ -61,4 +62,4 @@ export type EditButtonOptions<P = any, D = any> = Omit<OptionGroupDefinition, 'h
 
 export type UseBodilessOverrides<P = any, D = any, E = {}> = (
   props: P & EditButtonProps<D>,
-) => Partial<EditButtonOptions<P, D> & E>;
+) => Partial<EditButtonOptions<P, D> & E & MenuOptionsDefinition<P>>;

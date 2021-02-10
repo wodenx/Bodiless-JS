@@ -50,8 +50,8 @@ const useNewContext = (props: PageContextProviderProps, parent?: PageEditContext
  *
  * @param props Props which define the menu options to add.
  */
-export const useRegisterMenuOptions = (props: PageContextProviderProps) => {
-  const context = useEditContext();
+export const useRegisterMenuOptions = (props: PageContextProviderProps, parentContext?: PageEditContextInterface) => {
+  const context = parentContext || useEditContext();
   const peerContext = useNewContext(props, context.parent);
   context.registerPeer(peerContext);
 
@@ -138,10 +138,17 @@ export const withMenuOptions = <P extends object>(def$: MenuOptionsDefinition$<P
     const WithMenuOptions = (props: P) => {
       const def = typeof def$ === 'function' ? def$(props) : def$;
       const {
-        useMenuOptions, peer, ...rest
+        useMenuOptions, peer, root, ...rest
       } = def;
       const options = useMenuOptions && useMenuOptions(props);
       const getMenuOptions = options ? useGetter(options) : undefined;
+      const context = useEditContext();
+      if (root) {
+        let rootContext: PageEditContextInterface = context;
+        while (rootContext.parent) rootContext = rootContext;parent;
+        useRegisterMenuOptions({ getMenuOptions, ...rest }, rootContext);
+        return <Component {...props} />;
+      }
       if (peer) {
         useRegisterMenuOptions({ getMenuOptions, ...rest });
         return <Component {...props} />;

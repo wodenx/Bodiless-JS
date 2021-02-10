@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by applicable law or agreed to in writingpi, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -13,7 +13,8 @@
  */
 
 import React, { ComponentType } from 'react';
-import { flowRight } from 'lodash';
+import flowRight from 'lodash/flowRight';
+import pick from 'lodash/pick';
 import { v1 } from 'uuid';
 import {
   withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator, withLocalContextMenu,
@@ -119,8 +120,13 @@ const withChameleonButton = <P extends object, D extends object>(
     };
     return createMenuOptionGroup(baseDefinition);
   };
+  const useMenuOptionsDefinition = (props: P & EditButtonProps<D>) => ({
+    useMenuOptions,
+    name: 'Chameleon',
+    ...pick(useOverrides(props), 'root', 'peer'),
+  });
   return flowRight(
-    withMenuOptions({ useMenuOptions, name: 'Chamelion' }),
+    withMenuOptions(useMenuOptionsDefinition),
     withContextActivator('onClick'),
     withLocalContextMenu,
     // withUnwrap,

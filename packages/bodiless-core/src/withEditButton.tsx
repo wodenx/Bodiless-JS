@@ -38,15 +38,19 @@ export const createMenuOptionGroup = (
   const {
     groupLabel,
     groupMerge,
+    local,
+    global,
     ...menuOption
   } = baseOption;
+
+  if (global) return [menuOption];
 
   const menuGroup:TMenuOption = {
     name: `${menuOption.name}-group`,
     label: groupLabel || menuOption.label,
     groupMerge: groupMerge || 'none',
-    local: menuOption.local,
-    global: menuOption.global,
+    local,
+    global,
     Component: 'group',
   };
 

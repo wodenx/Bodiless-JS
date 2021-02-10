@@ -22,4 +22,5 @@ export type PageContextProviderProps = Partial<DefinesLocalEditContext>;
 export type MenuOptionsDefinition<P> = Omit<PageContextProviderProps, 'getMenuOptions'> & {
   useMenuOptions?: (props: P) => TMenuOption[],
   peer?: boolean,
+  root?: boolean,
 };
