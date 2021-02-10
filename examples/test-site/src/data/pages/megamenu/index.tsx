@@ -29,7 +29,7 @@ import { MegaMenuList } from '../../../components/Menu/MegaMenu';
 import { SimpleMenuList } from '../../../components/Menu/SimpleMenu';
 import { asHeader2, asHeader3, asHeader1 } from '../../../components/Elements.token';
 
-import { ResponsiveSimpleMenu, ResponsiveMegaMenu } from '../../../components/Menu';
+import { ResponsiveSimpleMenu, ResponsiveMegaMenu, BodilessMenu } from '../../../components/Menu';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -65,6 +65,11 @@ export default (props: any) => (
         This page showcases two types of menus.  Each menu is shown as a top nav and also
         as a simple list of links which render the same data as the top nav.
       </Description>
+
+      <H2>Bodiless Menu</H2>
+      <div>
+        <BodilessMenu nodeKey="bodiless-menu" />
+      </div>
 
       <H2>Simple Menu</H2>
       <div>

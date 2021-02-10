@@ -23,6 +23,8 @@ import { SimpleBurgerMenu, MegaBurgerMenu } from '../BurgerMenu';
 import { breakpoints as allBreakpoints } from '../Page';
 import { asDesktopOnly, asMobileOnly } from '../Elements.token';
 
+import BodilessMenu from './Menu';
+
 const breakpoints = pick(allBreakpoints, 'lg');
 
 const asResponsiveMenu = (DesktopMenu: ComponentType) => flow(
@@ -38,3 +40,4 @@ const asResponsiveMenu = (DesktopMenu: ComponentType) => flow(
 
 export const ResponsiveSimpleMenu = asResponsiveMenu(SimpleMenu)(SimpleBurgerMenu);
 export const ResponsiveMegaMenu = asResponsiveMenu(MegaMenu)(MegaBurgerMenu);
+export { BodilessMenu };
