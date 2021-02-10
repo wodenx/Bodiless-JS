@@ -33,7 +33,7 @@ import {
   withChameleonComponentFormControls,
 } from '@bodiless/components';
 
-import { useMenuOptionUI, asBodilessComponent, useEditContext } from '@bodiless/core';
+import { useMenuOptionUI, asBodilessComponent, useEditContext, useNode } from '@bodiless/core';
 import { asHeader1, asHeader2 } from '../../../components/Elements.token';
 import Layout from '../../../components/Layout';
 
@@ -197,6 +197,31 @@ const AvailabilityAccordionToggle = flow(
   withDesign(toggleDesign),
 )(AvailabilityAccordion);
 
+
+const GlobalChameleonBase = () => (
+  <div className="border p-2">
+    The visibility of this panel is controlled by a "Show" button on the Global
+    context menu (only visible in edit mode);
+  </div>
+);
+
+const GlobalChameleon = flow(
+  asBodilessChameleon('global-chameleon', undefined, () => ({
+    root: true,
+    label: 'Show',
+    icon: 'visibility',
+    isActive: () => {
+      const { node } = useNode<any>();
+      const child = node.child('global-chameleon');
+      console.log('data', child.path, child.data);
+      return child.data.component !== 'hidden';
+    },
+  })),
+  withDesign({
+    hidden: replaceWith(() => <></>),
+  }),
+)(GlobalChameleonBase);
+
 const H1 = flow(addClasses('pt-5'), asHeader1)(H1$);
 const H2 = flow(addClasses('pt-5'), asHeader2)(H2$);
 const Description = addClasses('mt-2 text-sm italic')(P);
@@ -271,6 +296,12 @@ export default (props: any) => (
             by clicking &quot;Disable&quot; in the lower left corner of the
             configuration form.
           </Description>
+        </Example>
+        <Example>
+          <H2>Chameleon with page level control</H2>
+          <BaseComponent>
+            <GlobalChameleon />
+          </BaseComponent>
         </Example>
       </Examples>
     </Layout>

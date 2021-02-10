@@ -113,8 +113,6 @@ const withChameleonButton = <P extends object, D extends object>(
       : useToggleButtonMenuOption;
     const baseDefinition:TMenuOption = {
       name: `chameleon-${v1()}`,
-      global: false,
-      local: true,
       ...extMenuOptions(),
       ...overrides,
     };
