@@ -14,8 +14,16 @@
 
 import asBodilessMenu from './asBodilessMenu';
 import { useIsMenuOpen } from './withMenuContext';
+import {
+  withListSubMenu,
+  withToutSubMenu,
+  withColumnSubMenu,
+} from './withSubMenu';
 
 export {
   asBodilessMenu,
   useIsMenuOpen,
+  withListSubMenu,
+  withToutSubMenu,
+  withColumnSubMenu,
 };

@@ -66,9 +66,14 @@ const asEditableMenuTitle = flow(
   }),
 );
 
+const withEditableMenuTitle = withDesign({
+  Title: asEditableMenuTitle,
+});
+
 export default MenuTitle;
 export {
   asMenuLink,
   asMenuTitle,
   asEditableMenuTitle,
+  withEditableMenuTitle,
 };

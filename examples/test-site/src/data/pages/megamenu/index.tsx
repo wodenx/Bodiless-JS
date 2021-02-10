@@ -68,7 +68,7 @@ export default (props: any) => (
 
       <H2>Bodiless Menu</H2>
       <div>
-        <BodilessMenu nodeKey="bodiless-menu" />
+        <BodilessMenu />
       </div>
 
       <H2>Simple Menu</H2>

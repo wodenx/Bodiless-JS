@@ -138,5 +138,15 @@ const asStylableList = withDesign({
   Title: stylable,
 });
 
+// TODO: Should this be a part of asSubListWrapper?
+const asStylableSubList = withDesign({
+  Wrapper: withDesign({
+    WrapperItem: stylable,
+    List: stylable,
+  }),
+});
+
 export default asBodilessList;
-export { asSubList, withSimpleSubListDesign, asStylableList };
+export {
+  asSubList, withSimpleSubListDesign, asStylableList, asStylableSubList,
+};

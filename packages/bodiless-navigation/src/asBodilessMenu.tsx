@@ -20,7 +20,7 @@ import { withDesign } from '@bodiless/fclasses';
 import type { UseListOverrides, ListDefaultDataType } from '@bodiless/components';
 
 import withMenuContext from './withMenuContext';
-import { asEditableMenuTitle } from './MenuTitles';
+import { withEditableMenuTitle } from './MenuTitles';
 
 const asBodilessMenu = <P extends object>(
   nodeKeys?: WithNodeKeyProps,
@@ -34,8 +34,8 @@ const asBodilessMenu = <P extends object>(
     ),
     asStylableList,
     withMenuContext,
+    withEditableMenuTitle,
     withDesign({
-      Title: asEditableMenuTitle,
       Item: asChameleonSubList(() => ({ formTitle: 'Sub-Menu Type' })),
     }),
   );
