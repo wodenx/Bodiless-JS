@@ -50,7 +50,10 @@ const useNewContext = (props: PageContextProviderProps, parent?: PageEditContext
  *
  * @param props Props which define the menu options to add.
  */
-export const useRegisterMenuOptions = (props: PageContextProviderProps, parentContext?: PageEditContextInterface) => {
+export const useRegisterMenuOptions = (
+  props: PageContextProviderProps,
+  parentContext?: PageEditContextInterface,
+) => {
   const context = parentContext || useEditContext();
   const peerContext = useNewContext(props, context.parent);
   context.registerPeer(peerContext);
@@ -118,9 +121,9 @@ type MenuOptionsDefinition$<P> = MenuOptionsDefinition<P>|((props:P) => MenuOpti
 
 /**
  * Using supplied options, returns an HOC which adds one or more menu options (buttons).
- * This simply wraps the supplied component with a `PageContextProvider`.
+ * This simplly wraps the supplied component with a `PageContextProvider`.
  *
- * Note that, unlike `PageContextProvider` itself, this function takes a custom hook
+ * Note that, unlike `PageContexProvider` itself, this function takes a custom hook
  * (`useMenuOptions`), which is invoked to create the 'getMenuOptions' prop
  * for `PageContextProvider`.  This allows you to use props and context at render
  * time to create your `getMenuOptions` callback.
@@ -141,18 +144,23 @@ export const withMenuOptions = <P extends object>(def$: MenuOptionsDefinition$<P
         useMenuOptions, peer, root, ...rest
       } = def;
       const options = useMenuOptions && useMenuOptions(props);
-      const getMenuOptions = options ? useGetter(options) : undefined;
-      const context = useEditContext();
-      if (root) {
-        let rootContext: PageEditContextInterface = context;
-        while (rootContext.parent) rootContext = rootContext;parent;
-        useRegisterMenuOptions({ getMenuOptions, ...rest }, rootContext);
+      if (root || peer) {
+        // Note we do not expect root or peer to change between renders, so it's
+        // ok to use hooks inside this condition.
+        let context = useEditContext();
+        if (root) {
+          while (context.parent) context = context.parent;
+        }
+        // Set the default menu placement based on whether we are attaching to the root context.
+        const getMenuOptions = options && useGetter(options.map(o => ({
+          global: !context.parent,
+          local: !!context.parent,
+          ...o,
+        })));
+        useRegisterMenuOptions({ getMenuOptions, ...rest }, context);
         return <Component {...props} />;
       }
-      if (peer) {
-        useRegisterMenuOptions({ getMenuOptions, ...rest });
-        return <Component {...props} />;
-      }
+      const getMenuOptions = options && useGetter(options);
       return (
         <PageContextProvider getMenuOptions={getMenuOptions} {...rest}>
           <Component {...props} />
