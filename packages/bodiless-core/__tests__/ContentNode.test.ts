@@ -14,6 +14,14 @@
 
 import { DefaultContentNode } from '../src/ContentNode';
 
+class ExtendedContentNode extends DefaultContentNode<any> {
+  get data() {
+    return {
+      value: `ExtendedConentNode for ${this.path.join('$')}`,
+    };
+  }
+}
+
 const mockStore = () => {
   const getNode = jest.fn();
   const setNode = jest.fn();
@@ -135,6 +143,17 @@ describe('ContentNode', () => {
         expect(grandChild.data).toEqual({ value: 'BarValue', extra: 'Extra' });
       });
 
+      it('Processes data from a derived class', () => {
+        const child = rootNode.child('foo');
+        const derived = new ExtendedContentNode(
+          child.getActions(), child.getGetters(), child.path,
+        );
+        expect(derived.proxy(processors).data).toEqual({
+          value: `ExtendedConentNode for ${child.path.join('$')}`,
+          extra: 'Extra',
+        });
+      });
+
       it('Applies multiple processors', () => {
         const processors2 = {
           getData: jest.fn().mockImplementation((data: any) => ({ ...data, extra2: 'Extra2' })),
@@ -193,7 +212,7 @@ describe('ContentNode', () => {
         expect(node.data).toEqual(content.Root$foo);
       });
     });
-  
+
     describe('getKeys', () => {
       const processors = {
         getKeys: jest.fn().mockImplementation(
