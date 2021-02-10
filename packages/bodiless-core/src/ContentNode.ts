@@ -64,6 +64,38 @@ type Processors<D> = {
   getKeys?: (keys: string[]) => string,
 };
 
+//@ts-ignore
+class ContentNodeProxy<D> implements ContentNode<D> {
+  constructor(node: ContentNode<D>, processors: Processors<D>) {
+    const {
+      getData, setData, getKeys,
+    }: Required<Processors<D>> = {
+      getData: identity,
+      setData: identity,
+      getKeys: identity,
+      ...processors,
+    };
+    const handlers = {
+      get: function get(target: ContentNode<D>, prop: keyof ContentNode<D>, receiver: any) {
+        switch (prop) {
+          case 'data':
+            return getData(target.data);
+          case 'keys':
+            return getKeys(target.keys);
+          case 'setData':
+            return (data: D) => target.setData(setData(data));
+          case 'peer':
+            return (path: Path) => target.peer<any>(path).proxy(processors);
+          default:
+            // return target[prop];
+            return Reflect.get(target, prop, receiver);
+        }
+      },
+    };
+    return new Proxy(node, handlers);
+  }
+}
+
 export class DefaultContentNode<D extends object> implements ContentNode<D> {
   protected actions: Actions;
 
@@ -148,32 +180,8 @@ export class DefaultContentNode<D extends object> implements ContentNode<D> {
   }
 
   proxy(processors: Processors<D>): ContentNode<D> {
-    const {
-      getData, setData, getKeys,
-    }: Required<Processors<D>> = {
-      getData: identity,
-      setData: identity,
-      getKeys: identity,
-      ...processors,
-    };
-    const handlers = {
-      get: function get(target: ContentNode<D>, prop: keyof ContentNode<D>, receiver: any) {
-        switch (prop) {
-          case 'data':
-            return getData(target.data);
-          case 'keys':
-            return getKeys(target.keys);
-          case 'setData':
-            return (data: D) => target.setData(setData(data));
-          case 'peer':
-            return (path: Path) => target.peer<any>(path).proxy(processors);
-          default:
-            // return target[prop];
-            return Reflect.get(target, prop, receiver);
-        }
-      },
-    };
-    return new Proxy(this, handlers);
+    // @ts-ignore
+    return new ContentNodeProxy<D>(this, processors);
   }
 
   static dummy(path = 'root', initialData = {}) {
