@@ -50,7 +50,7 @@ const MenuTitle = designable(MenuTitleComponents, 'Menu Title')(MenuTitleBase);
 
 const asMenuLink = (asEditableLink: typeof asBodilessLink) => flow(
   withSidecarNodes(
-    asEditableLink('link', undefined, () => ({ groupLabel: 'Menu Item' })),
+    asEditableLink('link', undefined, () => ({ groupLabel: 'Menu Link' })),
   ),
 );
 

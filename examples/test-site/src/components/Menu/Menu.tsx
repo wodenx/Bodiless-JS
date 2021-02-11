@@ -24,11 +24,12 @@ import { flow } from 'lodash';
 // import withSimpleMenuStyles from './SimpleMenu.token';
 // import { asBreadcrumbSource } from '../Breadcrumbs/MenuBreadcrumbs';
 
-import { asBodilessMenu, withListSubMenu } from '@bodiless/navigation';
+import { asBodilessMenu, withListSubMenu, withColumnSubMenu } from '@bodiless/navigation';
 
 const BodilessMenuBase = flow(
   asBodilessMenu('MainMenu'),
   withListSubMenu(),
+  withColumnSubMenu(),
 )('ul') as ComponentType<any>;
 
 const BodilessMenu = flow(

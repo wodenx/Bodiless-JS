@@ -16,6 +16,7 @@ import { flow } from 'lodash';
 import { HOC, Design, withDesign } from '@bodiless/fclasses';
 import {
   asStylableList, asStylableSubList, asSubList, withDeleteNodeOnUnwrap,
+  withSubLists, UseListOverrides,
 } from '@bodiless/components';
 
 import { withEditableMenuTitle } from './MenuTitles';
@@ -24,10 +25,10 @@ import { withEditableMenuTitle } from './MenuTitles';
  * Creates a stylable sublist which deletes it's data when the last item is removed.
  * Suitable for use for all menus.
  */
-const asMenuSubList = (titleDesign: any = {}) => {
+const asMenuSubList = (titleDesign: any = {}, useOverrides: UseListOverrides = () => ({})) => {
   const titleDesign$ = typeof titleDesign === 'function' ? titleDesign : withDesign(titleDesign);
   return flow(
-    asSubList(() => ({ groupLabel: 'Sub-Menu Item' })),
+    asSubList((props) => ({ groupLabel: 'Sub-Menu Item', ...useOverrides(props) })),
     asStylableList,
     asStylableSubList,
     withDeleteNodeOnUnwrap('sublist'),
@@ -53,9 +54,7 @@ const withToutSubMenu = (menuTitleDesign: Design<any> | HOC) => withSubMenuDesig
 const withColumnSubMenu = (menuTitleDesign: Design<any> | HOC) => withSubMenuDesign({
   Columns: flow(
     asMenuSubList(menuTitleDesign),
-    withDesign({
-      Item: asMenuSubList(menuTitleDesign),
-    }),
+    withSubLists(1)(asMenuSubList(menuTitleDesign, () => ({ groupLabel: 'Column Sub-Menu Item' }))),
   ),
 });
 

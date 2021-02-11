@@ -30,7 +30,7 @@ const asBodilessMenu = <P extends object>(
     asBodilessList(
       nodeKeys,
       defaultData,
-      (props: P) => ({ groupLabel: 'Menu Item', ...useOverrides(props) }),
+      (props: P) => ({ groupLabel: 'Main Menu Item', ...useOverrides(props) }),
     ),
     asStylableList,
     withMenuContext,
