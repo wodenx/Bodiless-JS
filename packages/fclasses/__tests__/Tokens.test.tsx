@@ -15,7 +15,6 @@ const addProp = (name?: string, value?: string): Token => Comp => (props: any) =
 };
 
 describe('asToken', () => {
-
   describe('meta', () => {
     it('meta.term creates an object of the right shape', () => {
       const t = meta.term('foo')('bar');
