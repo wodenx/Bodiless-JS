@@ -29,7 +29,7 @@ component changes.
 
 ## Tokens
 
-In bodiless, you implement design tokens as React higer-order components (HOC).
+In Bodiless, you implement design tokens as React higher-order components (HOC).
 Applying the HOC to a component is equivalent to styling that component with a
 token:
 
@@ -38,7 +38,7 @@ const ComponentWithStyles = withMyStyles(Component);
 ```
 
 This pattern should be familiar to those who have worked with CSS-in-JS libraries
-like Styled Components or Emotion.
+like [Styled Components](https://styled-components.com/) or [Emotion](https://emotion.sh/docs/introduction).
 
 Any HOC can be used as a token, and tokens can be composed using normal
 functional programming paradigms (eg Lodash flow):
@@ -75,10 +75,10 @@ const withComposedToken = asToken(
 
 However, there are a few key differences:
 
-- Metadata (static properties) attached to a component ar prpagated through
+- Metadata (static properties) attached to a component are prppagated through
   the chain of HOC's.
 - If you are using Typescript, the type of the parameters is constrained to be an
-  HOC, except...
+  HOC (or an object specifying metadata, see below).
 - There is an optional overload to accept a "TokenMeta" object which consists of
   metadata which should be attached to the token.
 - We intruduce a special kind of Token known as a "Filter". See more
@@ -153,7 +153,7 @@ Then
 
 <Header1 /> === <h1 className="text-blue bg-yellow-500 font-bold" />
 
-// The component itself includes aggreaged metadata from all composed tokens...
+// The component itself includes aggregated metadata from all composed tokens...
 Header1.categories === {
   TextColor: ['Blue'],
   BgColor: ['Yellow'],

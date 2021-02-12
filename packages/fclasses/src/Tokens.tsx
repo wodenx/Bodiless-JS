@@ -130,7 +130,7 @@ const flattenTokens = <P extends object>(
 /**
  * @private
  *
- * Generates a token fiter which applies to a token and any of its parents.
+ * Generates a token fliter which applies to a token and any of its parents.
  * Used to ensure that a token is removed if any of its parents match
  * the filter criteria.
  *
