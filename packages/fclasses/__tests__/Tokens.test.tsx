@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mount } from 'enzyme';
-import { asToken, withTokenFilter } from './Tokens';
-import type { Token } from './Tokens';
+import { asToken, withTokenFilter } from '../src';
+import type { Token } from '../src';
 
 const { meta } = asToken;
 
@@ -14,7 +14,19 @@ const addProp = (name?: string, value?: string): Token => Comp => (props: any) =
   return <Comp {...propsToAdd} {...props} />;
 };
 
-describe('flow', () => {
+describe('asToken', () => {
+
+  describe('meta', () => {
+    it('meta.term creates an object of the right shape', () => {
+      const t = meta.term('foo')('bar');
+      expect(t).toEqual({ categories: { foo: ['bar'] } });
+    });
+    it('meta.cat creates an object of the right shape', () => {
+      const t = meta.cat('foo');
+      expect(t).toEqual({ categories: { foo: [] } });
+    });
+  });
+
   describe('addProp helper', () => {
     const Base = () => <></>;
     it('Adds a prop', () => {
