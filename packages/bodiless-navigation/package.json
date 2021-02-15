@@ -29,6 +29,7 @@
     "@bodiless/core": "^0.0.68",
     "@bodiless/components": "^0.0.68",
     "@bodiless/fclasses": "^0.0.68",
+    "@bodiless/organisms": "^0.0.68",
     "enzyme": "^3.9.0",
     "lodash": "^4.17.19"
   },

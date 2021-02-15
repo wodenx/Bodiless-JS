@@ -14,14 +14,19 @@
 
 import React, { Fragment, ComponentType, FC } from 'react';
 import { flow } from 'lodash';
-import { withSidecarNodes, withOnlyProps } from '@bodiless/core';
+import {
+  withSidecarNodes, withOnlyProps, withNode, withNodeKey,
+} from '@bodiless/core';
 import { asEditable, asBodilessLink, withBodilessLinkToggle } from '@bodiless/components';
+import { ToutClean } from '@bodiless/organisms';
 import {
   A,
   Div,
+  Design,
   designable,
   withDesign,
   replaceWith,
+  DesignableProps,
   DesignableComponentsProps,
 } from '@bodiless/fclasses';
 
@@ -70,10 +75,36 @@ const withEditableMenuTitle = withDesign({
   Title: asEditableMenuTitle,
 });
 
+const asMenuTout = (linkNodeKey = 'link', titleNodeKey = 'title') => {
+  const transformDesign = (design: Design<any> = {}) => {
+    const Link = flow(
+      withSidecarNodes(
+        design.Link || withBodilessLinkToggle(asBodilessLink, replaceWith(Div))(),
+        withNodeKey(linkNodeKey),
+      ),
+    );
+    const Title = flow(
+      design.Title || asEditable(undefined, 'Menu Item'),
+      withNodeKey(titleNodeKey),
+    );
+    return { ...design, Link, Title };
+  };
+
+  return flow(
+    // @TODO replaceWith is incorrect -- it replaces the original component with the empty tout
+    // It needs to be startWith(), but currently doesnt work that way.
+    // eslint-disable-next-line max-len
+    replaceWith(({ design, ...rest }: DesignableProps<any>) => <ToutClean design={transformDesign(design)} {...rest} />),
+    withNode,
+    withNodeKey('title'),
+  );
+};
+
 export default MenuTitle;
 export {
   asMenuLink,
   asMenuTitle,
+  asMenuTout,
   asEditableMenuTitle,
   withEditableMenuTitle,
 };

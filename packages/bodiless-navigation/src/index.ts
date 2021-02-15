@@ -14,6 +14,7 @@
 
 import asBodilessMenu from './asBodilessMenu';
 import { useIsMenuOpen } from './withMenuContext';
+import { asMenuTout, asMenuLink, asMenuTitle } from './MenuTitles';
 import {
   withListSubMenu,
   withToutSubMenu,
@@ -26,4 +27,7 @@ export {
   withListSubMenu,
   withToutSubMenu,
   withColumnSubMenu,
+  asMenuLink,
+  asMenuTitle,
+  asMenuTout,
 };

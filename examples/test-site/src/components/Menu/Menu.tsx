@@ -14,22 +14,23 @@
 
 import { ComponentType } from 'react';
 import { flow } from 'lodash';
-// import { asStatic } from '@bodiless/core';
-// import { withoutProps } from '@bodiless/fclasses';
-// import {
-//   asSimpleMenuBase, withSimpleMenuDesign, asSimpleMenuTopNav,
-// } from '@bodiless/organisms';
+import {
+  asBodilessMenu, withListSubMenu, withColumnSubMenu, withToutSubMenu,
+  // asMenuTout,
+} from '@bodiless/navigation';
 
-// import { asMenuTitle } from './MegaMenu';
-// import withSimpleMenuStyles from './SimpleMenu.token';
-// import { asBreadcrumbSource } from '../Breadcrumbs/MenuBreadcrumbs';
+import { asEditableTout } from '../Tout';
 
-import { asBodilessMenu, withListSubMenu, withColumnSubMenu } from '@bodiless/navigation';
+export const $asEditableMenuTout = flow(
+  // asMenuTout(),
+  asEditableTout,
+);
 
 const BodilessMenuBase = flow(
   asBodilessMenu('MainMenu'),
   withListSubMenu(),
   withColumnSubMenu(),
+  withToutSubMenu($asEditableMenuTout),
 )('ul') as ComponentType<any>;
 
 const BodilessMenu = flow(
