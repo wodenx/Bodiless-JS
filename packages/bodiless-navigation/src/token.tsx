@@ -160,9 +160,6 @@ const asToutsSubMenu = flow(
  * ===========================================
  */
 const asColumnSubMenu = flow(
-  withDesign({
-    Item: asRelative,
-  }),
   asFullWidthSublist,
   asStaticOnHover,
   withBaseSubMenuStyles,

@@ -13,6 +13,7 @@
  */
 
 import { flow } from 'lodash';
+import { WithNodeKeyProps } from '@bodiless/core';
 import { addClasses, removeClasses } from '@bodiless/fclasses';
 import {
   asBodilessLink,
@@ -32,7 +33,6 @@ import {
   asUnderline,
   asAlignJustify,
 } from './ElementDefault.token';
-import { WithNodeKeyProps } from '../../../../packages/bodiless-organisms/node_modules/@bodiless/core/lib';
 
 /* Page Structure */
 const asBlockItem = addClasses('p-1 w-full');

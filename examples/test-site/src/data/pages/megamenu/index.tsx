@@ -70,6 +70,38 @@ export default (props: any) => (
       <div>
         <BodilessMenu />
       </div>
+      <Description>
+        <p>
+          This is a &quot;mega&quot; menu.
+          It extends the simlple menu so that the &quot;Sub&quot; button on each top level
+          menu item offers you a choice of three types of submenu:
+        </p>
+        <DescList>
+          <li>
+            <strong>List:</strong>
+            &nbsp;
+            functions exactly as a simple menu&apos;s submenus.
+          </li>
+          <li>
+            <strong>Touts:</strong>
+            &nbsp;
+            Each submenu item is a tout. You can edit tout components as with any other tout.
+          </li>
+          <li>
+            <strong>Columns:</strong>
+            &nbsp;
+            Each submenu item is a column which itself has a third level of submenu.
+            You cannot Delete the last item in a column&apos;s submenu.
+          </li>
+        </DescList>
+        <p>
+          Once you have added a submenu, the &quot;Sub&quot; button allows you to swap
+          it out for a different type.
+          The data model for each type of submenu is the same, so that when you swap
+          the title and link are preserved (for touts, the title becomes the tout
+          title and the link becomes the CTA link).
+        </p>
+      </Description>
 
       <H2>Simple Menu</H2>
       <div>
