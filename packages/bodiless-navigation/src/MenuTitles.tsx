@@ -16,6 +16,7 @@ import React, { Fragment, ComponentType, FC } from 'react';
 import { flow } from 'lodash';
 import {
   withSidecarNodes, withOnlyProps, withNode, withNodeKey,
+  WithNodeProps,
 } from '@bodiless/core';
 import { asEditable, asBodilessLink, withBodilessLinkToggle } from '@bodiless/components';
 import { ToutClean } from '@bodiless/organisms';
@@ -94,7 +95,7 @@ const asMenuTout = (linkNodeKey = 'link', titleNodeKey = 'title') => {
     // @TODO replaceWith is incorrect -- it replaces the original component with the empty tout
     // It needs to be startWith(), but currently doesnt work that way.
     // eslint-disable-next-line max-len
-    replaceWith(({ design, ...rest }: DesignableProps<any>) => <ToutClean design={transformDesign(design)} {...rest} />),
+    replaceWith(({ design, ...rest }: DesignableProps<any> & WithNodeProps) => <ToutClean design={transformDesign(design)} {...rest} />),
     withNode,
     withNodeKey('title'),
   );

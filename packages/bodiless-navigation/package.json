@@ -1,6 +1,6 @@
 {
   "name": "@bodiless/navigation",
-  "version": "0.0.68",
+  "version": "0.0.69",
   "description": "BodilessJs Navigation Components",
   "author": "Ivan Rudiuk <IRudiuk@its.jnj.com>",
   "license": "Apache-2.0",
@@ -26,10 +26,10 @@
     "clean": "rimraf \"lib/*\" && rimraf tsconfig.tsbuildinfo && rimraf \"doc/api\""
   },
   "dependencies": {
-    "@bodiless/core": "^0.0.68",
-    "@bodiless/components": "^0.0.68",
-    "@bodiless/fclasses": "^0.0.68",
-    "@bodiless/organisms": "^0.0.68",
+    "@bodiless/core": "^0.0.69",
+    "@bodiless/components": "^0.0.69",
+    "@bodiless/fclasses": "^0.0.69",
+    "@bodiless/organisms": "^0.0.69",
     "enzyme": "^3.9.0",
     "lodash": "^4.17.19"
   },
