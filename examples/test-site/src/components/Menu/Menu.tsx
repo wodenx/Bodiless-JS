@@ -16,8 +16,10 @@ import { ComponentType } from 'react';
 import { flow } from 'lodash';
 import {
   asBodilessMenu, withListSubMenu, withColumnSubMenu, withToutSubMenu,
+  withSubMenuToken, asTopNav,
   // asMenuTout,
 } from '@bodiless/navigation';
+import { Token, withDesign, addClasses } from '@bodiless/fclasses';
 
 import { asEditableTout } from '../Tout';
 
@@ -26,11 +28,38 @@ export const $asEditableMenuTout = flow(
   asEditableTout,
 );
 
+// const $withListStyles = withDesign({
+//   Wrapper: flow(
+//     addClasses('L:WRAPPER'),
+//     withDesign({
+//       List: addClasses('L:WRAPPER__LIST'),
+//       WrapperItem: addClasses('L:WRAPPER__ITEM'),
+//       Title: addClasses('L:WRAPPER__TITLE')
+//     }),
+//   ),
+//   Item: addClasses('L:ITEM'),
+//   Title: addClasses('L:TITLE pl-4'),
+// });
+
+// const $withMainStyles = withDesign({
+//   Wrapper: addClasses('M:WRAPPER'),
+//   Item: addClasses('M:ITEM'),
+//   Title: addClasses('M:TITLE'),
+// });
+
+const $withGeneralStyles = withDesign({
+  Title: addClasses('G:TITLE'),
+}) as Token;
+
 const BodilessMenuBase = flow(
   asBodilessMenu('MainMenu'),
   withListSubMenu(),
   withColumnSubMenu(),
   withToutSubMenu($asEditableMenuTout),
+  // withSubMenuToken('List')($withListStyles),
+  // withSubMenuToken('Main')($withMainStyles),
+  withSubMenuToken('Main', 'List', 'Columns', 'Touts')($withGeneralStyles),
+  asTopNav('List', 'Columns', 'Touts'),
 )('ul') as ComponentType<any>;
 
 const BodilessMenu = flow(

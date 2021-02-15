@@ -16,10 +16,10 @@ import asBodilessMenu from './asBodilessMenu';
 import { useIsMenuOpen } from './withMenuContext';
 import { asMenuTout, asMenuLink, asMenuTitle } from './MenuTitles';
 import {
-  withListSubMenu,
-  withToutSubMenu,
-  withColumnSubMenu,
+  withListSubMenu, withToutSubMenu, withColumnSubMenu,
 } from './withSubMenu';
+
+import { withSubMenuToken, asTopNav } from './token';
 
 export {
   asBodilessMenu,
@@ -30,4 +30,6 @@ export {
   asMenuLink,
   asMenuTitle,
   asMenuTout,
+  withSubMenuToken,
+  asTopNav,
 };

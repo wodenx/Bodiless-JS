@@ -43,11 +43,11 @@ const withSubMenuDesign = (design: Design<any>) => withDesign({
   Item: withDesign(design),
 });
 
-const withListSubMenu = (menuTitleDesign: Design<any> | HOC) => withSubMenuDesign({
+const withListSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesign({
   List: asMenuSubList(menuTitleDesign),
 });
 
-const withToutSubMenu = (menuTitleDesign: Design<any> | HOC) => withSubMenuDesign({
+const withToutSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesign({
   Touts: flow(
     asMenuSubList(menuTitleDesign),
     withDesign({
@@ -56,7 +56,7 @@ const withToutSubMenu = (menuTitleDesign: Design<any> | HOC) => withSubMenuDesig
   ),
 });
 
-const withColumnSubMenu = (menuTitleDesign: Design<any> | HOC) => withSubMenuDesign({
+const withColumnSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesign({
   Columns: flow(
     asMenuSubList(menuTitleDesign),
     withSubLists(1)(asMenuSubList(menuTitleDesign, () => ({ groupLabel: 'Column Sub-Menu Item' }))),
