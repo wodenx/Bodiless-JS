@@ -88,7 +88,12 @@ const $withBaseSubMenuStyles = withDesign({
   }),
 }) as Token;
 
-const $withColumnsSublistStyles = withColumnSubMenuDesign($withTitleStyles) as Token;
+const $withColumnsSublistStyles = withColumnSubMenuDesign(
+  $withTitleStyles,
+  withDesign({
+    Title: addClasses('pl-6'),
+  }) as Token,
+) as Token;
 
 const $asSiteNavStyles = asToken(
   asTopNav('List', 'Columns', 'Touts'),
