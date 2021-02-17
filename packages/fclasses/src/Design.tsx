@@ -19,7 +19,7 @@ import {
 import React, {
   ComponentType, Fragment, useContext, ComponentProps,
 } from 'react';
-import type { Token, ComponentOrTag } from './Tokens';
+import type { Token, ComponentOrTag, TokenMeta } from './Tokens';
 import { HOC } from './FClasses';
 import { addPropsIf } from './addProps';
 import { useShowDesignKeys, useDesignKeysAttribute } from './Context';
@@ -153,34 +153,41 @@ export const applyDesign = <C extends DesignableComponents> (
  * @param design
  * The design to apply
  *
+ * @param ...meta
+ * Metadata which should be applied to the returned token.
+ *
  * @return
- * HOC which applies the design to the wrapped component.
+ * Token which applies the design to the wrapped component.
  *
  */
-export const withDesign = <C extends DesignableComponents>(design: Design<C>) => (
-  <P extends DesignableProps<C>>(Component: ComponentType<P>) => {
-    const WithDesign = (props: P) => {
-      const { design: designFromProps } = props;
-      let finalDesign = design;
-      if (designFromProps) {
-        const keysToWrap = intersection(Object.keys(designFromProps), Object.keys(design));
-        const wrappedDesign = keysToWrap.reduce(
-          (acc, key) => ({
-            ...acc,
-            [key]: asToken(
-              design[key]! as Token<P>,
-              designFromProps[key]! as Token<P>,
-            ),
-          }),
-          {} as Design<C>,
-        );
-        finalDesign = { ...design, ...designFromProps, ...wrappedDesign } as Design<C>;
-      }
-      return <Component {...props} design={finalDesign} />;
-    };
-    return WithDesign;
-  }
-);
+export const withDesign = <C extends DesignableComponents>(
+  design: Design<C>,
+  ...meta: TokenMeta[]
+) => asToken(
+    (<P extends DesignableProps<C>>(Component: ComponentType<P>) => {
+      const WithDesign = (props: P) => {
+        const { design: designFromProps } = props;
+        let finalDesign = design;
+        if (designFromProps) {
+          const keysToWrap = intersection(Object.keys(designFromProps), Object.keys(design));
+          const wrappedDesign = keysToWrap.reduce(
+            (acc, key) => ({
+              ...acc,
+              [key]: asToken(
+                design[key]! as Token<P>,
+                designFromProps[key]! as Token<P>,
+              ),
+            }),
+            {} as Design<C>,
+          );
+          finalDesign = { ...design, ...designFromProps, ...wrappedDesign } as Design<C>;
+        }
+        return <Component {...props} design={finalDesign} />;
+      };
+      return WithDesign;
+    }) as Token,
+    ...meta,
+  );
 
 export const replaceWith = <P extends object>(Component: ComponentType<P>) => (
   (() => Component) as HOC
