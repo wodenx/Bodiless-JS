@@ -13,13 +13,14 @@
  */
 
 import React, { ComponentType } from 'react';
-import flowRight from 'lodash/flowRight';
 import pick from 'lodash/pick';
+import flow from 'lodash/flow';
 import { v1 } from 'uuid';
 import {
   withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator, withLocalContextMenu,
   TMenuOption, EditButtonProps, UseBodilessOverrides, createMenuOptionGroup,
 } from '@bodiless/core';
+import { flowIf } from '@bodiless/fclasses';
 
 import type { ChameleonButtonProps, ChameleonData } from './types';
 import { useChameleonContext, DEFAULT_KEY } from './withChameleonContext';
@@ -123,11 +124,16 @@ const withChameleonButton = <P extends object, D extends object>(
     name: 'Chameleon',
     ...pick(useOverrides(props), 'root', 'peer'),
   });
-  return flowRight(
+  const useHasLocalContext = (props: P & EditButtonProps<D>): boolean => {
+    const overrides = useOverrides(props);
+    return !overrides.root;
+  };
+  return flow(
+    flowIf(useHasLocalContext)(
+      withContextActivator('onClick'),
+      withLocalContextMenu,
+    ),
     withMenuOptions(useMenuOptionsDefinition),
-    withContextActivator('onClick'),
-    withLocalContextMenu,
-    // withUnwrap,
   );
 };
 

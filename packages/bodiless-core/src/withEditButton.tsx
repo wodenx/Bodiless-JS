@@ -38,19 +38,17 @@ export const createMenuOptionGroup = (
   const {
     groupLabel,
     groupMerge,
-    local,
-    global,
     ...menuOption
   } = baseOption;
 
-  if (global) return [menuOption];
+  // if (!baseOption.global) return [menuOption];
 
   const menuGroup:TMenuOption = {
     name: `${menuOption.name}-group`,
     label: groupLabel || menuOption.label,
     groupMerge: groupMerge || 'none',
-    local,
-    global,
+    local: baseOption.local,
+    global: baseOption.global,
     Component: 'group',
   };
 
@@ -165,7 +163,7 @@ const withEditButton = <P extends object, D extends object>(
     })
     : withMenuOptions({
       useMenuOptions: createMenuOptionHook(options),
-      name: `Edit${options.name}`,
+      name: `Edit ${options.name}`,
     });
   return flowRight(
     withMenuOptions$,

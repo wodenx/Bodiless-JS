@@ -12,10 +12,10 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
-import { FormBodyProps as ContextMenuFormBodyProps } from '../contextMenuForm';
-import { TMenuOption } from './ContextMenuTypes';
-import { MenuOptionsDefinition } from 'src';
+import type { ReactNode } from 'react';
+import type { FormBodyProps as ContextMenuFormBodyProps } from '../contextMenuForm';
+import type { TMenuOption } from './ContextMenuTypes';
+import type { MenuOptionsDefinition } from './PageContextProviderTypes';
 
 type EditDataHandler<D> = {
   initialValueHandler?: (values: any) => D;
@@ -60,6 +60,9 @@ export type EditButtonOptions<P = any, D = any> = Omit<OptionGroupDefinition, 'h
   useCompoundForm?: () => boolean,
 } & EditDataHandler<D>;
 
+export type BodilessOptions<P = any, D = any, E = {}> =
+  Partial<EditButtonOptions<P, D> & E & MenuOptionsDefinition<P>>;
+
 export type UseBodilessOverrides<P = any, D = any, E = {}> = (
   props: P & EditButtonProps<D>,
-) => Partial<EditButtonOptions<P, D> & E & MenuOptionsDefinition<P>>;
+) => BodilessOptions<P, D, E>;
