@@ -47,7 +47,7 @@ const $withTitleStyles = withDesign({
     withHoverMenuBackground,
     asAlignLeft,
     asTextWhite,
-    addClasses('px-3'),
+    addClasses('flex px-3'),
   ),
 });
 
@@ -86,6 +86,12 @@ const $withBaseSubMenuStyles = withDesign({
   }),
 });
 
+const $withListSubmenuStyles = withDesign({
+  Wrapper: withDesign({
+    List: addClasses('w-content'),
+  }),
+});
+
 const $withColumnsSublistStyles = withColumnSubMenuDesign(
   $withTitleStyles,
   withDesign({
@@ -98,6 +104,7 @@ const $asSiteNavStyles = asToken(
   $withBaseMenuStyles,
   withSubMenuToken('Main', 'List', 'Columns', 'Touts')($withTitleStyles, $withBaseSubMenuStyles),
   withSubMenuToken('Columns')($withColumnsSublistStyles),
+  withSubMenuToken('List')($withListSubmenuStyles),
 );
 
 export default $asSiteNavStyles;

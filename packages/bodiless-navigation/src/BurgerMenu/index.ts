@@ -12,26 +12,11 @@
  * limitations under the License.
  */
 
-import asBodilessMenu from './asBodilessMenu';
-import { useIsMenuOpen } from './withMenuContext';
-import { asMenuTout, asMenuLink, asMenuTitle } from './MenuTitles';
-import {
-  withListSubMenu, withToutSubMenu, withColumnSubMenu, withColumnSubMenuDesign,
-} from './withSubMenu';
+import BurgerMenuClean from './BurgerMenuClean';
+import asBurgerMenu, { withBurgerMenuWrapper } from './asBurgerMenu';
 
-import { withSubMenuToken, asTopNav } from './token';
-
-export * from './BurgerMenu';
 export {
-  asBodilessMenu,
-  useIsMenuOpen,
-  withListSubMenu,
-  withToutSubMenu,
-  withColumnSubMenu,
-  withColumnSubMenuDesign,
-  asMenuLink,
-  asMenuTitle,
-  asMenuTout,
-  withSubMenuToken,
-  asTopNav,
+  BurgerMenuClean,
+  asBurgerMenu,
+  withBurgerMenuWrapper,
 };

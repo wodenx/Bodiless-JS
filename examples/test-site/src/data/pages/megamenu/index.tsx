@@ -29,7 +29,9 @@ import { MegaMenuList } from '../../../components/Menu/MegaMenu';
 import { SimpleMenuList } from '../../../components/Menu/SimpleMenu';
 import { asHeader2, asHeader3, asHeader1 } from '../../../components/Elements.token';
 
-import { ResponsiveSimpleMenu, ResponsiveMegaMenu, BodilessMenu } from '../../../components/Menu';
+import {
+  ResponsiveSimpleMenu, ResponsiveMegaMenu, BodilessMenu, BodilessBurgerMenu,
+} from '../../../components/Menu';
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -102,6 +104,11 @@ export default (props: any) => (
           title and the link becomes the CTA link).
         </p>
       </Description>
+
+      <H2>Bodiless Burger Menu</H2>
+      <div>
+        <BodilessBurgerMenu />
+      </div>
 
       <H2>Simple Menu</H2>
       <div>

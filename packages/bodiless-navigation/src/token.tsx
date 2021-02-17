@@ -171,7 +171,6 @@ export const asTopNav = (...keys: string[]) => {
   const columnsSubmenuStyles = keys.indexOf('Columns') > -1 ? asColumnSubMenu : asToken();
 
   return asToken(
-    // @TODO Why cast as Token?
     withSubMenuToken('Main')(withBaseMenuStyles),
     withSubMenuToken('List')(listSubmenuStyles),
     withSubMenuToken('Touts')(toutsSubmenuStyles),
