@@ -13,9 +13,7 @@
  */
 
 import { flow } from 'lodash';
-import {
-  Token, asToken, withDesign, addClasses,
-} from '@bodiless/fclasses';
+import { asToken, withDesign, addClasses } from '@bodiless/fclasses';
 // import { useIsActiveTrail } from '@bodiless/organisms';
 import {
   asTopNav, withSubMenuToken, withColumnSubMenuDesign,
@@ -51,7 +49,7 @@ const $withTitleStyles = withDesign({
     asTextWhite,
     addClasses('px-3'),
   ),
-}) as Token;
+});
 
 // const withActiveTitleStyles = ifToggledOn(useIsActiveTrail)(
 //   withActiveMenuBackground, asBold, asUnderline,
@@ -86,20 +84,20 @@ const $withBaseSubMenuStyles = withDesign({
       addClasses('z-10'),
     ),
   }),
-}) as Token;
+});
 
 const $withColumnsSublistStyles = withColumnSubMenuDesign(
   $withTitleStyles,
   withDesign({
     Title: addClasses('pl-6'),
-  }) as Token,
-) as Token;
+  }),
+);
 
 const $asSiteNavStyles = asToken(
   asTopNav('List', 'Columns', 'Touts'),
-  $withBaseMenuStyles as Token,
-  withSubMenuToken('Main', 'List', 'Columns', 'Touts')($withTitleStyles, $withBaseSubMenuStyles) as Token,
-  withSubMenuToken('Columns')($withColumnsSublistStyles) as Token,
+  $withBaseMenuStyles,
+  withSubMenuToken('Main', 'List', 'Columns', 'Touts')($withTitleStyles, $withBaseSubMenuStyles),
+  withSubMenuToken('Columns')($withColumnsSublistStyles),
 );
 
 export default $asSiteNavStyles;

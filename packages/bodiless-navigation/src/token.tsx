@@ -21,7 +21,6 @@ import {
   TokenDef,
   asToken,
   Design,
-  Token,
 } from '@bodiless/fclasses';
 
 import { useIsMenuOpen } from './withMenuContext';
@@ -40,7 +39,7 @@ export const withSubMenuToken = <P extends object>(
 
     /* eslint-disable dot-notation */
     return design['Main']
-      ? asToken(design['Main'], withSubMenuDesign as Token)
+      ? asToken(design['Main'], withSubMenuDesign)
       : withSubMenuDesign;
   };
 
@@ -173,9 +172,9 @@ export const asTopNav = (...keys: string[]) => {
 
   return asToken(
     // @TODO Why cast as Token?
-    withSubMenuToken('Main')(withBaseMenuStyles) as Token,
-    withSubMenuToken('List')(listSubmenuStyles) as Token,
-    withSubMenuToken('Touts')(toutsSubmenuStyles) as Token,
-    withSubMenuToken('Columns')(columnsSubmenuStyles) as Token,
+    withSubMenuToken('Main')(withBaseMenuStyles),
+    withSubMenuToken('List')(listSubmenuStyles),
+    withSubMenuToken('Touts')(toutsSubmenuStyles),
+    withSubMenuToken('Columns')(columnsSubmenuStyles),
   );
 };
