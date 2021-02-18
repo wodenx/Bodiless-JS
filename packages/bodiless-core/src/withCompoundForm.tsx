@@ -17,8 +17,9 @@ import React, {
   ComponentType,
 } from 'react';
 import { useFormState, useFormApi } from 'informed';
-import { pick } from 'lodash';
-import { designable, DesignableComponentsProps } from '@bodiless/fclasses';
+import pick from 'lodash/pick';
+import flow from 'lodash/flow';
+import { designable, DesignableComponentsProps, withoutProps } from '@bodiless/fclasses';
 import { ContextMenuForm, FormBodyProps, FormBodyRenderer } from './contextMenuForm';
 import type { ContextMenuFormProps } from './Types/ContextMenuTypes';
 import type { MenuOptionsDefinition } from './Types/PageContextProviderTypes';
@@ -119,6 +120,8 @@ const Form = <D extends object>(props: FormProps<D>) => {
   );
 };
 
+type MenuOptionsDefinition$<P> = MenuOptionsDefinition<P>|((props:P) => MenuOptionsDefinition<P>);
+
 /**
  * @private
  *
@@ -128,12 +131,14 @@ const Form = <D extends object>(props: FormProps<D>) => {
  *
  * @returns A menu options hook.
  */
-const createMenuOptions = <P extends object, D extends object>(def: MenuOptionsDefinition<D>) => {
-  const useMenuOptions = ({ components, ...rest }: any) => {
+const createMenuOptionDefinition = <P extends object>(def$: MenuOptionsDefinition$<P>) => {
+  const useMenuOptions = (props: P & DesignableComponentsProps<CompoundFormComponents>) => {
+    const { components, ...rest } = props;
+    const def = typeof def$ === 'function' ? def$(props) : def$;
     const {
       useMenuOptions: useMenuOptionsBase = () => undefined,
     } = def;
-    const baseOptions = useMenuOptionsBase(rest) || [];
+    const baseOptions = useMenuOptionsBase(rest as P) || [];
     const [compoundFormOption, ...otherOptions] = baseOptions;
     const snippets = useContext(SnippetContext);
     const render = (p: ContextMenuFormProps) => (
@@ -147,7 +152,10 @@ const createMenuOptions = <P extends object, D extends object>(def: MenuOptionsD
       ...otherOptions,
     ];
   };
-  return { ...def, useMenuOptions };
+  return (props: P) => ({
+    ...typeof def$ === 'function' ? def$(props) : def$,
+    useMenuOptions,
+  });
 };
 
 /**
@@ -158,13 +166,16 @@ const createMenuOptions = <P extends object, D extends object>(def: MenuOptionsD
  * - a submit handler which will be passed all submitted values from the form.
  * @param option A context menu option (minus the handler).
  */
-const withCompoundForm = <P extends object>(options: MenuOptionsDefinition<P>) => (
+const withCompoundForm = <P extends object>(def$: MenuOptionsDefinition$<P>) => (
   Component: CT<P>,
 ) => {
-  const finalOptions = createMenuOptions(options);
-  const ComponentWithButton = withMenuOptions(finalOptions)(Component);
+  const useMenuOptionDefinition = createMenuOptionDefinition(def$);
+  const ComponentWithButton = flow(
+    withoutProps('components'),
+    withMenuOptions(useMenuOptionDefinition),
+  )(Component);
 
-  const WithCompoundForm = (props:P) => {
+  const WithCompoundForm = (props:P & DesignableComponentsProps<CompoundFormComponents>) => {
     // This ref will hold all snippets registered by child components.
     const snippets = useRef<Snippet<any>[]>([]);
     // This callback will be used by child components to contribute their snippets.

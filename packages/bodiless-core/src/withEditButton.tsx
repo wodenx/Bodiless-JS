@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { flowRight } from 'lodash';
+import flowRight from 'lodash/flowRight';
 import { withoutProps } from './hoc';
 import useContextMenuForm, {
   FormBodyProps as ContextMenuFormBodyProps,
@@ -156,15 +156,19 @@ const withEditButton = <P extends object, D extends object>(
   const isCompoundForm = typeof options === 'object'
     && options.useCompoundForm !== undefined
     && options.useCompoundForm();
+  const useMenuOptions = createMenuOptionHook(options);
+  const useMenuOptionsDefinition = (props: P) => {
+    const { root, peer, name } = typeof options === 'function' ? options(props) : options;
+    return {
+      root,
+      peer,
+      useMenuOptions,
+      name: `Edit ${name}`,
+    };
+  };
   const withMenuOptions$ = isCompoundForm
-    ? withCompoundForm({
-      useMenuOptions: createMenuOptionHook(options),
-      name: `Edit ${options.name}`,
-    })
-    : withMenuOptions({
-      useMenuOptions: createMenuOptionHook(options),
-      name: `Edit ${options.name}`,
-    });
+    ? withCompoundForm(useMenuOptionsDefinition)
+    : withMenuOptions(useMenuOptionsDefinition);
   return flowRight(
     withMenuOptions$,
     withoutProps(['setComponentData', 'isActive']),

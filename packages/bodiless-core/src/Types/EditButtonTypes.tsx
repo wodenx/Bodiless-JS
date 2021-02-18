@@ -58,11 +58,11 @@ export type EditButtonOptions<P = any, D = any> = Omit<OptionGroupDefinition, 'h
   * Default is to display standard form.
   */
   useCompoundForm?: () => boolean,
-} & EditDataHandler<D>;
+} & EditDataHandler<D> & Partial<MenuOptionsDefinition<P>>;
 
-export type BodilessOptions<P = any, D = any, E = {}> =
-  Partial<EditButtonOptions<P, D> & E & MenuOptionsDefinition<P>>;
+export type BodilessOverrides<P = any, D = any, E = {}> =
+  Partial<EditButtonOptions<P, D> & E>;
 
 export type UseBodilessOverrides<P = any, D = any, E = {}> = (
   props: P & EditButtonProps<D>,
-) => BodilessOptions<P, D, E>;
+) => BodilessOverrides<P, D, E>;
