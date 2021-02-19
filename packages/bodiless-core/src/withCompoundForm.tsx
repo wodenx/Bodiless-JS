@@ -14,12 +14,9 @@
 
 import React, {
   createContext, ComponentType as CT, useRef, useContext, MutableRefObject,
-  ComponentType,
 } from 'react';
 import { useFormState, useFormApi } from 'informed';
 import pick from 'lodash/pick';
-import flow from 'lodash/flow';
-import { designable, DesignableComponentsProps, withoutProps } from '@bodiless/fclasses';
 import { ContextMenuForm, FormBodyProps, FormBodyRenderer } from './contextMenuForm';
 import type { ContextMenuFormProps } from './Types/ContextMenuTypes';
 import type { MenuOptionsDefinition } from './Types/PageContextProviderTypes';
@@ -50,25 +47,14 @@ export type Snippet<D> = {
   submitValues?: (values: any) => void,
 };
 
-/**
- * A collection of compound form Design Components.
- */
-export type CompoundFormComponents = {
-  Wrapper: ComponentType<any>,
-};
-
 type SnippetRegister<D> = (snippet: Snippet<D>) => void;
 
 type FormProps<D> = ContextMenuFormProps & {
   snippets: Snippet<D>[],
-} & DesignableComponentsProps<CompoundFormComponents>;
+};
 
 const Context = createContext<SnippetRegister<any>>(() => {});
 const SnippetContext = createContext<MutableRefObject<Snippet<any>[]>|undefined>(undefined);
-
-const defaultComponents: CompoundFormComponents = {
-  Wrapper: React.Fragment,
-};
 
 /**
  * @private
@@ -78,8 +64,7 @@ const defaultComponents: CompoundFormComponents = {
  * @param props Standard context menu form props + an array of snippets to render.
  */
 const Form = <D extends object>(props: FormProps<D>) => {
-  const { snippets, components, ...rest } = props;
-  const { Wrapper } = components;
+  const { snippets, ...rest } = props;
 
   const submitValues = (values: any) => {
     snippets.forEach(s => {
@@ -101,7 +86,7 @@ const Form = <D extends object>(props: FormProps<D>) => {
 
   const formProps = { submitValues, initialValues };
 
-  const Snippets = (props$: Omit<FormProps<D>, 'components'>) => {
+  const Snippets = (props$: FormProps<D>) => {
     const { snippets: snippets$, ...rest$ } = props$;
     const renderProps: FormBodyProps<D> = {
       formState: useFormState(),
@@ -113,9 +98,7 @@ const Form = <D extends object>(props: FormProps<D>) => {
 
   return (
     <ContextMenuForm {...rest} {...formProps}>
-      <Wrapper>
-        <Snippets snippets={snippets} {...rest} />
-      </Wrapper>
+      <Snippets snippets={snippets} {...rest} />
     </ContextMenuForm>
   );
 };
@@ -132,18 +115,15 @@ type MenuOptionsDefinition$<P> = MenuOptionsDefinition<P>|((props:P) => MenuOpti
  * @returns A menu options hook.
  */
 const createMenuOptionDefinition = <P extends object>(def$: MenuOptionsDefinition$<P>) => {
-  const useMenuOptions = (props: P & DesignableComponentsProps<CompoundFormComponents>) => {
-    const { components, ...rest } = props;
+  const useMenuOptions = (props: P) => {
     const def = typeof def$ === 'function' ? def$(props) : def$;
     const {
       useMenuOptions: useMenuOptionsBase = () => undefined,
     } = def;
-    const baseOptions = useMenuOptionsBase(rest as P) || [];
+    const baseOptions = useMenuOptionsBase(props) || [];
     const [compoundFormOption, ...otherOptions] = baseOptions;
     const snippets = useContext(SnippetContext);
-    const render = (p: ContextMenuFormProps) => (
-      <Form {...p} components={components} snippets={snippets!.current} />
-    );
+    const render = (p: ContextMenuFormProps) => <Form {...p} snippets={snippets!.current} />;
     return [
       {
         ...compoundFormOption,
@@ -170,12 +150,9 @@ const withCompoundForm = <P extends object>(def$: MenuOptionsDefinition$<P>) => 
   Component: CT<P>,
 ) => {
   const useMenuOptionDefinition = createMenuOptionDefinition(def$);
-  const ComponentWithButton = flow(
-    withoutProps('components'),
-    withMenuOptions(useMenuOptionDefinition),
-  )(Component);
+  const ComponentWithButton = withMenuOptions(useMenuOptionDefinition)(Component);
 
-  const WithCompoundForm = (props:P & DesignableComponentsProps<CompoundFormComponents>) => {
+  const WithCompoundForm = (props:P) => {
     // This ref will hold all snippets registered by child components.
     const snippets = useRef<Snippet<any>[]>([]);
     // This callback will be used by child components to contribute their snippets.
@@ -195,7 +172,7 @@ const withCompoundForm = <P extends object>(def$: MenuOptionsDefinition$<P>) => 
       </Context.Provider>
     );
   };
-  return designable(defaultComponents, 'CompoundForm')(WithCompoundForm);
+  return WithCompoundForm;
 };
 
 export default withCompoundForm;

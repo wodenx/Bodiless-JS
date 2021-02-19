@@ -14,15 +14,11 @@
 
 import flowRight from 'lodash/flowRight';
 import { withoutProps } from './hoc';
-import useContextMenuForm, {
-  FormBodyProps as ContextMenuFormBodyProps,
-} from './contextMenuForm';
 import { withMenuOptions } from './PageContextProvider';
 import withCompoundForm from './withCompoundForm';
 import type { EditButtonProps, EditButtonOptions } from './Types/EditButtonTypes';
 import { TMenuOption } from './Types/ContextMenuTypes';
-
-type UseEditFormProps<P, D> = P & EditButtonProps<D> & Pick<EditButtonOptions<P, D>, 'renderForm'|'initialValueHandler'|'submitValueHandler'>;
+import withEditFormSnippet from './withEditFormSnippet';
 
 /**
  * Given a base option, creates a pair of menu options including
@@ -56,65 +52,6 @@ export const createMenuOptionGroup = (
   return [menuOption, menuGroup];
 };
 
-/**
- * Generates required props to pass to `ContextMenuForm`
- * using the normal bodiless data handlers. For example:
- * ```
- * const useMyContextMenuForm = props => (
- *   const render = () => (
- *     <ContextMenuForm {..useEditFormProps(props)}>
- *       // Custom form components
- *     </ContextMenuForm>
- *   );
- *   // use this render to provide a menu button.
- * );
- * ```
- * Alternatively you can pass an additional renderForm callback
- * to generate props suitable for `useEditForm`:
- * ```
- * const WithMyContextMenuForm = props => (
- *   const renderForm = () => // Custom form components
- *   const render = useContextMenuForm(useEditFormProps({ ...props, renderForm }));
- *   // use this render to provide a menu button.
- * };
- * ```
- *
- * @param props The props passed to the component providing the form.
- *
- * @return Props suitable for passing to ContextMenuForm.
- */
-export const useEditFormProps = <P extends object, D extends object>(
-  props: UseEditFormProps<P, D>,
-) => {
-  const {
-    componentData: initialValues$,
-    setComponentData,
-    onSubmit,
-    initialValueHandler,
-    submitValueHandler,
-    renderForm: renderForm$,
-  } = props;
-
-  const initialValues = initialValueHandler
-    ? initialValueHandler(initialValues$) : initialValues$;
-  const submitValues$ = (values: D) => {
-    setComponentData(values);
-    if (onSubmit) onSubmit();
-  };
-  const submitValues = submitValueHandler
-    ? flowRight(submitValues$, submitValueHandler) : submitValues$;
-  if (renderForm$) {
-    // Pass component props to the render function.
-    const renderForm = (p: ContextMenuFormBodyProps<D>) => renderForm$({
-      ...p,
-      // @TODO: Avoid passing all the props.
-      componentProps: props,
-    });
-    return { initialValues, submitValues, renderForm };
-  }
-  return { initialValues, submitValues };
-};
-
 const createMenuOptionHook = <P extends object, D extends object>(
   options: EditButtonOptions<P, D> | ((props: P) => EditButtonOptions<P, D>),
 ) => (
@@ -128,15 +65,8 @@ const createMenuOptionHook = <P extends object, D extends object>(
       ...rest
     } = options$;
     const { isActive } = props;
-    const render = useContextMenuForm(useEditFormProps({
-      ...props,
-      renderForm,
-      initialValueHandler,
-      submitValueHandler,
-    }));
     const menuOption = {
       ...rest,
-      handler: () => render,
     };
     if (isActive) menuOption.isActive = isActive;
     return createMenuOptionGroup(menuOption);
@@ -153,9 +83,10 @@ const createMenuOptionHook = <P extends object, D extends object>(
 const withEditButton = <P extends object, D extends object>(
   options: EditButtonOptions<P, D> | ((props: P) => EditButtonOptions<P, D>),
 ) => {
-  const isCompoundForm = typeof options === 'object'
-    && options.useCompoundForm !== undefined
-    && options.useCompoundForm();
+  const isCompoundForm = true;
+  // const isCompoundForm = typeof options === 'object'
+  //   && options.useCompoundForm !== undefined
+  //   && options.useCompoundForm();
   const useMenuOptions = createMenuOptionHook(options);
   const useMenuOptionsDefinition = (props: P) => {
     const { root, peer, name } = typeof options === 'function' ? options(props) : options;
@@ -171,6 +102,7 @@ const withEditButton = <P extends object, D extends object>(
     : withMenuOptions(useMenuOptionsDefinition);
   return flowRight(
     withMenuOptions$,
+    withEditFormSnippet(options),
     withoutProps(['setComponentData', 'isActive']),
   );
 };
