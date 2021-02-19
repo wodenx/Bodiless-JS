@@ -13,8 +13,46 @@
  */
 
 import { flow } from 'lodash';
-import { asToken, withDesign, addClasses } from '@bodiless/fclasses';
-import { asBurgerMenu, withSubMenuToken, withColumnSubMenuDesign } from '@bodiless/navigation';
+import {
+  Div, asToken, replaceWith, withDesign, addClasses,
+} from '@bodiless/fclasses';
+import {
+  asBurgerMenu, withSubMenuToken, withColumnSubMenuDesign,
+  BurgerMenuDefaultToggler, withBurgerMenuToggler,
+} from '@bodiless/navigation';
+
+import Logo from '../Layout/logo';
+import { asDefaultLogoStyle } from '../Layout/token';
+import { asTealBackground, asTextWhite } from '../Elements.token';
+
+const asWhiteToggler = withDesign({
+  Button: asTextWhite,
+});
+
+const withBurgerMenuTogglerStyles = asToken(
+  withDesign({
+    Wrapper: flow(
+      replaceWith(Div),
+      asTealBackground,
+      addClasses('flex w-full py-1'),
+    ),
+  }),
+  asWhiteToggler,
+);
+
+const withBurgerMenuHeader = withDesign({
+  Header: flow(
+    replaceWith(Logo),
+    asDefaultLogoStyle,
+    withDesign({
+      SiteReturn: flow(
+        withBurgerMenuToggler(asWhiteToggler(BurgerMenuDefaultToggler)),
+        asTealBackground,
+        addClasses('flex items-center justify-between'),
+      ),
+    }),
+  ),
+});
 
 const $withBaseSubMenuStyles = withDesign({
   Item: addClasses('pl-4'),
@@ -33,9 +71,13 @@ const $withBurgerMenuStyles = asToken(
 );
 
 const $asSiteBurgerMenu = flow(
+  withBurgerMenuHeader,
   withDesign({
     Menu: $withBurgerMenuStyles,
   }),
 );
 
-export default $asSiteBurgerMenu;
+export {
+  withBurgerMenuTogglerStyles,
+  $asSiteBurgerMenu,
+};

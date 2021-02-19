@@ -12,24 +12,12 @@
  * limitations under the License.
  */
 
-import { flow } from 'lodash';
-import { asStatic } from '@bodiless/core';
-import { withBurgerMenuWrapper, BurgerMenuDefaultToggler } from '@bodiless/navigation';
+import { addClasses, asToken, withDesign } from '@bodiless/fclasses';
 
-import { $asSiteBurgerMenu, withBurgerMenuTogglerStyles } from './BurgerMenu.token';
-import { BodilessMenuBase } from './Menu';
+const withBurgerMenuTogglerStyles = withDesign({
+  Button: asToken(
+    addClasses('material-icons cursor-pointer'),
+  ),
+});
 
-const BodilessBurgerMenuToggler = flow(
-  withBurgerMenuTogglerStyles,
-)(BurgerMenuDefaultToggler);
-
-const BodilessBurgerMenu = flow(
-  withBurgerMenuWrapper,
-  $asSiteBurgerMenu,
-  asStatic,
-)(BodilessMenuBase);
-
-export default BodilessBurgerMenu;
-export {
-  BodilessBurgerMenuToggler,
-};
+export default withBurgerMenuTogglerStyles;

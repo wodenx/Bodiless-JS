@@ -43,8 +43,8 @@ const BurgerMenuBase: FC<BurgerMenuProps> = ({ components, ...rest }) => {
   return (
     <Fragment>
       <Wrapper>
+        <Header />
         <Nav>
-          <Header />
           <Menu {...rest} />
         </Nav>
       </Wrapper>

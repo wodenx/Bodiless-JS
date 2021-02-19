@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import React, { Fragment } from 'react';
+import React, { ComponentType, Fragment } from 'react';
 import { flow } from 'lodash';
 import {
   Div, designable, addClasses, replaceWith,
@@ -20,6 +20,7 @@ import {
 import { useNode, withNodeKey, ifToggledOn } from '@bodiless/core';
 import { withBreadcrumbStore } from '@bodiless/components';
 import { withSearchResult } from '@bodiless/search';
+import { withBurgerMenuProvider } from '@bodiless/navigation';
 import Header from './header';
 import Footer from './footer';
 import SeoHelmet from './meta';
@@ -33,9 +34,10 @@ const SiteHeader = asSiteHeader(Header);
 const SiteFooter = asSiteFooter(Footer);
 
 const Container = flow(
+  withBurgerMenuProvider,
   asPageContainer,
   asYMargin,
-)(Div);
+)(Div) as ComponentType;
 
 const BreadcrumbProvider = withBreadcrumbStore(Fragment);
 

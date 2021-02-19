@@ -31,6 +31,7 @@ import { asHeader2, asHeader3, asHeader1 } from '../../../components/Elements.to
 
 import {
   ResponsiveSimpleMenu, ResponsiveMegaMenu, BodilessMenu, BodilessBurgerMenu,
+  BodilessBurgerMenuToggler,
 } from '../../../components/Menu';
 
 const NodeTreePrinter$ = () => {
@@ -104,6 +105,11 @@ export default (props: any) => (
           title and the link becomes the CTA link).
         </p>
       </Description>
+
+      <H2>Bodiless Burger Menu Toggler</H2>
+      <div>
+        <BodilessBurgerMenuToggler />
+      </div>
 
       <H2>Bodiless Burger Menu</H2>
       <div>
