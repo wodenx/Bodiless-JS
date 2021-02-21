@@ -15,8 +15,7 @@
 import React, {
   createContext, ComponentType as CT, useRef, useContext, MutableRefObject,
 } from 'react';
-import { useFormState, useFormApi } from 'informed';
-import pick from 'lodash/pick';
+import { useFormState, useFormApi, Scope } from 'informed';
 import { ContextMenuForm, FormBodyProps, FormBodyRenderer } from './contextMenuForm';
 import type { ContextMenuFormProps } from './Types/ContextMenuTypes';
 import type { MenuOptionsDefinition } from './Types/PageContextProviderTypes';
@@ -68,19 +67,17 @@ const Form = <D extends object>(props: FormProps<D>) => {
 
   const submitValues = (values: any) => {
     snippets.forEach(s => {
-      if (!s.submitValues) return;
-      if (s.initialValues && s.submitValues) {
-        // Ensure that we only submit values whose keys were present in the initial values.
-        const values$ = pick(values, Object.keys(s.initialValues));
-        s.submitValues(values$);
-      } else {
-        throw new Error('Submit handler requires \'submitValues\' and \'initialValues\' to be invoked properly.');
+      if (s.submitValues) {
+        s.submitValues(values[s.id]);
       }
     });
   };
 
   const initialValues = snippets.reduce(
-    (values, snippet) => ({ ...values, ...snippet.initialValues }),
+    (values, snippet) => ({
+      ...values,
+      [snippet.id]: snippet.initialValues,
+    }),
     {},
   );
 
@@ -93,7 +90,15 @@ const Form = <D extends object>(props: FormProps<D>) => {
       formApi: useFormApi(),
       ...rest$,
     };
-    return <>{snippets$.map(s => s.render(renderProps))}</>;
+    return (
+      <>
+        {snippets$.map(s => (
+          <Scope scope={s.id}>
+            {s.render(renderProps)}
+          </Scope>
+        ))}
+      </>
+    );
   };
 
   return (
