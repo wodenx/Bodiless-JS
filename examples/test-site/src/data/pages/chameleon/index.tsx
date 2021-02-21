@@ -34,7 +34,7 @@ import {
 } from '@bodiless/components';
 
 import {
-  useMenuOptionUI, asBodilessComponent, useEditContext, useNode,
+  useMenuOptionUI, asBodilessComponent, useEditContext,
 } from '@bodiless/core';
 import { asHeader1, asHeader2 } from '../../../components/Elements.token';
 import Layout from '../../../components/Layout';
@@ -201,21 +201,17 @@ const AvailabilityAccordionToggle = flow(
 
 const GlobalChameleonBase = () => (
   <div className="border p-2">
-    The visibility of this panel is controlled by a &lquot;Show&rquot; button on the Global
-    context menu (only visible in edit mode);
+    Now you see me!
   </div>
 );
 
 const GlobalChameleon = flow(
   asBodilessChameleon('global-chameleon', undefined, () => ({
     root: true,
-    label: 'Show',
+    label: useChameleonContext().isOn ? 'Show' : 'Hide',
     icon: 'visibility',
-    isActive: () => {
-      const { node } = useNode<any>();
-      const child = node.child<any>('global-chameleon');
-      return child.data.component !== 'hidden';
-    },
+    isActive: !useChameleonContext().isOn,
+    group: 'page-group',
   })),
   withDesign({
     hidden: replaceWith(() => <></>),
@@ -302,6 +298,11 @@ export default (props: any) => (
           <BaseComponent>
             <GlobalChameleon />
           </BaseComponent>
+          <Description>
+            The visibility of the panel above is controlled by a page level
+            &quot;Show&quot; button on the admin toolbar.  The button is only
+            visible in edit mode.
+          </Description>
         </Example>
       </Examples>
     </Layout>
