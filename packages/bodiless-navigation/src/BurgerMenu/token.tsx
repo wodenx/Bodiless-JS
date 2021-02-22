@@ -12,7 +12,10 @@
  * limitations under the License.
  */
 
-import { addClasses, asToken, withDesign } from '@bodiless/fclasses';
+import {
+  addClasses, addClassesIf, asToken, withDesign,
+} from '@bodiless/fclasses';
+import { useIsBurgerMenuVisible, useIsBurgerMenuHidden } from './BurgerMenuContext';
 
 const withBurgerMenuTogglerStyles = withDesign({
   Button: asToken(
@@ -20,4 +23,33 @@ const withBurgerMenuTogglerStyles = withDesign({
   ),
 });
 
+/**
+ * Animations
+ * ===========================================
+ */
+const withSlideInOutAnimation = withDesign({
+  Wrapper: asToken(
+    addClasses('transform -translate-x-full'),
+    addClassesIf(useIsBurgerMenuHidden)('animate-slide-out'),
+    addClassesIf(useIsBurgerMenuVisible)('animate-slide-in'),
+  ),
+});
+
+const asFullScreen = withDesign({
+  Wrapper: addClasses('fixed top-0 left-0 w-full h-full z-full'),
+});
+
+const withDefaultBackground = withDesign({
+  Wrapper: addClasses('bg-gray-200'),
+});
+
+const asSlideLeft = asToken(
+  withSlideInOutAnimation,
+  asFullScreen,
+  withDefaultBackground,
+);
+
 export default withBurgerMenuTogglerStyles;
+export {
+  asSlideLeft,
+};

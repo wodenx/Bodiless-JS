@@ -41,4 +41,6 @@ const asResponsiveMenu = (DesktopMenu: ComponentType) => flow(
 
 export const ResponsiveSimpleMenu = asResponsiveMenu(SimpleMenu)(SimpleBurgerMenu);
 export const ResponsiveMegaMenu = asResponsiveMenu(MegaMenu)(MegaBurgerMenu);
+export const ResponsiveBodilessMenu = asResponsiveMenu(BodilessMenu)(BodilessBurgerMenu);
+
 export { BodilessMenu, BodilessBurgerMenu, BodilessBurgerMenuToggler };

@@ -19,6 +19,10 @@ import {
   withBurgerMenuProvider, useBurgerMenuContext, useIsBurgerMenuVisible, useIsBurgerMenuHidden,
 } from './BurgerMenuContext';
 
+import {
+  asSlideLeft,
+} from './token';
+
 export {
   BurgerMenuClean,
   asBurgerMenu,
@@ -30,4 +34,5 @@ export {
   useBurgerMenuContext,
   useIsBurgerMenuVisible,
   useIsBurgerMenuHidden,
+  asSlideLeft,
 };

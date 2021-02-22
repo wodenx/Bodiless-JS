@@ -9,7 +9,8 @@
   "files": [
     "/lib",
     "/bodiless.docs.json",
-    "/doc"
+    "/doc",
+    "/tailwind.config.js"
   ],
   "repository": {
     "type": "git",

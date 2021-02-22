@@ -18,12 +18,14 @@ import {
 } from '@bodiless/fclasses';
 import {
   asBurgerMenu, withSubMenuToken, withColumnSubMenuDesign,
-  BurgerMenuDefaultToggler, withBurgerMenuToggler,
+  BurgerMenuDefaultToggler, withBurgerMenuToggler, asSlideLeft,
 } from '@bodiless/navigation';
 
 import Logo from '../Layout/logo';
 import { asDefaultLogoStyle } from '../Layout/token';
-import { asTealBackground, asTextWhite } from '../Elements.token';
+import {
+  asTealBackground, asTextWhite, asMobileOnly, asBold,
+} from '../Elements.token';
 
 const asWhiteToggler = withDesign({
   Button: asTextWhite,
@@ -34,6 +36,7 @@ const withBurgerMenuTogglerStyles = asToken(
     Wrapper: flow(
       replaceWith(Div),
       asTealBackground,
+      asMobileOnly,
       addClasses('flex w-full py-1'),
     ),
   }),
@@ -54,6 +57,14 @@ const withBurgerMenuHeader = withDesign({
   ),
 });
 
+const $withBoldAccordionTitle = withDesign({
+  Wrapper: withDesign({
+    Title: withDesign({
+      Label: asBold,
+    }),
+  }),
+});
+
 const $withBaseSubMenuStyles = withDesign({
   Item: addClasses('pl-4'),
 });
@@ -62,11 +73,12 @@ const $withColumnSubMenuStyles = withColumnSubMenuDesign(
   withDesign({
     Item: addClasses('pl-8'),
   }),
+  $withBoldAccordionTitle,
 );
 
 const $withBurgerMenuStyles = asToken(
   asBurgerMenu('List', 'Columns', 'Touts'),
-  withSubMenuToken('List', 'Columns', 'Touts')($withBaseSubMenuStyles),
+  withSubMenuToken('List', 'Columns', 'Touts')($withBaseSubMenuStyles, $withBoldAccordionTitle),
   withSubMenuToken('Columns')($withColumnSubMenuStyles),
 );
 
@@ -74,7 +86,9 @@ const $asSiteBurgerMenu = flow(
   withBurgerMenuHeader,
   withDesign({
     Menu: $withBurgerMenuStyles,
+    Nav: addClasses('p-3'),
   }),
+  asSlideLeft,
 );
 
 export {

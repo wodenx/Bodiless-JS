@@ -30,8 +30,8 @@ import { SimpleMenuList } from '../../../components/Menu/SimpleMenu';
 import { asHeader2, asHeader3, asHeader1 } from '../../../components/Elements.token';
 
 import {
-  ResponsiveSimpleMenu, ResponsiveMegaMenu, BodilessMenu, BodilessBurgerMenu,
-  BodilessBurgerMenuToggler,
+  ResponsiveSimpleMenu, ResponsiveMegaMenu,
+  BodilessBurgerMenuToggler, ResponsiveBodilessMenu,
 } from '../../../components/Menu';
 
 const NodeTreePrinter$ = () => {
@@ -71,7 +71,8 @@ export default (props: any) => (
 
       <H2>Bodiless Menu</H2>
       <div>
-        <BodilessMenu />
+        <BodilessBurgerMenuToggler />
+        <ResponsiveBodilessMenu />
       </div>
       <Description>
         <p>
@@ -105,16 +106,6 @@ export default (props: any) => (
           title and the link becomes the CTA link).
         </p>
       </Description>
-
-      <H2>Bodiless Burger Menu Toggler</H2>
-      <div>
-        <BodilessBurgerMenuToggler />
-      </div>
-
-      <H2>Bodiless Burger Menu</H2>
-      <div>
-        <BodilessBurgerMenu />
-      </div>
 
       <H2>Simple Menu</H2>
       <div>

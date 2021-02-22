@@ -19,6 +19,8 @@ import path from 'path';
 const whitelistedModules = [
   '@bodiless/layouts',
   '@bodiless/organisms',
+  // @TODO Why @bodiless/navigation isn't merge with the Test site?
+  '@bodiless/navigation',
 ];
 
 type TailwindConfigs = {
