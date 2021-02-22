@@ -19,6 +19,7 @@ import { v1 } from 'uuid';
 import {
   withMenuOptions, useContextMenuForm, useMenuOptionUI, withContextActivator, withLocalContextMenu,
   TMenuOption, EditButtonProps, UseBodilessOverrides, createMenuOptionGroup,
+  MenuOptionsDefinition, useEditContext,
 } from '@bodiless/core';
 import { flowIf } from '@bodiless/fclasses';
 
@@ -119,14 +120,17 @@ const withChameleonButton = <P extends object, D extends object>(
     };
     return createMenuOptionGroup(baseDefinition);
   };
-  const useMenuOptionsDefinition = (props: P & EditButtonProps<D>) => ({
+  const useMenuOptionsDefinition = (
+    props: P & EditButtonProps<D>,
+  ): MenuOptionsDefinition<P & EditButtonProps<D>> => ({
     useMenuOptions,
     name: 'Chameleon',
     ...pick(useOverrides(props), 'root', 'peer'),
   });
   const useHasLocalContext = (props: P & EditButtonProps<D>): boolean => {
-    const overrides = useOverrides(props);
-    return !overrides.root;
+    const def = useMenuOptionsDefinition(props);
+    const isRoot = def.root || (def.peer && !useEditContext().parent);
+    return !isRoot;
   };
   return flow(
     flowIf(useHasLocalContext)(

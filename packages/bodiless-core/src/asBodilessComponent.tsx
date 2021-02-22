@@ -16,6 +16,7 @@ import React, { ComponentType as CT } from 'react';
 import {
   pick, omit, identity, flowRight,
 } from 'lodash';
+import { flowIf } from '@bodiless/fclasses';
 import withNode, { withNodeKey } from './withNode';
 import {
   withNodeDataHandlers, withoutProps, withContextActivator, withLocalContextMenu,
@@ -25,7 +26,7 @@ import withEditButton from './withEditButton';
 import withData from './withData';
 import type { WithNodeProps, WithNodeKeyProps } from './Types/NodeTypes';
 import type { EditButtonOptions, EditButtonProps, UseBodilessOverrides } from './Types/EditButtonTypes';
-import { useContextActivator } from './hooks';
+import { useContextActivator, useEditContext } from './hooks';
 
 /**
  * Options for making a component "bodiless".
@@ -127,6 +128,12 @@ const asBodilessComponent = <P extends object, D extends object>(options: Option
     const editButtonOptions = useOverrides
       ? (props: P & EditButtonProps<D>) => ({ ...rest, ...useOverrides(props) })
       : rest;
+    const useHasLocalContext = (props: P & EditButtonProps<D>): boolean => {
+      const def = typeof editButtonOptions === 'function'
+        ? editButtonOptions(props) : editButtonOptions;
+      const isRoot = def.root || (def.peer && !useEditContext().parent);
+      return !isRoot;
+    };
     const finalData = { ...defaultDataOption, ...defaultData };
     return flowRight(
       withBodilessData(nodeKeys, finalData),
@@ -135,9 +142,11 @@ const asBodilessComponent = <P extends object, D extends object>(options: Option
       ),
       ifEditable(
         withEditButton(editButtonOptions),
-        withContextActivator(activateEvent),
-        withLocalContextMenu,
-        Wrapper ? withActivatorWrapper(activateEvent, Wrapper) : identity,
+        flowIf(useHasLocalContext)(
+          withContextActivator(activateEvent),
+          withLocalContextMenu,
+          Wrapper ? withActivatorWrapper(activateEvent, Wrapper) : identity,
+        ),
       ),
       withData,
     );
