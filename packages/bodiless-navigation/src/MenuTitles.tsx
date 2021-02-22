@@ -61,7 +61,7 @@ const asMenuLink = (asEditableLink: typeof asBodilessLink) => flow(
 );
 
 const asMenuTitle = (asEditableTitle: typeof asEditable) => flow(
-  asEditableTitle('title', 'Menu Item'),
+  asEditableTitle('text', 'Menu Item'),
 );
 
 const asEditableMenuTitle = flow(
@@ -70,6 +70,8 @@ const asEditableMenuTitle = flow(
     Link: asMenuLink(withBodilessLinkToggle(asBodilessLink, replaceWith(Div))),
     Title: asMenuTitle(asEditable),
   }),
+  withNode,
+  withNodeKey('title'),
 );
 
 const withEditableMenuTitle = withDesign({
