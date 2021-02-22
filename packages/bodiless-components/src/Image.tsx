@@ -31,7 +31,8 @@ import {
 } from '@bodiless/core';
 
 import { useDropzone } from 'react-dropzone';
-import { withFieldApi, FieldApi } from 'informed';
+import { withFieldApi } from 'informed';
+import type { FieldApi } from 'informed';
 import BackendSave from './BackendSave';
 import withPropsFromPlaceholder from './withPropsFromPlaceholder';
 // @ts-ignore fails when it is imported by jest.

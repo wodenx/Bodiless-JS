@@ -22,7 +22,9 @@ import { omit } from 'lodash';
 import withEditButton from '../src/withEditButton';
 import { useEditContext } from '../src/hooks';
 import ContextMenuItem from '../src/components/ContextMenuItem';
-import { TMenuOption, EditButtonOptions, PageContextProvider, ContextMenuForm } from '../src';
+import {
+  TMenuOption, EditButtonOptions, PageContextProvider,
+} from '../src';
 
 type Props = HTMLProps<HTMLDivElement>;
 type Data = {

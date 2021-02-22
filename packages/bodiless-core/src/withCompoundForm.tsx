@@ -13,7 +13,7 @@
  */
 
 import React, {
-  createContext, ComponentType as CT, useRef, useContext, MutableRefObject, Fragment,
+  createContext, ComponentType as CT, useRef, useContext, MutableRefObject,
 } from 'react';
 import { useFormState, useFormApi, Scope } from 'informed';
 import { ContextMenuForm, FormBodyProps, FormBodyRenderer } from './contextMenuForm';
