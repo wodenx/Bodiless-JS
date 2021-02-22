@@ -13,7 +13,7 @@
  */
 
 import React, {
-  createContext, ComponentType as CT, useRef, useContext, MutableRefObject,
+  createContext, ComponentType as CT, useRef, useContext, MutableRefObject, Fragment,
 } from 'react';
 import { useFormState, useFormApi, Scope } from 'informed';
 import { ContextMenuForm, FormBodyProps, FormBodyRenderer } from './contextMenuForm';
@@ -93,7 +93,7 @@ const Form = <D extends object>(props: FormProps<D>) => {
     return (
       <>
         {snippets$.map(s => (
-          <Scope scope={s.id}>
+          <Scope scope={s.id} key={s.id}>
             {s.render(renderProps)}
           </Scope>
         ))}
