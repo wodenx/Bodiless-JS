@@ -16,7 +16,6 @@ import React, { ComponentType as CT } from 'react';
 import {
   pick, omit, identity, flowRight,
 } from 'lodash';
-import { flowIf } from '@bodiless/fclasses';
 import withNode, { withNodeKey } from './withNode';
 import {
   withNodeDataHandlers, withoutProps, withContextActivator, withLocalContextMenu,
@@ -26,7 +25,8 @@ import withEditButton from './withEditButton';
 import withData from './withData';
 import type { WithNodeProps, WithNodeKeyProps } from './Types/NodeTypes';
 import type { EditButtonOptions, EditButtonProps, UseBodilessOverrides } from './Types/EditButtonTypes';
-import { useContextActivator, useEditContext } from './hooks';
+import { useContextActivator } from './hooks';
+import { ifToggledOn } from './withFlowToggle';
 
 /**
  * Options for making a component "bodiless".
@@ -131,8 +131,7 @@ const asBodilessComponent = <P extends object, D extends object>(options: Option
     const useHasLocalContext = (props: P & EditButtonProps<D>): boolean => {
       const def = typeof editButtonOptions === 'function'
         ? editButtonOptions(props) : editButtonOptions;
-      const isRoot = def.root || (def.peer && !useEditContext().parent);
-      return !isRoot;
+      return !(def.root || def.peer);
     };
     const finalData = { ...defaultDataOption, ...defaultData };
     return flowRight(
@@ -142,7 +141,7 @@ const asBodilessComponent = <P extends object, D extends object>(options: Option
       ),
       ifEditable(
         withEditButton(editButtonOptions),
-        flowIf(useHasLocalContext)(
+        ifToggledOn(useHasLocalContext)(
           withContextActivator(activateEvent),
           withLocalContextMenu,
           Wrapper ? withActivatorWrapper(activateEvent, Wrapper) : identity,

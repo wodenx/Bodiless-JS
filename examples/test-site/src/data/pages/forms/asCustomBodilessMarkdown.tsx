@@ -17,7 +17,7 @@ import {
   useMenuOptionUI, useEditFormProps,
   ContextMenuForm, withNodeKey, withNode, withNodeDataHandlers,
   ifReadOnly, withoutProps, ifEditable, withMenuOptions, withContextActivator,
-  withActivatorWrapper, withLocalContextMenu, withData,
+  withActivatorWrapper, withLocalContextMenu, withData, createMenuOptionGroup,
 } from '@bodiless/core';
 import type {
   EditButtonProps, ContextMenuFormProps, WithNodeKeyProps, AsBodiless,
@@ -47,12 +47,13 @@ const useMarkdownEditFormProps = (props: EditProps) => {
 };
 
 const Form: FC<ContextMenuFormProps> = props => {
-  const { ComponentFormLabel, ComponentFormTitle } = useMenuOptionUI();
+  const { ComponentFormLabel } = useMenuOptionUI();
   return (
     <ContextMenuForm {...props}>
-      <ComponentFormTitle>Markdown</ComponentFormTitle>
-      <ComponentFormLabel>Content</ComponentFormLabel>
-      <MarkdownField field="source" />
+      <ComponentFormLabel>
+        Content
+        <MarkdownField field="source" />
+      </ComponentFormLabel>
     </ContextMenuForm>
   );
 };
@@ -62,14 +63,14 @@ const useMenuOptions = (props: EditProps) => {
   const render = (formProps: ContextMenuFormProps) => (
     <Form {...formProps} {...editFormProps} />
   );
-  return [{
+  return createMenuOptionGroup({
     icon: 'edit',
-    name: 'edit',
+    name: 'edit-markdown',
     label: 'Edit',
-    global: false,
-    local: true,
-    handler: useCallback(() => render, [...Object.values(editFormProps)]),
-  }];
+    groupLabel: 'Markdown',
+    formTitle: 'Edit Markdown',
+    handler: () => render,
+  });
 };
 const withTimestamp = (Component: ComponentType<Props>) => {
   const WithTimestamp = ({ timestamp, ...rest }: Props) => (

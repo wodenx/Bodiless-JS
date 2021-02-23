@@ -190,7 +190,6 @@ describe('withEditButton', () => {
       renderForm: () => <></>,
       groupLabel: Math.random().toString(),
       groupMerge: 'merge',
-      global: false,
     };
     const Foo = withEditButton<Props, Data>(options)(TestComp);
     const wrapper = mount(
@@ -203,13 +202,13 @@ describe('withEditButton', () => {
     expect(menuOptions.length).toBe(2);
     const option = menuOptions.find(o => o.name === options.name);
     expect(option!.icon).toBe(options.icon);
-    expect(option!.global).toBe(false);
-    expect(option!.local).toBeUndefined();
+    expect(option!.global).toBeFalsy();
+    expect(option!.local).toBeTruthy();
     const group = menuOptions.find(o => o.name === `${options.name}-group`);
     expect(group!.label).toBe(options.groupLabel);
     expect(group!.groupMerge).toBe(options.groupMerge);
-    expect(group!.global).toBe(false);
-    expect(group!.local).toBeUndefined();
+    expect(group!.global).toBeFalsy();
+    expect(group!.local).toBeTruthy();
     expect(group!.Component).toBe('group');
   });
 });

@@ -16,7 +16,7 @@ import flowRight from 'lodash/flowRight';
 import omit from 'lodash/omit';
 import { withoutProps } from './hoc';
 import withCompoundForm from './withCompoundForm';
-import type { EditButtonOptions } from './Types/EditButtonTypes';
+import type { EditButtonOptions, OptionGroupDefinition } from './Types/EditButtonTypes';
 import { TMenuOption } from './Types/ContextMenuTypes';
 import withEditFormSnippet from './withEditFormSnippet';
 
@@ -29,7 +29,7 @@ import withEditFormSnippet from './withEditFormSnippet';
  * @return The base option and a group which contains it.
  */
 export const createMenuOptionGroup = (
-  baseOption: Omit<EditButtonOptions<any, any>, 'renderForm'>,
+  baseOption: OptionGroupDefinition,
 ):TMenuOption[] => {
   // Don't create a group if the option already specifies one.
   if (baseOption.group) return [baseOption];

@@ -15,10 +15,12 @@
 import React, {
   FC, ComponentType, useEffect, useLayoutEffect, useRef, useMemo,
 } from 'react';
+import { pickBy } from 'lodash';
 import PageEditContext from './PageEditContext';
 import { useEditContext, useUUID, useGetter } from './hooks';
 import { PageContextProviderProps, MenuOptionsDefinition } from './Types/PageContextProviderTypes';
 import { PageEditContextInterface } from './PageEditContext/types';
+import { TMenuOption } from './Types/ContextMenuTypes';
 
 /**
  * @private
@@ -120,6 +122,26 @@ PageContextProvider.defaultProps = {
 type MenuOptionsDefinition$<P> = MenuOptionsDefinition<P>|((props:P) => MenuOptionsDefinition<P>);
 
 /**
+ * @private
+ * Sets the default scope (global or local) for all menu options is the provided array.
+ * For any option in the array, the default scope is superceded by any explicit scope
+ * specified by the `global` or `local` attribute.
+ *
+ * @param options
+ * An array of menu options
+ * @param global
+ * Whether to set global or local scope.
+ *
+ * @returs
+ * Array of menu options with default scope set.
+ */
+const setDefaultOptionScope = (options: TMenuOption[], global: boolean) => options.map(o => ({
+  global,
+  local: !global,
+  ...pickBy(o, v => v !== undefined) as TMenuOption,
+}));
+
+/**
  * Using supplied options, returns an HOC which adds one or more menu options (buttons).
  * This simplly wraps the supplied component with a `PageContextProvider`.
  *
@@ -151,16 +173,13 @@ export const withMenuOptions = <P extends object>(def$: MenuOptionsDefinition$<P
         if (root) {
           while (context.parent) context = context.parent;
         }
-        // Set the default menu placement based on whether we are attaching to the root context.
-        const getMenuOptions = options && useGetter(options.map(o => ({
-          global: !context.parent,
-          local: !!context.parent,
-          ...o,
-        })));
+        const getMenuOptions = options && useGetter(
+          setDefaultOptionScope(options, !context.parent),
+        );
         useRegisterMenuOptions({ getMenuOptions, ...rest }, context);
         return <Component {...props} />;
       }
-      const getMenuOptions = options && useGetter(options);
+      const getMenuOptions = options && useGetter(setDefaultOptionScope(options, false));
       return (
         <PageContextProvider getMenuOptions={getMenuOptions} {...rest}>
           <Component {...props} />

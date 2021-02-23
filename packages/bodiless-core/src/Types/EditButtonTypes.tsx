@@ -51,13 +51,6 @@ export type EditButtonOptions<P = any, D = any> = Omit<OptionGroupDefinition, 'h
    * Callback to render the body of the edit form.
    */
   renderForm: FormBodyRenderer<P, D>,
-  /**
-  * An optional function that determines if the created menu option displays "compound form".
-  * If the function returns true, then "compound form" is displayed.
-  * Otherwise, standard form is displayed.
-  * Default is to display standard form.
-  */
-  useCompoundForm?: () => boolean,
 } & EditDataHandler<D> & Partial<MenuOptionsDefinition<P>>;
 
 export type BodilessOverrides<P = any, D = any, E = {}> =
