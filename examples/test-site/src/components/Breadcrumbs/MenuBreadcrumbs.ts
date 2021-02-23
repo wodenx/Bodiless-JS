@@ -29,8 +29,7 @@ import {
   asMegaMenuBreadcrumbSource as asMegaMenuBreadcrumbSourceBase,
 } from '@bodiless/organisms';
 
-import { EditorSimple } from '../Editors';
-import { asEditableLink, asLink } from '../Elements.token';
+import { asEditable, asEditableLink, asLink } from '../Elements.token';
 
 import {
   withArrowSeparator,
@@ -55,7 +54,7 @@ const withMenuBreadcrumbSchema = flow(
       asReadOnly,
     ),
     BreadcrumbTitle: flow(
-      replaceWith(EditorSimple),
+      replaceWith(asEditable('text', 'Breadcrumb Item')(Span)),
       asReadOnly,
     ),
   }),

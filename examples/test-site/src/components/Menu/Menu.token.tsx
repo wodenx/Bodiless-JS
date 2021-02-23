@@ -14,18 +14,18 @@
 
 import { flow } from 'lodash';
 import { asToken, withDesign, addClasses } from '@bodiless/fclasses';
-// import { useIsActiveTrail } from '@bodiless/organisms';
+import { useIsActiveTrail } from '@bodiless/organisms';
 import {
   asTopNav, withSubMenuToken, withColumnSubMenuDesign,
 } from '@bodiless/navigation';
 
-// import { ifToggledOn } from '@bodiless/core';
+import { ifToggledOn } from '@bodiless/core';
 import {
-  // asBold, asLightTealBackground,
+  asBold, asLightTealBackground,
   asLightTealBackgroundOnHover, asTealBackground, asTextWhite,
   asAlignLeft,
 } from '../Elements.token';
-// import { asUnderline } from '../ElementDefault.token';
+import { asUnderline } from '../ElementDefault.token';
 
 /**
  * Colors
@@ -33,9 +33,8 @@ import {
  */
 
 const withMenuBackground = asTealBackground;
-// const withActiveMenuBackground = asLightTealBackground;
+const withActiveMenuBackground = asLightTealBackground;
 const withHoverMenuBackground = asLightTealBackgroundOnHover;
-// const withMenuForeground = asTextWhite;
 
 /**
  * Title Styles
@@ -51,13 +50,13 @@ const $withTitleStyles = withDesign({
   ),
 });
 
-// const withActiveTitleStyles = ifToggledOn(useIsActiveTrail)(
-//   withActiveMenuBackground, asBold, asUnderline,
-// );
+const withActiveTitleStyles = ifToggledOn(useIsActiveTrail)(
+  withActiveMenuBackground, asBold, asUnderline,
+);
 
-// const withActiveSubTitleStyles = ifToggledOn(useIsActiveTrail)(
-//   withActiveMenuBackground, asBold,
-// );
+const withActiveSubTitleStyles = ifToggledOn(useIsActiveTrail)(
+  withActiveMenuBackground, asBold,
+);
 
 /**
  * Base Menu Styles
@@ -70,6 +69,7 @@ const $withBaseMenuStyles = withDesign({
     addClasses('w-full'),
   ),
   Item: addClasses('leading-loose text-sm'),
+  Title: withActiveTitleStyles,
 });
 
 /**
@@ -84,6 +84,7 @@ const $withBaseSubMenuStyles = withDesign({
       addClasses('z-10'),
     ),
   }),
+  Title: withActiveSubTitleStyles,
 });
 
 const $withListSubmenuStyles = withDesign({

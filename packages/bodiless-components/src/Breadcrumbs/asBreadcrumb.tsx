@@ -16,6 +16,7 @@ import React, {
   createContext, useContext, ComponentType, useLayoutEffect,
 } from 'react';
 import { useNode } from '@bodiless/core';
+import { withDesign } from '@bodiless/fclasses';
 import { observer } from 'mobx-react-lite';
 import { flow } from 'lodash';
 import { BreadcrumbItem } from './BreadcrumbStore';
@@ -135,5 +136,28 @@ const asBreadcrumbSource = (withMenuDesign: Function) => (
   return AsBreadcrumbSource;
 };
 
+const asBreadcrumbSourceNew = (settings: BreadcrumbSettings) => <P extends object>(
+  Component: ComponentType<P>,
+) => {
+  const Source = withDesign({
+    Item: asBreadcrumb(settings),
+  })(Component);
+
+  const SSRSource = flow(
+    withDesign({
+      Item: asBreadcrumb(settings),
+    }),
+    asHiddenBreadcrumbSource,
+  )(Component);
+
+  const AsBreadcrumbSource = (props: P) => (
+    <>
+      {isSSR() && <SSRSource {...props} />}
+      <Source {...props} />
+    </>
+  );
+  return AsBreadcrumbSource;
+};
+
 export default asBreadcrumb;
-export { asBreadcrumbSource };
+export { asBreadcrumbSource, asBreadcrumbSourceNew };
