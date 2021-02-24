@@ -20,6 +20,7 @@ import {
 } from '@bodiless/core';
 import {
   asEditable, asBodilessLink, withBodilessLinkToggle, useBreadcrumbContext,
+  asBreadcrumbSource as asBreadcrumbSourceBase,
 } from '@bodiless/components';
 import { ToutClean } from '@bodiless/organisms';
 import {
@@ -51,6 +52,11 @@ type MenuTitleProps = DesignableComponentsProps<MenuTitleComponents>;
  * @return true if the item is in the active trail, false otherwise.
  */
 const useIsActiveTrail = () => useBreadcrumbContext()?.isActive();
+
+const asBreadcrumbSource = asBreadcrumbSourceBase({
+  linkNodeKey: 'title$link',
+  titleNodeKey: 'title$text',
+});
 
 const MenuTitleBase: FC<MenuTitleProps> = ({ components, ...rest }) => {
   const { Link, Title } = components;
@@ -125,4 +131,5 @@ export {
   useIsActiveTrail,
   asEditableMenuTitle,
   withEditableMenuTitle,
+  asBreadcrumbSource,
 };

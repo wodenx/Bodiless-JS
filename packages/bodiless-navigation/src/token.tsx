@@ -22,7 +22,6 @@ import {
   asToken,
   Design,
 } from '@bodiless/fclasses';
-import { asBreadcrumbSource as asBreadcrumbSourceBase } from '@bodiless/components';
 
 import { useIsMenuOpen } from './withMenuContext';
 
@@ -103,11 +102,6 @@ const asFullWidthSublist = withDesign({
   }),
 });
 
-const asBreadcrumbSource = asBreadcrumbSourceBase({
-  linkNodeKey: 'title$link',
-  titleNodeKey: 'title$text',
-});
-
 /*
  * Base Menu Styles
  * ===========================================
@@ -120,7 +114,6 @@ const withHoverStyles = withDesign({
 });
 
 const withBaseMenuStyles = flow(
-  asBreadcrumbSource,
   withHoverStyles,
   withDesign({
     Wrapper: addClasses('relative flex'),
@@ -143,7 +136,6 @@ const withBaseSubMenuStyles = withDesign({
  * ===========================================
  */
 const asSimpleSubMenu = flow(
-  asBreadcrumbSource,
   asResponsiveSublist,
   asVerticalSubMenu,
   withBaseSubMenuStyles,
@@ -156,7 +148,6 @@ const asSimpleSubMenu = flow(
  * ===========================================
  */
 const asToutsSubMenu = flow(
-  asBreadcrumbSource,
   asFullWidthSublist,
   asStaticOnHover,
   withBaseSubMenuStyles,
@@ -168,7 +159,6 @@ const asToutsSubMenu = flow(
  * ===========================================
  */
 const asColumnSubMenu = flow(
-  asBreadcrumbSource,
   asFullWidthSublist,
   asStaticOnHover,
   withBaseSubMenuStyles,

@@ -21,7 +21,7 @@ import {
   withSubLists, UseListOverrides,
 } from '@bodiless/components';
 
-import { withEditableMenuTitle, asMenuTout } from './MenuTitles';
+import { asBreadcrumbSource, withEditableMenuTitle, asMenuTout } from './MenuTitles';
 
 /**
  * Creates a stylable sublist which deletes it's data when the last item is removed.
@@ -35,6 +35,7 @@ const asMenuSubList = (titleDesign: any = {}, useOverrides: UseListOverrides = (
     asStylableSubList,
     withDeleteNodeOnUnwrap('sublist'),
     withEditableMenuTitle,
+    asBreadcrumbSource,
     withDesign({
       Title: titleDesign$,
     }),
@@ -51,10 +52,22 @@ const withColumnSubMenuDesign = (...tokenDefs: TokenDef<any>[]) => withDesign({
   }),
 });
 
+/**
+ * Helper which can be used to add a List submenu option to the menu.
+ *
+ * @param menuTitleDesign? optional token which will be applied to the sublist title.
+ *
+ */
 const withListSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesign({
   List: asMenuSubList(menuTitleDesign),
 });
 
+/**
+ * Helper which can be used to add a Touts submenu option to the menu.
+ *
+ * @param menuTitleDesign? optional token which will be applied to the sublist title.
+ *
+ */
 const withToutSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesign({
   Touts: flow(
     asMenuSubList(menuTitleDesign),
@@ -64,6 +77,12 @@ const withToutSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesi
   ),
 });
 
+/**
+ * Helper which can be used to add a Columns submenu option to the menu.
+ *
+ * @param menuTitleDesign? optional token which will be applied to the sublist title.
+ *
+ */
 const withColumnSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesign({
   Columns: flow(
     asMenuSubList(menuTitleDesign),
