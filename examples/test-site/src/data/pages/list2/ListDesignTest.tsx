@@ -1,6 +1,6 @@
 import React from 'react';
 import { withDesign, Token, addProps } from '@bodiless/fclasses';
-import { flow, identity } from 'lodash';
+import { flow } from 'lodash';
 import {
   asSubList, asBodilessList, withSubLists, asBodilessChameleon,
 } from '@bodiless/components';
@@ -51,18 +51,8 @@ const TestList = flow(
       Wrapper: addProps({ 'data-plain': true }),
     }),
   }),
-  //withDefaultContent(data),
   withDefaultContent({ ...data, ...data$ }),
-  // withDefaultContent(data$),
 )('ul');
 
-const withListStyle = (style: ListStyles) => withDefaultContent({
-  'list-type': {
-    component: style,
-  },
-});
 
-
-// export default withListStyle('Bulleted')(TestList);
-// export default withDefaultContent(data$)(TestList);
 export default TestList;
