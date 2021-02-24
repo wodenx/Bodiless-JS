@@ -76,7 +76,7 @@ const defaultImagePickerUI = {
 };
 
 // DropZonePlugin control the upload of file and only saves jpg/png files.
-export function DropZonePlugin({ fieldApi, ui }: {
+export function DropZonePlugin({ fieldApi, ui = {} }: {
   fieldApi: FieldApi;
   ui?: Partial<TImagePickerUI>;
 }) {
@@ -169,9 +169,6 @@ export function DropZonePlugin({ fieldApi, ui }: {
     </MasterWrapper>
   );
 }
-// DropZonePlugin.defaultProps = {
-//   ui: {},
-// };
 
 // Type of the props accepted by this component.
 // Exclude the src and alt from the props accepted as we write it.
