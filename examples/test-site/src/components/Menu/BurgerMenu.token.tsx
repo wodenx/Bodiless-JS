@@ -29,17 +29,20 @@ import {
 
 const $asSiteToggler = asToken(
   withDesign({
-    Button: asTextWhite,
+    Button: asToken(asTextWhite, asMobileOnly),
+    Wrapper: flow(
+      replaceWith(Div),
+      asMobileOnly,
+      addClasses('flex'),
+    ),
   }),
 );
 
 const withTogglerWrapper = asToken(
   withDesign({
     Wrapper: flow(
-      replaceWith(Div),
       asTealBackground,
-      asMobileOnly,
-      addClasses('flex w-full py-1'),
+      addClasses('w-full py-1'),
     ),
   }),
 );
