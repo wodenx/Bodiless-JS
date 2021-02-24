@@ -64,12 +64,12 @@ const HeaderClean: FC<Props> = ({ components }) => {
   return (
     <Wrapper>
       <Container>
-        <MenuToggler />
         <SiteLogoReturn />
         <SearchContainer>
           <Search placeholder="Search" />
         </SearchContainer>
         <MenuContainer>
+          <MenuToggler />
           <Menu />
         </MenuContainer>
       </Container>
