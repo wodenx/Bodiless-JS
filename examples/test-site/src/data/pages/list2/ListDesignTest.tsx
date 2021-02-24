@@ -54,5 +54,4 @@ const TestList = flow(
   withDefaultContent({ ...data, ...data$ }),
 )('ul');
 
-
 export default TestList;
