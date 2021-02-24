@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 Johnson & Johnson
+ * Copyright © 2021 Johnson & Johnson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,11 +12,18 @@
  * limitations under the License.
  */
 
-import { Button } from '@bodiless/ui';
-import { addClasses } from '@bodiless/fclasses';
+import { flow } from 'lodash';
+import {
+  withMandatoryCategories,
+} from '@bodiless/layouts';
+import withDefaultVariations from './withDefaultVariations';
 
-const ClickableWrapper = addClasses(
-  'bl-block bl-highlighted bl-border bl-border-solid bl-border-gray-700 hover:bl-border-white bl-text-initial bl-cursor-pointer bl-bg-white bl-p-2 bl-my-2',
-)(Button);
+import { asFlowContainerWithMargins } from './token';
 
-export default ClickableWrapper;
+const asDefaultFlowContainer = flow(
+  withDefaultVariations,
+  asFlowContainerWithMargins,
+  withMandatoryCategories(['Orientation', 'Type']),
+);
+
+export default asDefaultFlowContainer;
