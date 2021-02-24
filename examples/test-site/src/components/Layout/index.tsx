@@ -34,26 +34,28 @@ const SiteHeader = asSiteHeader(Header);
 const SiteFooter = asSiteFooter(Footer);
 
 const Container = flow(
-  withBurgerMenuProvider,
   asPageContainer,
   asYMargin,
 )(Div) as ComponentType;
 
-const BreadcrumbProvider = withBreadcrumbStore(Fragment);
+const SiteProviders = flow(
+  withBreadcrumbStore,
+  withBurgerMenuProvider,
+)(Fragment) as ComponentType;
 
 const BaseLayout = ({ children, components }) => {
   const { Breadcrumbs } = components;
   return (
     <>
       <SeoHelmet />
-      <BreadcrumbProvider>
+      <SiteProviders>
         <SocialShareHelmet />
         <SiteHeader />
         <Container>
           { Breadcrumbs && <Breadcrumbs />}
           {children}
         </Container>
-      </BreadcrumbProvider>
+      </SiteProviders>
       <SiteFooter />
     </>
   );

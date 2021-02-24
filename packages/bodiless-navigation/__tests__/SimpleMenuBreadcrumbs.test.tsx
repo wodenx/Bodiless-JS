@@ -29,10 +29,7 @@ import {
 import { flowRight } from 'lodash';
 import type { BreadcrumbStoreItemsReducer } from '@bodiless/components';
 
-import {
-  asMenuBase,
-  asBreadcrumbSource,
-} from '../src/components/Menu/SimpleMenu';
+import { asBodilessMenu, withListSubMenu } from '../src';
 
 const { DefaultContentNode } = require('@bodiless/core');
 
@@ -47,11 +44,8 @@ const createBreadcrumbComponent = ({
   content = {},
 }) => {
   const Source = flowRight(
-    asBreadcrumbSource({
-      linkNodeKey: 'title$link',
-      titleNodeKey: 'title$text',
-    }),
-    asMenuBase('testMenu'),
+    withListSubMenu(),
+    asBodilessMenu('testMenu'),
   )('ul');
 
   const BreadcrumbComponent = (props: any) => (

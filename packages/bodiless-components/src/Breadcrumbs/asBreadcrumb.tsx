@@ -111,32 +111,7 @@ const asBreadcrumb = ({
  * @return
  * A version of the component which populates an enclosing
  */
-const asBreadcrumbSource = (withMenuDesign: Function) => (
-  settings: BreadcrumbSettings,
-) => <P extends object>(
-  Component: ComponentType<P>,
-) => {
-  const Source = withMenuDesign({
-    Item: asBreadcrumb(settings),
-  })(Component);
-
-  const SSRSource = flow(
-    withMenuDesign({
-      Item: asBreadcrumb(settings),
-    }),
-    asHiddenBreadcrumbSource,
-  )(Component);
-
-  const AsBreadcrumbSource = (props: P) => (
-    <>
-      {isSSR() && <SSRSource {...props} />}
-      <Source {...props} />
-    </>
-  );
-  return AsBreadcrumbSource;
-};
-
-const asBreadcrumbSourceNew = (settings: BreadcrumbSettings) => <P extends object>(
+const asBreadcrumbSource = (settings: BreadcrumbSettings) => <P extends object>(
   Component: ComponentType<P>,
 ) => {
   const Source = withDesign({
@@ -160,4 +135,4 @@ const asBreadcrumbSourceNew = (settings: BreadcrumbSettings) => <P extends objec
 };
 
 export default asBreadcrumb;
-export { asBreadcrumbSource, asBreadcrumbSourceNew };
+export { asBreadcrumbSource };

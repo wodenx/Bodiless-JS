@@ -28,7 +28,7 @@ import Layout from '../../../components/Layout';
 import { asHeader2, asHeader1 } from '../../../components/Elements.token';
 
 import {
-  BodilessBurgerMenuToggler, ResponsiveBodilessMenu,
+  BurgerMenuTogglerFullWidth, ResponsiveBodilessMenu,
 } from '../../../components/Menu';
 
 const NodeTreePrinter$ = () => {
@@ -66,7 +66,7 @@ export default (props: any) => (
       </Description>
 
       <div>
-        <BodilessBurgerMenuToggler />
+        <BurgerMenuTogglerFullWidth />
         <ResponsiveBodilessMenu />
       </div>
       <Description>

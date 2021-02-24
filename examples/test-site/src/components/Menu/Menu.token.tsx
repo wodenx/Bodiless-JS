@@ -14,9 +14,8 @@
 
 import { flow } from 'lodash';
 import { asToken, withDesign, addClasses } from '@bodiless/fclasses';
-import { useIsActiveTrail } from '@bodiless/organisms';
 import {
-  asTopNav, withSubMenuToken, withColumnSubMenuDesign,
+  asTopNav, withSubMenuToken, withColumnSubMenuDesign, useIsActiveTrail,
 } from '@bodiless/navigation';
 
 import { ifToggledOn } from '@bodiless/core';

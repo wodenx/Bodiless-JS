@@ -12,19 +12,16 @@
  * limitations under the License.
  */
 
+import { ComponentType } from 'react';
 import { flow, pick } from 'lodash';
 import { withDesign, replaceWith } from '@bodiless/fclasses';
 import { withResponsiveVariants } from '@bodiless/components';
 
-import { ComponentType } from 'react';
-import SimpleMenu from './SimpleMenu';
-import MegaMenu from './MegaMenu';
-import { SimpleBurgerMenu, MegaBurgerMenu } from '../BurgerMenu';
 import { breakpoints as allBreakpoints } from '../Page';
 import { asDesktopOnly, asMobileOnly } from '../Elements.token';
 
 import BodilessMenu from './Menu';
-import BodilessBurgerMenu, { BodilessBurgerMenuToggler } from './BurgerMenu';
+import BodilessBurgerMenu, { BurgerMenuToggler, BurgerMenuTogglerFullWidth } from './BurgerMenu';
 
 const breakpoints = pick(allBreakpoints, 'lg');
 
@@ -39,8 +36,10 @@ const asResponsiveMenu = (DesktopMenu: ComponentType) => flow(
   }),
 );
 
-export const ResponsiveSimpleMenu = asResponsiveMenu(SimpleMenu)(SimpleBurgerMenu);
-export const ResponsiveMegaMenu = asResponsiveMenu(MegaMenu)(MegaBurgerMenu);
-export const ResponsiveBodilessMenu = asResponsiveMenu(BodilessMenu)(BodilessBurgerMenu);
+const ResponsiveBodilessMenu = asResponsiveMenu(BodilessMenu)(BodilessBurgerMenu);
 
-export { BodilessMenu, BodilessBurgerMenu, BodilessBurgerMenuToggler };
+export {
+  ResponsiveBodilessMenu,
+  BurgerMenuToggler,
+  BurgerMenuTogglerFullWidth,
+};

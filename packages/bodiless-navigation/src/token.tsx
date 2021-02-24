@@ -22,7 +22,7 @@ import {
   asToken,
   Design,
 } from '@bodiless/fclasses';
-import { asBreadcrumbSourceNew } from '@bodiless/components';
+import { asBreadcrumbSource as asBreadcrumbSourceBase } from '@bodiless/components';
 
 import { useIsMenuOpen } from './withMenuContext';
 
@@ -103,7 +103,7 @@ const asFullWidthSublist = withDesign({
   }),
 });
 
-const asBreadcrumbSource = asBreadcrumbSourceNew({
+const asBreadcrumbSource = asBreadcrumbSourceBase({
   linkNodeKey: 'title$link',
   titleNodeKey: 'title$text',
 });

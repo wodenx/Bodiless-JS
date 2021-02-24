@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`asBreadcrumbsClean creates breadcrumbs for 2-level Columns MegaMenu 1`] = `"<ul></ul>"`;
+
+exports[`asBreadcrumbsClean creates breadcrumbs for 2-level List MegaMenu 1`] = `"<ul></ul>"`;
+
+exports[`asBreadcrumbsClean creates breadcrumbs for 2-level Touts MegaMenu 1`] = `"<ul></ul>"`;
+
+exports[`asBreadcrumbsClean creates breadcrumbs for 3-level Columns MegaMenu 1`] = `"<ul></ul>"`;

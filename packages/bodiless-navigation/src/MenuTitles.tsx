@@ -18,7 +18,9 @@ import {
   withSidecarNodes, withOnlyProps, withNode, withNodeKey,
   WithNodeProps,
 } from '@bodiless/core';
-import { asEditable, asBodilessLink, withBodilessLinkToggle } from '@bodiless/components';
+import {
+  asEditable, asBodilessLink, withBodilessLinkToggle, useBreadcrumbContext,
+} from '@bodiless/components';
 import { ToutClean } from '@bodiless/organisms';
 import {
   A,
@@ -37,6 +39,18 @@ type MenuTitleComponents = {
 };
 
 type MenuTitleProps = DesignableComponentsProps<MenuTitleComponents>;
+
+/**
+ * Hook which can be used to determine if a menu item is part of
+ * the current active breadcrumb trail.
+ *
+ * This hook is only accurate if
+ * - The menu is inside a BreadcrumbStoreProvider.
+ * - The menu item has been wrapped in asBreadcrumb
+ *
+ * @return true if the item is in the active trail, false otherwise.
+ */
+const useIsActiveTrail = () => useBreadcrumbContext()?.isActive();
 
 const MenuTitleBase: FC<MenuTitleProps> = ({ components, ...rest }) => {
   const { Link, Title } = components;
@@ -108,6 +122,7 @@ export {
   asMenuLink,
   asMenuTitle,
   asMenuTout,
+  useIsActiveTrail,
   asEditableMenuTitle,
   withEditableMenuTitle,
 };

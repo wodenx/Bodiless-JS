@@ -13,6 +13,7 @@
  */
 
 import React from 'react';
+import { flowRight } from 'lodash';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mount, ReactWrapper } from 'enzyme';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -22,9 +23,9 @@ import {
   asBodilessLink, asEditable, withBreadcrumbStore, Breadcrumbs,
 } from '@bodiless/components';
 import { replaceWith, withDesign } from '@bodiless/fclasses';
-import { flowRight } from 'lodash';
-
-import { asMenuBase, asBreadcrumbSource } from '../src/components/Menu/MegaMenu';
+import {
+  asBodilessMenu, withListSubMenu, withColumnSubMenu, withToutSubMenu,
+} from '../src';
 
 const { DefaultContentNode } = require('@bodiless/core');
 
@@ -38,11 +39,10 @@ const createBreadcrumbComponent = ({
   content = {},
 }) => {
   const Source = flowRight(
-    asBreadcrumbSource({
-      linkNodeKey: 'title$link',
-      titleNodeKey: 'title$text',
-    }),
-    asMenuBase('testMenu'),
+    withListSubMenu(),
+    withColumnSubMenu(),
+    withToutSubMenu(),
+    asBodilessMenu('testMenu'),
   )('ul');
 
   const BreadcrumbComponent = (props: any) => (

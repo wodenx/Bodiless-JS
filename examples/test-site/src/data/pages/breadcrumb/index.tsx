@@ -25,9 +25,8 @@ import {
 import { flow } from 'lodash';
 
 import Layout from '../../../components/Layout';
-import SimpleMenu from '../../../components/Menu/SimpleMenu';
-import MegaMenu from '../../../components/Menu/MegaMenu';
-import BaseMenuBreadcrumbs, {
+import BodilessMenu from '../../../components/Menu/Menu';
+import {
   DEFAULT_STARTING_TRAIL_NODE_KEY,
   MegaMenuBreadcrumbs as BaseMegaMenuBreadcrumbs,
 } from '../../../components/Breadcrumbs/MenuBreadcrumbs';
@@ -47,11 +46,11 @@ const MenuBreadcrumbs = flow(
     `${DEFAULT_STARTING_TRAIL_NODE_KEY}Default`,
     'Enter item',
   ),
-)(BaseMenuBreadcrumbs);
+)(BaseMegaMenuBreadcrumbs);
 
 const BreadcrumbWithStartingTrailIcon = withStartingTrailIcon(
   `${DEFAULT_STARTING_TRAIL_NODE_KEY}Icon`,
-)(BaseMenuBreadcrumbs);
+)(BaseMegaMenuBreadcrumbs);
 
 const BreadcrumbWithNonLinkableItems = flow(
   withEditableStartingTrail(
@@ -59,7 +58,7 @@ const BreadcrumbWithNonLinkableItems = flow(
     'Enter item',
   ),
   withNonLinkableItems,
-)(BaseMenuBreadcrumbs);
+)(BaseMegaMenuBreadcrumbs);
 
 const BreadcrumbWithBoldableFinalItem = flow(
   withEditableStartingTrail(
@@ -67,7 +66,7 @@ const BreadcrumbWithBoldableFinalItem = flow(
     'Enter item',
   ),
   withBoldedFinalTrail,
-)(BaseMenuBreadcrumbs);
+)(BaseMegaMenuBreadcrumbs);
 
 const BreadcrumbWithVerticalBarSeparator = flow(
   withEditableStartingTrail(
@@ -75,7 +74,7 @@ const BreadcrumbWithVerticalBarSeparator = flow(
     'Enter item',
   ),
   withVerticalBarSeparator,
-)(BaseMenuBreadcrumbs);
+)(BaseMegaMenuBreadcrumbs);
 
 const BreadcrumbWithSlashSeparator = flow(
   withEditableStartingTrail(
@@ -83,7 +82,7 @@ const BreadcrumbWithSlashSeparator = flow(
     'Enter item',
   ),
   withSlashSeparator,
-)(BaseMenuBreadcrumbs);
+)(BaseMegaMenuBreadcrumbs);
 
 const BreadcrumbWithHiddenCurrentPageItem = flow(
   withEditableStartingTrail(
@@ -91,13 +90,6 @@ const BreadcrumbWithHiddenCurrentPageItem = flow(
     'Enter item',
   ),
   withHiddenCurrentPageItem,
-)(BaseMenuBreadcrumbs);
-
-const MegaMenuBreadcrumbs = flow(
-  withEditableStartingTrail(
-    `${DEFAULT_STARTING_TRAIL_NODE_KEY}MegaMenu`,
-    'Enter item',
-  ),
 )(BaseMegaMenuBreadcrumbs);
 
 const MegaMenuBreadcrumbWithNonLinkableItems = flow(
@@ -121,21 +113,20 @@ export default (props: any) => (
   <Page {...props}>
     <Layout>
       <H1>Breadcrumb Demo</H1>
-      <H2>Simple Menu</H2>
       <BreadcrumbProvider>
-        <SimpleMenu nodeKey="simplemenu" />
+        <BodilessMenu nodeKey="bodilessMenu" />
         <H2>Breadcrumbs with editable starting trail</H2>
-        <MenuBreadcrumbs nodeKey="simplemenu" className="my-2" />
+        <MenuBreadcrumbs nodeKey="bodilessMenu" className="my-2" />
         <H2>Breadcrumbs with starting trail icon</H2>
-        <BreadcrumbWithStartingTrailIcon nodeKey="simplemenu" className="my-2" />
+        <BreadcrumbWithStartingTrailIcon nodeKey="bodilessMenu" className="my-2" />
         <H2>Breadcrumbs with non-linkable Middle Trail group</H2>
-        <BreadcrumbWithNonLinkableItems nodeKey="simplemenu" className="my-2" />
+        <BreadcrumbWithNonLinkableItems nodeKey="bodilessMenu" className="my-2" />
         <H2>Breadcrumbs with boldable final trail item</H2>
-        <BreadcrumbWithBoldableFinalItem nodeKey="simplemenu" className="my-2" />
+        <BreadcrumbWithBoldableFinalItem nodeKey="bodilessMenu" className="my-2" />
         <H2>Breadcrumbs with vertical bar separator</H2>
-        <BreadcrumbWithVerticalBarSeparator nodeKey="simplemenu" className="my-2" />
+        <BreadcrumbWithVerticalBarSeparator nodeKey="bodilessMenu" className="my-2" />
         <H2>Breadcrumbs with slash separator</H2>
-        <BreadcrumbWithSlashSeparator nodeKey="simplemenu" className="my-2" />
+        <BreadcrumbWithSlashSeparator nodeKey="bodilessMenu" className="my-2" />
         <H2>Breadcrumbs with hidden current page item</H2>
         <P>
           {`
@@ -144,15 +135,9 @@ export default (props: any) => (
           and current page is /breadcrumb, then this test component will render just Home -> Components
         `}
         </P>
-        <BreadcrumbWithHiddenCurrentPageItem nodeKey="simplemenu" className="my-2" />
-      </BreadcrumbProvider>
-      <H2>MegaMenu</H2>
-      <BreadcrumbProvider>
-        <MegaMenu nodeKey="megamenu" className="my-2" />
-        <H2>MegaMenu breadcrumbs</H2>
-        <MegaMenuBreadcrumbs nodeKey="megamenu" className="my-2" />
+        <BreadcrumbWithHiddenCurrentPageItem nodeKey="bodilessMenu" className="my-2" />
         <H2>MegaMenu breadcrumbs with non-editable starting trail and non-linkable Middle Trail group</H2>
-        <MegaMenuBreadcrumbWithNonLinkableItems nodeKey="megamenu" className="my-2" />
+        <MegaMenuBreadcrumbWithNonLinkableItems nodeKey="bodilessMenu" className="my-2" />
       </BreadcrumbProvider>
     </Layout>
   </Page>

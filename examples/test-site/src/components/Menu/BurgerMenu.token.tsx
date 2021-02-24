@@ -27,11 +27,13 @@ import {
   asTealBackground, asTextWhite, asMobileOnly, asBold,
 } from '../Elements.token';
 
-const asWhiteToggler = withDesign({
-  Button: asTextWhite,
-});
+const $asSiteToggler = asToken(
+  withDesign({
+    Button: asTextWhite,
+  }),
+);
 
-const withBurgerMenuTogglerStyles = asToken(
+const withTogglerWrapper = asToken(
   withDesign({
     Wrapper: flow(
       replaceWith(Div),
@@ -40,7 +42,6 @@ const withBurgerMenuTogglerStyles = asToken(
       addClasses('flex w-full py-1'),
     ),
   }),
-  asWhiteToggler,
 );
 
 const withBurgerMenuHeader = withDesign({
@@ -49,7 +50,9 @@ const withBurgerMenuHeader = withDesign({
     asDefaultLogoStyle,
     withDesign({
       SiteReturn: flow(
-        withBurgerMenuToggler(asWhiteToggler(BurgerMenuDefaultToggler)),
+        withBurgerMenuToggler(
+          $asSiteToggler(BurgerMenuDefaultToggler),
+        ),
         asTealBackground,
         addClasses('flex items-center justify-between'),
       ),
@@ -92,6 +95,7 @@ const $asSiteBurgerMenu = flow(
 );
 
 export {
-  withBurgerMenuTogglerStyles,
+  withTogglerWrapper,
   $asSiteBurgerMenu,
+  $asSiteToggler,
 };
