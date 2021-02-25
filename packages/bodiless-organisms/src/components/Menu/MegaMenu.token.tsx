@@ -34,25 +34,35 @@ const isContextNotActive = () => {
   return isEdit ? !isActive : true;
 };
 
-const asStaticOnHover = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: flow(
-      addClasses('hover:static'),
-      removeClassesIf(useIsMenuOpen)('hover:static'),
-    ),
-  }),
-});
+// const asStaticOnHover = withDesign({
+//   Wrapper: withDesign({
+//     WrapperItem: flow(
+//       addClasses('hover:static'),
+//       removeClassesIf(useIsMenuOpen)('hover:static'),
+//     ),
+//   }),
+// });
+const asStaticOnHover = flow(
+  addClasses('hover:static'),
+  removeClassesIf(useIsMenuOpen)('hover:static'),
+);
 
-const asRelativeNotActive = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: addClassesIf(isContextNotActive)('relative'),
-  }),
-});
+// const asRelativeNotActive = withDesign({
+//   Wrapper: withDesign({
+//     WrapperItem: addClassesIf(isContextNotActive)('relative'),
+//   }),
+// });
+
+const asRelativeNotActive = addClassesIf(isContextNotActive)('relative');
+
+// const asFullWidthSublist = withDesign({
+//   Wrapper: withDesign({
+//     List: addClasses('w-full'),
+//   }),
+// });
 
 const asFullWidthSublist = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('w-full'),
-  }),
+  Wrapper: addClasses('w-full'),
 });
 
 /**
@@ -60,11 +70,7 @@ const asFullWidthSublist = withDesign({
  * ===========================================
  */
 const asAccessibleMegaSubMenu = flow(
-  withDesign({
-    Wrapper: withDesign({
-      WrapperItem: addPropsIf(useIsSubmenuOpen)({ style: { position: 'static' } }),
-    }),
-  }),
+  addPropsIf(useIsSubmenuOpen)({ style: { position: 'static' } }),
   asToggleableSubMenu,
 );
 

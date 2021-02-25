@@ -263,14 +263,14 @@ const withTopMenuStyles = withDesign({
  * Same structure as the Simple SubMenu
  * ===========================================
  */
-const asBasicSubMenu = withDesign({
-  Wrapper: withDesign({
-  WrapperItem: addClasses('parent_menu_item'),
-    List: addClasses('sub_menu_wrapper'),
+const asBasicSubMenu = flow(
+  addClasses('parent_menu_item'),
+  withDesign({
+    Wrapper: addClasses('sub_menu_wrapper'),
+    Title: addClasses('sub_menu_title'),
+    Item: addClasses('sub_menu_item_wrapper'),
   }),
-  Title: addClasses('sub_menu_title'),
-  Item: addClasses('sub_menu_item_wrapper'),
-});
+);
 
 /**
  * Touts Sub Menu Styles

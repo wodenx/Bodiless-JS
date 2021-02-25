@@ -1,14 +1,116 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import {
   Token, withDesign, Design, asToken, addProps,
 } from '@bodiless/fclasses';
 import { withDefaultContent } from '@bodiless/core';
 import { flow } from 'lodash';
-import { render } from 'enzyme';
+import { render, ComponentType } from 'enzyme';
 import { withSubLists } from '../src/List/asChameleonSubList';
 import asBodilessList, { asSubList } from '../src/List/asBodilessList';
 import { asBodilessChameleon } from '../src/Chameleon';
+
+const withItemTitle = (title: string) => withDesign({
+  Title: flow(
+    () => (props: any) => <span {...props}>{title}</span>,
+  ),
+}) as Token;
+
+describe.only('list styling', () => {
+  const TestList = flow(
+    asBodilessList('testlist'),
+    withItemTitle('TopList'),
+    withSubLists(2)({
+      A: flow(asSubList(), withItemTitle('SublistA')),
+      B: flow(asSubList(), withItemTitle('SubListB')),
+    }),
+    // Add some id's so we can find the elements.
+    withDesign({
+      Wrapper: addProps({ id: 'top' }),
+      Item: withDesign({
+        A: withDesign({
+          Wrapper: withDesign({
+            List: addProps({ id: 'middle-a' }),
+          }),
+          Item: withDesign({
+            A: withDesign({
+              Wrapper: withDesign({
+                List: addProps({ id: 'inner-a-a' }),
+              }),
+            }),
+            B: withDesign({
+              Wrapper: withDesign({
+                List: addProps({ id: 'inner-a-b' }),
+              }),
+            }),
+          }),
+        }),
+        B: withDesign({
+          Wrapper: withDesign({
+            List: addProps({ id: 'middle-b' }),
+          }),
+          Item: withDesign({
+            A: withDesign({
+              Wrapper: withDesign({
+                List: addProps({ id: 'inner-b-a' }),
+              }),
+            }),
+            B: withDesign({
+              Wrapper: withDesign({
+                List: addProps({ id: 'inner-b-b' }),
+              }),
+            }),
+          }),
+        }),
+      }),
+    }),
+  )('ul');
+
+  const withSubListData = (levelOne?: 'A'|'B', levelTwo?: 'A'|'B') => withDefaultContent<any, any>({
+    'testlist$default$cham-sublist': {
+      component: levelOne,
+    },
+    'testlist$default$sublist$default$cham-sublist': {
+      component: levelTwo,
+    },
+  });
+
+  const renderTest = (C: ComponentType<any>) => {
+    return render(<div><C /></div>);
+  };
+
+  it.only('Applies a design on Item to the li for all sublist types', () => {
+    const Test = withDesign<any>({
+      Item: addProps({ 'data-test': 'foo' }),
+    })(TestList);
+    let wrapper;
+    wrapper = renderTest(withSubListData()(Test));
+    expect(wrapper.find('ul#top>li').prop('data-test')).toBe('foo');
+    wrapper = renderTest(withSubListData('A')(Test));
+    console.log(wrapper.html());
+    return;
+    expect(wrapper.find('ul#top>li').prop('data-test')).toBe('foo');
+    wrapper = renderTest(withSubListData('B')(Test));
+    expect(wrapper.find('ul#top>li').prop('data-test')).toBe('foo');
+  });
+
+  it('Applies a design on Wrapper to the ul for all sublist types', () => {
+    const Test = withDesign<any>({
+      Item: withDesign({
+        Wrapper: addProps({ 'data-test': 'foo' }),
+      }),
+    })(TestList);
+    let wrapper;
+    wrapper = renderTest(withSubListData()(Test));
+    expect(wrapper.find('ul#top>li').prop('data-test')).toBeUndefined();
+    wrapper = renderTest(withSubListData('A')(Test));
+    expect(wrapper.find('ul#top>li').prop('data-test')).toBeUndefined();
+    expect(wrapper.find('ul#top>li>ul').prop('data-test')).toBe('foo');
+    wrapper = renderTest(withSubListData('B')(Test));
+    expect(wrapper.find('ul#top>li').prop('data-test')).toBeUndefined();
+    expect(wrapper.find('ul#top>li>ul').prop('data-test')).toBe('foo');
+  });
+});
 
 describe('list design', () => {
   const applyTokenDeep = (token: Token, targetDepth: number, currentDepth: number = 0): Token => (
@@ -53,16 +155,10 @@ describe('list design', () => {
     );
   };
 
-  const withItemTitle = withDesign({
-    Title: flow(
-      () => (props: any) => <span {...props}>Item</span>,
-    ),
-  }) as Token;
-
   const TestList = flow(
     asBodilessList('testlist'),
-    withItemTitle,
-    withSubLists(2)(flow(asSubList(), withItemTitle)),
+    withItemTitle('item'),
+    withSubLists(2)(flow(asSubList(), withItemTitle('item'))),
     // Add some id's so we can find the elements.
     withDesign({
       Wrapper: addProps({ id: 'top' }),

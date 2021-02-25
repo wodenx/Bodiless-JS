@@ -22,6 +22,7 @@ import {
   asAlignLeft,
 } from '../Elements.token';
 import { asUnderline } from '../ElementDefault.token';
+import { withSubListDesign } from '@bodiless/components';
 
 /**
  * Colors
@@ -73,13 +74,11 @@ const withBaseMenuStyles = withDesign({
  */
 
 const withBaseSubMenuStyles = withDesign({
-  Wrapper: withDesign({
-    List: flow(
-      withMenuBackground,
-      withMenuForeground,
-      addClasses('w-content z-10'),
-    ),
-  }),
+  Wrapper: flow(
+    withMenuBackground,
+    withMenuForeground,
+    addClasses('w-content z-10'),
+  ),
   Item: addClasses('leading-loose text-sm'),
   Title: flow(withTitleStyles, withActiveSubTitleStyles),
 });
@@ -90,7 +89,10 @@ const withBaseSubMenuStyles = withDesign({
  */
 
 const withSimpleMenuStyles = flow(
-  withSimpleMenuDesign(withBaseSubMenuStyles),
+  withSubListDesign(1)({
+    SubMenu: withBaseSubMenuStyles,
+  }),
+  // withSimpleMenuDesign(withBaseSubMenuStyles),
   withBaseMenuStyles,
 );
 

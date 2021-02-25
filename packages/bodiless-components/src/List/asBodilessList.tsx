@@ -18,10 +18,12 @@ import {
 import React, {
   Fragment, ComponentType, PropsWithChildren, FC,
 } from 'react';
-import { flow, identity } from 'lodash';
+import { flow, identity, omit } from 'lodash';
 import {
   replaceWith, withDesign, asComponent, DesignableComponentsProps, designable, HOC,
   withoutProps,
+  extendDesignable,
+  Design,
 } from '@bodiless/fclasses';
 
 import withListButtons from './withListButtons';
@@ -71,9 +73,9 @@ const SubList$: FC<SubListProps> = ({
 }) => {
   const { WrapperItem, List, Title } = components;
   return (
-    <WrapperItem {...rest}>
+    <WrapperItem>
       <Title>{title}</Title>
-      <List overview={overview}>
+      <List {...rest} overview={overview}>
         {children}
       </List>
     </WrapperItem>
@@ -113,13 +115,37 @@ const asSubListWrapper = (Component: any) => withDesign<SubListComponents>({
 /**
  * HOC which can be applied to a list item to convert it to a sublist.
  */
-const asSubList = (useOverrides?: UseListOverrides) => flow(
-  asBodilessList('sublist', undefined, useOverrides),
-  withDesign({
-    Wrapper: asSubListWrapper,
-  }),
-  asTitledItem,
-);
+// const asSubListOld = (useOverrides?: UseListOverrides) => flow(
+//   asBodilessList('sublist', undefined, useOverrides),
+//   withDesign({
+//     Wrapper: asSubListWrapper,
+//   }),
+//   asTitledItem,
+// );
+
+/**
+ * HOC which can be applied to a list item to convert it to a sublist.
+ */
+const asSubList = (useOverrides?: UseListOverrides) => (Item: ComponentType<any>) => {
+  const List = asBodilessList('sublist', undefined, useOverrides)('ul');
+  // const startComponents = {
+  //   SublistTitle: Fragment,
+  // };
+  // const transformDesign = (design: Design<any> = {}) => (
+  //   omit(design, 'WrapperItem', 'SublistTitle', 'List')
+  // );
+  const AsSubList = (props: any) => {
+    const { design, children, ...rest } = props;
+    return (
+      <Item {...rest}>
+        {children}
+        <List design={design} />
+      </Item>
+    );
+  };
+  // return extendDesignable(transformDesign)(startComponents, 'SubList')(AsSubList);
+  return AsSubList;
+};
 
 const withSimpleSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
   depth === 0 ? identity

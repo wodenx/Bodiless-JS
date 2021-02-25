@@ -4,54 +4,61 @@ import { flow } from 'lodash';
 import {
   asSubList, asBodilessList, withSubLists, asBodilessChameleon,
 } from '@bodiless/components';
-import { withDefaultContent } from '@bodiless/core';
+// import { withDefaultContent } from '@bodiless/core';
 
-const withItemTitle = (title: string = 'Item') => withDesign({
+const withItemTitle = (title: string) => withDesign({
   Title: flow(
     () => (props: any) => <span {...props}>{title}</span>,
   ),
 }) as Token;
 
-const asTestSubList = flow(
-  asSubList(),
-  withItemTitle(),
-);
-
-const data = {
-  'testlist$default$cham-sublist': {
-    component: 'SubList',
-  },
-  'testlist$default$sublist$default$cham-sublist': {
-    component: 'SubList',
-  },
-  // 'list-type': {
-  //   component: 'Bulleted',
-  // }
-};
-
-const data$ = {
-  'list-type': {
-    component: 'Bulleted',
-  },
-};
-
 const TestList = flow(
   asBodilessList('testlist'),
-  withItemTitle(),
-  withSubLists(2)(asTestSubList),
-  asBodilessChameleon('list-type'),
+  withItemTitle('TopList'),
+  withSubLists(2)({
+    A: flow(asSubList(), withItemTitle('SublistA')),
+    B: flow(asSubList(), withItemTitle('SubListB')),
+  }),
+  // Add some id's so we can find the elements.
   withDesign({
-    Bulleted: withDesign({
-      Wrapper: addProps({ 'data-bullets': true }),
-    }),
-    Numbered: withDesign({
-      Wrapper: addProps({ 'data-numbers': true }),
-    }),
-    _default: withDesign({
-      Wrapper: addProps({ 'data-plain': true }),
+    Wrapper: addProps({ id: 'top' }),
+    Item: withDesign({
+      A: withDesign({
+        Wrapper: withDesign({
+          List: addProps({ id: 'middle-a' }),
+        }),
+        Item: withDesign({
+          A: withDesign({
+            Wrapper: withDesign({
+              List: addProps({ id: 'inner-a-a' }),
+            }),
+          }),
+          B: withDesign({
+            Wrapper: withDesign({
+              List: addProps({ id: 'inner-a-b' }),
+            }),
+          }),
+        }),
+      }),
+      B: withDesign({
+        Wrapper: withDesign({
+          List: addProps({ id: 'middle-b' }),
+        }),
+        Item: withDesign({
+          A: withDesign({
+            Wrapper: withDesign({
+              List: addProps({ id: 'inner-b-a' }),
+            }),
+          }),
+          B: withDesign({
+            Wrapper: withDesign({
+              List: addProps({ id: 'inner-b-b' }),
+            }),
+          }),
+        }),
+      }),
     }),
   }),
-  withDefaultContent({ ...data, ...data$ }),
 )('ul');
 
 export default TestList;

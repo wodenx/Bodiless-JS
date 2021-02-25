@@ -32,27 +32,15 @@ const isContextActive = () => {
 };
 
 const asVerticalSubMenu = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('flex-col'),
-  }),
+  Wrapper: addClasses('flex-col'),
 });
 
-const asRelative = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: addClasses('relative'),
-  }),
-});
+const asRelative = addClasses('relative');
 
-const asExpandedOnActive = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: addClassesIf(isContextActive)('overflow-visible'),
-  }),
-});
+const asExpandedOnActive = addClassesIf(isContextActive)('overflow-visible');
 
 const asResponsiveSublist = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('min-w-full'),
-  }),
+  Wrapper: addClasses('min-w-full'),
 });
 
 const asToggleableSubMenu = (Component: ComponentType) => (props: any) => {
@@ -102,20 +90,16 @@ const asAccessibleMenu = withDesign({
 });
 
 const asAccessibleSubMenu = flow(
+  withoutProps('isSubmenuOpen'),
+  // Note that we use 'style' here instead of the css class name to avoid
+  // issues with class specificity. For example, if `overflow-visible`
+  // class is used there is a risk of it being overwritten by the site builder
+  // by adding another `overflow` or `display` classes to `WrapperItem`
+  // which will break the functionality. 'style' is a safer alternative
+  // that will guarantee that the toggle functionality will continue to function as designed.
+  addPropsIf(useIsSubmenuOpen)({ style: { overflow: 'visible' } }),
   withDesign({
-    Wrapper: withDesign({
-      WrapperItem: flow(
-        withoutProps('isSubmenuOpen'),
-        // Note that we use 'style' here instead of the css class name to avoid
-        // issues with class specificity. For example, if `overflow-visible`
-        // class is used there is a risk of it being overwritten by the site builder
-        // by adding another `overflow` or `display` classes to `WrapperItem`
-        // which will break the functionality. 'style' is a safer alternative
-        // that will guarantee that the toggle functionality will continue to function as designed.
-        addPropsIf(useIsSubmenuOpen)({ style: { overflow: 'visible' } }),
-      ),
-      List: addProps({ role: 'menu', 'aria-label': 'Navigation Sub Menu' }),
-    }),
+    Wrapper: addProps({ role: 'menu', 'aria-label': 'Navigation Sub Menu' }),
     Title: addProps({ role: 'menuitem' }),
   }),
   asToggleableSubMenu,
@@ -150,9 +134,7 @@ const withBaseMenuStyles = flow(
  * ===========================================
  */
 const withBaseSubMenuStyles = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('flex absolute left-0'),
-  }),
+  Wrapper: addClasses('flex absolute left-0'),
 });
 
 /*

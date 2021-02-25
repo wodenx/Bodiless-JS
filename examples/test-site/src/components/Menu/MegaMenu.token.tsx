@@ -55,7 +55,18 @@ const withMegaMenuSubMenuStyles = withDesign({
  * ===========================================
  */
 const withMegaMenuStyles = flow(
-  withMegaMenuDesign(withBaseSubMenuStyles),
+  withDesign({
+    Item: withDesign({
+      List: withBaseSubMenuStyles,
+      Touts: withBaseSubMenuStyles,
+      Columns: flow(
+        withBaseSubMenuStyles, 
+        withDesign({
+          Item: withBaseSubMenuStyles,
+        }),
+      ),
+    }),
+  }),
   withMegaMenuSubMenuStyles,
   withBaseMenuStyles,
 );
