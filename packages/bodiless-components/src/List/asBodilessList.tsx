@@ -13,76 +13,22 @@
  */
 
 import {
-  WithNodeKeyProps, withNodeKey, useNode, NodeProvider, WithNodeProps, withOnlyProps,
+  WithNodeKeyProps, withNodeKey, WithNodeProps, useNode, NodeProvider,
 } from '@bodiless/core';
 import React, {
-  Fragment, ComponentType, PropsWithChildren, FC,
+  ComponentType, FC,
 } from 'react';
-import { flow, identity, omit } from 'lodash';
+import { flow, identity } from 'lodash';
 import {
-  replaceWith, withDesign, asComponent, DesignableComponentsProps, designable, HOC,
+  replaceWith, withDesign, asComponent, HOC,
   withoutProps,
-  extendDesignable,
-  Design,
 } from '@bodiless/fclasses';
 
 import withListButtons from './withListButtons';
 import BodilessList from './List';
-import { Data, UseListOverrides } from './types';
+import { Data, UseListOverrides, FinalProps as ListProps } from './types';
 
 type ComponentOrTag<P> = ComponentType<P>|keyof JSX.IntrinsicElements;
-
-export type TitledItemProps = PropsWithChildren<{
-  title: JSX.Element,
-}>;
-
-export type OverviewItem = PropsWithChildren<{
-  overview: JSX.Element,
-}>;
-
-const asTitledItem = <P extends TitledItemProps>(Item: ComponentType<P>) => {
-  const TitledItem: ComponentType<P> = ({ children, ...rest }) => {
-    // prepare and pass the submenu title as a prop according to rc-menu <SubMenu /> specification
-    // wrap the title with current node,
-    // otherwise the title will read data from incorrect node when it is rendered by <SubMenu />
-    const { node } = useNode();
-    const children$ = <NodeProvider node={node}>{children}</NodeProvider>;
-    return (
-      <Item title={children$} {...rest as any} />
-    );
-  };
-  return TitledItem;
-};
-
-type SubListComponents = {
-  WrapperItem: ComponentType<any>,
-  List: ComponentType<any>,
-  Title: ComponentType<any>
-};
-
-const startComponents: SubListComponents = {
-  WrapperItem: asComponent('li'),
-  List: asComponent('ul'),
-  Title: withOnlyProps('key', 'children')(Fragment),
-};
-
-type SubListProps = TitledItemProps & OverviewItem & DesignableComponentsProps<SubListComponents>;
-
-const SubList$: FC<SubListProps> = ({
-  title, children, components, overview, ...rest
-}) => {
-  const { WrapperItem, List, Title } = components;
-  return (
-    <WrapperItem>
-      <Title>{title}</Title>
-      <List {...rest} overview={overview}>
-        {children}
-      </List>
-    </WrapperItem>
-  );
-};
-
-const SubList = designable(startComponents, 'SubList')(SubList$);
 
 /**
  * Converts a component or tag to a "bodiless" list. The component itself (usually
@@ -107,39 +53,78 @@ const asBodilessList = <P extends object>(
     withNodeKey(nodeKeys),
   )(Component);
 
-// This ensures that the original item is used as the sublist wrapper item.
-const asSubListWrapper = (Component: any) => withDesign<SubListComponents>({
-  WrapperItem: replaceWith(Component),
-})(SubList);
+type SubListTitleProps = {
+  title: React.ReactNode,
+};
+
+type SubListProps = Omit<ListProps, 'title'|'nodeKey'> & SubListTitleProps;
 
 /**
- * HOC which can be applied to a list item to convert it to a sublist.
+ * @private
+ * HOC which can be applied to a list wrapper so that it accepts a `title` prop
+ * which is rendered alongside the wrapper itself.
+ *
+ * By using this in our sublist we make it possible to replace the sublist
+ * wrapper with some other component which accepts a title (eg, the SubMenu
+ * component from rc-menu).
+ *
+ * @param
+ * Wrapper The list wrapper component tow hich this HOC will apply.
+ *
+ * @returs
  */
-// const asSubListOld = (useOverrides?: UseListOverrides) => flow(
-//   asBodilessList('sublist', undefined, useOverrides),
-//   withDesign({
-//     Wrapper: asSubListWrapper,
-//   }),
-//   asTitledItem,
-// );
+const withSubListTitle = (Wrapper: ComponentType<any>) => (
+  { title, ...rest }: SubListTitleProps,
+) => (
+  <>
+    {title}
+    <Wrapper {...rest} />
+  </>
+);
 
 /**
- * HOC which can be applied to a list item to convert it to a sublist.
+ * Creates an HOC which can be applied to a list item to convert it to a sublist.
+ *
+ * @param useOverrides
+ * The overrides to use when creating the sublist edit buttons
+ *
+ * @return
+ * HOC which converts a list item to a sublist.
+ *
+ * @example
+ * ```ts
+ * const aslistWithSubList = flow(
+ *   asBodilessList('nodeKey'),
+ *   withDesign({
+ *     Item: asSubList(),
+ *   }),
+ * );
+ * ```
  */
 const asSubList = (useOverrides?: UseListOverrides) => (Item: ComponentType<any>) => {
-  const List = asBodilessList('sublist', undefined, useOverrides)('ul');
-  // const startComponents = {
-  //   SublistTitle: Fragment,
-  // };
+  const SubList: ComponentType<SubListProps> = flow(
+    asBodilessList('sublist', undefined, useOverrides),
+    withDesign({
+      // Below we pass the children as a title prop to the sublist. This
+      // prop is forwarded to the Wrapper which renders it.  By making our
+      // sublist wrapper accept a title prop, we enable replacing it with
+      // some other component which expects one (eg <SubMenu /> from rc-menu).
+      Wrapper: withSubListTitle,
+    }),
+  )('ul');
   // const transformDesign = (design: Design<any> = {}) => (
   //   omit(design, 'WrapperItem', 'SublistTitle', 'List')
   // );
-  const AsSubList = (props: any) => {
+  const AsSubList: FC<ListProps> = (props) => {
     const { design, children, ...rest } = props;
+    // We need to capture the current node before passing the children as title.
+    // Otherwise they are rendered in the context of the sublist node.
+    const { node } = useNode();
+    const title = <NodeProvider node={node}>{children}</NodeProvider>;
     return (
       <Item {...rest}>
-        {children}
-        <List design={design} />
+        {/* We pass the title prop to the sublist */}
+        <SubList design={design} title={title} />
       </Item>
     );
   };

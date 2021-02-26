@@ -14,15 +14,15 @@
 
 import { flow } from 'lodash';
 import { withDesign, addClasses } from '@bodiless/fclasses';
-import { withSimpleMenuDesign, useIsActiveTrail } from '@bodiless/organisms';
+import { useIsActiveTrail } from '@bodiless/organisms';
 
 import { ifToggledOn } from '@bodiless/core';
+import { withSubListDesign } from '@bodiless/components';
 import {
   asBold, asLightTealBackgroundOnHover, asLightTealBackground, asTealBackground, asTextWhite,
   asAlignLeft,
 } from '../Elements.token';
 import { asUnderline } from '../ElementDefault.token';
-import { withSubListDesign } from '@bodiless/components';
 
 /**
  * Colors

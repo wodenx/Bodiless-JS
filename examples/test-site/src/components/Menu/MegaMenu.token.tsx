@@ -14,7 +14,6 @@
 
 import { flow } from 'lodash';
 import { withDesign, addClasses } from '@bodiless/fclasses';
-import { withMegaMenuDesign } from '@bodiless/organisms';
 
 import {
   withBaseMenuStyles,
@@ -60,7 +59,7 @@ const withMegaMenuStyles = flow(
       List: withBaseSubMenuStyles,
       Touts: withBaseSubMenuStyles,
       Columns: flow(
-        withBaseSubMenuStyles, 
+        withBaseSubMenuStyles,
         withDesign({
           Item: withBaseSubMenuStyles,
         }),
