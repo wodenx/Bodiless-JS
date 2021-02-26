@@ -124,6 +124,7 @@ const addToCartButtonOptions = {
   icon: 'shopping_cart',
   name: 'enable-add-to-cart',
   label: () => (useChameleonContext().isOn ? 'Config' : 'Enable'),
+  groupLabel: 'Add to Cart',
   global: false,
   local: true,
   renderForm: ({ componentProps }: any) => {
