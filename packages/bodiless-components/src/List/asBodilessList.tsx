@@ -16,12 +16,15 @@ import {
   WithNodeKeyProps, withNodeKey, WithNodeProps, useNode, NodeProvider,
 } from '@bodiless/core';
 import React, {
-  ComponentType, FC,
+  ComponentType, FC, Fragment,
 } from 'react';
-import { flow, identity } from 'lodash';
+import { flow, identity, omit } from 'lodash';
 import {
   replaceWith, withDesign, asComponent, HOC,
   withoutProps,
+  Design,
+  DesignableComponentsProps,
+  extendDesignable,
 } from '@bodiless/fclasses';
 
 import withListButtons from './withListButtons';
@@ -57,7 +60,13 @@ type SubListTitleProps = {
   title: React.ReactNode,
 };
 
+type SubListComponents = {
+  SubListTitle: ComponentType<any>,
+  SubListWrapperItem: ComponentType<any>,
+};
+
 type SubListProps = Omit<ListProps, 'title'|'nodeKey'> & SubListTitleProps;
+type AsSubListProps = ListProps & DesignableComponentsProps<SubListComponents>;
 
 /**
  * @private
@@ -112,24 +121,39 @@ const asSubList = (useOverrides?: UseListOverrides) => (Item: ComponentType<any>
       Wrapper: withSubListTitle,
     }),
   )('ul');
-  // const transformDesign = (design: Design<any> = {}) => (
-  //   omit(design, 'WrapperItem', 'SublistTitle', 'List')
-  // );
-  const AsSubList: FC<ListProps> = (props) => {
-    const { design, children, ...rest } = props;
+  const transformDesign = (design: Design<any> = {}): Design<any> => (
+    omit(design, 'SubListWrapperItem', 'SubListTitle')
+  );
+  const applyDesign = (design: Design<SubListComponents> = {}) => {
+    const { SubListWrapperItem = identity, SubListTitle = identity } = design;
+    return {
+      SubListWrapperItem: SubListWrapperItem(Item),
+      SubListTitle: SubListTitle(Fragment),
+    };
+  };
+
+  const AsSubList: FC<AsSubListProps> = (props) => {
+    const {
+      design, children, components, ...rest
+    } = props;
+    const { SubListTitle, SubListWrapperItem } = components;
     // We need to capture the current node before passing the children as title.
     // Otherwise they are rendered in the context of the sublist node.
     const { node } = useNode();
-    const title = <NodeProvider node={node}>{children}</NodeProvider>;
+    const title = (
+      <NodeProvider node={node}>
+        <SubListTitle>
+          {children}
+        </SubListTitle>
+      </NodeProvider>
+    );
     return (
-      <Item {...rest}>
-        {/* We pass the title prop to the sublist */}
+      <SubListWrapperItem {...rest}>
         <SubList design={design} title={title} />
-      </Item>
+      </SubListWrapperItem>
     );
   };
-  // return extendDesignable(transformDesign)(startComponents, 'SubList')(AsSubList);
-  return AsSubList;
+  return extendDesignable(transformDesign)(applyDesign, 'SubList')(AsSubList);
 };
 
 const withSimpleSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
