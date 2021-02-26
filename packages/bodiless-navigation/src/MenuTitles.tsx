@@ -53,10 +53,13 @@ type MenuTitleProps = DesignableComponentsProps<MenuTitleComponents>;
  */
 const useIsActiveTrail = () => useBreadcrumbContext()?.isActive();
 
-const asBreadcrumbSource = asBreadcrumbSourceBase({
-  linkNodeKey: 'title$link',
-  titleNodeKey: 'title$text',
-});
+const asBreadcrumbSource = flow(
+  asBreadcrumbSourceBase({
+    linkNodeKey: 'title$link',
+    titleNodeKey: 'title$text',
+  }),
+  withNode,
+);
 
 const MenuTitleBase: FC<MenuTitleProps> = ({ components, ...rest }) => {
   const { Link, Title } = components;

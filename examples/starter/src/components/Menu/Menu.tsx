@@ -27,7 +27,7 @@ export const $asEditableMenuTout = flow(
 );
 
 const BodilessMenuBase = flow(
-  asBodilessMenu(),
+  asBodilessMenu('MainMenu'),
   withListSubMenu(),
   withColumnSubMenu(),
   withToutSubMenu(),

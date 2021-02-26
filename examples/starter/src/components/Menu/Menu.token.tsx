@@ -13,12 +13,16 @@
  */
 
 import { flow } from 'lodash';
-import { withDesign, addClasses } from '@bodiless/fclasses';
-import { withSimpleMenuDesign, useIsActiveTrail } from '@bodiless/organisms';
+import { asToken, withDesign, addClasses } from '@bodiless/fclasses';
+import {
+  asTopNav, withSubMenuToken, withColumnSubMenuDesign, useIsActiveTrail,
+} from '@bodiless/navigation';
 
 import { ifToggledOn } from '@bodiless/core';
 import {
-  asBold, asLightTealBackgroundOnHover, asLightTealBackground, asTealBackground, asTextWhite,
+  asBold, asLightTealBackground,
+  asLightTealBackgroundOnHover, asTealBackground, asTextWhite,
+  asAlignLeft,
 } from '../Elements.token';
 import { asUnderline } from '../ElementDefault.token';
 
@@ -30,17 +34,20 @@ import { asUnderline } from '../ElementDefault.token';
 const withMenuBackground = asTealBackground;
 const withActiveMenuBackground = asLightTealBackground;
 const withHoverMenuBackground = asLightTealBackgroundOnHover;
-const withMenuForeground = asTextWhite;
 
 /**
  * Title Styles
  * ===========================================
  */
 
-const withTitleStyles = flow(
-  withHoverMenuBackground,
-  addClasses('block w-full px-3'),
-);
+const $withTitleStyles = withDesign({
+  Title: asToken(
+    withHoverMenuBackground,
+    asAlignLeft,
+    asTextWhite,
+    addClasses('flex px-3'),
+  ),
+});
 
 const withActiveTitleStyles = ifToggledOn(useIsActiveTrail)(
   withActiveMenuBackground, asBold, asUnderline,
@@ -55,14 +62,13 @@ const withActiveSubTitleStyles = ifToggledOn(useIsActiveTrail)(
  * ===========================================
  */
 
-const withBaseMenuStyles = withDesign({
+const $withBaseMenuStyles = withDesign({
   Wrapper: flow(
     withMenuBackground,
-    withMenuForeground,
     addClasses('w-full'),
   ),
   Item: addClasses('leading-loose text-sm'),
-  Title: flow(withTitleStyles, withActiveTitleStyles),
+  Title: withActiveTitleStyles,
 });
 
 /**
@@ -70,30 +76,35 @@ const withBaseMenuStyles = withDesign({
  * ===========================================
  */
 
-const withBaseSubMenuStyles = withDesign({
+const $withBaseSubMenuStyles = withDesign({
   Wrapper: withDesign({
     List: flow(
       withMenuBackground,
-      withMenuForeground,
-      addClasses('w-content z-10'),
+      addClasses('z-10'),
     ),
   }),
-  Item: addClasses('leading-loose text-sm'),
-  Title: flow(withTitleStyles, withActiveSubTitleStyles),
+  Title: withActiveSubTitleStyles,
 });
 
-/**
- * Simple Menu Styles
- * ===========================================
- */
+const $withListSubmenuStyles = withDesign({
+  Wrapper: withDesign({
+    List: addClasses('w-content'),
+  }),
+});
 
-const withSimpleMenuStyles = flow(
-  withSimpleMenuDesign(withBaseSubMenuStyles),
-  withBaseMenuStyles,
+const $withColumnsSublistStyles = withColumnSubMenuDesign(
+  $withTitleStyles,
+  withDesign({
+    Title: addClasses('pl-6'),
+  }),
 );
 
-export default withSimpleMenuStyles;
-export {
-  withBaseMenuStyles,
-  withBaseSubMenuStyles,
-};
+const $asSiteNavStyles = asToken(
+  asTopNav('List', 'Columns', 'Touts'),
+  $withBaseMenuStyles,
+  withSubMenuToken('Main', 'List', 'Columns', 'Touts')($withTitleStyles, $withBaseSubMenuStyles),
+  withSubMenuToken('Columns')($withColumnsSublistStyles),
+  withSubMenuToken('List')($withListSubmenuStyles),
+);
+
+export default $asSiteNavStyles;

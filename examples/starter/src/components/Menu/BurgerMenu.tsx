@@ -12,33 +12,29 @@
  * limitations under the License.
  */
 
-import { ComponentType } from 'react';
 import { flow } from 'lodash';
-import {
-  asBodilessMenu, withListSubMenu, withColumnSubMenu, withToutSubMenu,
-} from '@bodiless/navigation';
+import { asStatic } from '@bodiless/core';
+import { withBurgerMenuWrapper, BurgerMenuDefaultToggler } from '@bodiless/navigation';
 
-import { asEditableTout } from '../Tout';
-import $asSiteNavStyles from './Menu.token';
+import { $asSiteBurgerMenu, $asSiteToggler, withTogglerWrapper } from './BurgerMenu.token';
+import { BodilessMenuBase } from './Menu';
 
-export const $asEditableMenuTout = flow(
-  // asMenuTout(),
-  asEditableTout,
-);
+const BurgerMenuToggler = flow(
+  $asSiteToggler,
+)(BurgerMenuDefaultToggler);
 
-const BodilessMenuBase = flow(
-  asBodilessMenu(),
-  withListSubMenu(),
-  withColumnSubMenu(),
-  withToutSubMenu(),
-)('ul') as ComponentType<any>;
+const BurgerMenuTogglerFullWidth = flow(
+  withTogglerWrapper,
+)(BurgerMenuToggler);
 
-const BodilessMenu = flow(
-  withToutSubMenu($asEditableMenuTout),
-  $asSiteNavStyles,
+const BodilessBurgerMenu = flow(
+  withBurgerMenuWrapper,
+  $asSiteBurgerMenu,
+  asStatic,
 )(BodilessMenuBase);
 
-export default BodilessMenu;
+export default BodilessBurgerMenu;
 export {
-  BodilessMenuBase,
+  BurgerMenuToggler,
+  BurgerMenuTogglerFullWidth,
 };
