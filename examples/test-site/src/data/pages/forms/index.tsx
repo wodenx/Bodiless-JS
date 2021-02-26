@@ -24,7 +24,7 @@ import withLastModified from './withLastModified';
 import withMarkdownFetchButton from './withMarkdownFetchButton';
 
 const Markdown = flow(
-  // withLastModified('last-modified'),
+  withLastModified('last-modified'),
   withMarkdownFetchButton,
   asBodilessMarkdown('body', undefined, () => ({
     root: true,
