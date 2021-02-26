@@ -58,11 +58,11 @@ const LogoClean: FC<Props> = ({ components }) => {
 const LogoImg = asEditableImage({ nodeKey: 'image', nodeCollection: 'site' })(Img);
 
 const asLogo = flow(
-  designable(logoComponents),
+  designable(logoComponents, 'Logo'),
   withDesign({
     SiteLogo: replaceWith(LogoImg),
   }),
 );
 
-const Logo = asLogo(LogoClean);
+const Logo = asLogo(LogoClean) as ComponentType;
 export default Logo;

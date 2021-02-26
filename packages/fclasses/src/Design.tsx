@@ -14,12 +14,17 @@
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
-  intersection, flowRight, flow, mergeWith, identity,
+  intersection, identity, flow,
 } from 'lodash';
-import React, { ComponentType, Fragment, useContext } from 'react';
+import React, {
+  ComponentType, Fragment, useContext, ComponentProps,
+} from 'react';
+import type { Token, ComponentOrTag } from './Tokens';
 import { HOC } from './FClasses';
-
-export type DesignElement<P> = (c: ComponentType<P> | string) => ComponentType<P>;
+import { addPropsIf } from './addProps';
+import { useShowDesignKeys, useDesignKeysAttribute } from './Context';
+import { withDisplayName } from './hoc-util';
+import { asToken } from './Tokens';
 
 /**
  * This is the type to use for the components prop of a component with a fluid design.
@@ -28,13 +33,17 @@ export type DesignableComponents = {
   [key: string]: ComponentType<any>,
 };
 
+// Necessary for backwards compatibility with existing design definition.
+export type DesignElement<C extends ComponentType|keyof JSX.IntrinsicElements> =
+  ((component: C) => C) | Token<ComponentProps<C>>;
+
 /**
  * This is the type of a design which can be applied to a component which accepts
  * a components prop of type "C".
  */
 export type Design<C extends DesignableComponents> = {
-  [Key in keyof C]?: (component: C[Key]) => C[Key]
-} & { _final?: Design<C> };
+  [Key in keyof C]?: DesignElement<C[Key]>
+} & { _final?: Design<Omit<C, '_final'>> };
 
 /**
  * This is the type of the props for a designable whose underlying component
@@ -76,18 +85,9 @@ export const asComponent = <P extends object>(
   return AsComponent;
 };
 
-/**
- * is an HOC that will attach a displayName to an object
- * @param name the name of the displayName.
- */
-const withDisplayName = <P extends Object> (name: string) => (Component: ComponentType<P>) => {
-  const WithDisplayName = (props: P) => <Component {...props} />;
-  const newMeta = mergeWith({}, Component, { displayName: name });
-  return Object.assign(WithDisplayName, newMeta);
-};
 const designContextDefault = undefined as undefined | ComponentType<any>;
 const DesignContext = React.createContext(designContextDefault);
-export const replaceable = <P extends object> (Component:ComponentType<P>) => {
+export const replaceable = <P extends object> (Component:ComponentOrTag<P>): ComponentType<any> => {
   const Replaceable = (props:P) => {
     const UpstreamComponent = useContext(DesignContext);
     const FinalComponent = UpstreamComponent || Component;
@@ -123,8 +123,8 @@ export const applyDesign = <C extends DesignableComponents> (
             // explicitly in C We feel safe casting this to C[string] because DesignableComponents
             // defines it as ComponentType<any>
             // We are wrapping the result in replaceable so one of the HoC could replace it.
-            [key]: incomingDesign[key]!(
-              replaceable(components[key] || DefaultComponent) as any as C[string],
+            [key]: (incomingDesign[key]! as Token<any>)(
+              replaceable(components[key] || DefaultComponent),
             ),
           } as C
         ),
@@ -165,9 +165,13 @@ export const withDesign = <C extends DesignableComponents>(design: Design<C>) =>
       if (designFromProps) {
         const keysToWrap = intersection(Object.keys(designFromProps), Object.keys(design));
         const wrappedDesign = keysToWrap.reduce(
-          (acc, key) => (
-            { ...acc, [key]: flowRight(designFromProps[key]!, design[key]!) }
-          ),
+          (acc, key) => ({
+            ...acc,
+            [key]: asToken(
+              design[key]! as Token<P>,
+              designFromProps[key]! as Token<P>,
+            ),
+          }),
           {} as Design<C>,
         );
         finalDesign = { ...design, ...designFromProps, ...wrappedDesign } as Design<C>;
@@ -240,13 +244,13 @@ export const withTransformer = <P, Q, X extends Object> (funcs: WithTransformerP
  */
 const extendDesign$ = <C extends DesignableComponents> (design: Design<C>) => (
   (baseDesign: Design<C> = {}) => (
-    Object.getOwnPropertyNames(design).reduce(
-      (acc, key) => (
-        acc[key]
-        // We just checked for key in acc and we are iterating design.
-          ? { ...acc, [key]: flow(acc[key]!, design[key]!) } as Design<C>
-          : { ...acc, [key]: design[key] } as Design<C>
-      ),
+    Object.getOwnPropertyNames(design).filter(k => k !== '_final').reduce(
+      (acc, key) => ({
+        ...acc,
+        [key]: acc[key]
+          ? asToken(acc[key]! as Token<any>, design[key]! as Token<any>)
+          : design[key],
+      }),
       baseDesign,
     ) as Design<C>
   )
@@ -297,8 +301,18 @@ type TransformDesign = (design?: Design<any>) => Design<any>|undefined;
  * @return A function with the same signature as `designable`.
  */
 export const extendDesignable = (transformDesign: TransformDesign = identity) => (
-  <C extends DesignableComponents> (start: C | Function) => (
+  <C extends DesignableComponents> (start: C | Function, namespace: string = '?') => (
     <P extends object>(Component: ComponentType<P & DesignableComponentsProps<C>>) => {
+      const designKeys = typeof start !== 'function'
+        ? Object.keys(start).reduce((keys, key) => ({
+          ...keys,
+          [key]: addPropsIf(useShowDesignKeys)(
+            () => ({
+              [`data-${useDesignKeysAttribute()}`]: `${namespace}:${key}`,
+            }),
+          ),
+        }), {})
+        : undefined;
       const transformFixed = (props:DesignableProps<C> & P) => {
         const { design } = props;
         const { _final, ...restDesign } = design || {};
@@ -315,7 +329,13 @@ export const extendDesignable = (transformDesign: TransformDesign = identity) =>
         return (newDesign ? { ...rest, design: newDesign } : rest) as P;
       };
       // const transformPassthrough = (props:DesignableProps<C>&P) => omit(props, ['design']) as P;
-      const Designable = withTransformer({ transformFixed, transformPassthrough })(Component);
+      const Designable = flow(
+        withTransformer({ transformFixed, transformPassthrough }),
+        designKeys ? withDesign(designKeys) : identity,
+      )(Component);
+
+      Designable.displayName = `extendDesignable(${namespace})`;
+
       return Designable as ComponentType<DesignableProps<C> & P>;
     }
   )
@@ -343,7 +363,13 @@ const varyDesign$ = <C extends DesignableComponents> (design:Design<C>):HOD<C> =
           Object.getOwnPropertyNames(design).reduce(
             (innerAcc, key) => (
               // We know this keys exist be cause we are iterating them
-              { ...innerAcc, [baseKey + key]: flow(baseDesign[baseKey]!, design[key]!) }
+              {
+                ...innerAcc,
+                [baseKey + key]: asToken(
+                  baseDesign[baseKey]! as Token<any>,
+                  design[key]! as Token<any>,
+                ),
+              }
             ),
             (acc),
           )
@@ -357,9 +383,7 @@ type DesignOrHod<C extends DesignableComponents> = Design<C> | HOD<C>;
 const flowDesignsWith = <C extends DesignableComponents> (func: (d:Design<C>) => HOD<C>) => (
   (...designs: DesignOrHod<C>[]) => (baseDesign: Design<C> = {}) => (
     flow(
-      ...designs.map(design => (
-        (typeof design === 'function') ? func(design()) : func(design)
-      )),
+      ...designs.map(design => (typeof design === 'function' ? func(design()) : func(design))),
     )(baseDesign)
   )
 );

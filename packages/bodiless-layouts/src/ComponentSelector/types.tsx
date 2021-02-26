@@ -12,34 +12,32 @@
  * limitations under the License.
  */
 
-import {
-  ComponentType, HTMLProps, MouseEvent, ReactNode,
-} from 'react';
-import { FormApi, FormState, FieldProps } from 'informed';
+import type { ComponentType, HTMLProps } from 'react';
 
-export type AllowedComponent = ComponentWithMeta<any>;
-export type RenderList = (options: {
-  formState: FormState<any>;
-  formApi: FormApi<any>;
-  components: AllowedComponent[];
-  onSelect: onSelectType;
-}) => ReactNode;
-export type ComponentSelectorProps = {
-  components: (ComponentType<any> | string)[];
-  renderList?: RenderList;
-  onSelect(event: MouseEvent, componentName: string): void;
-  closeForm?(e: any): void;
+export type ComponentSelectorProps = ItemListProps & {
+  /**
+   * Calback to close the form.
+   */
+  closeForm?: (e?: any) => void;
+  /**
+   * Styled components to use in the component selector UI.
+   */
   ui?: ComponentSelectorUI;
+  /**
+   * List of categories which should always be shown in the filters.
+   */
   mandatoryCategories?: string[];
 };
-export type onSelectType = (
-  event: MouseEvent,
-  componentName: string,
-) => void | boolean;
+
 export type Categories = {
   [key: string]: string[];
 };
-export type ComponentWithMeta<P> = ComponentType<P> & {
+
+/**
+ * Component metadata used to search, filter and display
+ * information about a component,
+ */
+export type Meta = {
   /**
    * default static prop for react component to distingush it in the render tree
    */
@@ -55,12 +53,26 @@ export type ComponentWithMeta<P> = ComponentType<P> & {
   /**
    * Category and value pairs for facets
    */
-  categories: Categories;
+  categories?: Categories;
 };
+
+export type ComponentWithMeta<P = any> = ComponentType<P> & Meta;
+export type ComponentWithPartialMeta<P = any> = ComponentType<P> & Partial<Meta>;
+
+/**
+ * Props passed to the list of items within the component selector.
+ */
 export type ItemListProps = {
-  components: ComponentWithMeta<any>[];
-  onSelect: onSelectType;
+  /**
+   * An array of components with metadata (at leassts displayName, title, description)
+   */
+  components: ComponentWithMeta[],
+  /**
+   * Callback when one or more components are selected.
+   */
+  onSelect: (names: string[]) => void,
 };
+
 export type FinalUI = {
   // A div that wraps everything
   MasterWrapper: ComponentType<HTMLProps<HTMLDivElement>> | string;
@@ -74,8 +86,6 @@ export type FinalUI = {
   ComponentSelectorWrapper: ComponentType<HTMLProps<HTMLDivElement>> | string;
   // A input that will wrap the close menu icon
   SubmitButton: ComponentType<HTMLProps<HTMLButtonElement>> | string;
-  // A div the will wrap the AllCheckbox
-  AllCheckboxWrapper: ComponentType<HTMLProps<HTMLDivElement>> | string;
   // A div that will wrap all Accordion
   AccordionWrapper: ComponentType<HTMLProps<HTMLDivElement>> | string;
   // A div the will wrap the AccordionCheckbox
@@ -85,7 +95,7 @@ export type FinalUI = {
   // A label that will be displayed by the AccordionCheckbox
   AccordionCheckboxLabel: ComponentType<HTMLProps<HTMLLabelElement>> | string;
   // A input that will be displayed by the Accordion Label
-  AccordionCheckBox: ComponentType<FieldProps<any, any>> | string;
+  AccordionCheckBox: ComponentType<HTMLProps<HTMLInputElement>> | string;
   // A div that will wrap the search bar
   SearchBarWrapper: ComponentType<HTMLProps<HTMLDivElement>> | string;
   // A styled text input
@@ -112,6 +122,9 @@ export type FinalUI = {
   TitleWrapper: ComponentType<HTMLProps<HTMLSpanElement>> | string;
   // An h3 that wraps the component title element of a component box
   ComponentTitleWrapper: ComponentType<HTMLProps<HTMLHeadingElement>> | string;
+  // A link element.
+  ComponentLinkWrapper: ComponentType<HTMLProps<HTMLAnchorElement>> | string;
+
   // A span that wraps the icon element of a component box
   IconWrapper: ComponentType<HTMLProps<HTMLSpanElement>> | string;
   // A div that wraps the component description

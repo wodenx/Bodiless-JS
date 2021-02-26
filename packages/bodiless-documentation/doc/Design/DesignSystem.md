@@ -55,13 +55,13 @@ styleguide. For example, here are the colors defined for the Bodiless admin UI:
         black: '#22292f',
         white: '#ffffff',
 
-        'grey-100': '#f7fafc',
-        'grey-200': '#edf2f7',
-        'grey-400': '#cbd5e0',
-        grey: '#a0aec0',
-        'grey-600': '#718096',
-        'grey-800': '#2d3748',
-        'grey-900': '#1a202c',
+        'gray-100': '#f7fafc',
+        'gray-200': '#edf2f7',
+        'gray-400': '#cbd5e0',
+        gray: '#a0aec0',
+        'gray-600': '#718096',
+        'gray-800': '#2d3748',
+        'gray-900': '#1a202c',
 
         red: '#e3342f',
         green: '#309795',
@@ -290,7 +290,7 @@ styling or functionality to the second link).
 
 This has been a very high level overview of the Bodiless Design System. For some
 hands on experience, you can proceed to the
-[Design System Tutorial](../About/DesignSystemBasics). Or, you can read the full
+[Design System Tutorial](../Development/Guides/DesignElementBasics). Or, you can read the full
 documentation for the [Design API](../Development/Architecture/FClasses).
 
 For reference, here is a flow diagram showing how utility classes, element

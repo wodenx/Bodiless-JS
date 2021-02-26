@@ -1,8 +1,6 @@
-module.exports = {
-  future: {
-    removeDeprecatedGapUtilities: true,
-    purgeLayersByDefault: true,
-  },
+const { mergeWithBodilessConfigs } = require('@bodiless/gatsby-theme-bodiless/dist/tailwindcss');
+
+module.exports = mergeWithBodilessConfigs({
   purge: [
     './src/**/!(*.d).{ts,js,jsx,tsx}',
   ],
@@ -19,13 +17,6 @@ module.exports = {
   */
 
   theme: {
-
-    extend: {
-      width: {
-        content: 'max-content',
-      },
-    },
-
     /*
     |---------------------------------------------------------------------------
     | Colors                                https://tailwindcss.com/docs/colors
@@ -48,7 +39,33 @@ module.exports = {
     |
     */
 
-    // colors: {},
+    colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+
+      black: '#000',
+      white: '#fff',
+
+      gray: {
+        200: '#edf2f7',
+        500: '#a0aec0',
+        600: '#718096',
+        700: '#4a5568',
+      },
+      orange: {
+        600: '#dd6b20',
+        700: '#c05621',
+      },
+      teal: {
+        500: '#38b2ac',
+        600: '#319795',
+        700: '#2c7a7b',
+      },
+      blue: {
+        500: '#4299e1',
+        700: '#2b6cb0',
+      },
+    },
 
     /*
     |---------------------------------------------------------------------------
@@ -68,6 +85,13 @@ module.exports = {
     | Class name: .{screen}:{utility}
     |
     */
+
+    screens: {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+    },
 
     /*
     |---------------------------------------------------------------------------
@@ -108,7 +132,18 @@ module.exports = {
     |
     */
 
-    // fontSize: {},
+    fontSize: {
+      xs: '0.75rem',
+      sm: '0.875rem',
+      base: '1rem',
+      lg: '1.125rem',
+      xl: '1.25rem',
+      '2xl': '1.5rem',
+      '3xl': '1.875rem',
+      '4xl': '2.25rem',
+      '5xl': '3rem',
+      '6xl': '4rem',
+    },
 
     /*
     |---------------------------------------------------------------------------
@@ -274,7 +309,17 @@ module.exports = {
     |
     */
 
-    // width: {},
+    extend: {
+      inset: {
+        full: '100%',
+      },
+      width: {
+        content: 'max-content',
+      },
+      outline: {
+        black: 'black auto 1px',
+      },
+    },
 
     /*
     |---------------------------------------------------------------------------
@@ -306,15 +351,8 @@ module.exports = {
     | Class name: .min-w-{size}
     |
     */
-    // Min-width is set for https://github.com/johnsonandjohnson/Bodiless-JS/issues/481
-    // We need a min width here for the asToutOverlayTitle and asToutOverlayCta
-    minWidth: {
-      1: '1rem',
-      5: '5rem',
-      // Used by main menu items to match the UI wireframes
-      100: '100px',
-      full: '100%',
-    },
+
+    // minWidth: {},
 
     /*
     |---------------------------------------------------------------------------
@@ -363,11 +401,7 @@ module.exports = {
     |
     */
 
-    maxHeight: {
-      // Used to limit the maximum height of menu.
-      // See src/components/Menus/token.tsx for usage.
-      'menu-row': '1.75rem',
-    },
+    // maxHeight: {},
 
     /*
     |---------------------------------------------------------------------------
@@ -510,10 +544,7 @@ module.exports = {
   |
   */
 
-  variants: {
-    overflow: ['responsive', 'hover', 'focus'],
-    position: ['responsive', 'hover', 'focus'],
-  },
+  variants: {},
 
   corePlugins: {},
 
@@ -533,4 +564,4 @@ module.exports = {
 
   plugins: [
   ],
-};
+});

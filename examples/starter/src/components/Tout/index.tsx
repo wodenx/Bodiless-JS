@@ -17,15 +17,13 @@ import { withSidecarNodes } from '@bodiless/core';
 import {
   ToutClean,
 } from '@bodiless/organisms';
-import {
-  withDesign,
-} from '@bodiless/fclasses';
+import { withDesign } from '@bodiless/fclasses';
 import {
   asEditableImage, asEditableLink,
 } from '../Elements.token';
 import { withEditorBasic, withEditorSimple } from '../Editors';
 
-const asEditableTout = flow(
+export const asEditableTout = flow(
   withDesign({
     Image: asEditableImage('image'),
     ImageLink: withSidecarNodes(

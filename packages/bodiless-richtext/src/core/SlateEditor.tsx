@@ -13,60 +13,37 @@
  */
 
 import React, {
-  useRef,
-  useState,
   Fragment,
   ComponentType,
 } from 'react';
-import { Editor, Value } from 'slate';
-import { Editor as ReactEditor, EditorProps } from 'slate-react';
 import SlateEditorContext from './SlateEditorContext';
 import '@material/react-material-icon/dist/material-icon.css';
-import { EditorOnChange } from '../Type';
+import {
+  EditorOnChange,
+  EditableProps,
+  Plugin,
+  Value,
+} from '../Type';
 
 type Props = {
   initialValue: object;
-} & EditorProps;
+  onChange: EditorOnChange,
+  plugins: Plugin[],
+  value: Value,
+  editorProps: EditableProps,
+};
 
 const withSlateEditor = <P extends object> (Component:ComponentType<P>) => (props:P & Props) => {
   const {
-    initialValue, value, onChange, placeholder, ...rest
+    initialValue, value, onChange, plugins = [], ...rest
   } = props;
-  // A reference to 'slate-react/Content' instance that allows to manipulate the editor
-  const editorRef = useRef<ReactEditor>(null);
-
-  // It is important to keep track of internal activeValue
-  // state in case outer activeValue is not provided.
-  // Value is used in plugins and buttons before Content is mounted and its activeValue is obtained.
-  const [localValueState, setLocalValue] = useState<Value>(
-    value
-    || Value.fromJSON(initialValue),
-  );
-  const internalOnChange: EditorOnChange = change => {
-    const { value: valueFromChange } = change;
-    if (typeof onChange === 'function') {
-      onChange(change);
-    } else if (typeof value !== 'undefined') {
-      setLocalValue(valueFromChange);
-    }
-
-    return change;
-  };
 
   const editorContextValue = {
-    editorRef,
-    // for some reason current.controller doesn't return what it's supposed to
-    // but editorRef.current!.controller.controller does.
-    editor:
-      editorRef.current!
-      // @ts-ignore
-      && (editorRef.current!.controller.controller as Editor),
-    value: value || localValueState,
+    value,
+    plugins,
+    onChange,
     editorProps: {
-      ...rest,
-      placeholder,
-      onChange: internalOnChange,
-      value: value || localValueState,
+      ...rest as EditableProps,
     },
   };
 

@@ -79,10 +79,10 @@ const FooterClean: FC<DesignableProps> = ({ components }) => {
 };
 
 const asFooterHeader = flow(
-  designable(footerComponents),
+  designable(footerComponents, 'Footer'),
   withDesign({
-    SiteTitleCopyrightEditable: asEditable({ nodeKey: 'sitetitle', nodeCollection: 'site' }, 'Insert Site Title', 'site'),
-    SiteCopyrightEditable: asEditable({ nodeKey: 'copyright', nodeCollection: 'site' }, 'Insert Copyright', 'site'),
+    SiteTitleCopyrightEditable: asEditable({ nodeKey: 'sitetitle', nodeCollection: 'site' }, 'Insert Site Title'),
+    SiteCopyrightEditable: asEditable({ nodeKey: 'copyright', nodeCollection: 'site' }, 'Insert Copyright'),
   }),
 );
 

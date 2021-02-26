@@ -23,7 +23,6 @@ import {
   ensureDirectoryExistence,
   isUrlExternal,
   mapUrlToFilePath,
-  trimQueryParamsFromUrl,
 } from './helpers';
 import Downloader from './downloader';
 import {
@@ -39,16 +38,36 @@ import {
 } from './html-to-components';
 import ResourcesFromCssExtractor from './resources-from-css';
 import debug from './debug';
+import type { MigrationApiType } from './migrationApi';
 
-export interface PageCreatorParams {
+const DEFAULT_PAGE_INDEX_FILE = 'index.jsx';
+
+export type PageCreatorParams = {
+  /**
+   * directory where pages should be created
+   */
   pagesDir: string,
+  /**
+   * whether the pages should be created
+   * default: true
+   */
+  isEnabled?: boolean | ((pageUrl: string) => boolean),
+  /**
+   * name of the page index file
+   * default: index.jsx
+   */
+  pageIndexFile?: string | ((pageUrl: string) => string),
+  /**
+   * migration api object
+   * stores path to the directory containing page data
+   */
+  migrationApi: MigrationApiType,
   staticDir: string,
   templatePath: string,
   templateDangerousHtml: string,
   pageUrl: string,
   headHtml: string,
   bodyHtml: string,
-  metatags: Array<string>,
   scripts: Array<string>,
   inlineScripts: Array<string>,
   styles: Array<string>,
@@ -57,13 +76,12 @@ export interface PageCreatorParams {
   videos?: Array<string>,
   htmlTag: string,
   bodyTag: string,
-  createPages: boolean,
   downloadAssets: boolean,
   htmlToComponents: boolean,
   htmlToComponentsSettings?: HtmlToComponentsSettings,
   reservedPaths?: Array<string>,
   allowFallbackHtml?: boolean,
-}
+};
 
 export class PageCreator {
   params: PageCreatorParams;
@@ -71,7 +89,10 @@ export class PageCreator {
   downloader: Downloader;
 
   constructor(params: PageCreatorParams) {
-    this.params = params;
+    this.params = {
+      isEnabled: true,
+      ...params,
+    };
     this.downloader = new Downloader(
       this.params.pageUrl,
       this.params.staticDir,
@@ -79,8 +100,20 @@ export class PageCreator {
     );
   }
 
+  public get pageIndexFile() {
+    return typeof this.params.pageIndexFile === 'function'
+      ? this.params.pageIndexFile(this.params.pageUrl)
+      : (this.params.pageIndexFile || DEFAULT_PAGE_INDEX_FILE);
+  }
+
+  public get isEnabled() {
+    return typeof this.params.isEnabled === 'function'
+      ? this.params.isEnabled(this.params.pageUrl)
+      : this.params.isEnabled;
+  }
+
   async createPage() {
-    if (this.params.createPages) {
+    if (this.isEnabled) {
       this.createJsxPage();
     }
     if (this.params.downloadAssets) {
@@ -88,14 +121,10 @@ export class PageCreator {
     }
   }
 
-  getPageFilePath(pageUrl: string, fileName = 'index.jsx'): string {
-    let filePath = url.parse(pageUrl).path;
-    if (filePath === undefined) {
-      return '';
-    }
-    filePath = this.removeExtension(filePath);
-    filePath = trimQueryParamsFromUrl(filePath);
-    return filePath === '/' ? fileName : (`${filePath}/${fileName}`);
+  private getPageFilePath(pageUrl: string, fileName?: string): string {
+    const filePath = this.params.migrationApi.getPagePath(pageUrl);
+    const fileName$ = fileName || this.pageIndexFile;
+    return filePath === '/' ? fileName$ : path.join(filePath, fileName$);
   }
 
   getHtmlFilePath(pageUrl: string): string {
@@ -143,11 +172,6 @@ export class PageCreator {
     );
   }
 
-  private removeExtension(extensionPath: string) {
-    // https://stackoverflow.com/questions/4250364/how-to-trim-a-file-extension-from-a-string-in-javascript
-    return extensionPath.replace(/\.[^/.]+$/, '');
-  }
-
   private convertToComponents() {
     if (this.params.htmlToComponents && this.params.htmlToComponentsSettings !== undefined) {
       const settings = this.params.htmlToComponentsSettings;
@@ -158,7 +182,7 @@ export class PageCreator {
         .filter(item => item.scope === ComponentScope.Local)
         .map(item => `${item.component}.jsx`);
       const htmlToComponents = new HtmlToComponents(settings);
-      const targetPageJsxPath = path.join(this.params.pagesDir, this.getPageFilePath(this.params.pageUrl, 'Page.jsx'));
+      const targetPageJsxPath = this.getPageFilePath(this.params.pageUrl, 'Page.jsx');
 
       try {
         htmlToComponents.convert(this.params.bodyHtml);
@@ -185,8 +209,7 @@ export class PageCreator {
       localComponents.forEach(component => {
         const sourcePath = path.resolve(sourceComponentsPath, component);
         if (fs.existsSync(sourcePath)) {
-          const pageFilePath = this.getPageFilePath(this.params.pageUrl, component);
-          const targetPath = path.join(this.params.pagesDir, pageFilePath);
+          const targetPath = this.getPageFilePath(this.params.pageUrl, component);
           fs.copyFileSync(sourcePath, targetPath);
         }
       });
@@ -196,10 +219,7 @@ export class PageCreator {
   private createJsxPage() {
     let content = this.processTemplate();
     this.convertToComponents();
-    const pageFilePath = path.join(
-      this.params.pagesDir,
-      this.getPageFilePath(this.params.pageUrl),
-    );
+    const pageFilePath = this.getPageFilePath(this.params.pageUrl);
     content = formatJsx(content);
     this.writeContent(pageFilePath, content);
   }

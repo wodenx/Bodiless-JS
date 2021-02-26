@@ -33,32 +33,39 @@ import {
   StylableProps,
   DesignableComponentsProps,
   designable,
+  DesignableProps,
 } from '@bodiless/fclasses';
 import { useSearchResultContext } from './SearchContextProvider';
-import { TSearchResult } from '../types';
+import { TSearchResult, Suggestion } from '../types';
+import { Suggestions as BaseSuggestions } from './Suggestions';
+import type { SuggestionListComponents } from './Suggestions';
+import getSearchPagePath from './getSearchPagePath';
 
-type SearchComponents = {
+export type SearchComponents = {
   SearchWrapper: ComponentType<StylableProps>;
   SearchInput: ComponentType<any>;
   SearchButton: ComponentType<any>;
+  Suggestions: ComponentType<DesignableProps<SuggestionListComponents> & {
+    suggestions: Suggestion[]
+  }>,
 };
 
 type SearchResultComponents = {
   SearchResultWrapper: ComponentType<StylableProps>;
   SearchResultList: ComponentType<any>;
   SearchResultListItem: ComponentType<any>;
-  SearchResultSummary: ComponentType<StylableProps>,
+  SearchResultSummary: ComponentType<StylableProps>;
 };
 
 type SearchResultItemComponents = {
-  ItemList: ComponentType<StylableProps>,
-  ItemH3: ComponentType<StylableProps>,
-  ItemAnchor: ComponentType<HTMLProps<HTMLAnchorElement> & StylableProps>,
-  ItemParagraph: ComponentType<StylableProps>,
+  ItemList: ComponentType<StylableProps>;
+  ItemH3: ComponentType<StylableProps>;
+  ItemAnchor: ComponentType<HTMLProps<HTMLAnchorElement> & StylableProps>;
+  ItemParagraph: ComponentType<StylableProps>;
 };
 
 type SearchResultItemProps = DesignableComponentsProps<SearchResultItemComponents> &
-{value: { [key: string]: string; }};
+{ value: { [key: string]: string; } };
 
 const SearchInputBase: FC<HTMLProps<HTMLInputElement>> = props => {
   const { placeholder = 'Search', ...rest } = props;
@@ -67,14 +74,11 @@ const SearchInputBase: FC<HTMLProps<HTMLInputElement>> = props => {
   );
 };
 
-const SearchButtonBase: FC<HTMLProps<HTMLButtonElement>> = (
-  { onClick, ...rest },
-) => <Button onClick={onClick} {...rest} />;
-
-const searchComponents: SearchComponents = {
+export const searchComponents: SearchComponents = {
   SearchWrapper: Div,
   SearchInput: SearchInputBase,
-  SearchButton: SearchButtonBase,
+  SearchButton: Button,
+  Suggestions: BaseSuggestions,
 };
 
 const searchResultItemComponents: SearchResultItemComponents = {
@@ -97,7 +101,7 @@ const SearchResultItemBase: FC<SearchResultItemProps> = ({ components, ...props 
   return (
     <ItemList {...props}>
       <ItemH3>
-        <ItemAnchor href={value.link}>{ value.title }</ItemAnchor>
+        <ItemAnchor href={value.link}>{value.title}</ItemAnchor>
       </ItemH3>
       <ItemParagraph>{value.preview}</ItemParagraph>
     </ItemList>
@@ -105,7 +109,7 @@ const SearchResultItemBase: FC<SearchResultItemProps> = ({ components, ...props 
 };
 
 const SearchResultItemClean = flow(
-  designable(searchResultItemComponents),
+  designable(searchResultItemComponents, 'SearchResultItem'),
 )(SearchResultItemBase);
 
 const searchResultComponents: SearchResultComponents = {
@@ -115,8 +119,10 @@ const searchResultComponents: SearchResultComponents = {
   SearchResultSummary: P,
 };
 
-type SearchProps = DesignableComponentsProps<SearchComponents> &
-HTMLProps<HTMLElement>;
+export type SearchProps = DesignableComponentsProps<SearchComponents> &
+HTMLProps<HTMLElement> & {
+  onSubmit?: (query: string) => void,
+};
 type SearchResultProps = DesignableComponentsProps<SearchResultComponents> &
 HTMLProps<HTMLElement> & { resultCountMessage?: string, resultEmptyMessage?: string };
 
@@ -138,7 +144,7 @@ const SearchResultBase: FC<SearchResultProps> = ({
     return (
       <SearchResultWrapper>
         <SearchResultSummary>{showResultCount}</SearchResultSummary>
-        <H3>{ resultEmptyMessage }</H3>
+        <H3>{resultEmptyMessage}</H3>
       </SearchResultWrapper>
     );
   }
@@ -158,11 +164,14 @@ const SearchResultBase: FC<SearchResultProps> = ({
 
 const SearchBoxBase: FC<SearchProps> = ({ components, ...props }) => {
   const [queryString, setQueryString] = useState('');
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const searchResultContext = useSearchResultContext();
-  const searchPagePath = process.env.BODILESS_SEARCH_PAGE || 'search';
   const onChangeHandler = useCallback((event: any) => {
     event.preventDefault();
-    setQueryString(event.target.value);
+    const queryString$ = event.target.value;
+    setQueryString(queryString$);
+    const suggestions$ = searchResultContext.suggest(queryString$);
+    setSuggestions(suggestions$);
   }, []);
 
   /**
@@ -172,14 +181,15 @@ const SearchBoxBase: FC<SearchProps> = ({ components, ...props }) => {
   useEffect(() => {
     if (queryString !== searchResultContext.searchTerm) {
       setQueryString(searchResultContext.searchTerm);
+      setSuggestions([]);
     }
   }, [searchResultContext.searchTerm]);
 
   const searchLocationValidate = () => {
     if (
-      searchPagePath !== window.location.pathname.replace(/^\//, '').replace(/\/$/, '')
+      getSearchPagePath() !== window.location.pathname.replace(/^\//, '').replace(/\/$/, '')
     ) {
-      window.location.href = `/${searchPagePath}/#${encodeURIComponent(queryString)}`;
+      window.location.href = getSearchPagePath(queryString);
     }
   };
 
@@ -188,22 +198,34 @@ const SearchBoxBase: FC<SearchProps> = ({ components, ...props }) => {
     searchResultContext.setSearchTerm(queryString);
   }, [queryString]);
 
+  const {
+    placeholder = 'Search',
+    onSubmit,
+    ...rest
+  } = props;
+
   const onKeyPressHandler = useCallback((event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
+      if (onSubmit) onSubmit(queryString);
       searchHandler();
     }
-  }, [queryString]);
+  }, [queryString, onSubmit]);
 
   const onClickHandler = useCallback((event: React.MouseEvent) => {
+    if (onSubmit) onSubmit(queryString);
     event.preventDefault();
     searchHandler();
-  }, [queryString]);
+  }, [queryString, onSubmit]);
 
-  const { placeholder = 'Search' } = props;
+  const {
+    SearchWrapper,
+    SearchInput,
+    SearchButton,
+    Suggestions,
+  } = components;
 
-  const { SearchWrapper, SearchInput, SearchButton } = components;
   return (
-    <SearchWrapper>
+    <SearchWrapper {...rest}>
       <SearchInput
         value={queryString}
         onChange={onChangeHandler}
@@ -211,11 +233,17 @@ const SearchBoxBase: FC<SearchProps> = ({ components, ...props }) => {
         placeholder={placeholder}
       />
       <SearchButton onClick={onClickHandler} />
+      {
+        queryString !== '' && suggestions.length > 0
+        && <Suggestions suggestions={suggestions} />
+      }
     </SearchWrapper>
   );
 };
 
-export const SearchBox = designable(searchComponents)(SearchBoxBase) as ComponentType<SearchProps>;
+export const SearchBox = designable(
+  searchComponents, 'SearchBox',
+)(SearchBoxBase) as ComponentType<SearchProps>;
 export const SearchResult = designable(
-  searchResultComponents,
+  searchResultComponents, 'SearchResult',
 )(SearchResultBase) as ComponentType<SearchResultProps>;

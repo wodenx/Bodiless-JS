@@ -80,6 +80,12 @@ const asToutOverlayCta = asToken('Layout')(asToutOverlayCta$);
 const asToutNoBodyNoTitle = asToken('Structure')(asToutNoBodyNoTitle$);
 const asToutWithPaddings = asToken('Layout')(asToutWithPaddings$);
 const asToutTextWhite = asToken('Appearance')(asToutTextWhite$);
+const asToutMainMenu = flow(
+  asToutTextWhite,
+  asToutWithPaddings,
+  asToutDefaultStyle,
+  asToutHorizontal,
+);
 
 export {
   asToutHorizontal,
@@ -93,4 +99,5 @@ export {
   asToutNoBodyNoTitle,
   asToutWithPaddings,
   asToutTextWhite,
+  asToutMainMenu,
 };

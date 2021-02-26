@@ -24,8 +24,7 @@ import type {
 } from './FClasses';
 
 import withTokensFromProps from './withTokensFromProps';
-
-import addProps from './addProps';
+import addProps, { addPropsIf } from './addProps';
 import {
   asComponent,
   applyDesign,
@@ -46,12 +45,25 @@ import type {
   DesignableComponentsProps,
   DesignableComponents,
 } from './Design';
-import { flowIf, hasProp, withoutProps } from './hoc-util';
+import {
+  flowIf, hasProp, withoutProps, withOnlyProps, replaceOnEffect,
+  withDisplayName,
+} from './hoc-util';
+import Fragment from './Fragment';
 
 export * from './StyledHTML';
 
+export { asToken, withTokenFilter } from './Tokens';
+export type {
+  TokenFilterTest, Token, TokenDef,
+  TokenMeta, ComponentWithMeta, ComponentOrTag,
+} from './Tokens';
+
+export { withShowDesignKeys } from './Context';
+
 export {
   addProps,
+  addPropsIf,
   stylable,
   addClasses,
   removeClasses,
@@ -59,11 +71,13 @@ export {
   withFinalDesign,
   applyDesign,
   replaceWith,
+  replaceOnEffect,
   startWith,
   remove,
   flowIf,
   hasProp,
   withoutProps,
+  withOnlyProps,
   designable,
   extendDesignable,
   varyDesign,
@@ -72,6 +86,8 @@ export {
   addClassesIf,
   removeClassesIf,
   withTokensFromProps,
+  Fragment,
+  withDisplayName,
 };
 
 export type {

@@ -64,14 +64,16 @@ const PageDimensionsProvider: FC<PageDimensionsProviderProps> = ({ children, bre
   const [dimensions, setDimensions] = useState<PageDimensions>(getDimensions(breakpoints));
 
   useEffect(() => {
+    let isRendered = true;
     const handleResize = () => {
-      setDimensions(getDimensions(breakpoints));
+      if (isRendered) {
+        setDimensions(getDimensions(breakpoints));
+      }
     };
-
     window.addEventListener('resize', throttle(handleResize, 100));
-
     return () => {
-      window.removeEventListener('resize', handleResize);
+      isRendered = false;
+      window.removeEventListener('resize', throttle(handleResize, 100));
     };
   }, []);
 
@@ -82,6 +84,14 @@ const PageDimensionsProvider: FC<PageDimensionsProviderProps> = ({ children, bre
   );
 };
 
+/**
+ * Adds a context which provides the current viewport size as well as the
+ * breakpoint to which it maps.
+ *
+ * @param breakpoints A list of breakpoints to define the mapping.
+ *
+ * @return HOC which wraps a component with the context provider.
+ */
 const withPageDimensionsContext = <P extends object>({
   breakpoints,
 }: PageDimensionsProviderProps) => (Component: ComponentType<P> | string) => (props: P) => (

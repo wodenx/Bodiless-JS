@@ -15,12 +15,14 @@
 import { flow } from 'lodash';
 import { useEditContext } from '@bodiless/core';
 import {
-  withDesign, addClasses, addClassesIf, removeClassesIf,
+  withDesign, addClasses, addClassesIf, removeClassesIf, addPropsIf,
 } from '@bodiless/fclasses';
+import { withSubListDesign } from '@bodiless/components';
 
 import { useIsMenuOpen } from './withMenuContext';
 import {
   withBaseSubMenuStyles, withBaseMenuStyles, asSimpleSubMenu, asRelative,
+  asAccessibleMenu, asAccessibleSubMenu, asToggleableSubMenu, useIsSubmenuOpen,
 } from './SimpleMenu.token';
 
 /*
@@ -52,6 +54,33 @@ const asFullWidthSublist = withDesign({
     List: addClasses('w-full'),
   }),
 });
+
+/**
+ * Accessibility Features
+ * ===========================================
+ */
+const asAccessibleMegaSubMenu = flow(
+  withDesign({
+    Wrapper: withDesign({
+      WrapperItem: addPropsIf(useIsSubmenuOpen)({ style: { position: 'static' } }),
+    }),
+  }),
+  asToggleableSubMenu,
+);
+
+const asAccessibleMegaMenu = flow(
+  withSubListDesign(2)({
+    List: asAccessibleSubMenu,
+    Touts: asAccessibleMegaSubMenu,
+    Columns: flow(
+      asAccessibleMegaSubMenu,
+      withDesign({
+        Item: asAccessibleMegaSubMenu,
+      }),
+    ),
+  }),
+  asAccessibleMenu,
+);
 
 /*
  * Touts Sub Menu Styles
@@ -97,6 +126,7 @@ const asMegaMenuTopNav = flow(
     Item: asMegaMenuSubListStyles,
   }),
   withBaseMenuStyles,
+  asAccessibleMegaMenu,
 );
 
 export default asMegaMenuTopNav;

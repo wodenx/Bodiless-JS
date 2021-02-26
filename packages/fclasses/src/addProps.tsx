@@ -17,9 +17,20 @@ import React, { ComponentType } from 'react';
  * HOC that adds properties to a Component
  * @param propsToAdd
  */
-const addProps = <P extends object, Q extends object>(propsToAdd: Q) => (
-  (Component: ComponentType<P>) => (
+const addProps = <P extends object = any, Q extends object = P>(propsToAdd: Q) => (
+  // @TODO Fix these typings!
+  (Component: ComponentType<any>): ComponentType<any> => (
     (props: P) => <Component {...propsToAdd} {...props} />
   )
 );
+
+/**
+ * HOC that adds props conditionally based on value returned by hook.
+ */
+export const addPropsIf = <P extends object, Q extends object>(
+  conditionHook: (props: P) => boolean,
+) => (propsToAdd: Q) => (Component: ComponentType<P>) => (props: P) => (conditionHook(props)
+    ? <Component {...(typeof propsToAdd === 'function' ? propsToAdd() : propsToAdd)} {...props} />
+    : <Component {...props} />);
+
 export default addProps;
