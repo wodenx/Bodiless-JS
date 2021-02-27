@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.70](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.69...v0.0.70) (2021-02-24)
+
+
+### Bug Fixes
+
+* **components:** prevent set state for unmounted component ([#854](https://github.com/johnsonandjohnson/bodiless-js/issues/854)) ([7132142](https://github.com/johnsonandjohnson/bodiless-js/commit/71321425b827779ffc107ba4be0fadebe5979670))
+* **starter:** Highlighting Link in Tout replaced it with actual href link ([#844](https://github.com/johnsonandjohnson/bodiless-js/issues/844)) ([4f70f1e](https://github.com/johnsonandjohnson/bodiless-js/commit/4f70f1e20f2d7787f1c6340d6704dd59f8eaa22f)), closes [#616](https://github.com/johnsonandjohnson/bodiless-js/issues/616)
+
+
+
+
+
+## [0.0.69](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.68...v0.0.69) (2021-02-12)
+
+
+### Features
+
+* **bodiless-components,bodiless-migration-tool,gatsby-theme-bodiless:** Bodiless Image supports Img Title ([#755](https://github.com/johnsonandjohnson/bodiless-js/issues/755)) ([45ed2aa](https://github.com/johnsonandjohnson/bodiless-js/commit/45ed2aab856af2d12fb251bb795372e42ba864e5))
+* **components:** add a go to link for bodiless links in edit mode. ([#823](https://github.com/johnsonandjohnson/bodiless-js/issues/823)) ([dd85931](https://github.com/johnsonandjohnson/bodiless-js/commit/dd85931f7d118cc9849b58bdcb80a27c612ea64e)), closes [#585](https://github.com/johnsonandjohnson/bodiless-js/issues/585)
+
+
+
+
+
+## [0.0.68](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.67...v0.0.68) (2021-01-25)
+
+
+### Bug Fixes
+
+* **components:** Breadcrumbs lost when a component context is activated in edit mode ([#808](https://github.com/johnsonandjohnson/bodiless-js/issues/808)) ([f64143d](https://github.com/johnsonandjohnson/bodiless-js/commit/f64143d38be6583b6ffcd0491cb9e1b0d88a0756))
+* **docs:** missing images in docs ([#786](https://github.com/johnsonandjohnson/bodiless-js/issues/786)) ([224b66e](https://github.com/johnsonandjohnson/bodiless-js/commit/224b66e868a5f799dd3797691cc75812d562b2bb))
+
+
+
+
+
 ## [0.0.67](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.66...v0.0.67) (2021-01-12)
 
 
