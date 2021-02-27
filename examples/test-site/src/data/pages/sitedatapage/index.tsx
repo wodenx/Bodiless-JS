@@ -17,31 +17,7 @@ import { Link, graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 
 import { Editable } from '@bodiless/components';
-import {
-  designable, startWith, withDesign,
-} from '@bodiless/fclasses';
-import { flow } from 'lodash';
 import Layout from '../../../components/Layout';
-
-const ProblemComponentInnerBase = ({ components: C }: any) => (
-  <C.Component>Problem</C.Component>
-);
-const ProblemComponentInner = designable({ Component: 'div' as any }, 'ProblemInner')(
-  ProblemComponentInnerBase,
-);
-
-const ProblemComponentBase = ({ components: C }: any) => (
-  <C.Wrapper>
-    <ProblemComponentInner />
-  </C.Wrapper>
-);
-
-const ProblemComponent = flow(
-  designable({ Wrapper: 'div' as any }, 'Problem'),
-  withDesign({
-    Wrapper: startWith('h1' as any),
-  }),
-)(ProblemComponentBase);
 
 export default (props: any) => (
   <Page {...props}>
@@ -57,7 +33,6 @@ export default (props: any) => (
       <div className="m-2 p-2 w-1/3 h-12 border-blue border">
         <Editable nodeKey="sitedatapage" nodeCollection="site" placeholder="Site level data..." />
       </div>
-      <ProblemComponent />
     </Layout>
   </Page>
 );
