@@ -20,7 +20,6 @@ import React, {
   ComponentType, Fragment, useContext, ComponentProps,
 } from 'react';
 import type { Token, ComponentOrTag } from './Tokens';
-import { HOC } from './FClasses';
 import { addPropsIf } from './addProps';
 import { useShowDesignKeys, useDesignKeysAttribute } from './Context';
 import { withDisplayName } from './hoc-util';
