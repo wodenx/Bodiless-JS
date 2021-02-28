@@ -70,7 +70,7 @@ type TokenFilterTest<P> = (hoc: Token<P>) => boolean;
  * Type of the parameters to asToken.  Overloaded to accept metadata
  * objects in addition to tokens.
  */
-type TokenDef<P> = Token<P>|TokenMeta;
+type TokenDef<P> = Token<P>|TokenMeta|undefined;
 
 const isToken = (def: TokenDef<any>) => typeof def === 'function';
 
@@ -185,10 +185,12 @@ const filterMembers = <P extends object>(tokens: Token<P>[]): Token<P>[] => {
  * A composed token.
  */
 const asToken = <P extends object>(...args: TokenDef<P>[]): Token<P> => {
-  const metaBits: TokenMeta[] = args.filter(a => !isToken(a)) as TokenMeta[];
+  // We allow "undefined" in args and simply ignore them.
+  const args$ = args.filter(a => a !== undefined);
+  const metaBits: TokenMeta[] = args$.filter(a => !isToken(a)) as TokenMeta[];
   const meta = mergeWith({}, ...metaBits, mergeMeta);
   const members: Token<P>[] = [
-    ...args.filter(a => isToken(a)) as Token<P>[],
+    ...args$.filter(a => isToken(a)) as Token<P>[],
     withMeta(meta),
   ];
   const hocs = filterMembers(members);

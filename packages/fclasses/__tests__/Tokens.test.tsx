@@ -77,6 +77,20 @@ describe('asToken', () => {
       const wrapper = mount(<Test />);
       expect(wrapper.find(Base).prop('foo')).toBe('bar');
     });
+
+    it('Ignores undefined tokens', () => {
+      const withPossiblyUndefinedToken = (token?: Token) => asToken(
+        token,
+        addProp('bar'),
+      );
+      let Test = withPossiblyUndefinedToken()(Base);
+      let wrapper = mount(<Test />);
+      expect(wrapper.find(Base).prop('bar')).toBeTruthy();
+      Test = withPossiblyUndefinedToken(addProp('foo'))(Base);
+      wrapper = mount(<Test />);
+      expect(wrapper.find(Base).prop('bar')).toBeTruthy();
+      expect(wrapper.find(Base).prop('foo')).toBeTruthy();
+    });
   });
 
   describe('Meta propagation', () => {
