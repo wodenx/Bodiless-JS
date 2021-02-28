@@ -186,8 +186,25 @@ export const withDesign = <C extends DesignableComponents>(design: Design<C>) =>
   }
 );
 
-export const replaceWith = <P extends object>(Component: ComponentType<P>) => (
-  (() => Component) as HOC
+/**
+ * Returns a Token which replaces the component to which it is applied with another.
+ *
+ * @param Replacement
+ * The component or tag to use as a replacement.
+ *
+ * @example
+ * ```
+ * const Start = () => <div />
+ * const Replaced = replaceWith('span')(Start);
+ * <Start /> === '<div />'
+ * <Replaced /> ==== '<span />'
+ * ```
+ */
+export const replaceWith = <P extends object>(Replacement: ComponentOrTag<P>): Token<P> => asToken(
+  () => {
+    const ReplaceWith = (props: P) => <Replacement {...props} />;
+    return ReplaceWith;
+  },
 );
 export const remove = <P extends React.HTMLAttributes<HTMLBaseElement>> () => (props:P) => {
   const { children } = props;
