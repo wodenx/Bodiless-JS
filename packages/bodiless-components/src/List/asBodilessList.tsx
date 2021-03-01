@@ -166,20 +166,20 @@ const withSimpleSubListDesign = (depth: number) => (withDesign$: HOC): HOC => (
     }) as HOC
 );
 
-// TODO: Should this be a part of asBodilessList?
+// @TODO: Should this be a part of asBodilessList?
 const asStylableList = withDesign({
   Wrapper: stylable,
   Item: stylable,
   Title: stylable,
 });
 
-// TODO: Should this be a part of asSubListWrapper?
-const asStylableSubList = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: stylable,
-    List: stylable,
+// @TODO: Should this be a part of asSubListWrapper?
+const asStylableSubList = flow(
+  stylable,
+  withDesign({
+    Wrapper: stylable,
   }),
-});
+);
 
 export default asBodilessList;
 export {

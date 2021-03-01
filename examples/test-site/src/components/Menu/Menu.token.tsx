@@ -77,19 +77,15 @@ const $withBaseMenuStyles = withDesign({
  */
 
 const $withBaseSubMenuStyles = withDesign({
-  Wrapper: withDesign({
-    List: flow(
-      withMenuBackground,
-      addClasses('z-10'),
-    ),
-  }),
+  Wrapper: flow(
+    withMenuBackground,
+    addClasses('z-10'),
+  ),
   Title: withActiveSubTitleStyles,
 });
 
 const $withListSubmenuStyles = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('w-content'),
-  }),
+  Wrapper: addClasses('w-content'),
 });
 
 const $withColumnsSublistStyles = withColumnSubMenuDesign(
@@ -103,6 +99,7 @@ const $asSiteNavStyles = asToken(
   asTopNav('List', 'Columns', 'Touts'),
   $withBaseMenuStyles,
   withSubMenuToken('Main', 'List', 'Columns', 'Touts')($withTitleStyles, $withBaseSubMenuStyles),
+  withSubMenuToken('List', 'Columns', 'Touts')($withBaseSubMenuStyles),
   withSubMenuToken('Columns')($withColumnsSublistStyles),
   withSubMenuToken('List')($withListSubmenuStyles),
 );

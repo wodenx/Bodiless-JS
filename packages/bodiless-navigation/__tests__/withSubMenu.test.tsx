@@ -77,9 +77,7 @@ describe('Bodiless Menu', () => {
 
   const withSubMenuDesign = (submenuType: string = 'List') => withSubMenuToken(submenuType)(
     withDesign({
-      Wrapper: withDesign({
-        List: addProps({ 'data-test-submenu': `${submenuType.toLowerCase()}-submenu` }),
-      }),
+      Wrapper: addProps({ 'data-test-submenu': `${submenuType.toLowerCase()}-submenu` }),
       Title: addProps({ 'data-test-submenu': `${submenuType.toLowerCase()}-submenu-title` }),
       Item: addProps({ 'data-test-submenu': `${submenuType.toLowerCase()}-submenu-item` }),
     }),
@@ -131,9 +129,7 @@ describe('Bodiless Menu', () => {
       withSubMenuToken('Columns')(
         withColumnSubMenuDesign(
           withDesign({
-            Wrapper: withDesign({
-              List: addProps({ 'data-test-submenu': 'sub-column-submenu' }),
-            }),
+            Wrapper: addProps({ 'data-test-submenu': 'sub-column-submenu' }),
             Title: addProps({ 'data-test-submenu': 'sub-column-submenu-title' }),
             Item: addProps({ 'data-test-submenu': 'sub-column-submenu-item' }),
           }),

@@ -70,48 +70,26 @@ const isContextNotActive = () => {
 };
 
 const asVerticalSubMenu = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('flex-col'),
-  }),
+  Wrapper: addClasses('flex-col'),
 });
 
-const asRelative = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: addClasses('relative'),
-  }),
-});
+const asRelative = addClasses('relative');
 
-const asExpandedOnActive = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: addClassesIf(isContextActive)('overflow-visible'),
-  }),
-});
+const asExpandedOnActive = addClassesIf(isContextActive)('overflow-visible');
 
 const asResponsiveSublist = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('min-w-full'),
-  }),
+  Wrapper: addClasses('min-w-full'),
 });
 
-const asStaticOnHover = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: flow(
-      addClasses('hover:static'),
-      removeClassesIf(useIsMenuOpen)('hover:static'),
-    ),
-  }),
-});
+const asStaticOnHover = flow(
+  addClasses('hover:static'),
+  removeClassesIf(useIsMenuOpen)('hover:static'),
+);
 
-const asRelativeNotActive = withDesign({
-  Wrapper: withDesign({
-    WrapperItem: addClassesIf(isContextNotActive)('relative'),
-  }),
-});
+const asRelativeNotActive = addClassesIf(isContextNotActive)('relative');
 
 const asFullWidthSublist = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('w-full'),
-  }),
+  Wrapper: addClasses('w-full'),
 });
 
 /*
@@ -138,9 +116,7 @@ const withBaseMenuStyles = flow(
  * ===========================================
  */
 const withBaseSubMenuStyles = withDesign({
-  Wrapper: withDesign({
-    List: addClasses('flex absolute left-0'),
-  }),
+  Wrapper: addClasses('flex absolute left-0'),
 });
 
 /*
