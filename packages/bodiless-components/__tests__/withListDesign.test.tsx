@@ -1,11 +1,11 @@
-import React, { FC, Fragment } from 'react';
+import React, { FC } from 'react';
 
 import {
   Token, withDesign, addProps, replaceWith, withoutProps,
 } from '@bodiless/fclasses';
 import { withDefaultContent } from '@bodiless/core';
 import { flow } from 'lodash';
-import { render, ComponentType, mount } from 'enzyme';
+import { render, ComponentType } from 'enzyme';
 import { withSubLists } from '../src/List/asChameleonSubList';
 import asBodilessList, { asSubList } from '../src/List/asBodilessList';
 
@@ -91,9 +91,8 @@ describe('list styling', () => {
         B: withDesign({
           Wrapper: addProps({ 'data-test': 'foo' }),
         }),
-      }), 
+      }),
     })(TestList);
-    let wrapper;
     wrapper = renderTest(withSubListData()(Test));
     expect(wrapper.find('ul#top>li').prop('data-test')).toBeUndefined();
     wrapper = renderTest(withSubListData('A')(Test));

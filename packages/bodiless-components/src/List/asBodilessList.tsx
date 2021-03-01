@@ -27,7 +27,9 @@ import {
 
 import withListButtons from './withListButtons';
 import BodilessList from './List';
-import { Data, UseListOverrides, FinalProps as ListProps, ListDesignableComponents } from './types';
+import {
+  Data, UseListOverrides, FinalProps as ListProps, ListDesignableComponents,
+} from './types';
 
 type ComponentOrTag<P> = ComponentType<P>|keyof JSX.IntrinsicElements;
 
