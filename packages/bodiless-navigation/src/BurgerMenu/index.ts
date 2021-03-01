@@ -21,7 +21,7 @@ import {
 
 import {
   asSlideLeft,
-} from './token';
+} from './BurgerMenu.token';
 
 export {
   BurgerMenuClean,

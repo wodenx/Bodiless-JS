@@ -19,7 +19,7 @@ import {
 } from '@bodiless/fclasses';
 
 import { useBurgerMenuContext } from './BurgerMenuContext';
-import withBurgerMenuTogglerStyles from './token';
+import withBurgerMenuTogglerStyles from './BurgerMenu.token';
 
 type TogglerComponents = {
   Wrapper: ComponentType<any>,

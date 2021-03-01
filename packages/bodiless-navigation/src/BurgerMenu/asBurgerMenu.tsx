@@ -21,7 +21,7 @@ import {
 import BurgerMenuClean from './BurgerMenuClean';
 
 import { withColumnSubMenuDesign } from '../withSubMenu';
-import { withSubMenuToken } from '../token';
+import { withSubMenuToken } from '../Menu.token';
 
 type OverviewItem = {
   overview: JSX.Element,
@@ -64,14 +64,16 @@ const withOverlayLinkAccordion = <P extends object>(Component: ComponentType<P>)
   return asAccordionBody(WithOverlayLinkAccordion as ComponentType<P>);
 };
 
-const asBurgerMenuDesign = withDesign({
-  Wrapper: withDesign({
-    List: withOverlayLinkAccordion,
-    Title: asAccodionTitle,
-    WrapperItem: asAccordionWrapper,
+const asBurgerMenuDesign = asToken(
+  asAccordionWrapper,
+  withDesign({
+    Wrapper: withOverlayLinkAccordion,
+    OuterWrapper: withDesign({
+      Title: asAccodionTitle,
+    }),
+    Item: asBurgerMenuOverviewLink,
   }),
-  Item: asBurgerMenuOverviewLink,
-});
+);
 
 /**
  * HOC that wraps the supplied Component in the burger menu chrome.
@@ -97,7 +99,6 @@ const withBurgerMenuWrapper = <P extends object>(Component: ComponentType<P>) =>
  */
 const asBurgerMenu = (...keys: string[]) => asToken(
   withSubMenuToken(...keys)(asBurgerMenuDesign),
-  withSubMenuToken('Main')(asBurgerMenuDesign),
   keys.indexOf('Columns') > -1
     ? withSubMenuToken('Columns')(withColumnSubMenuDesign(asBurgerMenuDesign))
     : {},

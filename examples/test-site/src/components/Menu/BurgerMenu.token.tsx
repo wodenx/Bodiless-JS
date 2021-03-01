@@ -64,7 +64,7 @@ const withBurgerMenuHeader = withDesign({
 });
 
 const $withBoldAccordionTitle = withDesign({
-  Wrapper: withDesign({
+  OuterWrapper: withDesign({
     Title: withDesign({
       Label: asBold,
     }),

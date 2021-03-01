@@ -21,7 +21,7 @@ import {
   withListSubMenu, withToutSubMenu, withColumnSubMenu, withColumnSubMenuDesign,
 } from './withSubMenu';
 
-import { withSubMenuToken, asTopNav } from './token';
+import { withSubMenuToken, asTopNav } from './Menu.token';
 
 export * from './BurgerMenu';
 export {
