@@ -2,7 +2,7 @@ import React from 'react';
 import { withDesign, Token, addProps } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import {
-  asSubList, asBodilessList, withSubLists, asBodilessChameleon,
+  asSubList, asBodilessList, withSubLists,
 } from '@bodiless/components';
 // import { withDefaultContent } from '@bodiless/core';
 
