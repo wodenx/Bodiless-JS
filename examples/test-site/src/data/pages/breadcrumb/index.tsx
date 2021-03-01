@@ -26,10 +26,7 @@ import { flow } from 'lodash';
 
 import Layout from '../../../components/Layout';
 import BodilessMenu from '../../../components/Menu/Menu';
-import {
-  DEFAULT_STARTING_TRAIL_NODE_KEY,
-  MegaMenuBreadcrumbs as BaseMegaMenuBreadcrumbs,
-} from '../../../components/Breadcrumbs/MenuBreadcrumbs';
+import Breadcrumbs, { DEFAULT_STARTING_TRAIL_NODE_KEY } from '../../../components/Breadcrumbs/MenuBreadcrumbs';
 import {
   withEditableStartingTrail,
   withStartingTrailIcon,
@@ -46,11 +43,11 @@ const MenuBreadcrumbs = flow(
     `${DEFAULT_STARTING_TRAIL_NODE_KEY}Default`,
     'Enter item',
   ),
-)(BaseMegaMenuBreadcrumbs);
+)(Breadcrumbs);
 
 const BreadcrumbWithStartingTrailIcon = withStartingTrailIcon(
   `${DEFAULT_STARTING_TRAIL_NODE_KEY}Icon`,
-)(BaseMegaMenuBreadcrumbs);
+)(Breadcrumbs);
 
 const BreadcrumbWithNonLinkableItems = flow(
   withEditableStartingTrail(
@@ -58,7 +55,7 @@ const BreadcrumbWithNonLinkableItems = flow(
     'Enter item',
   ),
   withNonLinkableItems,
-)(BaseMegaMenuBreadcrumbs);
+)(Breadcrumbs);
 
 const BreadcrumbWithBoldableFinalItem = flow(
   withEditableStartingTrail(
@@ -66,7 +63,7 @@ const BreadcrumbWithBoldableFinalItem = flow(
     'Enter item',
   ),
   withBoldedFinalTrail,
-)(BaseMegaMenuBreadcrumbs);
+)(Breadcrumbs);
 
 const BreadcrumbWithVerticalBarSeparator = flow(
   withEditableStartingTrail(
@@ -74,7 +71,7 @@ const BreadcrumbWithVerticalBarSeparator = flow(
     'Enter item',
   ),
   withVerticalBarSeparator,
-)(BaseMegaMenuBreadcrumbs);
+)(Breadcrumbs);
 
 const BreadcrumbWithSlashSeparator = flow(
   withEditableStartingTrail(
@@ -82,7 +79,7 @@ const BreadcrumbWithSlashSeparator = flow(
     'Enter item',
   ),
   withSlashSeparator,
-)(BaseMegaMenuBreadcrumbs);
+)(Breadcrumbs);
 
 const BreadcrumbWithHiddenCurrentPageItem = flow(
   withEditableStartingTrail(
@@ -90,7 +87,7 @@ const BreadcrumbWithHiddenCurrentPageItem = flow(
     'Enter item',
   ),
   withHiddenCurrentPageItem,
-)(BaseMegaMenuBreadcrumbs);
+)(Breadcrumbs);
 
 const MegaMenuBreadcrumbWithNonLinkableItems = flow(
   withEditableStartingTrail(
@@ -101,7 +98,7 @@ const MegaMenuBreadcrumbWithNonLinkableItems = flow(
     StartingTrail: asReadOnly,
   }),
   withNonLinkableItems,
-)(BaseMegaMenuBreadcrumbs);
+)(Breadcrumbs);
 
 const H1 = flow(addClasses('pt-5'), asHeader1)(H1$);
 const H2 = flow(addClasses('pt-5'), asHeader2)(H2$);

@@ -80,14 +80,8 @@ const Breadcrumbs = flow(
   withMenuBreadcrumbsStyles,
 )(BreadcrumbsBase);
 
-const MegaMenuBreadcrumbs = flow(
-  withMenuBreadcrumbSchema,
-  withMenuBreadcrumbsStyles,
-)(BreadcrumbsBase);
-
 export default Breadcrumbs;
 export {
   DEFAULT_STARTING_TRAIL_NODE_KEY,
   DEFAULT_FINAL_TRAIL_NODE_KEY,
-  MegaMenuBreadcrumbs,
 };

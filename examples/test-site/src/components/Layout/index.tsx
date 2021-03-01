@@ -28,7 +28,7 @@ import { SocialShareHelmet } from '../SocialShare';
 import { asPageContainer, asYMargin } from '../Elements.token';
 import { asSiteHeader, asSiteFooter } from './token';
 
-import { MegaMenuBreadcrumbs } from '../Breadcrumbs/MenuBreadcrumbs';
+import BreadcrumbsBase from '../Breadcrumbs/MenuBreadcrumbs';
 
 const SiteHeader = asSiteHeader(Header);
 const SiteFooter = asSiteFooter(Footer);
@@ -69,7 +69,7 @@ const Layout$ = designable({
     addClasses('pt-2'),
     // hide breadcrumbs on home page
     ifToggledOn(isHomePage)(replaceWith(React.Fragment)),
-  )(MegaMenuBreadcrumbs),
+  )(BreadcrumbsBase),
 })(BaseLayout);
 
 const Layout = withSearchResult(Layout$);
