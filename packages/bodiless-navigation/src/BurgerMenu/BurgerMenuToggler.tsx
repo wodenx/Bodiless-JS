@@ -48,6 +48,13 @@ const TogglerBase: FC<TogglerProps> = ({ components, ...rest }) => {
 
 const BurgerMenuTogglerClean = designable(TogglerComponents, 'BurgerMenuToggler')(TogglerBase);
 
+/**
+ * HOC that adds an ability to toggle Burger Menu visibility on click.
+ * It extends Component's default onClick handler if exists. Note that
+ * the Component has to be inside a BurgerMenuContext.
+ *
+ * @return Original component with extended onClick handler that toggles Burger Menu visibility.
+ */
 const asBurgerMenuToggler = <P extends object>(Component: ComponentType<P>) => (
   props: P & { onClick?: () => any },
 ) => {
@@ -62,6 +69,20 @@ const asBurgerMenuToggler = <P extends object>(Component: ComponentType<P>) => (
   return <Component {...props} onClick={extendOnClick} />;
 };
 
+/**
+ * HOC that inserts supplied Toggler component as the first child of wrapped component.
+ *
+ * ```
+ * <Component {...rest}>
+ *   { children }
+ *   <Toggler />
+ * </Component>
+ * ```
+ *
+ * @param Toggler Toggler component to insert.
+ *
+ * @return Original component with Toggler as the first child.
+ */
 const withBurgerMenuToggler = (
   Toggler: ComponentType<any>,
 ) => (Component: ComponentType<any>) => ({ children, ...rest }: PropsWithChildren<any>) => (
@@ -71,6 +92,15 @@ const withBurgerMenuToggler = (
   </Component>
 );
 
+/**
+ * Default Burger Menu Toggler button. Toggles button icon based on the
+ * burger menu state ('close' | 'menu'). Has an onClick handler that toggles
+ * BurgerMenuContext 'isVisible' prop.
+ *
+ * For this button to work both burger menu and toggler button should be inside BurgerMenuContext.
+ *
+ * @return Burger Menu default toggler component.
+ */
 const BurgerMenuDefaultToggler = flow(
   asBurgerMenuToggler,
   withBurgerMenuTogglerStyles,

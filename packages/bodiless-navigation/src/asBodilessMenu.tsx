@@ -26,6 +26,18 @@ const withChameleonSublist = withDesign({
   Item: asChameleonSubList(() => ({ formTitle: 'Sub-Menu Type' })),
 });
 
+/**
+ * Bodiless HOC generator which creates the basic structure of the Bodiless Menu.
+ *
+ * This serves as a base for various views on the Menu data, including
+ * a site's main menu, a burger menu and breadcrumbs.
+ *
+ * @param nodeKeys Location where the menu state data should be stored.
+ * @param defaultData Default menu data.
+ * @param useOverrides Hook returning overrides for the menu button.
+
+ * @return HOC which creates a basic mega menu list.
+ */
 const asBodilessMenu = <P extends object>(
   nodeKeys?: WithNodeKeyProps,
   defaultData?: ListDefaultDataType,

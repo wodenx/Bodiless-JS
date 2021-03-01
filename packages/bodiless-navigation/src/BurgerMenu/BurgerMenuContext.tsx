@@ -16,6 +16,9 @@ import React, {
   ComponentType, createContext, useContext, useState,
 } from 'react';
 
+/**
+ * Type of a Burger Menu Context.
+ */
 type BurgerMenuContextType = {
   isVisible: boolean,
   toggle: React.Dispatch<React.SetStateAction<boolean>>,
@@ -28,6 +31,14 @@ const BurgerMenuContext = createContext<BurgerMenuContextType>({
 
 const useBurgerMenuContext = () => useContext(BurgerMenuContext);
 
+/**
+ * @private
+ * Wraps component with the BurgerMenuContext and creates two state variables
+ * that are passed to the provider:
+ *  - `isVisible` - Boolean to toggle Burger Menu visibility.
+ *  - `toggle()` - Visibility toggle function.
+ *
+ */
 const withBurgerMenuProvider = <P extends object>(Component: ComponentType<P>) => (props: P) => {
   const [isVisible, toggle] = useState<boolean>(false);
 
@@ -38,7 +49,18 @@ const withBurgerMenuProvider = <P extends object>(Component: ComponentType<P>) =
   );
 };
 
+/**
+ * Hook which can be used to determine if Burger Menu is visible.
+ *
+ * @return true if the Burger Menu is visible, false otherwise.
+ */
 const useIsBurgerMenuVisible = () => useBurgerMenuContext().isVisible;
+
+/**
+ * Hook which can be used to determine if Burger Menu is hidden.
+ *
+ * @return true if the Burger Menu is hidden, false otherwise.
+ */
 const useIsBurgerMenuHidden = () => !useBurgerMenuContext().isVisible;
 
 export {

@@ -15,6 +15,10 @@
 import React, { ComponentType } from 'react';
 import { PageContextProvider, useEditContext, useUUID } from '@bodiless/core';
 
+/**
+ * HOC that wrapps component in PageContextProvider with type="menu" and unique id.
+ * Used by useIsMenuOpen() to determine if menu context is active.
+ */
 const withMenuContext = <P extends Object>(
   Component: ComponentType<P> | string,
 ) => (props: P) => (
@@ -23,6 +27,11 @@ const withMenuContext = <P extends Object>(
   </PageContextProvider>
   );
 
+/**
+ * Hook which can be used to determine if any of submenus are open and have it's context activated.
+ *
+ * @return true if context for any of Items is active, false otherwise.
+ */
 const useIsMenuOpen = () => {
   // Move up the context tree to see if we find an active menu context.
   for (let context = useEditContext(); context; context = context.parent!) {

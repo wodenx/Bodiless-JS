@@ -73,6 +73,13 @@ const asBurgerMenuDesign = withDesign({
   Item: asBurgerMenuOverviewLink,
 });
 
+/**
+ * HOC that wraps the supplied Component in the burger menu chrome.
+ *
+ * @param Component Component to be wrapped in the burger menu chrome.
+ *
+ * @return Original component wrapped in the burger menu chrome with 'Menu' design key.
+ */
 const withBurgerMenuWrapper = <P extends object>(Component: ComponentType<P>) => asToken(
   replaceWith(BurgerMenuClean),
   withDesign({
@@ -80,6 +87,14 @@ const withBurgerMenuWrapper = <P extends object>(Component: ComponentType<P>) =>
   }),
 )(Fragment);
 
+/**
+ * Helper which allows specifying which submenu types are configured
+ * by default for the Burger Menu. Transforms selected submenus into accordions.
+ *
+ * @param keys List of the submenu key(s) to which the default styles will be applied to.
+ *
+ * @return Token that applies default burger menu styles based on provided keys.
+ */
 const asBurgerMenu = (...keys: string[]) => asToken(
   withSubMenuToken(...keys)(asBurgerMenuDesign),
   withSubMenuToken('Main')(asBurgerMenuDesign),

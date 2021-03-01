@@ -26,6 +26,9 @@ import { asBreadcrumbSource, withEditableMenuTitle, asMenuTout } from './MenuTit
 /**
  * Creates a stylable sublist which deletes it's data when the last item is removed.
  * Suitable for use for all menus.
+ *
+ * @param titleDesign optional token which will be applied to the sublist title.
+ * @param useOverrides optional hook returning overrides for the submenu button.
  */
 const asMenuSubList = (titleDesign: any = {}, useOverrides: UseListOverrides = () => ({})) => {
   const titleDesign$ = typeof titleDesign === 'function' ? titleDesign : withDesign(titleDesign);

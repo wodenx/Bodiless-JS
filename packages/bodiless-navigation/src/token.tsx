@@ -25,6 +25,18 @@ import {
 
 import { useIsMenuOpen } from './withMenuContext';
 
+/**
+ * Helper which makes it easier to target a particular type of submenu.
+ *
+ * The first parameter is a list of the submenu key(s) to which the token
+ * provided as a second argument should be applied.
+ * It also accepts the special key 'Main' to apply the design to the top level menu.
+ *
+ * @param keys List of the submenu key(s) to which the token should be applied.
+ * @param tokenDefs List of tokens to be applied to submenu design key(s).
+ *
+ * @return Desigh token that applies supplied list of tokens to the provided design keys.
+ */
 export const withSubMenuToken = <P extends object>(
   ...keys: string[]
 ) => (...tokenDefs: TokenDef<P>[]) => {
@@ -165,6 +177,13 @@ const asColumnSubMenu = flow(
   asRelativeNotActive,
 );
 
+/**
+ * Helper which allows specifying which submenu types should have default navigation styling added.
+ *
+ * @param keys List of the submenu key(s) to which the default menu styles be applied to.
+ *
+ * @return Token that applies default top navigation styles based on provided keys.
+ */
 export const asTopNav = (...keys: string[]) => {
   const listSubmenuStyles = keys.indexOf('List') > -1 ? asSimpleSubMenu : asToken();
   const toutsSubmenuStyles = keys.indexOf('Touts') > -1 ? asToutsSubMenu : asToken();
