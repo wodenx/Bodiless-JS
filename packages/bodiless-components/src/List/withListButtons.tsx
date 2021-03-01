@@ -19,7 +19,7 @@ import {
 } from '@bodiless/core';
 import { v1 } from 'uuid';
 
-import { withFinalDesign } from '@bodiless/fclasses';
+import { withFinalDesign, withoutProps } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import { ItemProps, UseListOverrides } from './types';
 
@@ -86,6 +86,7 @@ const useMenuOptions = (useOverrides: UseListOverrides = () => ({})) => (props: 
 const withListButtons = (useOverrides?: UseListOverrides) => ifEditable(
   withFinalDesign({
     Item: flow(
+      withoutProps(['addItem', 'deleteItem', 'canDelete', 'unwrap']),
       withContextActivator('onClick'),
       withLocalContextMenu,
       withMenuOptions({

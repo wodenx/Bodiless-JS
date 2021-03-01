@@ -26,6 +26,7 @@ import ChameleonListDemo from './ChameleonListDemo';
 import ListDemo from './ListDemo';
 import SimpleListDemo from './SimpleListDemo';
 import { asHeader1, asHeader3 } from '../../../components/Elements.token';
+import ListDesignTest from './ListDesignTest';
 
 const SuperSimpleList = flow(
   asBodilessList('list'),
@@ -78,6 +79,15 @@ export default (props: any) => (
             the list are editable links.
           </p>
           <ChameleonListDemo nodeKey="list1" />
+        </Wrapper>
+        <Wrapper>
+          <SectionHeader>List design test</SectionHeader>
+          <p>
+            This list has up to 2 levels of nested sublists. The main list itself and
+            each sublist can be switched between bullets and numbers.  The titles in
+            the list are editable links.
+          </p>
+          <ListDesignTest />
         </Wrapper>
       </div>
     </Layout>
