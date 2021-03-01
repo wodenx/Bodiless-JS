@@ -1,14 +1,13 @@
-import React, { ReactElement, FC, Fragment } from 'react';
+import React, { FC, Fragment } from 'react';
 
 import {
-  Token, withDesign, Design, asToken, addProps, replaceWith,
+  Token, withDesign, addProps, replaceWith, withoutProps,
 } from '@bodiless/fclasses';
 import { withDefaultContent } from '@bodiless/core';
 import { flow } from 'lodash';
-import { render, ComponentType } from 'enzyme';
+import { render, ComponentType, mount } from 'enzyme';
 import { withSubLists } from '../src/List/asChameleonSubList';
 import asBodilessList, { asSubList } from '../src/List/asBodilessList';
-import { asBodilessChameleon } from '../src/Chameleon';
 
 const withItemTitle = (title: string) => withDesign({
   Title: flow(
@@ -63,9 +62,7 @@ describe('list styling', () => {
     },
   });
 
-  const renderTest = (C: ComponentType<any>) => {
-    return render(<div><C /></div>);
-  };
+  const renderTest = (C: ComponentType<any>) => render(<div><C /></div>);
 
   let wrapper;
 
@@ -85,7 +82,7 @@ describe('list styling', () => {
   it('Applies a design on Wrapper to the ul for all sublist types', () => {
     const Test = withDesign<any>({
       Item: withDesign({
-        // NOTE: we cannot apply the design directly to the item bc the 
+        // NOTE: we cannot apply the design directly to the item bc the
         // chameleon consumes it.  Perhaps look at using extendDesignable
         // for chameleons...
         A: withDesign({
@@ -94,7 +91,7 @@ describe('list styling', () => {
         B: withDesign({
           Wrapper: addProps({ 'data-test': 'foo' }),
         }),
-      }),
+      }), 
     })(TestList);
     let wrapper;
     wrapper = renderTest(withSubListData()(Test));
@@ -107,9 +104,9 @@ describe('list styling', () => {
     expect(wrapper.find('ul#top>li>ul').prop('data-test')).toBe('foo');
   });
 
-  it.only('Supports an rc-menu style sublist',  () => {
+  it('Supports an rc-menu style sublist', () => {
     const TitledSubList: FC<any> = ({ title, children, ...rest }) => (
-      <li id="title-sub-list">
+      <li id="title-sub-list" {...rest}>
         {title}
         <ul>
           {children}
@@ -118,16 +115,23 @@ describe('list styling', () => {
     );
     const Test = flow(
       withDesign({
-        Item: withDesign({
-          A: withDesign({
-            Wrapper: replaceWith(TitledSubList),
-            SubListWrapperItem: replaceWith(Fragment),
+        Item: flow(
+          addProps({ 'data-item': true }),
+          withDesign({
+            A: withDesign({
+              OuterWrapper: flow(
+                replaceWith(TitledSubList),
+                // @todo find a way to avoid this.
+                withoutProps(['addItem', 'deleteItem', 'canDelete', 'unwrap']),
+              ) as Token,
+            }),
           }),
-        }),
+        ),
       }),
-      withSubListData('A')
+      withSubListData('A'),
     )(TestList);
     wrapper = renderTest(Test);
+    expect(wrapper.find('ul#top>li').prop('id')).toBe('title-sub-list');
     console.log(wrapper.html());
   });
 });
