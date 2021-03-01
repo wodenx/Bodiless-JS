@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { ComponentType } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
@@ -20,9 +20,8 @@ import {
 } from '@bodiless/fclasses';
 import { observer } from 'mobx-react-lite';
 import { flow } from 'lodash';
-import {
-  useNode, withNode,
-} from '@bodiless/core';
+import { useNode, withNode, withNodeKey } from '@bodiless/core';
+import { withBurgerMenuProvider } from '@bodiless/navigation';
 
 import Layout from '../../../components/Layout';
 import { asHeader2, asHeader1 } from '../../../components/Elements.token';
@@ -30,6 +29,9 @@ import { asHeader2, asHeader1 } from '../../../components/Elements.token';
 import {
   BurgerMenuTogglerFullWidth, ResponsiveBodilessMenu,
 } from '../../../components/Menu';
+
+const BurgerMenuProvider = withBurgerMenuProvider(Div) as ComponentType;
+const DemoMenu = withNodeKey({ nodeKey: 'DemoMenu' })(ResponsiveBodilessMenu) as ComponentType;
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -65,10 +67,10 @@ export default (props: any) => (
         as a simple list of links which render the same data as the top nav.
       </Description>
 
-      <div>
+      <BurgerMenuProvider>
         <BurgerMenuTogglerFullWidth />
-        <ResponsiveBodilessMenu />
-      </div>
+        <DemoMenu />
+      </BurgerMenuProvider>
       <Description>
         <p>
           Each menu item has a &quot;Sub&quot; button on each top level
