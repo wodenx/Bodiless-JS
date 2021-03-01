@@ -27,6 +27,7 @@ import {
   A,
   Div,
   Design,
+  asToken,
   designable,
   withDesign,
   replaceWith,
@@ -77,13 +78,13 @@ const MenuTitleComponents: MenuTitleComponents = {
 
 const MenuTitle = designable(MenuTitleComponents, 'Menu Title')(MenuTitleBase);
 
-const asMenuLink = (asEditableLink: typeof asBodilessLink) => flow(
+const asMenuLink = (asEditableLink: typeof asBodilessLink) => asToken(
   withSidecarNodes(
     asEditableLink('link', undefined, () => ({ groupLabel: 'Menu Link' })),
   ),
 );
 
-const asMenuTitle = (asEditableTitle: typeof asEditable) => flow(
+const asMenuTitle = (asEditableTitle: typeof asEditable) => asToken(
   asEditableTitle('text', 'Menu Item'),
 );
 
@@ -103,13 +104,13 @@ const withEditableMenuTitle = withDesign({
 
 const asMenuTout = (linkNodeKey = 'link', titleNodeKey = 'title') => {
   const transformDesign = (design: Design<any> = {}) => {
-    const Link = flow(
+    const Link = asToken(
       withSidecarNodes(
         design.Link || withBodilessLinkToggle(asBodilessLink, replaceWith(Div))(),
         withNodeKey(linkNodeKey),
       ),
     );
-    const Title = flow(
+    const Title = asToken(
       design.Title || asEditable(undefined, 'Menu Item'),
       withNodeKey(titleNodeKey),
     );

@@ -72,7 +72,7 @@ const withListSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesi
  *
  */
 const withToutSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesign({
-  Touts: flow(
+  Touts: asToken(
     asMenuSubList(menuTitleDesign),
     withDesign({
       Title: asMenuTout(),
@@ -87,7 +87,7 @@ const withToutSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesi
  *
  */
 const withColumnSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesign({
-  Columns: flow(
+  Columns: asToken(
     asMenuSubList(menuTitleDesign),
     withSubLists(1)(asMenuSubList(menuTitleDesign, () => ({ groupLabel: 'Column Sub-Menu Item' }))),
   ),

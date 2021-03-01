@@ -12,7 +12,6 @@
  * limitations under the License.
  */
 
-import { flow } from 'lodash';
 import {
   Div, asToken, replaceWith, withDesign, addClasses,
 } from '@bodiless/fclasses';
@@ -30,7 +29,7 @@ import {
 const $asSiteToggler = asToken(
   withDesign({
     Button: asToken(asTextWhite, asMobileOnly),
-    Wrapper: flow(
+    Wrapper: asToken(
       replaceWith(Div),
       asMobileOnly,
       addClasses('flex'),
@@ -40,7 +39,7 @@ const $asSiteToggler = asToken(
 
 const withTogglerWrapper = asToken(
   withDesign({
-    Wrapper: flow(
+    Wrapper: asToken(
       asTealBackground,
       addClasses('w-full py-1'),
     ),
@@ -48,11 +47,11 @@ const withTogglerWrapper = asToken(
 );
 
 const withBurgerMenuHeader = withDesign({
-  Header: flow(
+  Header: asToken(
     replaceWith(Logo),
     asDefaultLogoStyle,
     withDesign({
-      SiteReturn: flow(
+      SiteReturn: asToken(
         withBurgerMenuToggler(
           $asSiteToggler(BurgerMenuDefaultToggler),
         ),
@@ -88,7 +87,7 @@ const $withBurgerMenuStyles = asToken(
   withSubMenuToken('Columns')($withColumnSubMenuStyles),
 );
 
-const $asSiteBurgerMenu = flow(
+const $asSiteBurgerMenu = asToken(
   withBurgerMenuHeader,
   withDesign({
     Menu: $withBurgerMenuStyles,

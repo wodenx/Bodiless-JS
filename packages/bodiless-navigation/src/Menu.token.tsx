@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { flow, omit } from 'lodash';
+import { omit } from 'lodash';
 import { useEditContext } from '@bodiless/core';
 import {
   addClasses,
@@ -24,6 +24,8 @@ import {
 } from '@bodiless/fclasses';
 
 import { useIsMenuOpen } from './withMenuContext';
+
+const { meta } = asToken;
 
 /**
  * Helper which makes it easier to target a particular type of submenu.
@@ -69,27 +71,67 @@ const isContextNotActive = () => {
   return isEdit ? !isActive : true;
 };
 
-const asVerticalSubMenu = withDesign({
-  Wrapper: addClasses('flex-col'),
-});
-
-const asRelative = addClasses('relative');
-
-const asExpandedOnActive = addClassesIf(isContextActive)('overflow-visible');
-
-const asResponsiveSublist = withDesign({
-  Wrapper: addClasses('min-w-full'),
-});
-
-const asStaticOnHover = flow(
-  addClasses('hover:static'),
-  removeClassesIf(useIsMenuOpen)('hover:static'),
+const asFlex = asToken(
+  addClasses('flex'),
+  meta.term('Layout')('Display'),
 );
 
-const asRelativeNotActive = addClassesIf(isContextNotActive)('relative');
+const asOverflowHidden = asToken(
+  addClasses('overflow-hidden'),
+  meta.term('Layout')('Overflow'),
+);
+
+const asVerticalSubMenu = withDesign({
+  Wrapper: asToken(
+    addClasses('flex-col'),
+    // @todo confirm category & term spelling
+    meta.term('Flexbox')('Flex Direction'),
+  ),
+});
+
+const asRelative = asToken(
+  addClasses('relative'),
+  meta.term('Layout')('Position'),
+);
+
+const asAbsolute = asToken(
+  addClasses('absolute'),
+  meta.term('Layout')('Position'),
+);
+
+const asPositionedLeft = asToken(
+  addClasses('left-0'),
+  meta.term('Layout')('Left'),
+);
+
+const asVisibleOnActive = asToken(
+  addClassesIf(isContextActive)('overflow-visible'),
+  meta.term('Layout')('Overflow'),
+);
+
+const asResponsiveSublist = withDesign({
+  Wrapper: asToken(
+    addClasses('min-w-full'),
+    meta.term('Sizing')('Min-Width'),
+  ),
+});
+
+const asStaticOnHover = asToken(
+  addClasses('hover:static'),
+  removeClassesIf(useIsMenuOpen)('hover:static'),
+  meta.term('Layout')('Position'),
+);
+
+const asRelativeNotActive = asToken(
+  addClassesIf(isContextNotActive)('relative'),
+  meta.term('Layout')('Position'),
+);
 
 const asFullWidthSublist = withDesign({
-  Wrapper: addClasses('w-full'),
+  Wrapper: asToken(
+    addClasses('w-full'),
+    meta.term('Sizing')('Width'),
+  ),
 });
 
 /*
@@ -97,17 +139,18 @@ const asFullWidthSublist = withDesign({
  * ===========================================
  */
 const withHoverStyles = withDesign({
-  Item: flow(
+  Item: asToken(
     addClasses('hover:overflow-visible'),
     removeClassesIf(useIsMenuOpen)('hover:overflow-visible'),
+    meta.term('Layout')('Overflow'),
   ),
 });
 
-const withBaseMenuStyles = flow(
+const withBaseMenuStyles = asToken(
   withHoverStyles,
   withDesign({
-    Wrapper: addClasses('relative flex'),
-    Item: addClasses('overflow-hidden'),
+    Wrapper: asToken(asFlex, asRelative),
+    Item: asOverflowHidden,
   }),
 );
 
@@ -116,41 +159,44 @@ const withBaseMenuStyles = flow(
  * ===========================================
  */
 const withBaseSubMenuStyles = withDesign({
-  Wrapper: addClasses('flex absolute left-0'),
+  Wrapper: asToken(asFlex, asAbsolute, asPositionedLeft),
 });
 
 /*
- * Simple Sub Menu Styles
+ * List Sub Menu Styles
  * ===========================================
  */
-const asSimpleSubMenu = flow(
+const asListSubMenu = asToken(
   asResponsiveSublist,
   asVerticalSubMenu,
   withBaseSubMenuStyles,
-  asExpandedOnActive,
+  asVisibleOnActive,
   asRelative,
+  meta.term('Submenu')('List'),
 );
 
 /*
  * Touts Sub Menu Styles
  * ===========================================
  */
-const asToutsSubMenu = flow(
+const asToutsSubMenu = asToken(
   asFullWidthSublist,
   asStaticOnHover,
   withBaseSubMenuStyles,
   asRelativeNotActive,
+  meta.term('Submenu')('Touts'),
 );
 
 /*
  * Columns Sub Menu Styles
  * ===========================================
  */
-const asColumnSubMenu = flow(
+const asColumnSubMenu = asToken(
   asFullWidthSublist,
   asStaticOnHover,
   withBaseSubMenuStyles,
   asRelativeNotActive,
+  meta.term('Submenu')('Columns'),
 );
 
 /**
@@ -161,7 +207,7 @@ const asColumnSubMenu = flow(
  * @return Token that applies default top navigation styles based on provided keys.
  */
 export const asTopNav = (...keys: string[]) => {
-  const listSubmenuStyles = keys.indexOf('List') > -1 ? asSimpleSubMenu : asToken();
+  const listSubmenuStyles = keys.indexOf('List') > -1 ? asListSubMenu : asToken();
   const toutsSubmenuStyles = keys.indexOf('Touts') > -1 ? asToutsSubMenu : asToken();
   const columnsSubmenuStyles = keys.indexOf('Columns') > -1 ? asColumnSubMenu : asToken();
 

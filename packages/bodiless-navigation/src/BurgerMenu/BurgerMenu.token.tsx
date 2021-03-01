@@ -17,11 +17,32 @@ import {
 } from '@bodiless/fclasses';
 import { useIsBurgerMenuVisible, useIsBurgerMenuHidden } from './BurgerMenuContext';
 
+/**
+ * Tokens
+ * ===========================================
+ */
+const { meta } = asToken;
+
 const withBurgerMenuTogglerStyles = withDesign({
   Button: asToken(
     addClasses('material-icons cursor-pointer'),
   ),
 });
+
+const withLightGrayBg = asToken(
+  addClasses('bg-gray-200'),
+  meta.term('Backgrounds')('Color'),
+);
+
+const withTransformStyles = asToken(
+  addClasses('transform'),
+  meta.term('Transforms')('Transform'),
+);
+
+const withSlideInTranslateStyles = asToken(
+  addClasses('-translate-x-full'),
+  meta.term('Transforms')('Translate'),
+);
 
 /**
  * Animations
@@ -29,9 +50,11 @@ const withBurgerMenuTogglerStyles = withDesign({
  */
 const withSlideInOutAnimation = withDesign({
   Wrapper: asToken(
-    addClasses('transform -translate-x-full'),
+    withTransformStyles,
+    withSlideInTranslateStyles,
     addClassesIf(useIsBurgerMenuHidden)('animate-slide-out'),
     addClassesIf(useIsBurgerMenuVisible)('animate-slide-in'),
+    meta.term('Transitions')('Animation'),
   ),
 });
 
@@ -40,7 +63,7 @@ const asFullScreen = withDesign({
 });
 
 const withDefaultBackground = withDesign({
-  Wrapper: addClasses('bg-gray-200'),
+  Wrapper: withLightGrayBg,
 });
 
 const asSlideLeft = asToken(

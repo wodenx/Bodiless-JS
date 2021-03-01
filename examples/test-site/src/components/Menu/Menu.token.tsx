@@ -12,7 +12,6 @@
  * limitations under the License.
  */
 
-import { flow } from 'lodash';
 import { asToken, withDesign, addClasses } from '@bodiless/fclasses';
 import {
   asTopNav, withSubMenuToken, withColumnSubMenuDesign, useIsActiveTrail,
@@ -63,7 +62,7 @@ const withActiveSubTitleStyles = ifToggledOn(useIsActiveTrail)(
  */
 
 const $withBaseMenuStyles = withDesign({
-  Wrapper: flow(
+  Wrapper: asToken(
     withMenuBackground,
     addClasses('w-full'),
   ),
@@ -77,7 +76,7 @@ const $withBaseMenuStyles = withDesign({
  */
 
 const $withBaseSubMenuStyles = withDesign({
-  Wrapper: flow(
+  Wrapper: asToken(
     withMenuBackground,
     addClasses('z-10'),
   ),
@@ -98,7 +97,7 @@ const $withColumnsSublistStyles = withColumnSubMenuDesign(
 const $asSiteNavStyles = asToken(
   asTopNav('List', 'Columns', 'Touts'),
   $withBaseMenuStyles,
-  withSubMenuToken('Main', 'List', 'Columns', 'Touts')($withTitleStyles, $withBaseSubMenuStyles),
+  withSubMenuToken('Main', 'List', 'Columns', 'Touts')($withTitleStyles),
   withSubMenuToken('List', 'Columns', 'Touts')($withBaseSubMenuStyles),
   withSubMenuToken('Columns')($withColumnsSublistStyles),
   withSubMenuToken('List')($withListSubmenuStyles),
