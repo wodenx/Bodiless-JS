@@ -19,7 +19,7 @@ import {
 import React, {
   ComponentType, Fragment, useContext, ComponentProps,
 } from 'react';
-import type { Token, ComponentOrTag } from './Tokens';
+import type { Token, ComponentOrTag, HOC } from './Tokens';
 import { addPropsIf } from './addProps';
 import { useShowDesignKeys, useDesignKeysAttribute } from './Context';
 import { withDisplayName } from './hoc-util';
@@ -200,10 +200,10 @@ export const withDesign = <C extends DesignableComponents>(design: Design<C>) =>
  * ```
  */
 export const replaceWith = <P extends object>(Replacement: ComponentOrTag<P>): Token<P> => asToken(
-  () => {
+  (() => {
     const ReplaceWith = (props: P) => <Replacement {...props} />;
     return ReplaceWith;
-  },
+  }) as HOC, // Cast is necessary bc we don't specify a component as a parameter.
 );
 export const remove = <P extends React.HTMLAttributes<HTMLBaseElement>> () => (props:P) => {
   const { children } = props;
