@@ -20,18 +20,17 @@ import { useIsBurgerMenuVisible, useIsBurgerMenuHidden } from './BurgerMenuConte
 import {
   withLightGrayBg, withNoInsetStyles, withFullWidthStyles, withFullHeightStyles,
   asFixed, withFullZIndex, withMaterialIconsFont, withPointerCursorStyles,
+  asElementToken,
 } from '../token';
-
-const { meta } = asToken;
 
 const withTransformStyles = asToken(
   addClasses('transform'),
-  meta.term('Transforms')('Transform'),
+  asElementToken('Transforms')('Transform'),
 );
 
 const withSlideInTranslateStyles = asToken(
   addClasses('-translate-x-full'),
-  meta.term('Transforms')('Translate'),
+  asElementToken('Transforms')('Translate'),
 );
 
 const withFullScreenStyles = asToken(
@@ -40,7 +39,6 @@ const withFullScreenStyles = asToken(
   withNoInsetStyles,
   asFixed,
   withFullZIndex,
-  meta.term('Component')('Element'),
 );
 
 const withSlideInAnimationStyles = asToken(
@@ -48,14 +46,12 @@ const withSlideInAnimationStyles = asToken(
   withSlideInTranslateStyles,
   addClassesIf(useIsBurgerMenuHidden)('animate-slide-out'),
   addClassesIf(useIsBurgerMenuVisible)('animate-slide-in'),
-  meta.term('Transitions')('Animation'),
-  meta.term('Component')('Element'),
+  asElementToken('Transitions')('Animation'),
 );
 
 const withTogglerButtonStyles = asToken(
   withMaterialIconsFont,
   withPointerCursorStyles,
-  meta.term('Component')('Element'),
 );
 
 const withBurgerMenuTogglerStyles = withDesign({

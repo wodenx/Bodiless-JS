@@ -14,86 +14,105 @@
 
 import { addClasses, asToken } from '@bodiless/fclasses';
 
-const { meta } = asToken;
+export const withMeta = (component: string) => (category: string) => (attribute: string) => ({
+  categories: {
+    Category: Array.isArray(category) ? category : [category],
+    Attribute: Array.isArray(attribute) ? attribute : [attribute],
+    Component: [component],
+  },
+});
+
+export const asElementToken = withMeta('Element');
+export const asListToken = withMeta('List');
 
 export const asFlex = asToken(
   addClasses('flex'),
-  meta.term('Layout')('Display'),
-);
-
-export const withFullWidthStyles = asToken(
-  addClasses('w-full'),
-  meta.term('Sizing')('Width'),
-);
-
-export const withFullHeightStyles = asToken(
-  addClasses('h-full'),
-  meta.term('Sizing')('Height'),
-);
-
-export const asOverflowHidden = asToken(
-  addClasses('overflow-hidden'),
-  meta.term('Layout')('Overflow'),
+  asElementToken('Layout')('Display'),
 );
 
 export const asRelative = asToken(
   addClasses('relative'),
-  meta.term('Layout')('Position'),
+  asElementToken('Layout')('Position'),
 );
 
 export const asAbsolute = asToken(
   addClasses('absolute'),
-  meta.term('Layout')('Position'),
+  asElementToken('Layout')('Position'),
 );
 
 export const asFixed = asToken(
   addClasses('fixed'),
-  meta.term('Layout')('Position'),
+  asElementToken('Layout')('Position'),
+);
+
+export const asOverflowHidden = asToken(
+  addClasses('overflow-hidden'),
+  asElementToken('Layout')('Overflow'),
+);
+
+export const withVisibleOnHoverStyles = asToken(
+  addClasses('hover:overflow-visible'),
+  asElementToken('Layout')('Overflow'),
+);
+
+export const withStaticOnHoverStyles = asToken(
+  addClasses('hover:static'),
+  asElementToken('Layout')('Overflow'),
 );
 
 export const asPositionedLeft = asToken(
   addClasses('left-0'),
-  meta.term('Layout')('Inset'),
+  asElementToken('Layout')('Inset'),
 );
 
 export const withNoInsetStyles = asToken(
   addClasses('inset-0'),
-  meta.term('Layout')('Inset'),
+  asElementToken('Layout')('Inset'),
 );
 
 export const withFullZIndex = asToken(
   addClasses('z-full'),
-  meta.term('Layout')('Position'),
+  asElementToken('Layout')('Position'),
+);
+
+export const withFullWidthStyles = asToken(
+  addClasses('w-full'),
+  asElementToken('Sizing')('Width'),
+);
+
+export const withFullHeightStyles = asToken(
+  addClasses('h-full'),
+  asElementToken('Sizing')('Height'),
 );
 
 export const withColumnDirectionStyles = asToken(
   addClasses('flex-col'),
   // @todo confirm category & term spelling
-  meta.term('Flexbox')('Flex Direction'),
+  asElementToken('Flexbox')('Flex Direction'),
 );
 
 export const withLightGrayBg = asToken(
   addClasses('bg-gray-200'),
-  meta.term('Backgrounds')('Color'),
+  asElementToken('Backgrounds')('Color'),
 );
 
 export const withTransformStyles = asToken(
   addClasses('transform'),
-  meta.term('Transforms')('Transform'),
+  asElementToken('Transforms')('Transform'),
 );
 
 export const withSlideInTranslateStyles = asToken(
   addClasses('-translate-x-full'),
-  meta.term('Transforms')('Translate'),
+  asElementToken('Transforms')('Translate'),
 );
 
 // @todo term for .material-icons?
 export const withMaterialIconsFont = asToken(
   addClasses('material-icons'),
-  meta.term('Typography')('Font Family'),
+  asElementToken('Typography')('Font Family'),
 );
 
 export const withPointerCursorStyles = asToken(
   addClasses('cursor-pointer'),
-  meta.term('Interactivity')('Cursor'),
+  asElementToken('Interactivity')('Cursor'),
 );

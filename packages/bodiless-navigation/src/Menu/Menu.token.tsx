@@ -27,9 +27,8 @@ import { useIsMenuOpen } from './withMenuContext';
 import {
   asFlex, asOverflowHidden, asRelative, asAbsolute,
   asPositionedLeft, withFullWidthStyles, withColumnDirectionStyles,
+  withStaticOnHoverStyles, withVisibleOnHoverStyles, asElementToken, asListToken,
 } from '../token';
-
-const { meta } = asToken;
 
 /**
  * Helper which makes it easier to target a particular type of submenu.
@@ -81,25 +80,25 @@ const asVerticalSubMenu = withDesign({
 
 const asVisibleOnActive = asToken(
   addClassesIf(isContextActive)('overflow-visible'),
-  meta.term('Layout')('Overflow'),
+  asElementToken('Layout')('Overflow'),
 );
 
 const asResponsiveSublist = withDesign({
   Wrapper: asToken(
     addClasses('min-w-full'),
-    meta.term('Sizing')('Min-Width'),
+    asElementToken('Sizing')('Min-Width'),
   ),
 });
 
 const asStaticOnHover = asToken(
-  addClasses('hover:static'),
+  withStaticOnHoverStyles,
   removeClassesIf(useIsMenuOpen)('hover:static'),
-  meta.term('Layout')('Position'),
+  asElementToken('Layout')('Position'),
 );
 
 const asRelativeNotActive = asToken(
   addClassesIf(isContextNotActive)('relative'),
-  meta.term('Layout')('Position'),
+  asElementToken('Layout')('Position'),
 );
 
 const asFullWidthSublist = withDesign({
@@ -108,9 +107,9 @@ const asFullWidthSublist = withDesign({
 
 const withHoverStyles = withDesign({
   Item: asToken(
-    addClasses('hover:overflow-visible'),
+    withVisibleOnHoverStyles,
     removeClassesIf(useIsMenuOpen)('hover:overflow-visible'),
-    meta.term('Layout')('Overflow'),
+    asElementToken('Layout')('Overflow'),
   ),
 });
 
@@ -124,6 +123,8 @@ const withBaseMenuStyles = asToken(
     Wrapper: asToken(asFlex, asRelative),
     Item: asOverflowHidden,
   }),
+  // @todo Discuss Attr and Category
+  asListToken('Menu')('Main'),
 );
 
 /*
@@ -144,7 +145,7 @@ const asListSubMenu = asToken(
   withBaseSubMenuStyles,
   asVisibleOnActive,
   asRelative,
-  meta.term('Submenu')('List'),
+  asListToken('Submenu')('List'),
 );
 
 /*
@@ -156,7 +157,7 @@ const asToutsSubMenu = asToken(
   asStaticOnHover,
   withBaseSubMenuStyles,
   asRelativeNotActive,
-  meta.term('Submenu')('Touts'),
+  asListToken('Submenu')('Touts'),
 );
 
 /*
@@ -168,7 +169,7 @@ const asColumnSubMenu = asToken(
   asStaticOnHover,
   withBaseSubMenuStyles,
   asRelativeNotActive,
-  meta.term('Submenu')('Columns'),
+  asListToken('Submenu')('Columns'),
 );
 
 /**
