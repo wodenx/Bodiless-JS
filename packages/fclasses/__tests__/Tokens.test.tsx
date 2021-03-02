@@ -46,6 +46,7 @@ describe('asToken', () => {
 
     it('Allows added props to be overridden', () => {
       const Test = addProp('foo', 'bar')(Base);
+      // @ts-ignore prop foo does not exist on test
       const wrapper = mount(<Test foo="baz" />);
       expect(wrapper.find(Base).props()).toEqual({
         foo: 'baz',
