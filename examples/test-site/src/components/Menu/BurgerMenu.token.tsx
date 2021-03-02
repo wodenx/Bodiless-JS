@@ -26,6 +26,10 @@ import {
   asTealBackground, asTextWhite, asMobileOnly, asBold,
 } from '../Elements.token';
 
+/**
+ * Tokens
+ * ===========================================
+ */
 const $asSiteToggler = asToken(
   withDesign({
     Button: asToken(asTextWhite, asMobileOnly),
@@ -35,6 +39,14 @@ const $asSiteToggler = asToken(
       addClasses('flex'),
     ),
   }),
+);
+
+const withFullWidthToggler = asToken(
+  withBurgerMenuToggler(
+    $asSiteToggler(BurgerMenuDefaultToggler),
+  ),
+  asTealBackground,
+  addClasses('flex items-center justify-between'),
 );
 
 const withTogglerWrapper = asToken(
@@ -51,13 +63,7 @@ const withBurgerMenuHeader = withDesign({
     replaceWith(Logo),
     asDefaultLogoStyle,
     withDesign({
-      SiteReturn: asToken(
-        withBurgerMenuToggler(
-          $asSiteToggler(BurgerMenuDefaultToggler),
-        ),
-        asTealBackground,
-        addClasses('flex items-center justify-between'),
-      ),
+      SiteReturn: withFullWidthToggler,
     }),
   ),
 });

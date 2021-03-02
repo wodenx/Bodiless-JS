@@ -20,8 +20,8 @@ import {
 } from '@bodiless/fclasses';
 import BurgerMenuClean from './BurgerMenuClean';
 
-import { withColumnSubMenuDesign } from '../withSubMenu';
-import { withSubMenuToken } from '../Menu.token';
+import { withColumnSubMenuDesign } from '../Menu/withSubMenu';
+import { withSubMenuToken } from '../Menu/Menu.token';
 
 type OverviewItem = {
   overview: JSX.Element,
@@ -64,7 +64,7 @@ const withOverlayLinkAccordion = <P extends object>(Component: ComponentType<P>)
   return asAccordionBody(WithOverlayLinkAccordion as ComponentType<P>);
 };
 
-const asBurgerMenuDesign = asToken(
+const withBurgerMenuSchema = asToken(
   asAccordionWrapper,
   withDesign({
     Wrapper: withOverlayLinkAccordion,
@@ -73,6 +73,8 @@ const asBurgerMenuDesign = asToken(
     }),
     Item: asBurgerMenuOverviewLink,
   }),
+  asToken.meta.term('Attribute')('Submenu'),
+  asToken.meta.term('Component')('Element'),
 );
 
 /**
@@ -98,9 +100,9 @@ const withBurgerMenuWrapper = <P extends object>(Component: ComponentType<P>) =>
  * @return Token that applies default burger menu styles based on provided keys.
  */
 const asBurgerMenu = (...keys: string[]) => asToken(
-  withSubMenuToken(...keys)(asBurgerMenuDesign),
+  withSubMenuToken(...keys)(withBurgerMenuSchema),
   keys.indexOf('Columns') > -1
-    ? withSubMenuToken('Columns')(withColumnSubMenuDesign(asBurgerMenuDesign))
+    ? withSubMenuToken('Columns')(withColumnSubMenuDesign(withBurgerMenuSchema))
     : {},
 );
 

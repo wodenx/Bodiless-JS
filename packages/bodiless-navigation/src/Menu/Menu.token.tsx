@@ -24,6 +24,10 @@ import {
 } from '@bodiless/fclasses';
 
 import { useIsMenuOpen } from './withMenuContext';
+import {
+  asFlex, asOverflowHidden, asRelative, asAbsolute,
+  asPositionedLeft, withFullWidthStyles, withColumnDirectionStyles,
+} from '../token';
 
 const { meta } = asToken;
 
@@ -71,38 +75,9 @@ const isContextNotActive = () => {
   return isEdit ? !isActive : true;
 };
 
-const asFlex = asToken(
-  addClasses('flex'),
-  meta.term('Layout')('Display'),
-);
-
-const asOverflowHidden = asToken(
-  addClasses('overflow-hidden'),
-  meta.term('Layout')('Overflow'),
-);
-
 const asVerticalSubMenu = withDesign({
-  Wrapper: asToken(
-    addClasses('flex-col'),
-    // @todo confirm category & term spelling
-    meta.term('Flexbox')('Flex Direction'),
-  ),
+  Wrapper: withColumnDirectionStyles,
 });
-
-const asRelative = asToken(
-  addClasses('relative'),
-  meta.term('Layout')('Position'),
-);
-
-const asAbsolute = asToken(
-  addClasses('absolute'),
-  meta.term('Layout')('Position'),
-);
-
-const asPositionedLeft = asToken(
-  addClasses('left-0'),
-  meta.term('Layout')('Left'),
-);
 
 const asVisibleOnActive = asToken(
   addClassesIf(isContextActive)('overflow-visible'),
@@ -128,16 +103,9 @@ const asRelativeNotActive = asToken(
 );
 
 const asFullWidthSublist = withDesign({
-  Wrapper: asToken(
-    addClasses('w-full'),
-    meta.term('Sizing')('Width'),
-  ),
+  Wrapper: withFullWidthStyles,
 });
 
-/*
- * Base Menu Styles
- * ===========================================
- */
 const withHoverStyles = withDesign({
   Item: asToken(
     addClasses('hover:overflow-visible'),
@@ -146,6 +114,10 @@ const withHoverStyles = withDesign({
   ),
 });
 
+/*
+ * Base Menu Styles
+ * ===========================================
+ */
 const withBaseMenuStyles = asToken(
   withHoverStyles,
   withDesign({

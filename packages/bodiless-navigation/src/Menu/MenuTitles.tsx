@@ -12,11 +12,10 @@
  * limitations under the License.
  */
 
-import React, { Fragment, ComponentType, FC } from 'react';
+import React, { ComponentType, FC } from 'react';
 import { flow } from 'lodash';
 import {
-  withSidecarNodes, withOnlyProps, withNode, withNodeKey,
-  WithNodeProps,
+  withSidecarNodes, withNode, withNodeKey, WithNodeProps,
 } from '@bodiless/core';
 import {
   asEditable, asBodilessLink, withBodilessLinkToggle, useBreadcrumbContext,
@@ -28,6 +27,7 @@ import {
   Div,
   Design,
   asToken,
+  Fragment,
   designable,
   withDesign,
   replaceWith,
@@ -73,7 +73,7 @@ const MenuTitleBase: FC<MenuTitleProps> = ({ components, ...rest }) => {
 
 const MenuTitleComponents: MenuTitleComponents = {
   Link: A,
-  Title: withOnlyProps('key', 'children')(Fragment),
+  Title: Fragment,
 };
 
 const MenuTitle = designable(MenuTitleComponents, 'Menu Title')(MenuTitleBase);

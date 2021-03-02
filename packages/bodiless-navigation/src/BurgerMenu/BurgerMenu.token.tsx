@@ -15,24 +15,14 @@
 import {
   addClasses, addClassesIf, asToken, withDesign,
 } from '@bodiless/fclasses';
+
 import { useIsBurgerMenuVisible, useIsBurgerMenuHidden } from './BurgerMenuContext';
+import {
+  withLightGrayBg, withNoInsetStyles, withFullWidthStyles, withFullHeightStyles,
+  asFixed, withFullZIndex, withMaterialIconsFont, withPointerCursorStyles,
+} from '../token';
 
-/**
- * Tokens
- * ===========================================
- */
 const { meta } = asToken;
-
-const withBurgerMenuTogglerStyles = withDesign({
-  Button: asToken(
-    addClasses('material-icons cursor-pointer'),
-  ),
-});
-
-const withLightGrayBg = asToken(
-  addClasses('bg-gray-200'),
-  meta.term('Backgrounds')('Color'),
-);
 
 const withTransformStyles = asToken(
   addClasses('transform'),
@@ -44,22 +34,40 @@ const withSlideInTranslateStyles = asToken(
   meta.term('Transforms')('Translate'),
 );
 
-/**
- * Animations
- * ===========================================
- */
+const withFullScreenStyles = asToken(
+  withFullWidthStyles,
+  withFullHeightStyles,
+  withNoInsetStyles,
+  asFixed,
+  withFullZIndex,
+  meta.term('Component')('Element'),
+);
+
+const withSlideInAnimationStyles = asToken(
+  withTransformStyles,
+  withSlideInTranslateStyles,
+  addClassesIf(useIsBurgerMenuHidden)('animate-slide-out'),
+  addClassesIf(useIsBurgerMenuVisible)('animate-slide-in'),
+  meta.term('Transitions')('Animation'),
+  meta.term('Component')('Element'),
+);
+
+const withTogglerButtonStyles = asToken(
+  withMaterialIconsFont,
+  withPointerCursorStyles,
+  meta.term('Component')('Element'),
+);
+
+const withBurgerMenuTogglerStyles = withDesign({
+  Button: withTogglerButtonStyles,
+});
+
 const withSlideInOutAnimation = withDesign({
-  Wrapper: asToken(
-    withTransformStyles,
-    withSlideInTranslateStyles,
-    addClassesIf(useIsBurgerMenuHidden)('animate-slide-out'),
-    addClassesIf(useIsBurgerMenuVisible)('animate-slide-in'),
-    meta.term('Transitions')('Animation'),
-  ),
+  Wrapper: withSlideInAnimationStyles,
 });
 
 const asFullScreen = withDesign({
-  Wrapper: addClasses('fixed top-0 left-0 w-full h-full z-full'),
+  Wrapper: withFullScreenStyles,
 });
 
 const withDefaultBackground = withDesign({
