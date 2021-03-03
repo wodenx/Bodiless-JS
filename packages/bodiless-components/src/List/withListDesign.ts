@@ -40,7 +40,7 @@ const allCanonicalPaths = (schema: Schema, prefix: Path = []): Path[] => {
 };
 
 // Creates an object representing list structure from a schema definition.
-const buildTree = (schema: Schema): any => {
+export const buildTree = (schema: Schema): any => {
   const paths = allCanonicalPaths(schema);
   const setPath = (path: Path) => (tree: any) => set(tree, path, true);
   return flow(
