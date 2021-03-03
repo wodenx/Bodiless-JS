@@ -1,4 +1,4 @@
-import { identity, flow } from 'lodash';
+import { identity, flow, set } from 'lodash';
 import { withDesign, HOC } from '@bodiless/fclasses';
 
 type Path = string[];
@@ -9,8 +9,10 @@ type Schema = {
 };
 
 // Returns the options available at a given depth
-const subKeysForPath = (schema: Schema) => (path: Path) => schema.keySpace
-  .filter(key => schema.hasNode([...path, key]));
+const subKeysForPath = (schema: Schema) => (path: Path) => (
+  path.length >= schema.maxDepth
+    ? [] : schema.keySpace.filter(key => schema.hasNode([...path, key]))
+);
 
 // Translates a canonical list path to an actual list design path (inserts the
 // 'Item' key where necessary), based on the list schema.
@@ -24,6 +26,7 @@ const realPath = (schema: Schema) => (pathIn: Path): Path => pathIn.reduce(
 );
 
 // Gives you all possible canonical paths for a given schema
+// @todo i think this does not properly limit to max-depth.
 const allCanonicalPaths = (schema: Schema, prefix: Path = []): Path[] => {
   const keys = subKeysForPath(schema)(prefix);
   return keys.reduce(
@@ -34,6 +37,17 @@ const allCanonicalPaths = (schema: Schema, prefix: Path = []): Path[] => {
     ],
     [] as Path[],
   );
+};
+
+// Creates an object representing list structure from a schema definition.
+const buildTree = (schema: Schema): any => {
+  const paths = allCanonicalPaths(schema);
+  const setPath = (path: Path) => (tree: any) => set(tree, path, true);
+  return flow(
+    paths
+      .sort((a, b) => a.length - b.length)
+      .map(path => setPath(path)),
+  )({});
 };
 
 const withDesignAtSingle = (path:Path) => (hoc:HOC): HOC => {
@@ -68,10 +82,10 @@ const canvasxSchema: Schema = {
   keySpace: ['Bullets', 'Numbers', 'SubList'],
   maxDepth: 3,
   hasNode: path => path.reduce<boolean>(
-    (result, key, depth) => (
+    (result, key, depth) => result && (
       depth === 0
-        ? (result && ['Bullets', 'Numbers', '_default'].includes(key))
-        : (result && ['Sublist', '_default'].includes(key))
+        ? ['Bullets', 'Numbers', '_default'].includes(key)
+        : ['Sublist', '_default'].includes(key)
     ),
     true,
   ),
