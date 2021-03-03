@@ -14,3 +14,4 @@
 
 export * from './Menu';
 export * from './BurgerMenu';
+export * from './Breadcrumbs';

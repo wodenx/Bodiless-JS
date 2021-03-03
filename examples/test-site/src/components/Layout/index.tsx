@@ -18,9 +18,8 @@ import {
   Div, designable, addClasses, replaceWith,
 } from '@bodiless/fclasses';
 import { useNode, withNodeKey, ifToggledOn } from '@bodiless/core';
-import { withBreadcrumbStore } from '@bodiless/components';
 import { withSearchResult } from '@bodiless/search';
-import { withBurgerMenuProvider } from '@bodiless/navigation';
+import { withBurgerMenuProvider, withBreadcrumbStore } from '@bodiless/navigation';
 import Header from './header';
 import Footer from './footer';
 import SeoHelmet from './meta';

@@ -22,7 +22,7 @@ import {
   BreadcrumbsClean,
   withBreadcrumbStartingTrail,
   withoutBreadcrumbFinalTrail,
-} from '../../src/Breadcrumbs';
+} from '../src/Breadcrumbs';
 
 const withAttrRename = (oldAttr: string, newAttr: string) => (Component: ComponentType) => {
   const WithAttrRename = (props: any) => {

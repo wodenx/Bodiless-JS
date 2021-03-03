@@ -17,12 +17,12 @@ import React, {
 } from 'react';
 import { useNode } from '@bodiless/core';
 import { withDesign } from '@bodiless/fclasses';
+import type { LinkData } from '@bodiless/components';
 import { observer } from 'mobx-react-lite';
 import { flow } from 'lodash';
 import { BreadcrumbItem } from './BreadcrumbStore';
 import type { BreadcrumbItemType } from './BreadcrumbStore';
 import { useBreadcrumbStore, asHiddenBreadcrumbSource } from './BreadcrumbStoreProvider';
-import type { LinkData } from '../Link';
 
 const breadcrumbContext = createContext<BreadcrumbItemType | undefined>(undefined);
 

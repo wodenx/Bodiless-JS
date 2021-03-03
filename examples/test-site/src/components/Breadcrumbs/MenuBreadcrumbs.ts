@@ -14,7 +14,8 @@
 
 import { flow } from 'lodash';
 import { withSidecarNodes, asReadOnly } from '@bodiless/core';
-import { withoutLinkWhenLinkDataEmpty, Breadcrumbs as BreadcrumbsBase } from '@bodiless/components';
+import { withoutLinkWhenLinkDataEmpty } from '@bodiless/components';
+import { Breadcrumbs as BreadcrumbsBase } from '@bodiless/navigation';
 import {
   addClasses, withDesign, replaceWith, A, Span, Ul, stylable,
 } from '@bodiless/fclasses';

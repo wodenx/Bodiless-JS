@@ -145,8 +145,6 @@ export * from './Chameleon/index';
 export * from './List';
 export * from './Link';
 
-export * from './Breadcrumbs';
-
 export type { MetaFormFieldType, YouTubePlayerSettings };
 
 export type {

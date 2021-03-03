@@ -26,7 +26,7 @@ import {
   withBreadcrumbStartingTrail,
   withBreadcrumbFinalTrail,
   withoutBreadcrumbFinalTrail,
-} from '@bodiless/components';
+} from '@bodiless/navigation';
 import {
   addClasses,
   addProps,

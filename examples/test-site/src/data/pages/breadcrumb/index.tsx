@@ -18,7 +18,7 @@ import React, { Fragment } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { asReadOnly } from '@bodiless/core';
-import { withBreadcrumbStore } from '@bodiless/components';
+import { withBreadcrumbStore } from '@bodiless/navigation';
 import {
   addClasses, H1 as H1$, H2 as H2$, P as P$, withDesign,
 } from '@bodiless/fclasses';

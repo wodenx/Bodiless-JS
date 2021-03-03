@@ -17,10 +17,7 @@ import { flow } from 'lodash';
 import {
   withSidecarNodes, withNode, withNodeKey, WithNodeProps,
 } from '@bodiless/core';
-import {
-  asEditable, asBodilessLink, withBodilessLinkToggle, useBreadcrumbContext,
-  asBreadcrumbSource as asBreadcrumbSourceBase,
-} from '@bodiless/components';
+import { asEditable, asBodilessLink, withBodilessLinkToggle } from '@bodiless/components';
 import { ToutClean } from '@bodiless/organisms';
 import {
   A,
@@ -34,6 +31,8 @@ import {
   DesignableProps,
   DesignableComponentsProps,
 } from '@bodiless/fclasses';
+
+import { useBreadcrumbContext, asBreadcrumbSource as asBreadcrumbSourceBase } from '../Breadcrumbs';
 
 type MenuTitleComponents = {
   Link: ComponentType<any>,

@@ -19,12 +19,11 @@ import { mount, ReactWrapper } from 'enzyme';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import cheerio from 'cheerio';
 import { withDefaultContent, withSidecarNodes } from '@bodiless/core';
-import {
-  asBodilessLink, asEditable, withBreadcrumbStore, Breadcrumbs,
-} from '@bodiless/components';
+import { asBodilessLink, asEditable } from '@bodiless/components';
 import { replaceWith, withDesign } from '@bodiless/fclasses';
 import {
   asBodilessMenu, withListSubMenu, withColumnSubMenu, withToutSubMenu,
+  withBreadcrumbStore, Breadcrumbs,
 } from '../src';
 
 const { DefaultContentNode } = require('@bodiless/core');

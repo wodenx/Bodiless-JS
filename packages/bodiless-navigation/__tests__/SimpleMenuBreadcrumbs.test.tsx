@@ -18,18 +18,19 @@ import { mount, ReactWrapper } from 'enzyme';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import cheerio from 'cheerio';
 import { withDefaultContent, withSidecarNodes, ifToggledOn } from '@bodiless/core';
-import {
-  asBodilessLink, asEditable, withBreadcrumbStartingTrail, Breadcrumbs, withBreadcrumbStore,
-} from '@bodiless/components';
+import { asBodilessLink, asEditable } from '@bodiless/components';
 import {
   replaceWith,
   withDesign,
   addProps,
 } from '@bodiless/fclasses';
 import { flowRight } from 'lodash';
-import type { BreadcrumbStoreItemsReducer } from '@bodiless/components';
 
-import { asBodilessMenu, withListSubMenu } from '../src';
+import {
+  asBodilessMenu, withListSubMenu, withBreadcrumbStartingTrail,
+  Breadcrumbs, withBreadcrumbStore,
+} from '../src';
+import type { BreadcrumbStoreItemsReducer } from '../src';
 
 const { DefaultContentNode } = require('@bodiless/core');
 
