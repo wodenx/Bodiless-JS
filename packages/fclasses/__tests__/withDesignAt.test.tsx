@@ -1,10 +1,11 @@
 import React, { ComponentType, FC } from 'react';
 import flow from 'lodash/flow';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { mount, render } from 'enzyme';
+import { render } from 'enzyme';
 import type { DesignableComponentsProps, Token } from '../src';
-import { designable, replaceWith, withDesign } from '../src';
-import withDesignAt from '../src/withDesignAt';
+import {
+  designable, replaceWith, withDesign, withDesignAt,
+} from '../src';
 
 type Components = {
   A: ComponentType<any>,
@@ -62,7 +63,6 @@ const Outer = flow(
   withAttr('comp', 'outer'),
 )(Base);
 
-
 const findNeedle = (T: ComponentType) => {
   // const wrapper = mount(<T />);
   // console.log(wrapper.html());
@@ -102,7 +102,7 @@ describe('withDesignAt', () => {
 
   it('Applies a design correctly to an middle path', () => {
     const Test = withDesignAt(['A', 'A'])({
-      B: withNeedle
+      B: withNeedle,
     })(Outer);
     const needle = findNeedle(Test);
     expect(needle).toHaveLength(1);
@@ -124,7 +124,7 @@ describe('withDesignAt', () => {
     expect(needle.eq(1).attr('data-key')).toBe('outer-b');
   });
 
-  it('Applies a token correctly at the top level',  () => {
+  it('Applies a token correctly at the top level', () => {
     const Test = withDesignAt([])(withNeedle)(Outer);
     const needle = findNeedle(Test);
     expect(needle).toHaveLength(1);
