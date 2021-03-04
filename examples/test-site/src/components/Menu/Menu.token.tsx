@@ -12,16 +12,13 @@
  * limitations under the License.
  */
 
-import { asToken, withDesign, addClasses } from '@bodiless/fclasses';
-import {
-  asTopNav, withSubMenuToken, withColumnSubMenuDesign, useIsActiveTrail,
-} from '@bodiless/navigation';
-
 import { ifToggledOn } from '@bodiless/core';
+import { asToken, withDesign, addClasses } from '@bodiless/fclasses';
+import { asTopNav, useIsActiveTrail, withMenuDesign } from '@bodiless/navigation';
+
 import {
-  asBold, asLightTealBackground,
+  asBold, asLightTealBackground, asAlignLeft,
   asLightTealBackgroundOnHover, asTealBackground, asTextWhite,
-  asAlignLeft,
 } from '../Elements.token';
 import { asUnderline } from '../ElementDefault.token';
 
@@ -87,20 +84,17 @@ const $withListSubmenuStyles = withDesign({
   Wrapper: addClasses('w-content'),
 });
 
-const $withColumnsSublistStyles = withColumnSubMenuDesign(
-  $withTitleStyles,
-  withDesign({
-    Title: addClasses('pl-6'),
-  }),
-);
+const $withColumnsSublistStyles = withDesign({
+  Title: addClasses('pl-6'),
+});
 
 const $asSiteNavStyles = asToken(
   asTopNav('List', 'Columns', 'Touts'),
   $withBaseMenuStyles,
-  withSubMenuToken('Main', 'List', 'Columns', 'Touts')($withTitleStyles),
-  withSubMenuToken('List', 'Columns', 'Touts')($withBaseSubMenuStyles),
-  withSubMenuToken('Columns')($withColumnsSublistStyles),
-  withSubMenuToken('List')($withListSubmenuStyles),
+  withMenuDesign(['Main', 'List', 'Columns', 'Touts'])($withTitleStyles),
+  withMenuDesign(['List', 'Columns', 'Touts'])($withBaseSubMenuStyles),
+  withMenuDesign('Columns', 2)($withColumnsSublistStyles),
+  withMenuDesign('List')($withListSubmenuStyles),
 );
 
 export default $asSiteNavStyles;

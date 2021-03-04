@@ -20,7 +20,7 @@ import { withDefaultContent } from '@bodiless/core';
 import { mount } from 'enzyme';
 
 import {
-  asBodilessMenu, withListSubMenu, withSubMenuToken, withColumnSubMenu, withToutSubMenu,
+  asBodilessMenu, withListSubMenu, withMenuDesign, withColumnSubMenu, withToutSubMenu,
   withColumnSubMenuDesign,
 } from '../src';
 
@@ -75,7 +75,7 @@ describe('Bodiless Menu', () => {
     Title: addProps({ 'data-test': 'menu-title' }),
   });
 
-  const withSubMenuDesign = (submenuType: string = 'List') => withSubMenuToken(submenuType)(
+  const withSubMenuDesign = (submenuType: string = 'List') => withMenuDesign(submenuType)(
     withDesign({
       Wrapper: addProps({ 'data-test-submenu': `${submenuType.toLowerCase()}-submenu` }),
       Title: addProps({ 'data-test-submenu': `${submenuType.toLowerCase()}-submenu-title` }),
@@ -126,7 +126,7 @@ describe('Bodiless Menu', () => {
       withColumnSubMenuItems(...subMenuItems),
       withTopMenuDesign,
       withSubMenuDesign('Columns'),
-      withSubMenuToken('Columns')(
+      withMenuDesign('Columns')(
         withColumnSubMenuDesign(
           withDesign({
             Wrapper: addProps({ 'data-test-submenu': 'sub-column-submenu' }),

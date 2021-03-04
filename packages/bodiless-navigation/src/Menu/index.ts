@@ -21,7 +21,7 @@ import {
   withListSubMenu, withToutSubMenu, withColumnSubMenu, withColumnSubMenuDesign,
 } from './withSubMenu';
 
-import { withSubMenuToken, asTopNav } from './Menu.token';
+import { withMenuDesign, asTopNav } from './Menu.token';
 
 export {
   asBodilessMenu,
@@ -34,6 +34,6 @@ export {
   asMenuLink,
   asMenuTitle,
   asMenuTout,
-  withSubMenuToken,
+  withMenuDesign,
   asTopNav,
 };

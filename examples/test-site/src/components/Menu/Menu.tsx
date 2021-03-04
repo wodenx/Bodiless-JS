@@ -30,11 +30,10 @@ const BodilessMenuBase = flow(
   asBodilessMenu(),
   withListSubMenu(),
   withColumnSubMenu(),
-  withToutSubMenu(),
+  withToutSubMenu($asEditableMenuTout),
 )('ul') as ComponentType<any>;
 
 const BodilessMenu = flow(
-  withToutSubMenu($asEditableMenuTout),
   $asSiteNavStyles,
 )(BodilessMenuBase);
 

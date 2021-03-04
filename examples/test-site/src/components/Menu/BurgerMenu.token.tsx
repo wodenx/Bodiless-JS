@@ -16,8 +16,7 @@ import {
   Div, asToken, replaceWith, withDesign, addClasses,
 } from '@bodiless/fclasses';
 import {
-  asBurgerMenu, withSubMenuToken, withColumnSubMenuDesign,
-  BurgerMenuDefaultToggler, withBurgerMenuToggler, asSlideLeft,
+  asBurgerMenu, withMenuDesign, BurgerMenuDefaultToggler, withBurgerMenuToggler, asSlideLeft,
 } from '@bodiless/navigation';
 
 import Logo from '../Layout/logo';
@@ -80,17 +79,14 @@ const $withBaseSubMenuStyles = withDesign({
   Item: addClasses('pl-4'),
 });
 
-const $withColumnSubMenuStyles = withColumnSubMenuDesign(
-  withDesign({
-    Item: addClasses('pl-8'),
-  }),
-  $withBoldAccordionTitle,
-);
+const $withColumnSubMenuStyles = withDesign({
+  Item: addClasses('pl-8'),
+});
 
 const $withBurgerMenuStyles = asToken(
   asBurgerMenu('List', 'Columns', 'Touts'),
-  withSubMenuToken('List', 'Columns', 'Touts')($withBaseSubMenuStyles, $withBoldAccordionTitle),
-  withSubMenuToken('Columns')($withColumnSubMenuStyles),
+  withMenuDesign(['List', 'Columns', 'Touts'])($withBaseSubMenuStyles, $withBoldAccordionTitle),
+  withMenuDesign('Columns')($withColumnSubMenuStyles),
 );
 
 const $asSiteBurgerMenu = asToken(

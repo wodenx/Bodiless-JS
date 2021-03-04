@@ -20,8 +20,7 @@ import {
 } from '@bodiless/fclasses';
 import BurgerMenuClean from './BurgerMenuClean';
 
-import { withColumnSubMenuDesign } from '../Menu/withSubMenu';
-import { withSubMenuToken } from '../Menu/Menu.token';
+import { withMenuDesign } from '../Menu/Menu.token';
 
 type OverviewItem = {
   overview: JSX.Element,
@@ -100,10 +99,8 @@ const withBurgerMenuWrapper = <P extends object>(Component: ComponentType<P>) =>
  * @return Token that applies default burger menu styles based on provided keys.
  */
 const asBurgerMenu = (...keys: string[]) => asToken(
-  withSubMenuToken(...keys)(withBurgerMenuSchema),
-  keys.indexOf('Columns') > -1
-    ? withSubMenuToken('Columns')(withColumnSubMenuDesign(withBurgerMenuSchema))
-    : {},
+  withMenuDesign(keys)(withBurgerMenuSchema),
+  // @todo what meta?
 );
 
 export default asBurgerMenu;

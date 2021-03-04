@@ -11,16 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { omit } from 'lodash';
+
 import { useEditContext } from '@bodiless/core';
 import {
   addClasses,
   removeClassesIf,
   addClassesIf,
+  withDesignAt,
   withDesign,
   TokenDef,
   asToken,
-  Design,
 } from '@bodiless/fclasses';
 
 import { useIsMenuOpen } from './withMenuContext';
@@ -29,6 +29,80 @@ import {
   asPositionedLeft, withFullWidthStyles, withColumnDirectionStyles,
   withStaticOnHoverStyles, withVisibleOnHoverStyles, asElementToken, asListToken,
 } from '../token';
+
+const withSecondLevelDesign = (keys: string[]) => keys.reduce((result, item) => {
+  result.push(['Item', item]);
+  return result;
+}, [] as any[]);
+
+// eslint-disable-next-line no-confusing-arrow
+const withThirdLevelDesign = (keys: string[]) => keys.includes('Columns')
+  ? [['Item', 'Columns', 'Item', 'SubList']]
+  : [];
+
+// @todo think about implementation
+const depthDesignPathOptions = [() => [], withSecondLevelDesign, withThirdLevelDesign];
+
+/**
+ * Applies a token or design at a particular design path in the menu.
+ *
+ * @example
+ * ```js
+ * withMenuDesign('Columns') -- all levels of columns submenu
+ * withDesignAt(['Item', 'Columns'], ['Item', 'Columns', 'Item', 'SubList'])
+ *
+ * withMenuDesign('Columns', 1) -- second level of columns submenu
+ * withDesignAt(['Item', 'Columns'])
+ *
+ * withMenuDesign('Columns', 2) -- second level of columns submenu
+ * withDesignAt(['Item', 'Columns', 'Item', 'SubList'])
+ *
+ * withMenuDesign('Touts') -- all levels of touts submenu
+ * withDesignAt(['Item', 'Touts'])
+ *
+ * withMenuDesign('List') -- all levels of lists submenu
+ * withDesignAt(['Item', 'List'])
+ *
+ * withMenuDesign() -- all levels of all submenus + top menu
+ * withDesignAt(
+ *   ['Item'],
+ *   ['Item', 'List'],
+ *   ['Item', 'Touts'],
+ *   ['Item', 'Columns'],
+ *   ['Item', 'Columns', 'Item', 'SubList'],
+ * )
+ *
+ * withMenuDesign(undefined, 0) -- top level menu only
+ * withDesignAt(['Item'])
+ *
+ * withMenuDesign(undefined, 1) -- all submenus of level 1
+ * withDesignAt(['Item', 'List'], ['Item', 'Touts'], ['Item', 'Columns'])
+
+ * withMenuDesign(undefined, 2) -- all submenus of level 2 ( currently columns submenus only )
+ * withDesignAt(['Item', 'Columns', 'Item', 'SubList'])
+ * ```
+ */
+export const withMenuDesign = <P extends object>(
+  keys: string|string[] = ['Main', 'List', 'Columns', 'Touts'],
+  depths: number|number[] = [0, 1, 2],
+) => (...tokenDefs: TokenDef<P>[]) => {
+    const keys$ = Array.isArray(keys) ? keys : [keys];
+    const depths$ = Array.isArray(depths) ? depths : [depths];
+
+    const submenuDesignPaths: any = [];
+    depths$
+      .filter(d => d < 3 && d > 0)
+      .forEach(d => submenuDesignPaths.push(...depthDesignPathOptions[d](keys$.filter(k => k !== 'Main'))));
+
+    if (keys$.includes('Main') && depths$.includes(0)) {
+      return asToken(
+        ...tokenDefs,
+        withDesignAt(...submenuDesignPaths)(asToken(...tokenDefs)),
+      );
+    }
+
+    return withDesignAt(...submenuDesignPaths)(asToken(...tokenDefs));
+  };
 
 /**
  * Helper which makes it easier to target a particular type of submenu.
@@ -42,23 +116,23 @@ import {
  *
  * @return Desigh token that applies supplied list of tokens to the provided design keys.
  */
-export const withSubMenuToken = <P extends object>(
-  ...keys: string[]
-) => (...tokenDefs: TokenDef<P>[]) => {
-    const design: Design<any> = keys.reduce((acc, key) => ({
-      ...acc,
-      [key]: asToken(...tokenDefs),
-    }), {});
+// export const withSubMenuToken = <P extends object>(
+//   ...keys: string[]
+// ) => (...tokenDefs: TokenDef<P>[]) => {
+//     const design: Design<any> = keys.reduce((acc, key) => ({
+//       ...acc,
+//       [key]: asToken(...tokenDefs),
+//     }), {});
 
-    const withSubMenuDesign = withDesign({
-      Item: withDesign(omit(design, 'Main')),
-    });
+//     const withSubMenuDesign = withDesign({
+//       Item: withDesign(omit(design, 'Main')),
+//     });
 
-    /* eslint-disable dot-notation */
-    return design['Main']
-      ? asToken(design['Main'], withSubMenuDesign)
-      : withSubMenuDesign;
-  };
+//     /* eslint-disable dot-notation */
+//     return design['Main']
+//       ? asToken(design['Main'], withSubMenuDesign)
+//       : withSubMenuDesign;
+//   };
 
 /*
  * Utility Styles
@@ -185,9 +259,10 @@ export const asTopNav = (...keys: string[]) => {
   const columnsSubmenuStyles = keys.indexOf('Columns') > -1 ? asColumnSubMenu : asToken();
 
   return asToken(
-    withSubMenuToken('Main')(withBaseMenuStyles),
-    withSubMenuToken('List')(listSubmenuStyles),
-    withSubMenuToken('Touts')(toutsSubmenuStyles),
-    withSubMenuToken('Columns')(columnsSubmenuStyles),
+    withMenuDesign('Main')(withBaseMenuStyles),
+    withMenuDesign('List')(listSubmenuStyles),
+    withMenuDesign('Touts')(toutsSubmenuStyles),
+    withMenuDesign('Columns', [0, 1])(columnsSubmenuStyles),
+    // withMenuDesign('Columns')(asTest),
   );
 };
