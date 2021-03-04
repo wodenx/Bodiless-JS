@@ -1,9 +1,8 @@
 import ListSchema from '../src/List/ListSchema';
-import List from '../src/List/List';
 const { DefaultKey } = ListSchema;
 
 describe('ListSchema', () => {
-  it.only('Rejects paths that dont exist', () => {
+  it('Rejects paths that dont exist', () => {
     const schema = new ListSchema(
       ['Foo'],
       ['Foo', 'Bar'],
