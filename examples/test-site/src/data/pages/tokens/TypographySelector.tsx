@@ -1,5 +1,5 @@
 import { WithNodeKeyProps, UseBodilessOverrides } from '@bodiless/core';
-import { addProps, withTokensFromProps, addClasses } from '@bodiless/fclasses';
+import { addProps, withTokensFromProps } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import React, { ComponentType } from 'react';
 import {

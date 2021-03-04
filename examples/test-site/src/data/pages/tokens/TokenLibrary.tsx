@@ -108,7 +108,7 @@ const useEditButtonOptions = (): EditButtonOptions<any, any> => {
 const TokenLibrary = withSidecarNodes(flow(
   withTokenLibrary,
   withEditButton(useEditButtonOptions),
-  withNodeDataHandlers({ tokens: []}),
+  withNodeDataHandlers({ tokens: [] }),
   withNode,
   withNodeKey('token-library'),
 ))(Fragment);

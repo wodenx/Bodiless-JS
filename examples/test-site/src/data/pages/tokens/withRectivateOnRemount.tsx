@@ -1,5 +1,6 @@
 import React, { FC, ComponentType } from 'react';
 import { useEditContext, useActivateOnEffect, useActivateOnEffectActivator } from '@bodiless/core';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { v4 } from 'uuid';
 
 export const useRectivateOnRemount = (uuid: string) => {

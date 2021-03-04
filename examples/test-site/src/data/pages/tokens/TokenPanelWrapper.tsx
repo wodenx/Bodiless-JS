@@ -5,6 +5,7 @@ import {
   useNode,
 } from '@bodiless/core';
 import { asAccodionTitle, asAccordionBody, asAccordionWrapper } from '@bodiless/organisms';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { v4 } from 'uuid';
 import { flow, flowRight } from 'lodash';
 import { observer } from 'mobx-react-lite';

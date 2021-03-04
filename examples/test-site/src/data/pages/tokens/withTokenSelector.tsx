@@ -9,6 +9,7 @@ import {
 } from '@bodiless/core';
 import { ComponentOrTag, TokensProps } from '@bodiless/fclasses/lib/withTokensFromProps';
 import { flowRight, pick } from 'lodash';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { v4 } from 'uuid';
 import type { Token } from './TokenMap';
 import TokenMap from './TokenMap';
