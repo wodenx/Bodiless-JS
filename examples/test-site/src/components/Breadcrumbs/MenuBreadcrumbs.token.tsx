@@ -24,51 +24,31 @@ import {
 } from '@bodiless/core';
 import {
   withBreadcrumbStartingTrail,
-  withBreadcrumbFinalTrail,
   withoutBreadcrumbFinalTrail,
 } from '@bodiless/navigation';
 import {
+  asToken,
+  stylable,
   addClasses,
   addProps,
   withDesign,
   replaceWith,
   A,
+  Ul,
   Span,
   Fragment,
 } from '@bodiless/fclasses';
 
 import {
   asBold,
-  asEditable,
   asEditableLink,
   asLink,
 } from '../Elements.token';
 
-const withEditableStartingTrail = (
-  nodeKeys?: WithNodeKeyProps,
-  placeholder?: string,
-) => flow(
-  withBreadcrumbStartingTrail,
-  withDesign({
-    StartingTrail: replaceWith(
-      flow(
-        asEditable('text', placeholder),
-        addProps({
-          children: 'Home',
-        }),
-        withSidecarNodes(
-          asEditableLink('link'),
-        ),
-        addProps({
-          href: '/',
-        }),
-        asLink,
-        withNode,
-        withNodeKey(nodeKeys),
-      )(A),
-    ),
-  }),
-);
+const HomeBreadcrumbIcon = asToken(
+  addProps({ children: 'home' }),
+  addClasses('material-icons'),
+)(Span);
 
 const withStartingTrailIcon = (
   nodeKeys?: WithNodeKeyProps,
@@ -77,21 +57,11 @@ const withStartingTrailIcon = (
   withDesign({
     StartingTrail: replaceWith(
       flow(
-        withChild(
-          flow(
-            addProps({
-              children: 'home',
-            }),
-            addClasses('material-icons'),
-          )(Span),
-        ),
-        addClasses('material-icons'),
+        withChild(HomeBreadcrumbIcon),
         withSidecarNodes(
           asEditableLink('link'),
         ),
-        addProps({
-          href: '/',
-        }),
+        addProps({ href: '/' }),
         withNode,
         withNodeKey(nodeKeys),
       )(A),
@@ -102,19 +72,6 @@ const withStartingTrailIcon = (
 const withNonLinkableItems = withDesign({
   BreadcrumbLink: replaceWith(Fragment),
 });
-
-const withEditableFinalTrail = (
-  nodeKeys?: WithNodeKeyProps,
-  placeholder?: string,
-) => flow(
-  withDesign({
-    FinalTrail: flow(
-      replaceWith(Span),
-      asEditable(nodeKeys, placeholder),
-    ),
-  }),
-  withBreadcrumbFinalTrail,
-);
 
 const withBoldedFinalTrail = withDesign({
   BreadcrumbItem: ifToggledOn(({ isCurrentPage }: any) => isCurrentPage)(asBold),
@@ -130,7 +87,7 @@ const withHiddenCurrentPageItem = flow(
   withoutBreadcrumbFinalTrail,
 );
 
-export const withSeparator = (separator: string) => addProps({
+const withSeparator = (separator: string) => addProps({
   children: separator,
 });
 
@@ -146,14 +103,34 @@ const withSlashSeparator = withDesign({
   Separator: withSeparator('/'),
 });
 
+const withStartingTrailLinkStyles = withDesign({
+  StartingTrail: asLink,
+});
+
+const withMenuBreadcrumbStyles = asToken(
+  withDesign({
+    Separator: asToken(
+      replaceWith(Span),
+      addClasses('mx-1'),
+    ),
+    BreadcrumbWrapper: asToken(
+      replaceWith(Ul),
+      addClasses('inline-flex'),
+    ),
+    BreadcrumbItem: stylable,
+    BreadcrumbLink: asLink,
+  }),
+  withStartingTrailLinkStyles,
+  withArrowSeparator,
+);
+
 export {
-  withEditableStartingTrail,
+  withMenuBreadcrumbStyles,
   withStartingTrailIcon,
   withNonLinkableItems,
-  withEditableFinalTrail,
   withBoldedFinalTrail,
-  withArrowSeparator,
   withVerticalBarSeparator,
   withSlashSeparator,
   withHiddenCurrentPageItem,
+  withStartingTrailLinkStyles,
 };

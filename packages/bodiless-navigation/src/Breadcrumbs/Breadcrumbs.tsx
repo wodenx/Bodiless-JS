@@ -307,14 +307,22 @@ const withoutFinalTrail = addProps({
 });
 
 /**
+ * HOC that adds breadcrumb props retrieved from breadcrumb store.
+ */
+const asMenuBreadcrumbs = flowRight(
+  observer,
+  withBreadcrumbItemsFromStore,
+);
+
+/**
  * Component that renders breadcrumb items retrieved from breadcrumb store.
  */
 const Breadcrumbs = flowRight(
-  observer,
-  withBreadcrumbItemsFromStore,
+  asMenuBreadcrumbs,
 )(BreadcrumbsClean);
 
 export {
+  asMenuBreadcrumbs,
   BreadcrumbsClean,
   Breadcrumbs,
   withStartingTrail as withBreadcrumbStartingTrail,

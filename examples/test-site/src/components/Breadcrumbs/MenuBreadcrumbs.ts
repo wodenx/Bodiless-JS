@@ -12,43 +12,22 @@
  * limitations under the License.
  */
 
-import { flow } from 'lodash';
-import { withSidecarNodes, asReadOnly } from '@bodiless/core';
-import { withoutLinkWhenLinkDataEmpty } from '@bodiless/components';
-import { Breadcrumbs as BreadcrumbsBase } from '@bodiless/navigation';
 import {
-  addClasses, withDesign, replaceWith, A, Span, Ul, stylable,
-} from '@bodiless/fclasses';
-
-import { asEditable, asEditableLink, asLink } from '../Elements.token';
-
-import {
-  withArrowSeparator,
+  BreadcrumbsClean,
+  asMenuBreadcrumbs,
   withEditableStartingTrail,
   withEditableFinalTrail,
-} from './MenuBreadcrumbs.token';
+  withMenuBreadcrumbSchema as withDefaultBreadcrumbSchema,
+} from '@bodiless/navigation';
+import { asToken } from '@bodiless/fclasses';
+
+import { withMenuBreadcrumbStyles } from './MenuBreadcrumbs.token';
 
 const DEFAULT_STARTING_TRAIL_NODE_KEY = 'startingTrail';
 const DEFAULT_FINAL_TRAIL_NODE_KEY = 'finalTrail';
 
-const withMenuBreadcrumbSchema = flow(
-  withDesign({
-    BreadcrumbLink: flow(
-      replaceWith(
-        flow(
-          withoutLinkWhenLinkDataEmpty,
-          withSidecarNodes(
-            asEditableLink(),
-          ),
-        )(A),
-      ),
-      asReadOnly,
-    ),
-    BreadcrumbTitle: flow(
-      replaceWith(asEditable('text', 'Breadcrumb Item')(Span)),
-      asReadOnly,
-    ),
-  }),
+const withMenuBreadcrumbSchema = asToken(
+  withDefaultBreadcrumbSchema,
   withEditableStartingTrail({
     nodeKey: DEFAULT_STARTING_TRAIL_NODE_KEY,
     nodeCollection: 'site',
@@ -56,30 +35,11 @@ const withMenuBreadcrumbSchema = flow(
   withEditableFinalTrail(DEFAULT_FINAL_TRAIL_NODE_KEY, 'Enter item'),
 );
 
-const withMenuBreadcrumbsStyles = flow(
-  withDesign({
-    Separator: flow(
-      replaceWith(Span),
-      addClasses('mx-1'),
-    ),
-    BreadcrumbWrapper: flow(
-      replaceWith(Ul),
-      addClasses('inline-flex'),
-    ),
-    // if we want to do replaceWith
-    // then we need to strip non-li (position, isCurrentPage) props ourself
-    // otherwise we will get runtime warning
-    // see @bodiless/components BreadcrumbStartComponents
-    BreadcrumbItem: stylable,
-    BreadcrumbLink: asLink,
-  }),
-  withArrowSeparator,
-);
-
-const Breadcrumbs = flow(
+const Breadcrumbs = asToken(
+  asMenuBreadcrumbs,
   withMenuBreadcrumbSchema,
-  withMenuBreadcrumbsStyles,
-)(BreadcrumbsBase);
+  withMenuBreadcrumbStyles,
+)(BreadcrumbsClean);
 
 export default Breadcrumbs;
 export {

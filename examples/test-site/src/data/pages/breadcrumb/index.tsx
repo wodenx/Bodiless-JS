@@ -18,7 +18,7 @@ import React, { Fragment } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { asReadOnly } from '@bodiless/core';
-import { withBreadcrumbStore } from '@bodiless/navigation';
+import { withBreadcrumbStore, withEditableStartingTrail } from '@bodiless/navigation';
 import {
   addClasses, H1 as H1$, H2 as H2$, P as P$, withDesign,
 } from '@bodiless/fclasses';
@@ -28,13 +28,13 @@ import Layout from '../../../components/Layout';
 import BodilessMenu from '../../../components/Menu/Menu';
 import Breadcrumbs, { DEFAULT_STARTING_TRAIL_NODE_KEY } from '../../../components/Breadcrumbs/MenuBreadcrumbs';
 import {
-  withEditableStartingTrail,
   withStartingTrailIcon,
   withNonLinkableItems,
   withBoldedFinalTrail,
   withVerticalBarSeparator,
   withSlashSeparator,
   withHiddenCurrentPageItem,
+  withStartingTrailLinkStyles,
 } from '../../../components/Breadcrumbs/MenuBreadcrumbs.token';
 import { asHeader2, asHeader1, asItalic } from '../../../components/Elements.token';
 
@@ -43,6 +43,7 @@ const MenuBreadcrumbs = flow(
     `${DEFAULT_STARTING_TRAIL_NODE_KEY}Default`,
     'Enter item',
   ),
+  withStartingTrailLinkStyles,
 )(Breadcrumbs);
 
 const BreadcrumbWithStartingTrailIcon = withStartingTrailIcon(
@@ -54,6 +55,7 @@ const BreadcrumbWithNonLinkableItems = flow(
     `${DEFAULT_STARTING_TRAIL_NODE_KEY}NonLinkable`,
     'Enter item',
   ),
+  withStartingTrailLinkStyles,
   withNonLinkableItems,
 )(Breadcrumbs);
 
@@ -62,6 +64,7 @@ const BreadcrumbWithBoldableFinalItem = flow(
     `${DEFAULT_STARTING_TRAIL_NODE_KEY}BoldedFinal`,
     'Enter item',
   ),
+  withStartingTrailLinkStyles,
   withBoldedFinalTrail,
 )(Breadcrumbs);
 
@@ -70,6 +73,7 @@ const BreadcrumbWithVerticalBarSeparator = flow(
     `${DEFAULT_STARTING_TRAIL_NODE_KEY}VerticalBar`,
     'Enter item',
   ),
+  withStartingTrailLinkStyles,
   withVerticalBarSeparator,
 )(Breadcrumbs);
 
@@ -78,6 +82,7 @@ const BreadcrumbWithSlashSeparator = flow(
     `${DEFAULT_STARTING_TRAIL_NODE_KEY}SlashSeparator`,
     'Enter item',
   ),
+  withStartingTrailLinkStyles,
   withSlashSeparator,
 )(Breadcrumbs);
 
@@ -86,6 +91,7 @@ const BreadcrumbWithHiddenCurrentPageItem = flow(
     `${DEFAULT_STARTING_TRAIL_NODE_KEY}CurrentPage`,
     'Enter item',
   ),
+  withStartingTrailLinkStyles,
   withHiddenCurrentPageItem,
 )(Breadcrumbs);
 
@@ -94,6 +100,7 @@ const MegaMenuBreadcrumbWithNonLinkableItems = flow(
     `${DEFAULT_STARTING_TRAIL_NODE_KEY}MegaMenuNonLinkable`,
     'Enter item',
   ),
+  withStartingTrailLinkStyles,
   withDesign({
     StartingTrail: asReadOnly,
   }),

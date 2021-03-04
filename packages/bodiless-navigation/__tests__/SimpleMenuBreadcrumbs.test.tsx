@@ -28,11 +28,13 @@ import { flowRight } from 'lodash';
 
 import {
   asBodilessMenu, withListSubMenu, withBreadcrumbStartingTrail,
-  Breadcrumbs, withBreadcrumbStore,
+  BreadcrumbsClean, asMenuBreadcrumbs, withBreadcrumbStore,
 } from '../src';
-import type { BreadcrumbStoreItemsReducer } from '../src';
+import type { BreadcrumbStoreItemsReducer } from '../src/Breadcrumbs/Breadcrumbs';
 
 const { DefaultContentNode } = require('@bodiless/core');
+
+const Breadcrumbs = asMenuBreadcrumbs(BreadcrumbsClean);
 
 const setPagePath = (pagePath: string) => {
   Object.defineProperty(DefaultContentNode.prototype, 'pagePath', {

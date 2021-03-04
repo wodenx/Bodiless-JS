@@ -23,10 +23,12 @@ import { asBodilessLink, asEditable } from '@bodiless/components';
 import { replaceWith, withDesign } from '@bodiless/fclasses';
 import {
   asBodilessMenu, withListSubMenu, withColumnSubMenu, withToutSubMenu,
-  withBreadcrumbStore, Breadcrumbs,
+  withBreadcrumbStore, asMenuBreadcrumbs, BreadcrumbsClean,
 } from '../src';
 
 const { DefaultContentNode } = require('@bodiless/core');
+
+const Breadcrumbs = asMenuBreadcrumbs(BreadcrumbsClean);
 
 const setPagePath = (pagePath: string) => {
   Object.defineProperty(DefaultContentNode.prototype, 'pagePath', {

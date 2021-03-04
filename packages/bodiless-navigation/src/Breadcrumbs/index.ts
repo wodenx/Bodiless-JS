@@ -36,19 +36,27 @@ export type {
 } from './BreadcrumbStore';
 
 export {
+  asMenuBreadcrumbs,
   BreadcrumbsClean,
-  Breadcrumbs,
   withBreadcrumbStartingTrail,
   withoutBreadcrumbStartingTrail,
   withBreadcrumbFinalTrail,
   withoutBreadcrumbFinalTrail,
 } from './Breadcrumbs';
 
-export type { BreadcrumbStoreItemsReducer } from './Breadcrumbs';
-
 export {
   useBreadcrumbStore,
   BreadcrumbStoreProvider,
 } from './BreadcrumbStoreProvider';
+
+export {
+  withMenuBreadcrumbSchema,
+  withEditableFinalTrail,
+  withEditableStartingTrail,
+} from './withEditableTrail';
+
+export {
+  withBreadcrumbItemToken,
+} from './Breadcrumb.token';
 
 export { default as withBreadcrumbs } from './withBreadcrumbs';
