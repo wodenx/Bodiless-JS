@@ -22,6 +22,7 @@ import { ToutClean } from '@bodiless/organisms';
 import {
   A,
   Div,
+  HOC,
   Design,
   asToken,
   Fragment,
@@ -90,7 +91,7 @@ const asMenuTitle = (asEditableTitle: typeof asEditable) => asToken(
 const asEditableMenuTitle = flow(
   replaceWith(MenuTitle),
   withDesign({
-    Link: asMenuLink(withBodilessLinkToggle(asBodilessLink, replaceWith(Div))),
+    Link: asMenuLink(withBodilessLinkToggle(asBodilessLink, replaceWith(Div) as HOC)),
     Title: asMenuTitle(asEditable),
   }),
   withNode,
@@ -105,7 +106,7 @@ const asMenuTout = (linkNodeKey = 'link', titleNodeKey = 'title') => {
   const transformDesign = (design: Design<any> = {}) => {
     const Link = asToken(
       withSidecarNodes(
-        design.Link || withBodilessLinkToggle(asBodilessLink, replaceWith(Div))(),
+        design.Link || withBodilessLinkToggle(asBodilessLink, replaceWith(Div) as HOC)(),
         withNodeKey(linkNodeKey),
       ),
     );
