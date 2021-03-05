@@ -1,18 +1,25 @@
 import React from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { mount } from 'enzyme';
 import type { HTMLProps } from 'react';
-import { flow } from 'lodash';
-import withTokensFromProps, { withRandomKey } from '../src/withTokensFromProps';
-import type { ComponentOrTag } from '../src/withTokensFromProps';
+import flow from 'lodash/flow';
+import { v4 } from 'uuid';
+import { withTokensFromProps, Token } from '../src';
+import type { ComponentOrTag } from '../src';
+
+const withRandomKey = <P extends object>(Component: ComponentOrTag<P>) => {
+  const WithRandomKey = (props: P) => <Component {...props} key={v4()} />;
+  return WithRandomKey;
+};
 
 describe('withTokensFromProps', () => {
-  const createTestToken = (attr: string) => (
+  const createTestToken = (attr: string): Token => (
     <P extends object>(C: ComponentOrTag<P>) => {
       const attrProp = { [attr]: true };
       const WithTestToken = (props: P) => <C {...props} {...attrProp} />;
       return WithTestToken;
     }
-  );
+  ) as Token;
 
   it('Applies tokens provided as props', () => {
     const token1 = createTestToken('data-token1');
