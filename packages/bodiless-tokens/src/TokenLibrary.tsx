@@ -6,6 +6,7 @@ import {
   withNode, withSidecarNodes, withNodeKey, withNodeDataHandlers,
 } from '@bodiless/core';
 import { addClasses } from '@bodiless/fclasses';
+import type { Token } from '@bodiless/fclasses';
 import { Option } from 'informed';
 import { observer } from 'mobx-react-lite';
 import { flow } from 'lodash';
@@ -24,7 +25,7 @@ export const useTokenLibrary = (target: string): Tokens => {
   const data = useContext(TokenLibraryContext).filter(t => t.target === target);
   const tokens: Tokens = data.reduce((acc, next) => ({
     ...acc,
-    [next.name]: withCategory(next.category)(addClasses(next.className)),
+    [next.name]: withCategory(next.category)(addClasses(next.className) as Token),
   }), {});
   return tokens;
 };
