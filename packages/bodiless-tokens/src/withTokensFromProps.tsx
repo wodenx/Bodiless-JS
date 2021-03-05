@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ComponentOrTag, Token, asToken } from './Tokens';
+import { ComponentOrTag, Token, asToken } from '@bodiless/fclasses';
 
 export type Tokens = { [key: string]: Token };
 export type TokensProps = { tokens: Token[] };

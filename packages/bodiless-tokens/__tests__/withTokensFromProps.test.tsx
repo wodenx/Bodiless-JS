@@ -4,8 +4,8 @@ import { mount } from 'enzyme';
 import type { HTMLProps } from 'react';
 import flow from 'lodash/flow';
 import { v4 } from 'uuid';
-import { withTokensFromProps, Token } from '../src';
-import type { ComponentOrTag } from '../src';
+import type { ComponentOrTag, Token } from '@bodiless/fclasses';
+import { withTokensFromProps } from '../src';
 
 const withRandomKey = <P extends object>(Component: ComponentOrTag<P>) => {
   const WithRandomKey = (props: P) => <Component {...props} key={v4()} />;

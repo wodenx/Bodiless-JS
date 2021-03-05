@@ -1,7 +1,11 @@
-import { WithNodeKeyProps, UseBodilessOverrides } from '@bodiless/core';
-import { addProps, withTokensFromProps, addClasses } from '@bodiless/fclasses';
+import { WithNodeKeyProps } from '@bodiless/core';
+import { addProps } from '@bodiless/fclasses';
 import { flow } from 'lodash';
 import React, { ComponentType } from 'react';
+import {
+  withCategory, withTokenPanelPane, useTokenLibrary, withTokensFromProps,
+} from '@bodiless/tokens';
+import type { TokenSelectorProps } from '@bodiless/tokens';
 import {
   asBold,
   asItalic,
@@ -16,24 +20,20 @@ import {
   asSuperScript,
   asTextColorPrimary,
 } from '../../../components/Elements.token';
-import { asToken } from './TokenMap';
-import withTokenSelector, { TokenSelectorProps } from './withTokenSelector';
-import { withTokenPanelPane } from './TokenPanelWrapper';
-import { useTokenLibrary } from './TokenLibrary';
 
 const availableTokens = {
-  asBold: asToken('Style')(asBold),
-  asItalic: asToken('Style')(asItalic),
-  asUnderline: asToken('Style')(asUnderline),
-  asLink: asToken('Style')(asLink),
-  asStrikeThrough: asToken('Style')(asStrikeThrough),
-  asHeader1: asToken('Headers')(asHeader1),
-  asHeader2: asToken('Headers')(asHeader2),
-  asHeader3: asToken('Headers')(asHeader3),
-  asCta: asToken('Style')(asCta),
-  asPrimaryColorBackground: asToken('Color')(asPrimaryColorBackground),
-  asSuperScript: asToken('Style')(asSuperScript),
-  asTextColorPrimary: asToken('Color')(asTextColorPrimary),
+  asBold: withCategory('Style')(asBold),
+  asItalic: withCategory('Style')(asItalic),
+  asUnderline: withCategory('Style')(asUnderline),
+  asLink: withCategory('Style')(asLink),
+  asStrikeThrough: withCategory('Style')(asStrikeThrough),
+  asHeader1: withCategory('Headers')(asHeader1),
+  asHeader2: withCategory('Headers')(asHeader2),
+  asHeader3: withCategory('Headers')(asHeader3),
+  asCta: withCategory('Style')(asCta),
+  asPrimaryColorBackground: withCategory('Color')(asPrimaryColorBackground),
+  asSuperScript: withCategory('Style')(asSuperScript),
+  asTextColorPrimary: withCategory('Color')(asTextColorPrimary),
   // asTextWhite: asToken('Clor')(addClasses('text-white')),
 };
 
@@ -53,17 +53,18 @@ const withDataTokens = (target: string) => <P extends object>(
   return WithDataTokens;
 };
 
-const withTypographySelector = (
-  nodeKey: WithNodeKeyProps,
-  defaultData?: any,
-  useOverrides?: UseBodilessOverrides<any, any>,
-) => flow(
-  withTokensFromProps,
-  withTokenSelector(nodeKey, defaultData, useOverrides),
-  withDataTokens('typography'),
-  addProps({ availableTokens }),
-);
+// const withTypographySelector = (
+//   nodeKey: WithNodeKeyProps,
+//   defaultData?: any,
+//   useOverrides?: UseBodilessOverrides<any, any>,
+// ) => flow(
+//   withTokensFromProps,
+//   withTokenSelector(nodeKey, defaultData, useOverrides),
+//   withDataTokens('typography'),
+//   addProps({ availableTokens }),
+// );
 
+// eslint-disable-next-line import/prefer-default-export
 export const withTypographyTokenPanel = (
   nodeKey: WithNodeKeyProps,
   defaultData?: any,
@@ -74,4 +75,4 @@ export const withTypographyTokenPanel = (
   addProps({ availableTokens }),
 );
 
-export default withTypographySelector;
+// export default withTypographySelector;

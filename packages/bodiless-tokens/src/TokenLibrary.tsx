@@ -9,7 +9,7 @@ import { addClasses } from '@bodiless/fclasses';
 import { Option } from 'informed';
 import { observer } from 'mobx-react-lite';
 import { flow } from 'lodash';
-import { Tokens, asToken } from './TokenMap';
+import { Tokens, withCategory } from './TokenMap';
 
 type TokenData = {
   category?: string,
@@ -24,7 +24,7 @@ export const useTokenLibrary = (target: string): Tokens => {
   const data = useContext(TokenLibraryContext).filter(t => t.target === target);
   const tokens: Tokens = data.reduce((acc, next) => ({
     ...acc,
-    [next.name]: asToken(next.category)(addClasses(next.className)),
+    [next.name]: withCategory(next.category)(addClasses(next.className)),
   }), {});
   return tokens;
 };
@@ -108,7 +108,7 @@ const useEditButtonOptions = (): EditButtonOptions<any, any> => {
 const TokenLibrary = withSidecarNodes(flow(
   withTokenLibrary,
   withEditButton(useEditButtonOptions),
-  withNodeDataHandlers({ tokens: []}),
+  withNodeDataHandlers({ tokens: [] }),
   withNode,
   withNodeKey('token-library'),
 ))(Fragment);

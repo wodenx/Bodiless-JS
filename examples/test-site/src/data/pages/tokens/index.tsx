@@ -16,7 +16,7 @@ import { graphql } from 'gatsby';
 import { flow } from 'lodash';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  H1, withTokensFromProps, addProps, withDesign, replaceWith, H3, H2, addClasses,
+  H1, addProps, withDesign, replaceWith, H3, H2, addClasses,
 } from '@bodiless/fclasses';
 import {
   ToutClean, asAccordionBody, asAccodionTitle, asAccordionWrapper,
@@ -27,18 +27,33 @@ import {
 import { FlowContainer } from '@bodiless/layouts-ui';
 import { withTitle, withDesc } from '@bodiless/layouts';
 import { useNode } from '@bodiless/core/src';
+import {
+  TokenLibrary, withTokenNamesFromData, withTokensFromProps, TokenPrinter,
+  withTokenPrinterKeys, withReactivateOnRemount,
+  TokenPanelWrapper as TokenPaneLWrapperClean, withTokenPanelPane,
+} from '@bodiless/tokens';
 import Layout from '../../../components/Layout';
 import {
-  asHeader1, asPrimaryColorBackground, asHeader3, asHeader2,
+  asHeader1, asPrimaryColorBackground, asHeader3, asHeader2, asBold,
 } from '../../../components/Elements.token';
 import { asEditableTout } from '../../../components/Tout';
 import * as availableTokens from '../../../components/Tout/token';
 import { withTypographyTokenPanel } from './TypographySelector';
-import TokenPanelWrapper, { withTokenPanelPane } from './TokenPanelWrapper';
-import withReactivateOnRemount from './withRectivateOnRemount';
-import TokenPrinter, { withTokenPrinterKeys } from './TokenPrinter';
-import { withTokenNamesFromData } from './withTokenSelector';
-import TokenLibrary from './TokenLibrary';
+
+const asFancyPanel = withDesign({
+  Title: flow(asAccodionTitle, asHeader3, asPrimaryColorBackground),
+  Wrapper: asAccordionWrapper,
+  Body: asAccordionBody,
+  Category: flow(asBold, addClasses('mt-2')),
+  CheckBox: addClasses('mr-2'),
+  Label: addClasses('block'),
+});
+
+const asFancyWrapper = withDesign({
+  Panel: asFancyPanel,
+});
+
+const TokenPanelWrapper = asFancyWrapper(TokenPaneLWrapperClean);
 
 const withFlowContainerFirstItemNode = (nodeKey: string) => <P extends object>(
   Component: ComponentType<P & WithNodeKeyProps>,

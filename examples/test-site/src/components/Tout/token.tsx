@@ -27,6 +27,7 @@ import {
   asToutOverlayCta as asToutOverlayCta$,
   asToutNoBodyNoTitle as asToutNoBodyNoTitle$,
 } from '@bodiless/organisms';
+import { withCategory } from '@bodiless/tokens';
 import {
   asImageRounded,
   asCta,
@@ -34,7 +35,6 @@ import {
   asBlockItem,
   asTextColorPrimary,
 } from '../Elements.token';
-import { asToken } from '../../data/pages/tokens/TokenMap';
 
 const asToutHorizontal$ = flow(
   withDesign({
@@ -69,17 +69,17 @@ const asToutTextWhite$ = withDesign({
   Body: addClasses('text-white'),
 });
 
-const asToutHorizontal = asToken('Orientation')(asToutHorizontal$);
-const asToutVertical = asToken('Orientation')(asToutVertical$);
-const asToutNoTitle = asToken('Structure')(asToutNoTitle$);
-const asToutNoBody = asToken('Structure')(asToutNoBody$);
-const asToutNoCta = asToken('Structure')(asToutNoCta$);
-const asToutDefaultStyle = asToken('Appearance')(asToutDefaultStyle$);
-const asToutOverlayTitle = asToken('Layout')(asToutOverlayTitle$);
-const asToutOverlayCta = asToken('Layout')(asToutOverlayCta$);
-const asToutNoBodyNoTitle = asToken('Structure')(asToutNoBodyNoTitle$);
-const asToutWithPaddings = asToken('Layout')(asToutWithPaddings$);
-const asToutTextWhite = asToken('Appearance')(asToutTextWhite$);
+const asToutHorizontal = withCategory('Orientation')(asToutHorizontal$);
+const asToutVertical = withCategory('Orientation')(asToutVertical$);
+const asToutNoTitle = withCategory('Structure')(asToutNoTitle$);
+const asToutNoBody = withCategory('Structure')(asToutNoBody$);
+const asToutNoCta = withCategory('Structure')(asToutNoCta$);
+const asToutDefaultStyle = withCategory('Appearance')(asToutDefaultStyle$);
+const asToutOverlayTitle = withCategory('Layout')(asToutOverlayTitle$);
+const asToutOverlayCta = withCategory('Layout')(asToutOverlayCta$);
+const asToutNoBodyNoTitle = withCategory('Structure')(asToutNoBodyNoTitle$);
+const asToutWithPaddings = withCategory('Layout')(asToutWithPaddings$);
+const asToutTextWhite = withCategory('Appearance')(asToutTextWhite$);
 const asToutMainMenu = flow(
   asToutTextWhite,
   asToutWithPaddings,

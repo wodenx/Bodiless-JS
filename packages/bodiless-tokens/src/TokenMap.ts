@@ -10,7 +10,7 @@ export type Tokens<P = any> = {
   [key: string]: Token<P>,
 };
 
-export const asToken = <P extends object>(category?: string) => (...hocs: HOC<P>[]) => {
+export const withCategory = <P extends object>(category?: string) => (...hocs: HOC<P>[]) => {
   const token: Token<P> = flow(...hocs);
   token.category = category;
   return token;

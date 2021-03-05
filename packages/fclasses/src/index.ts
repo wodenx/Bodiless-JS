@@ -23,7 +23,6 @@ import type {
   StylableProps,
 } from './FClasses';
 
-import withTokensFromProps from './withTokensFromProps';
 import addProps, { addPropsIf } from './addProps';
 import {
   asComponent,
@@ -85,7 +84,6 @@ export {
   asComponent,
   addClassesIf,
   removeClassesIf,
-  withTokensFromProps,
   Fragment,
   withDisplayName,
 };

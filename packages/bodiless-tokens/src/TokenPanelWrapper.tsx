@@ -4,17 +4,18 @@ import {
   withNodeDataHandlers, withContextActivator, useEditContext,
   useNode,
 } from '@bodiless/core';
-import { asAccodionTitle, asAccordionBody, asAccordionWrapper } from '@bodiless/organisms';
 import { v4 } from 'uuid';
 import { flow, flowRight } from 'lodash';
 import { observer } from 'mobx-react-lite';
-import { withoutProps, withDesign, addClasses } from '@bodiless/fclasses';
+import {
+  withoutProps, DesignableComponentsProps, designable,
+} from '@bodiless/fclasses';
+import { TMenuOption } from '@bodiless/core/src';
 import type { TokenPanelProps } from './TokenPanel';
 import {
   TokenSelectorProps, TokenSelectorData, withKeyFromData, withTokensFromData,
 } from './withTokenSelector';
 import TokenPanel from './TokenPanel';
-import { asHeader3, asBold, asPrimaryColorBackground } from '../../../components/Elements.token';
 
 // class TokenPanelStore {
 //   @observable
@@ -29,7 +30,11 @@ import { asHeader3, asBold, asPrimaryColorBackground } from '../../../components
 const TOKEN_PANEL_CONTEXT_TYPE = 'token-panel';
 
 type WithTokenPanelsProps = {
-  panelsProps: Partial<TokenPanelProps>[],
+  panelsProps: TokenPanelProps[],
+};
+
+type TokenPanelMenuOption = Omit<TMenuOption, 'handler'> & {
+  handler: () => TokenPanelProps,
 };
 
 const withTokenPanelsProps = <P extends object>(
@@ -38,10 +43,10 @@ const withTokenPanelsProps = <P extends object>(
   const WithTokenPanelsProps = observer((props: P) => {
     const context = useEditContext();
     const { contextMenuOptions } = context;
-    const panelsProps = contextMenuOptions
-      .filter(op => op.context.type === TOKEN_PANEL_CONTEXT_TYPE)
-      .map((op): Partial<TokenPanelProps> => ({
-        ...op.handler(undefined),
+    const panelsProps = (contextMenuOptions as TokenPanelMenuOption[])
+      .filter(op => op.context?.type === TOKEN_PANEL_CONTEXT_TYPE)
+      .map((op): TokenPanelProps => ({
+        ...op.handler(),
         title: typeof op.label === 'function' ? op.label() : op.label,
       }));
     return <Component {...props} panelsProps={panelsProps} />;
@@ -75,19 +80,20 @@ const withTokenPanelPane = (
   withTokensFromData,
 );
 
-const FancyPanel = withDesign({
-  Title: flow(asAccodionTitle, asHeader3, asPrimaryColorBackground),
-  Wrapper: asAccordionWrapper,
-  Body: asAccordionBody,
-  Category: flow(asBold, addClasses('mt-2')),
-  CheckBox: addClasses('mr-2'),
-  Label: addClasses('block'),
-})(TokenPanel);
+type TokenPanelWrapperComponents = {
+  Panel: ComponentType<any>,
+};
 
-const TokenPanelWrapper: FC<WithTokenPanelsProps> = props => {
-  const { panelsProps } = props;
+type WrapperProps =WithTokenPanelsProps & DesignableComponentsProps<TokenPanelWrapperComponents>;
+
+const tokenPanelWrapperComponents = {
+  Panel: TokenPanel,
+};
+
+const TokenPanelWrapper: FC<WrapperProps> = props => {
+  const { panelsProps, components: C } = props;
   const content = (panelsProps.length > 0)
-    ? panelsProps.map(p => <FancyPanel {...p} key={p.node.path.join('$')} />)
+    ? panelsProps.map(p => <C.Panel {...p} key={p.node.path.join('$')} />)
     : <div>No component is selected.</div>;
   return (
     <div data-bl-activator>
@@ -97,6 +103,7 @@ const TokenPanelWrapper: FC<WithTokenPanelsProps> = props => {
 };
 
 export default flow(
+  designable(tokenPanelWrapperComponents, 'TokenPanelWrapper'),
   withTokenPanelsProps,
 )(TokenPanelWrapper);
 
