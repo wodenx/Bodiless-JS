@@ -44,43 +44,33 @@ const withThirdLevelDesign = (keys: string[]) => keys.includes('Columns')
 const depthDesignPathOptions = [() => [], withSecondLevelDesign, withThirdLevelDesign];
 
 /**
- * Applies a token or design at a particular design path in the menu.
+ * Helper which makes it easier to target a particular type of submenu.
+ *
+ * The first parameter is a list of the submenu key(s) and the second param is the design keys depth
+ * to which the tokens provided as a second argument should be applied.
+ * It also accepts the special key 'Main' to apply the design to the top level menu.
  *
  * @example
  * ```js
- * withMenuDesign('Columns') -- all levels of columns submenu
- * withDesignAt(['Item', 'Columns'], ['Item', 'Columns', 'Item', 'SubList'])
+ * withMenuDesign('Columns') -- Applies tokens to all levels of columns submenu.
+ * withMenuDesign('Columns', 1) -- Applies tokens to only the first level of Columns submenu.
+ * withMenuDesign('Columns', 2) -- Applies tokens to only the second level of Columns submenu.
  *
- * withMenuDesign('Columns', 1) -- second level of columns submenu
- * withDesignAt(['Item', 'Columns'])
+ * withMenuDesign('Main') -- Applies tokens to the Top menu.
+ * withMenuDesign('Touts') -- Applies tokens to Touts submenu.
+ * withMenuDesign('List') -- Applies tokens to List submenu.
  *
- * withMenuDesign('Columns', 2) -- second level of columns submenu
- * withDesignAt(['Item', 'Columns', 'Item', 'SubList'])
- *
- * withMenuDesign('Touts') -- all levels of touts submenu
- * withDesignAt(['Item', 'Touts'])
- *
- * withMenuDesign('List') -- all levels of lists submenu
- * withDesignAt(['Item', 'List'])
- *
- * withMenuDesign() -- all levels of all submenus + top menu
- * withDesignAt(
- *   ['Item'],
- *   ['Item', 'List'],
- *   ['Item', 'Touts'],
- *   ['Item', 'Columns'],
- *   ['Item', 'Columns', 'Item', 'SubList'],
- * )
- *
- * withMenuDesign(undefined, 0) -- top level menu only
- * withDesignAt(['Item'])
- *
- * withMenuDesign(undefined, 1) -- all submenus of level 1
- * withDesignAt(['Item', 'List'], ['Item', 'Touts'], ['Item', 'Columns'])
-
- * withMenuDesign(undefined, 2) -- all submenus of level 2 ( currently columns submenus only )
- * withDesignAt(['Item', 'Columns', 'Item', 'SubList'])
+ * withMenuDesign() -- Applies tokens to the Top menu and all submenus.
+ * withMenuDesign(undefined, 0) -- Applies tokens to the Top menu.
+ * withMenuDesign(undefined, 1) -- Applies tokens to all submenus of level 1.
+ * withMenuDesign(undefined, 2) -- Applies tokens to all submenus of level 2.
  * ```
+ *
+ * @param keys List of the submenu key(s) to which the token should be applied.
+ * @param depths List of menu depth to wicht the token should be applied to.
+ * @param tokenDefs List of tokens to be applied to submenu design key(s).
+ *
+ * @return Desigh token that applies supplied list of tokens to the provided design keys.
  */
 export const withMenuDesign = <P extends object>(
   keys: string|string[] = ['Main', 'List', 'Columns', 'Touts'],
@@ -92,8 +82,14 @@ export const withMenuDesign = <P extends object>(
     const submenuDesignPaths: any = [];
     depths$
       .filter(d => d < 3 && d > 0)
-      .forEach(d => submenuDesignPaths.push(...depthDesignPathOptions[d](keys$.filter(k => k !== 'Main'))));
+      .forEach(
+        d => submenuDesignPaths.push(
+          ...depthDesignPathOptions[d](keys$.filter(k => k !== 'Main')),
+        ),
+      );
 
+    // Make sure depths take precidence.
+    // For example withMenuDesign(Main, 1) will not do anything.
     if (keys$.includes('Main') && depths$.includes(0)) {
       return asToken(
         ...tokenDefs,
@@ -103,36 +99,6 @@ export const withMenuDesign = <P extends object>(
 
     return withDesignAt(...submenuDesignPaths)(asToken(...tokenDefs));
   };
-
-/**
- * Helper which makes it easier to target a particular type of submenu.
- *
- * The first parameter is a list of the submenu key(s) to which the token
- * provided as a second argument should be applied.
- * It also accepts the special key 'Main' to apply the design to the top level menu.
- *
- * @param keys List of the submenu key(s) to which the token should be applied.
- * @param tokenDefs List of tokens to be applied to submenu design key(s).
- *
- * @return Desigh token that applies supplied list of tokens to the provided design keys.
- */
-// export const withSubMenuToken = <P extends object>(
-//   ...keys: string[]
-// ) => (...tokenDefs: TokenDef<P>[]) => {
-//     const design: Design<any> = keys.reduce((acc, key) => ({
-//       ...acc,
-//       [key]: asToken(...tokenDefs),
-//     }), {});
-
-//     const withSubMenuDesign = withDesign({
-//       Item: withDesign(omit(design, 'Main')),
-//     });
-
-//     /* eslint-disable dot-notation */
-//     return design['Main']
-//       ? asToken(design['Main'], withSubMenuDesign)
-//       : withSubMenuDesign;
-//   };
 
 /*
  * Utility Styles
@@ -263,6 +229,5 @@ export const asTopNav = (...keys: string[]) => {
     withMenuDesign('List')(listSubmenuStyles),
     withMenuDesign('Touts')(toutsSubmenuStyles),
     withMenuDesign('Columns', [0, 1])(columnsSubmenuStyles),
-    // withMenuDesign('Columns')(asTest),
   );
 };
