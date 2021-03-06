@@ -3,8 +3,9 @@ import TokenLibrary, { useTokenLibrary } from './TokenLibrary';
 import { withTokenNamesFromData } from './withTokenSelector';
 import TokenPrinter, { withTokenPrinterKeys } from './TokenPrinter';
 import withReactivateOnRemount from './withRectivateOnRemount';
-import TokenPanelWrapper, { withTokenPanelPane } from './TokenPanelWrapper';
-import TokenMap, { withCategory } from './TokenMap';
+import TokenPanel from './TokenPanel';
+import { withTokenPanelPane } from './TokenPanelPane';
+import TokenMap from './TokenMap';
 import type { TokenSelectorProps } from './withTokenSelector';
 
 export {
@@ -15,10 +16,9 @@ export {
   TokenPrinter,
   withTokenPrinterKeys,
   withReactivateOnRemount,
-  TokenPanelWrapper,
+  TokenPanel,
   withTokenPanelPane,
   TokenMap,
-  withCategory,
 };
 
 export type {

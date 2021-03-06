@@ -5,12 +5,12 @@ import {
   useNode, useMenuOptionUI, EditButtonOptions, withEditButton,
   withNode, withSidecarNodes, withNodeKey, withNodeDataHandlers,
 } from '@bodiless/core';
-import { addClasses } from '@bodiless/fclasses';
+import { addClasses, asToken } from '@bodiless/fclasses';
 import type { Token } from '@bodiless/fclasses';
 import { Option } from 'informed';
 import { observer } from 'mobx-react-lite';
 import { flow } from 'lodash';
-import { Tokens, withCategory } from './TokenMap';
+import { Tokens } from './TokenMap';
 
 type TokenData = {
   category?: string,
@@ -21,11 +21,14 @@ type TokenData = {
 
 const TokenLibraryContext = createContext<TokenData[]>([]);
 
-export const useTokenLibrary = (target: string): Tokens => {
+export const useTokenLibrary = (target: string, groupName = 'Group'): Tokens => {
   const data = useContext(TokenLibraryContext).filter(t => t.target === target);
   const tokens: Tokens = data.reduce((acc, next) => ({
     ...acc,
-    [next.name]: withCategory(next.category)(addClasses(next.className) as Token),
+    [next.name]: asToken(
+      addClasses(next.className) as Token,
+      next.category ? asToken.meta.term(groupName)(next.category) : undefined,
+    ),
   }), {});
   return tokens;
 };

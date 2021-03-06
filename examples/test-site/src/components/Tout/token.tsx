@@ -16,6 +16,7 @@ import { flow } from 'lodash';
 import {
   addClasses,
   withDesign,
+  Token,
 } from '@bodiless/fclasses';
 import {
   asToutVertical as asBToutVertical,
@@ -27,13 +28,13 @@ import {
   asToutOverlayCta as asToutOverlayCta$,
   asToutNoBodyNoTitle as asToutNoBodyNoTitle$,
 } from '@bodiless/organisms';
-import { withCategory } from '@bodiless/tokens';
 import {
   asImageRounded,
   asCta,
   asHeader2,
   asBlockItem,
   asTextColorPrimary,
+  withCategory,
 } from '../Elements.token';
 
 const asToutHorizontal$ = flow(
@@ -69,17 +70,17 @@ const asToutTextWhite$ = withDesign({
   Body: addClasses('text-white'),
 });
 
-const asToutHorizontal = withCategory('Orientation')(asToutHorizontal$);
-const asToutVertical = withCategory('Orientation')(asToutVertical$);
-const asToutNoTitle = withCategory('Structure')(asToutNoTitle$);
-const asToutNoBody = withCategory('Structure')(asToutNoBody$);
-const asToutNoCta = withCategory('Structure')(asToutNoCta$);
-const asToutDefaultStyle = withCategory('Appearance')(asToutDefaultStyle$);
-const asToutOverlayTitle = withCategory('Layout')(asToutOverlayTitle$);
-const asToutOverlayCta = withCategory('Layout')(asToutOverlayCta$);
-const asToutNoBodyNoTitle = withCategory('Structure')(asToutNoBodyNoTitle$);
-const asToutWithPaddings = withCategory('Layout')(asToutWithPaddings$);
-const asToutTextWhite = withCategory('Appearance')(asToutTextWhite$);
+const asToutHorizontal = withCategory('Orientation')(asToutHorizontal$ as Token);
+const asToutVertical = withCategory('Orientation')(asToutVertical$ as Token);
+const asToutNoTitle = withCategory('Structure')(asToutNoTitle$ as Token);
+const asToutNoBody = withCategory('Structure')(asToutNoBody$ as Token);
+const asToutNoCta = withCategory('Structure')(asToutNoCta$ as Token);
+const asToutDefaultStyle = withCategory('Appearance')(asToutDefaultStyle$ as Token);
+const asToutOverlayTitle = withCategory('Layout')(asToutOverlayTitle$ as Token);
+const asToutOverlayCta = withCategory('Layout')(asToutOverlayCta$ as Token);
+const asToutNoBodyNoTitle = withCategory('Structure')(asToutNoBodyNoTitle$ as Token);
+const asToutWithPaddings = withCategory('Layout')(asToutWithPaddings$ as Token);
+const asToutTextWhite = withCategory('Appearance')(asToutTextWhite$ as Token);
 const asToutMainMenu = flow(
   asToutTextWhite,
   asToutWithPaddings,

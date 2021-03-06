@@ -16,7 +16,7 @@ import { graphql } from 'gatsby';
 import { flow } from 'lodash';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  H1, addProps, withDesign, replaceWith, H3, H2, addClasses,
+  H1, addProps, withDesign, replaceWith, H3, H2, addClasses, Token, asToken,
 } from '@bodiless/fclasses';
 import {
   ToutClean, asAccordionBody, asAccodionTitle, asAccordionWrapper,
@@ -30,7 +30,7 @@ import { useNode } from '@bodiless/core/src';
 import {
   TokenLibrary, withTokenNamesFromData, withTokensFromProps, TokenPrinter,
   withTokenPrinterKeys, withReactivateOnRemount,
-  TokenPanelWrapper as TokenPaneLWrapperClean, withTokenPanelPane,
+  TokenPanel as TokenPaneLClean, withTokenPanelPane,
 } from '@bodiless/tokens';
 import Layout from '../../../components/Layout';
 import {
@@ -53,7 +53,14 @@ const asFancyWrapper = withDesign({
   Panel: asFancyPanel,
 });
 
-const TokenPanelWrapper = asFancyWrapper(TokenPaneLWrapperClean);
+const TokenPanel = asFancyWrapper(TokenPaneLClean);
+
+export const withCategory = <P extends object>(category?: string) => (...hocs: Token[]) => (
+  asToken(
+    ...hocs,
+    category ? asToken.meta.term('Categories')(category) : undefined,
+  )
+);
 
 const withFlowContainerFirstItemNode = (nodeKey: string) => <P extends object>(
   Component: ComponentType<P & WithNodeKeyProps>,
@@ -169,7 +176,7 @@ export default (props: any) => (
           </div>
           <div className="w-1/3 p-5">
             <ColumnHeader>Tokens</ColumnHeader>
-            <TokenPanelWrapper />
+            <TokenPanel />
           </div>
         </div>
       </TokenLibrary>

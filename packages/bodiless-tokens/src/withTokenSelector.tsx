@@ -7,10 +7,10 @@ import {
   EditButtonOptions,
   UseBodilessOverrides,
 } from '@bodiless/core';
+import type { Token } from '@bodiless/fclasses';
 import { ComponentOrTag, TokensProps } from '@bodiless/fclasses/lib/withTokensFromProps';
 import { flowRight, pick } from 'lodash';
 import { v4 } from 'uuid';
-import type { Token } from './TokenMap';
 import TokenMap from './TokenMap';
 
 export type Tokens = {
@@ -50,7 +50,7 @@ const submitValueHandler = (data: { [field: string]: boolean }) => ({
 
 const useCategoryCheckboxes = (map: TokenMap<any>) => {
   const { ComponentFormLabel, ComponentFormCheckBox } = useMenuOptionUI();
-  return map.categories.map(cat => (
+  return map.groups.map(cat => (
     <>
       <ComponentFormLabel>{cat}</ComponentFormLabel>
       {map.namesFor(cat).map(name => (

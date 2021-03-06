@@ -1,40 +1,38 @@
 import { flow } from 'lodash';
 
-import { asToken } from '@bodiless/fclasses';
 import type { Token } from '@bodiless/fclasses';
 
 export type Tokens = {
   [key: string]: Token,
 };
 
-export const withCategory = <P extends object>(category?: string) => (...hocs: Token[]) => (
-  asToken(
-    ...hocs,
-    category ? asToken.meta.term('Categories')(category) : undefined,
-  )
-);
-
-const tokCat = (token?: Token) => token?.meta?.categories?.Category || [];
-
 class TokenMap<P> {
   protected map = new Map<string, Token>();
+
+  protected groupsFor: (token?: Token) => string[];
+
+  constructor(groupsFor?: (token?: Token) => string[]) {
+    this.groupsFor = groupsFor || ((token?: Token) => token?.meta?.categories?.Category || []);
+  }
 
   get names() {
     return Array.from(this.map.keys());
   }
 
-  get categories() {
-    const categories = new Set<string>();
+  get groups() {
+    const groups = new Set<string>();
     this.map.forEach(value => {
-      tokCat(value).forEach(c => categories.add(c));
+      const g = this.groupsFor(value);
+      if (g.length === 0) groups.add('Other');
+      else g.forEach(c => groups.add(c));
     });
-    return Array.from(categories.values());
+    return Array.from(groups.values());
   }
 
-  namesFor(cat: string) {
+  namesFor(group: string) {
     return Array.from(this.map.keys()).reduce((acc, key) => {
-      const tok = this.map.get(key);
-      if (tokCat(tok).includes(cat) || (tokCat(tok).length === 0 && cat === 'Other')) {
+      const groups = this.groupsFor(this.map.get(key));
+      if (groups.includes(group) || (groups.length === 0 && group === 'Other')) {
         return [...acc, key];
       }
       return acc;

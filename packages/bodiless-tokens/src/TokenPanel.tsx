@@ -1,79 +1,66 @@
-import { ContentNode } from '@bodiless/core/src';
-import React, {
-  ComponentType, HTMLProps, FC, useCallback, Fragment,
-} from 'react';
+import React, { ComponentType, FC } from 'react';
 import {
-  DesignableComponentsProps, designable, Div, H4, H5,
-  Label as StylableLabel, Input,
-} from '@bodiless/fclasses';
+  useEditContext,
+} from '@bodiless/core';
 import { flow } from 'lodash';
 import { observer } from 'mobx-react-lite';
-import { TokenSelectorProps, TokenSelectorData } from './withTokenSelector';
-import TokenMap from './TokenMap';
+import {
+  DesignableComponentsProps, designable,
+} from '@bodiless/fclasses';
+import { TMenuOption } from '@bodiless/core/src';
+import type { TokenPanelPaneProps } from './TokenPanelPane';
+import TokenPanelPane, { TOKEN_PANEL_CONTEXT_TYPE } from './TokenPanelPane';
+
+type WithTokenPanelPanesProps = {
+  panesProps: TokenPanelPaneProps[],
+};
+
+type TokenPanelPaneMenuOption = Omit<TMenuOption, 'handler'> & {
+  handler: () => TokenPanelPaneProps,
+};
+
+const withTokenPanelPanesProps = <P extends object>(
+  Component: ComponentType<P & WithTokenPanelPanesProps>,
+) => {
+  const WithTokenPanelPanesProps = observer((props: P) => {
+    const context = useEditContext();
+    const { contextMenuOptions } = context;
+    const panesProps = (contextMenuOptions as TokenPanelPaneMenuOption[])
+      .filter(op => op.context?.type === TOKEN_PANEL_CONTEXT_TYPE)
+      .map((op): TokenPanelPaneProps => ({
+        ...op.handler(),
+        title: typeof op.label === 'function' ? op.label() : op.label,
+      }));
+    return <Component {...props} panesProps={panesProps} />;
+  });
+  return WithTokenPanelPanesProps;
+};
 
 type TokenPanelComponents = {
+  Panel: ComponentType<any>,
   Wrapper: ComponentType<any>,
-  Body: ComponentType<any>,
-  Title: ComponentType<any>,
-  Category: ComponentType<any>,
-  Label: ComponentType<HTMLProps<HTMLLabelElement>>,
-  CheckBox: ComponentType<HTMLProps<HTMLInputElement>>,
 };
+
+type TokenPanelProps = WithTokenPanelPanesProps & DesignableComponentsProps<TokenPanelComponents>;
 
 const tokenPanelComponents: TokenPanelComponents = {
-  Wrapper: Div,
-  Body: Div,
-  Title: H4,
-  Category: H5,
-  Label: StylableLabel,
-  CheckBox: Input,
+  Wrapper: 'div' as any,
+  Panel: TokenPanelPane,
 };
 
-export type TokenPanelProps = TokenSelectorProps & {
-  node: ContentNode<TokenSelectorData>,
-  title?: string,
-} & DesignableComponentsProps<TokenPanelComponents>;
-
-const TokenPanelBase: FC<TokenPanelProps> = props => {
-  const {
-    node, availableTokens, components, title = 'Tokens',
-  } = props;
-  const map = new TokenMap<any>();
-  map.add(availableTokens);
-  const {
-    Wrapper, Title, Label, Category, CheckBox, Body,
-  } = components;
-  const { tokens = [] } = node.data;
-  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const tokenSet = new Set(node.data.tokens);
-    if (e.target.checked) tokenSet.add(e.target.name);
-    else tokenSet.delete(e.target.name);
-    node.setData({ tokens: Array.from(tokenSet) });
-  }, [node]);
-  const checkboxes = map.categories.map(cat => (
-    <Fragment key={cat}>
-      <Category>{cat}</Category>
-      {map.namesFor(cat).map(name => (
-        <Label key={name}>
-          <CheckBox type="checkbox" name={name} onChange={onChange} checked={tokens.includes(name)} />
-          {name}
-        </Label>
-      ))}
-    </Fragment>
-  ));
+const TokenPanel: FC<TokenPanelProps> = props => {
+  const { panesProps, components: C } = props;
+  const content = (panesProps.length > 0)
+    ? panesProps.map(p => <C.Panel {...p} key={p.node.path.join('$')} />)
+    : <div>No component is selected.</div>;
   return (
-    <Wrapper>
-      <Title>{title}</Title>
-      <Body>
-        {checkboxes}
-      </Body>
-    </Wrapper>
+    <C.Wrapper data-bl-activator>
+      {content}
+    </C.Wrapper>
   );
 };
 
-const TokenPanel = flow(
-  observer,
-  designable(tokenPanelComponents),
-)(TokenPanelBase);
-
-export default TokenPanel;
+export default flow(
+  designable(tokenPanelComponents, 'TokenPanel'),
+  withTokenPanelPanesProps,
+)(TokenPanel);
