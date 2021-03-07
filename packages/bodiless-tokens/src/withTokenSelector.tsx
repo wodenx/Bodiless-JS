@@ -7,10 +7,10 @@ import {
   EditButtonOptions,
   UseBodilessOverrides,
 } from '@bodiless/core';
-import type { Token } from '@bodiless/fclasses';
-import { ComponentOrTag, TokensProps } from '@bodiless/fclasses/lib/withTokensFromProps';
+import type { Token, ComponentOrTag } from '@bodiless/fclasses';
 import { flowRight, pick } from 'lodash';
 import { v4 } from 'uuid';
+import type { TokensProps } from './withTokensFromProps';
 import TokenMap from './TokenMap';
 
 export type Tokens = {
@@ -94,7 +94,7 @@ const useEditButtonOptions = (
   return { ...defaults, ...useOverrides(props) };
 };
 
-export const withTokensFromData = <P extends TokensProps<P>>(Component: ComponentOrTag<P>) => {
+export const withTokensFromData = <P extends TokensProps>(Component: ComponentOrTag<P>) => {
   const WithTokensFromData = (
     props: P & EditButtonProps<TokenSelectorData> & TokenSelectorProps,
   ) => {
@@ -106,7 +106,7 @@ export const withTokensFromData = <P extends TokensProps<P>>(Component: Componen
   return WithTokensFromData;
 };
 
-export const withTokenNamesFromData = <P extends TokensProps<P>>(Component: ComponentOrTag<P>) => {
+export const withTokenNamesFromData = <P extends TokensProps>(Component: ComponentOrTag<P>) => {
   const WithTokenNamesFromData = (
     props: P & EditButtonProps<TokenSelectorData> & TokenSelectorProps,
   ) => {
