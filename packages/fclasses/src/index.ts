@@ -19,7 +19,6 @@ import {
 } from './FClasses';
 
 import type {
-  HOC,
   StylableProps,
 } from './FClasses';
 
@@ -54,7 +53,7 @@ export * from './StyledHTML';
 
 export { asToken, withTokenFilter } from './Tokens';
 export type {
-  TokenFilterTest, Token, TokenDef,
+  TokenFilterTest, Token, TokenDef, HOC,
   TokenMeta, ComponentWithMeta, ComponentOrTag,
 } from './Tokens';
 
@@ -95,5 +94,4 @@ export type {
   DesignElement,
   DesignableComponentsProps,
   DesignableComponents,
-  HOC,
 };
