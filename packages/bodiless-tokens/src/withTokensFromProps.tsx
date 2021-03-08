@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { ComponentOrTag, Token, asToken } from '@bodiless/fclasses';
+import {
+  ComponentOrTag, Token, asToken, HOC, ComponentWithMeta,
+} from '@bodiless/fclasses';
 
 export type Tokens = { [key: string]: Token };
 export type TokensProps = { tokens: Token[] };
@@ -18,7 +20,9 @@ export type TokensProps = { tokens: Token[] };
  * @return
  * A component which will apply tokens supplied as a prop.
  */
-const withTokensFromProps = <P extends object>(Component: ComponentOrTag<P>) => {
+const withTokensFromProps: HOC = <P extends object, Q = P & TokensProps>(
+  Component: ComponentOrTag<P>,
+) => {
   class WithTokensFromProps extends React.Component<P & TokensProps> {
     Component: ComponentOrTag<P>;
 
@@ -33,7 +37,7 @@ const withTokensFromProps = <P extends object>(Component: ComponentOrTag<P>) => 
       return <this.Component {...passedProps as P} />;
     }
   }
-  return WithTokensFromProps as ComponentOrTag<P & TokensProps>;
+  return WithTokensFromProps as any as ComponentWithMeta<Q>;
 };
 
 export default withTokensFromProps;
