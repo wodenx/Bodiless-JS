@@ -207,7 +207,7 @@ export const withDesign = <C extends DesignableComponents>(
  * <Replaced /> ==== '<span />'
  * ```
  */
-export const replaceWith = <P extends object>(Replacement: ComponentType<P>): Token => asToken(
+export const replaceWith = <P extends object>(Replacement: ComponentOrTag<P>): Token => asToken(
   (() => {
     const ReplaceWith = (props: P) => <Replacement {...props} />;
     return ReplaceWith;
