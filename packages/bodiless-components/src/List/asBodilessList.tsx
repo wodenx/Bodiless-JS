@@ -36,10 +36,6 @@ export type TitledItemProps = PropsWithChildren<{
   title: JSX.Element,
 }>;
 
-export type OverviewItem = PropsWithChildren<{
-  overview: JSX.Element,
-}>;
-
 const asTitledItem = <P extends TitledItemProps>(Item: ComponentType<P>) => {
   const TitledItem: ComponentType<P> = ({ children, ...rest }) => {
     // prepare and pass the submenu title as a prop according to rc-menu <SubMenu /> specification
@@ -67,16 +63,16 @@ const sublistWrapperComponents: SubListWrapperComponents = {
 };
 
 type SubListWrapperProps =
-  TitledItemProps & OverviewItem & DesignableComponentsProps<SubListWrapperComponents>;
+  TitledItemProps & DesignableComponentsProps<SubListWrapperComponents>;
 
 const SubListWrapper$: FC<SubListWrapperProps> = ({
-  title, children, components, overview, ...rest
+  title, children, components, ...rest
 }) => {
   const { WrapperItem, List, Title } = components;
   return (
     <WrapperItem {...rest}>
       <Title>{title}</Title>
-      <List overview={overview}>
+      <List>
         {children}
       </List>
     </WrapperItem>
@@ -137,6 +133,13 @@ const passWrapperDesignToSubList = (SubList: ComponentType<SubListProps>) => {
   return PassWrapperDesignToSubList;
 };
 
+const withInsertChildren = (Component: any) => ({ insertChildren, children, ...rest }: any) => (
+  <Component {...rest}>
+    {insertChildren}
+    {children}
+  </Component>
+);
+
 /**
  * HOC which can be applied to a list item to convert it to a sublist.
  */
@@ -144,6 +147,8 @@ const asSubList = (useOverrides?: UseListOverrides) => flow(
   // First, replace with a bodiless list which sets the "Wrapper" to be
   // the original item.
   asBodilessList('sublist', undefined, useOverrides),
+  // Add sublist children if insertChildren prop is supplied.
+  withInsertChildren,
   // Next, replace that "Wrapper" with our SublistWrapper component which
   // now uses the original component as the "WrapperItem"
   withDesign({

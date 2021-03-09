@@ -20,7 +20,7 @@ import { useIsBurgerMenuVisible, useIsBurgerMenuHidden } from './BurgerMenuConte
 import {
   withLightGrayBg, withNoInsetStyles, withFullWidthStyles, withFullHeightStyles,
   asFixed, withFullZIndex, withMaterialIconsFont, withPointerCursorStyles,
-  asElementToken,
+  asElementToken, asDisabled,
 } from '../token';
 
 const withTransformStyles = asToken(
@@ -70,6 +70,10 @@ const withDefaultBackground = withDesign({
   Wrapper: withLightGrayBg,
 });
 
+const withDisabledTitleLink = withDesign({
+  Title: asDisabled,
+});
+
 const asSlideLeft = asToken(
   withSlideInOutAnimation,
   asFullScreen,
@@ -79,4 +83,5 @@ const asSlideLeft = asToken(
 export default withBurgerMenuTogglerStyles;
 export {
   asSlideLeft,
+  withDisabledTitleLink,
 };

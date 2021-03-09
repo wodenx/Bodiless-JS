@@ -12,65 +12,43 @@
  * limitations under the License.
  */
 
-import React, { FC, ComponentType, HTMLProps } from 'react';
+import React, { ComponentType, HTMLProps } from 'react';
 import { useNode } from '@bodiless/core';
 import { asAccordionWrapper, asAccodionTitle, asAccordionBody } from '@bodiless/organisms';
 import {
-  A, Fragment, withDesign, replaceWith, asToken,
+  A, Fragment, withDesign, replaceWith, asToken, addProps, Token,
 } from '@bodiless/fclasses';
 import BurgerMenuClean from './BurgerMenuClean';
 
+import { withDisabledTitleLink } from './BurgerMenu.token';
 import { withMenuDesign } from '../Menu/Menu.token';
-
-type OverviewItem = {
-  overview: JSX.Element,
-};
-
-type WithOverviewLink = {
-  OverviewLink: ComponentType<HTMLProps<HTMLAnchorElement>>
-};
 
 const DefaultOverviewLink: ComponentType<HTMLProps<HTMLAnchorElement>> = (props) => (
   <A {...props}>Overview</A>
 );
 
-const asBurgerMenuOverviewLink = <P extends object>(Item: ComponentType<P>) => {
-  const ItemWithOverview: ComponentType<P & WithOverviewLink> = ({
-    OverviewLink = DefaultOverviewLink,
-    ...rest
-  }) => {
+const withOverviewLink = (OverviewLink: ComponentType<any>) => {
+  const Overview = (props: any) => {
     const { node } = useNode();
-    const linkNode = node.child<{ href: string }>('link');
-    const overview = <li><OverviewLink href={linkNode.data.href} /></li>;
-    const overviewProps = linkNode.data.href ? { overview } : undefined;
+    const parentNodePath = node.path.slice(0, node.path.length - 1);
+    const linkNode = node.peer<{ href: string }>([...parentNodePath, 'title', 'link']);
 
-    return (
-      <Item {...overviewProps} {...rest as P} />
-    );
+    return linkNode.data.href
+      ? <OverviewLink {...props} href={linkNode.data.href} />
+      : <></>;
   };
 
-  return ItemWithOverview;
-};
-
-const withOverlayLinkAccordion = <P extends object>(Component: ComponentType<P>) => {
-  const WithOverlayLinkAccordion: FC<P & OverviewItem> = ({ children, overview, ...rest }) => (
-    <Component {...rest as P}>
-      { overview }
-      { children }
-    </Component>
-  );
-
-  return asAccordionBody(WithOverlayLinkAccordion as ComponentType<P>);
+  return addProps({ insertChildren: <Overview /> }) as Token;
 };
 
 const withBurgerMenuSchema = asToken(
   asAccordionWrapper,
+  withOverviewLink(DefaultOverviewLink),
   withDesign({
-    Wrapper: withOverlayLinkAccordion,
+    Wrapper: asAccordionBody,
     OuterWrapper: withDesign({
       Title: asAccodionTitle,
     }),
-    Item: asBurgerMenuOverviewLink,
   }),
   asToken.meta.term('Attribute')('Submenu'),
   asToken.meta.term('Component')('Element'),
@@ -100,6 +78,7 @@ const withBurgerMenuWrapper = <P extends object>(Component: ComponentType<P>) =>
  */
 const asBurgerMenu = (...keys: string[]) => asToken(
   withMenuDesign(keys)(withBurgerMenuSchema),
+  withDisabledTitleLink,
   // @todo what meta?
 );
 

@@ -76,7 +76,7 @@ const MenuTitleComponents: MenuTitleComponents = {
   Title: Fragment,
 };
 
-const MenuTitle = designable(MenuTitleComponents, 'Menu Title')(MenuTitleBase);
+const MenuTitle = designable(MenuTitleComponents, 'MenuTitle')(MenuTitleBase);
 
 const asMenuLink = (asEditableLink: typeof asBodilessLink) => asToken(
   withSidecarNodes(

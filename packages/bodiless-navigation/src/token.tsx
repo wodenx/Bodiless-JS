@@ -116,3 +116,8 @@ export const withPointerCursorStyles = asToken(
   addClasses('cursor-pointer'),
   asElementToken('Interactivity')('Cursor'),
 );
+
+export const asDisabled = asToken(
+  addClasses('pointer-events-none'),
+  asElementToken('Interactivity')('Pointer Events'),
+);
