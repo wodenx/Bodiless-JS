@@ -70,12 +70,13 @@ const BasicList: FC<Props> = ({
   const itemData = getItems();
   const canDelete = () => Boolean(getItems().length > 1 || unwrap);
 
-  const childItems = React.Children.map(children, child => (
+  const childItems = React.Children.toArray(children).filter(Boolean).map(child => (
     <Item
       // @TODO should we disable the add button, or should it add an item after all children?
       addItem={() => undefined}
       deleteItem={() => undefined}
       canDelete={() => false}
+      key={`child-item-${child}`}
     >
       {child}
     </Item>

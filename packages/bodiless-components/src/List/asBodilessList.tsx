@@ -133,7 +133,9 @@ const passWrapperDesignToSubList = (SubList: ComponentType<SubListProps>) => {
   return PassWrapperDesignToSubList;
 };
 
-const withInsertChildren = (Component: any) => ({ insertChildren, children, ...rest }: any) => (
+const withInsertChildren = (Component: ComponentType<any>) => (
+  { insertChildren, children, ...rest }: any,
+) => (
   <Component {...rest}>
     {insertChildren}
     {children}
