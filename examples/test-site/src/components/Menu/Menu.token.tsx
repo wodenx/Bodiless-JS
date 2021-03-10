@@ -90,8 +90,8 @@ const $withColumnsSublistStyles = withDesign({
 
 const $asSiteNavStyles = asToken(
   asTopNav('List', 'Columns', 'Touts'),
-  $withBaseMenuStyles,
-  withMenuDesign(['Main', 'List', 'Columns', 'Touts'])($withTitleStyles),
+  withMenuDesign()($withTitleStyles),
+  withMenuDesign('Main')($withBaseMenuStyles),
   withMenuDesign(['List', 'Columns', 'Touts'])($withBaseSubMenuStyles),
   withMenuDesign('Columns', 2)($withColumnsSublistStyles),
   withMenuDesign('List')($withListSubmenuStyles),

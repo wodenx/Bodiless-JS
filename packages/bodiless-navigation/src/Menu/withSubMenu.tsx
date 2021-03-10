@@ -14,7 +14,7 @@
 
 import { flow } from 'lodash';
 import {
-  TokenDef, HOC, Design, withDesign, asToken,
+  HOC, Design, withDesign, asToken,
 } from '@bodiless/fclasses';
 import {
   asStylableList, asStylableSubList, asSubList, withDeleteNodeOnUnwrap,
@@ -47,12 +47,6 @@ const asMenuSubList = (titleDesign: any = {}, useOverrides: UseListOverrides = (
 
 const withSubMenuDesign = (design: Design<any>) => withDesign({
   Item: withDesign(design),
-});
-
-const withColumnSubMenuDesign = (...tokenDefs: TokenDef<any>[]) => withDesign({
-  Item: withDesign({
-    SubList: asToken(...tokenDefs),
-  }),
 });
 
 /**
@@ -98,5 +92,4 @@ export {
   withToutSubMenu,
   withColumnSubMenu,
   withSubMenuDesign,
-  withColumnSubMenuDesign,
 };

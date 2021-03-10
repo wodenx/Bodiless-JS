@@ -28,17 +28,25 @@ const DefaultOverviewLink: ComponentType<HTMLProps<HTMLAnchorElement>> = (props)
 );
 
 const withOverviewLink = (OverviewLink: ComponentType<any>) => {
+  let hasLink = false;
+
   const Overview = (props: any) => {
     const { node } = useNode();
     const parentNodePath = node.path.slice(0, node.path.length - 1);
     const linkNode = node.peer<{ href: string }>([...parentNodePath, 'title', 'link']);
+
+    if (linkNode.data.href) {
+      hasLink = true;
+    }
 
     return linkNode.data.href
       ? <OverviewLink {...props} href={linkNode.data.href} />
       : <></>;
   };
 
-  return addProps({ insertChildren: <Overview /> }) as Token;
+  return hasLink
+    ? addProps({ insertChildren: <Overview /> }) as Token
+    : asToken();
 };
 
 const withBurgerMenuSchema = asToken(

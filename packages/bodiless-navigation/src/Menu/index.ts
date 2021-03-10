@@ -18,7 +18,7 @@ import {
   asMenuTout, asMenuLink, asMenuTitle, useIsActiveTrail,
 } from './MenuTitles';
 import {
-  withListSubMenu, withToutSubMenu, withColumnSubMenu, withColumnSubMenuDesign,
+  withListSubMenu, withToutSubMenu, withColumnSubMenu,
 } from './withSubMenu';
 
 import { withMenuDesign, asTopNav } from './Menu.token';
@@ -30,7 +30,6 @@ export {
   withListSubMenu,
   withToutSubMenu,
   withColumnSubMenu,
-  withColumnSubMenuDesign,
   asMenuLink,
   asMenuTitle,
   asMenuTout,

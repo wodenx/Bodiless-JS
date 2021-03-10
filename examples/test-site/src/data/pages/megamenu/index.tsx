@@ -104,7 +104,7 @@ export default (props: any) => (
 
       <DataPreviewContainer>
         <H2>Data</H2>
-        <NodeTreePrinter nodeKey="MainMenu" />
+        <NodeTreePrinter nodeKey="DemoMenu" />
       </DataPreviewContainer>
     </Layout>
   </Page>

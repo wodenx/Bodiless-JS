@@ -228,6 +228,6 @@ export const asTopNav = (...keys: string[]) => {
     withMenuDesign('Main')(withBaseMenuStyles),
     withMenuDesign('List')(listSubmenuStyles),
     withMenuDesign('Touts')(toutsSubmenuStyles),
-    withMenuDesign('Columns', [0, 1])(columnsSubmenuStyles),
+    withMenuDesign('Columns', 1)(columnsSubmenuStyles),
   );
 };

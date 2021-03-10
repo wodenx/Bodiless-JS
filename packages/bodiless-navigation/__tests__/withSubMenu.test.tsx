@@ -21,7 +21,6 @@ import { mount } from 'enzyme';
 
 import {
   asBodilessMenu, withListSubMenu, withMenuDesign, withColumnSubMenu, withToutSubMenu,
-  withColumnSubMenuDesign,
 } from '../src';
 
 describe('Bodiless Menu', () => {
@@ -126,14 +125,12 @@ describe('Bodiless Menu', () => {
       withColumnSubMenuItems(...subMenuItems),
       withTopMenuDesign,
       withSubMenuDesign('Columns'),
-      withMenuDesign('Columns')(
-        withColumnSubMenuDesign(
-          withDesign({
-            Wrapper: addProps({ 'data-test-submenu': 'sub-column-submenu' }),
-            Title: addProps({ 'data-test-submenu': 'sub-column-submenu-title' }),
-            Item: addProps({ 'data-test-submenu': 'sub-column-submenu-item' }),
-          }),
-        ),
+      withMenuDesign('Columns', 2)(
+        withDesign({
+          Wrapper: addProps({ 'data-test-submenu': 'sub-column-submenu' }),
+          Title: addProps({ 'data-test-submenu': 'sub-column-submenu-title' }),
+          Item: addProps({ 'data-test-submenu': 'sub-column-submenu-item' }),
+        }),
       ),
     )(BaseMenu);
 
