@@ -14,7 +14,7 @@
 
 import { withPrependChild } from '@bodiless/core';
 import {
-  A, Div, asToken, replaceWith, withDesign, addClasses, addProps,
+  A, Div, asToken, replaceWith, startWith, withDesign, addClasses, addProps,
 } from '@bodiless/fclasses';
 import {
   asBurgerMenu, withMenuDesign, BurgerMenuDefaultToggler,
@@ -31,7 +31,7 @@ import {
  * Tokens
  * ===========================================
  */
-const $asSiteToggler = asToken(
+const $withTogglerStyles = asToken(
   withDesign({
     Button: asToken(asTextWhite, asMobileOnly),
     Wrapper: asToken(
@@ -42,35 +42,21 @@ const $asSiteToggler = asToken(
   }),
 );
 
-const withFullWidthToggler = asToken(
-  withPrependChild(
-    $asSiteToggler(BurgerMenuDefaultToggler),
-    'MenuToggler',
-  ),
-  asTealBackground,
-  addClasses('flex items-center justify-between'),
-);
-
-const withTogglerWrapper = asToken(
+const $withBurgerMenuHeaderStyles = asToken(
+  asDefaultLogoStyle,
   withDesign({
-    Wrapper: asToken(
+    SiteReturn: asToken(
+      withPrependChild(BurgerMenuDefaultToggler, 'MenuToggler'),
       asTealBackground,
-      addClasses('w-full py-1'),
+      withDesign({
+        MenuToggler: $withTogglerStyles,
+      }),
+      addClasses('flex items-center justify-between'),
     ),
   }),
 );
 
-const withBurgerMenuHeader = withDesign({
-  Header: asToken(
-    replaceWith(Logo),
-    asDefaultLogoStyle,
-    withDesign({
-      SiteReturn: withFullWidthToggler,
-    }),
-  ),
-});
-
-const $withBoldAccordionTitle = withDesign({
+const $withBoldAccordionTitleStyles = withDesign({
   OuterWrapper: withDesign({
     Title: withDesign({
       Label: asBold,
@@ -91,25 +77,27 @@ const OverviewLink = asToken(
   addProps({ children: 'Overview' }),
 )(A);
 
-const $withSiteOverviewLink = withOverviewLink(OverviewLink);
+const $withOverviewLink = withOverviewLink(OverviewLink);
 
-const $withBurgerMenuStyles = asToken(
+const $withMenuStyles = asToken(
   asBurgerMenu('List', 'Columns', 'Touts'),
-  withMenuDesign(['List', 'Columns', 'Touts'])($withBaseSubMenuStyles, $withBoldAccordionTitle, $withSiteOverviewLink),
+  withMenuDesign(['List', 'Columns', 'Touts'])($withBaseSubMenuStyles, $withBoldAccordionTitleStyles, $withOverviewLink),
   withMenuDesign('Columns')($withColumnSubMenuStyles),
 );
 
-const $asSiteBurgerMenu = asToken(
-  withBurgerMenuHeader,
+const $withBurgerMenuStyles = asToken(
   withDesign({
-    Menu: $withBurgerMenuStyles,
+    Menu: $withMenuStyles,
     Nav: addClasses('p-3'),
+    Header: asToken(
+      startWith(Logo),
+      $withBurgerMenuHeaderStyles,
+    ),
   }),
   asSlideLeft,
 );
 
 export {
-  withTogglerWrapper,
-  $asSiteBurgerMenu,
-  $asSiteToggler,
+  $withBurgerMenuStyles,
+  $withTogglerStyles,
 };

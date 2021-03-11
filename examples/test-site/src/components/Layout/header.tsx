@@ -21,7 +21,7 @@ import {
   Div,
 } from '@bodiless/fclasses';
 import { withNodeKey } from '@bodiless/core';
-import { ResponsiveBodilessMenu, BurgerMenuToggler } from '../Menu';
+import { ResponsiveMenu, BurgerMenuToggler } from '../Menu';
 import { ResponsiveSearchBox } from '../Search';
 import Logo from './logo';
 
@@ -44,7 +44,7 @@ const headerComponents:HeaderComponents = {
   MenuContainer: Div,
   MenuToggler: BurgerMenuToggler,
   SearchContainer: Div,
-  Menu: ResponsiveBodilessMenu,
+  Menu: ResponsiveMenu,
   Search: ResponsiveSearchBox,
   SiteLogoReturn: Logo,
 };

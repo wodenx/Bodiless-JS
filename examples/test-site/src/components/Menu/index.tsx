@@ -21,7 +21,7 @@ import { breakpoints as allBreakpoints } from '../Page';
 import { asDesktopOnly, asMobileOnly } from '../Elements.token';
 
 import BodilessMenu from './Menu';
-import BodilessBurgerMenu, { BurgerMenuToggler, BurgerMenuTogglerFullWidth } from './BurgerMenu';
+import BodilessBurgerMenu, { BurgerMenuToggler } from './BurgerMenu';
 
 const breakpoints = pick(allBreakpoints, 'lg');
 
@@ -36,10 +36,9 @@ const asResponsiveMenu = (DesktopMenu: ComponentType) => flow(
   }),
 );
 
-const ResponsiveBodilessMenu = asResponsiveMenu(BodilessMenu)(BodilessBurgerMenu);
+const ResponsiveMenu = asResponsiveMenu(BodilessMenu)(BodilessBurgerMenu);
 
 export {
-  ResponsiveBodilessMenu,
+  ResponsiveMenu,
   BurgerMenuToggler,
-  BurgerMenuTogglerFullWidth,
 };

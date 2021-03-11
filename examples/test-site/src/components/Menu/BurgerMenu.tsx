@@ -16,25 +16,20 @@ import { flow } from 'lodash';
 import { asStatic } from '@bodiless/core';
 import { withBurgerMenuWrapper, BurgerMenuDefaultToggler } from '@bodiless/navigation';
 
-import { $asSiteBurgerMenu, $asSiteToggler, withTogglerWrapper } from './BurgerMenu.token';
+import { $withBurgerMenuStyles, $withTogglerStyles } from './BurgerMenu.token';
 import { BodilessMenuBase } from './Menu';
 
 const BurgerMenuToggler = flow(
-  $asSiteToggler,
+  $withTogglerStyles,
 )(BurgerMenuDefaultToggler);
-
-const BurgerMenuTogglerFullWidth = flow(
-  withTogglerWrapper,
-)(BurgerMenuToggler);
 
 const BodilessBurgerMenu = flow(
   withBurgerMenuWrapper,
-  $asSiteBurgerMenu,
+  $withBurgerMenuStyles,
   asStatic,
 )(BodilessMenuBase);
 
 export default BodilessBurgerMenu;
 export {
   BurgerMenuToggler,
-  BurgerMenuTogglerFullWidth,
 };

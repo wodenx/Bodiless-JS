@@ -16,22 +16,27 @@ import React, { ComponentType } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  addClasses, H1 as H1$, H2 as H2$, Ul, Div,
+  withDesign, asToken, addClasses, H1 as H1$, H2 as H2$, Ul, Div,
 } from '@bodiless/fclasses';
 import { observer } from 'mobx-react-lite';
-import { flow } from 'lodash';
 import { useNode, withNode, withNodeKey } from '@bodiless/core';
 import { withBurgerMenuProvider } from '@bodiless/navigation';
 
 import Layout from '../../../components/Layout';
-import { asHeader2, asHeader1 } from '../../../components/Elements.token';
+import { asHeader2, asHeader1, asTealBackground } from '../../../components/Elements.token';
 
 import {
-  BurgerMenuTogglerFullWidth, ResponsiveBodilessMenu,
+  BurgerMenuToggler, ResponsiveMenu,
 } from '../../../components/Menu';
 
 const BurgerMenuProvider = withBurgerMenuProvider(Div) as ComponentType;
-const DemoMenu = withNodeKey({ nodeKey: 'DemoMenu' })(ResponsiveBodilessMenu) as ComponentType;
+const DemoMenu = withNodeKey({ nodeKey: 'DemoMenu' })(ResponsiveMenu) as ComponentType;
+const BurgerMenuTogglerFullWidth = withDesign({
+  Wrapper: asToken(
+    asTealBackground,
+    addClasses('w-full py-1'),
+  ),
+})(BurgerMenuToggler);
 
 const NodeTreePrinter$ = () => {
   const { node } = useNode();
@@ -51,9 +56,9 @@ const NodeTreePrinter$ = () => {
   );
 };
 
-const NodeTreePrinter = flow(observer, withNode)(NodeTreePrinter$);
-const H1 = flow(addClasses('pt-5'), asHeader1)(H1$);
-const H2 = flow(addClasses('pt-5'), asHeader2)(H2$);
+const NodeTreePrinter = asToken(observer, withNode)(NodeTreePrinter$);
+const H1 = asToken(addClasses('pt-5'), asHeader1)(H1$);
+const H2 = asToken(addClasses('pt-5'), asHeader2)(H2$);
 const Description = addClasses('text-sm mb-2 italic')(Div);
 const DataPreviewContainer = addClasses('overflow-scroll')(Div);
 const DescList = addClasses('list-disc ml-5')(Ul);
