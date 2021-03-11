@@ -25,12 +25,12 @@ export const DemoMenu = asBodilessMenu('simple-menu-demo')('ul');
 #### Menu Sublists
 The `DemoMenu` above will create a simple one-level **unstyled** list with Editable menu titles by default. This menu may be extended with different types of submenus:
 ```js
-import { flow } from 'lodash';
+import { asToken } from '@bodiless/fclasses';
 import {
   asBodilessMenu, withListSubMenu, withColumnSubMenu, withToutSubMenu,
 } from '@bodiless/navigation';
 
-export const DemoMenu = flow(
+export const DemoMenu = asToken(
   asBodilessMenu('menu-demo'),
   withListSubMenu(), // Add an ability to create a List submenu
   withColumnSubMenu(), // Add an ability to create a Columns submenu

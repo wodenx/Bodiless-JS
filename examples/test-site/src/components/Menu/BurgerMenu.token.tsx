@@ -13,10 +13,11 @@
  */
 
 import {
-  Div, asToken, replaceWith, withDesign, addClasses,
+  A, Div, asToken, replaceWith, withDesign, addClasses, addProps,
 } from '@bodiless/fclasses';
 import {
-  asBurgerMenu, withMenuDesign, BurgerMenuDefaultToggler, withBurgerMenuToggler, asSlideLeft,
+  asBurgerMenu, withMenuDesign, BurgerMenuDefaultToggler, withBurgerMenuToggler,
+  asSlideLeft, withOverviewLink,
 } from '@bodiless/navigation';
 
 import Logo from '../Layout/logo';
@@ -83,9 +84,16 @@ const $withColumnSubMenuStyles = withDesign({
   Item: addClasses('pl-8'),
 });
 
+// Example of custom OverviewLink
+const OverviewLink = asToken(
+  addProps({ children: 'Overview' }),
+)(A);
+
+const $withSiteOverviewLink = withOverviewLink(OverviewLink);
+
 const $withBurgerMenuStyles = asToken(
   asBurgerMenu('List', 'Columns', 'Touts'),
-  withMenuDesign(['List', 'Columns', 'Touts'])($withBaseSubMenuStyles, $withBoldAccordionTitle),
+  withMenuDesign(['List', 'Columns', 'Touts'])($withBaseSubMenuStyles, $withBoldAccordionTitle, $withSiteOverviewLink),
   withMenuDesign('Columns')($withColumnSubMenuStyles),
 );
 

@@ -27,26 +27,26 @@ const DefaultOverviewLink: ComponentType<HTMLProps<HTMLAnchorElement>> = (props)
   <A {...props}>Overview</A>
 );
 
+/**
+ * HOC that adds an `OverviewLink` as an `insertChildren` prop to the menu list.
+ * This HOC has to be applied on the List level (List, Tout or Column submenus).
+ *
+ * @param OverviewLink Component to be added to the list as an Overview Link.
+ *
+ * @return Token that adds an OverviewLink to the menu list.
+ */
 const withOverviewLink = (OverviewLink: ComponentType<any>) => {
-  let hasLink = false;
-
   const Overview = (props: any) => {
     const { node } = useNode();
     const parentNodePath = node.path.slice(0, node.path.length - 1);
     const linkNode = node.peer<{ href: string }>([...parentNodePath, 'title', 'link']);
-
-    if (linkNode.data.href) {
-      hasLink = true;
-    }
 
     return linkNode.data.href
       ? <OverviewLink {...props} href={linkNode.data.href} />
       : <></>;
   };
 
-  return hasLink
-    ? addProps({ insertChildren: <Overview /> }) as Token
-    : asToken();
+  return addProps({ insertChildren: <Overview /> }) as Token;
 };
 
 const withBurgerMenuSchema = asToken(
@@ -93,4 +93,5 @@ const asBurgerMenu = (...keys: string[]) => asToken(
 export default asBurgerMenu;
 export {
   withBurgerMenuWrapper,
+  withOverviewLink,
 };

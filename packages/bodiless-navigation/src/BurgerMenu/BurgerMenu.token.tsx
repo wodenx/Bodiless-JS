@@ -74,6 +74,11 @@ const withDisabledTitleLink = withDesign({
   Title: asDisabled,
 });
 
+/**
+ * An HOC that adds styles and transitions needed for a slide-in animation for the Burger menu.
+ *
+ * @return Token that applies required styles for slide-in animation.
+ */
 const asSlideLeft = asToken(
   withSlideInOutAnimation,
   asFullScreen,
