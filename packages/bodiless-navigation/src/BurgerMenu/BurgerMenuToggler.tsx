@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import React, { FC, ComponentType, PropsWithChildren } from 'react';
+import React, { FC, ComponentType } from 'react';
 import { flow } from 'lodash';
 import {
   Fragment, A, DesignableComponentsProps, designable,
@@ -70,29 +70,6 @@ const asBurgerMenuToggler = <P extends object>(Component: ComponentType<P>) => (
 };
 
 /**
- * HOC that inserts supplied Toggler component as the first child of wrapped component.
- *
- * ```
- * <Component {...rest}>
- *   { children }
- *   <Toggler />
- * </Component>
- * ```
- *
- * @param Toggler Toggler component to insert.
- *
- * @return Original component with Toggler as the first child.
- */
-const withBurgerMenuToggler = (
-  Toggler: ComponentType<any>,
-) => (Component: ComponentType<any>) => ({ children, ...rest }: PropsWithChildren<any>) => (
-  <Component {...rest}>
-    { children }
-    <Toggler />
-  </Component>
-);
-
-/**
  * Default Burger Menu Toggler button. Toggles button icon based on the
  * burger menu state ('close' | 'menu'). Has an onClick handler that toggles
  * BurgerMenuContext 'isVisible' prop.
@@ -108,6 +85,5 @@ const BurgerMenuDefaultToggler = flow(
 
 export default BurgerMenuDefaultToggler;
 export {
-  withBurgerMenuToggler,
   asBurgerMenuToggler,
 };

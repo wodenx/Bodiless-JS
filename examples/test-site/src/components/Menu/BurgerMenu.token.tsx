@@ -12,11 +12,12 @@
  * limitations under the License.
  */
 
+import { withPrependChild } from '@bodiless/core';
 import {
   A, Div, asToken, replaceWith, withDesign, addClasses, addProps,
 } from '@bodiless/fclasses';
 import {
-  asBurgerMenu, withMenuDesign, BurgerMenuDefaultToggler, withBurgerMenuToggler,
+  asBurgerMenu, withMenuDesign, BurgerMenuDefaultToggler,
   asSlideLeft, withOverviewLink,
 } from '@bodiless/navigation';
 
@@ -42,8 +43,9 @@ const $asSiteToggler = asToken(
 );
 
 const withFullWidthToggler = asToken(
-  withBurgerMenuToggler(
+  withPrependChild(
     $asSiteToggler(BurgerMenuDefaultToggler),
+    'MenuToggler',
   ),
   asTealBackground,
   addClasses('flex items-center justify-between'),
