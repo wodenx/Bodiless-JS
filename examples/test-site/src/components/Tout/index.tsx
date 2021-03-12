@@ -26,7 +26,7 @@ import {
 } from '@bodiless/organisms';
 import { withDesign } from '@bodiless/fclasses';
 import {
-  asEditableImage, asEditableLink,
+  asEditableImage, asEditableLink, // asEditable,
 } from '../Elements.token';
 import {
   withEditorBasic,
@@ -42,6 +42,23 @@ export const withToutEditors = flow(
     Title: withEditorSimple('title', 'Tout Title Text'),
     Link: flow(
       withEditorSimple('ctatext', 'CTA'),
+      withSidecarNodes(
+        asEditableLink('link', undefined, () => ({ groupLabel: 'CTA' })),
+      ),
+    ),
+    Body: withEditorBasic('body', 'Tout Body Text'),
+  }),
+);
+
+export const withMenuToutEditors = flow(
+  withDesign({
+    Image: asEditableImage('image'),
+    ImageLink: withSidecarNodes(
+      asEditableLink('link'),
+    ),
+    // Title: asEditable('title', 'Tout Title Text'),
+    Link: flow(
+      // asEditable('ctatext', 'CTA'),
       withSidecarNodes(
         asEditableLink('link', undefined, () => ({ groupLabel: 'CTA' })),
       ),

@@ -15,15 +15,15 @@
 import { ComponentType } from 'react';
 import { flow } from 'lodash';
 import {
-  asBodilessMenu, withListSubMenu, withColumnSubMenu, withToutSubMenu,
+  asBodilessMenu, withListSubMenu, withColumnSubMenu, withToutSubMenu, asMenuTout,
 } from '@bodiless/navigation';
 
-import { asEditableTout } from '../Tout';
+import { withMenuToutEditors } from '../Tout';
 import $asSiteNavStyles from './Menu.token';
 
 export const $asEditableMenuTout = flow(
-  // asMenuTout(),
-  asEditableTout,
+  asMenuTout(),
+  withMenuToutEditors,
 );
 
 const BodilessMenuBase = flow(

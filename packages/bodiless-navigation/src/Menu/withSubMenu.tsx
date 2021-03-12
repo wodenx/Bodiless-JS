@@ -21,7 +21,7 @@ import {
   withSubLists, UseListOverrides,
 } from '@bodiless/components';
 
-import { asBreadcrumbSource, withEditableMenuTitle, asMenuTout } from './MenuTitles';
+import { asBreadcrumbSource, withEditableMenuTitle } from './MenuTitles';
 
 /**
  * Creates a stylable sublist which deletes it's data when the last item is removed.
@@ -66,12 +66,7 @@ const withListSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesi
  *
  */
 const withToutSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesign({
-  Touts: asToken(
-    asMenuSubList(menuTitleDesign),
-    withDesign({
-      Title: asMenuTout(),
-    }),
-  ),
+  Touts: asMenuSubList(menuTitleDesign),
 });
 
 /**

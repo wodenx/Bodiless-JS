@@ -21,6 +21,7 @@ import {
   asLightTealBackgroundOnHover, asTealBackground, asTextWhite,
 } from '../Elements.token';
 import { asUnderline } from '../ElementDefault.token';
+import { asToutMainMenu } from '../Tout/token';
 
 /**
  * Colors
@@ -88,6 +89,11 @@ const $withColumnsSublistStyles = withDesign({
   Title: addClasses('pl-6'),
 });
 
+const $withToutsSublistStyles = withDesign({
+  Title: asToutMainMenu,
+  Item: addClasses('w-1/3'),
+});
+
 const $asSiteNavStyles = asToken(
   asTopNav('List', 'Columns', 'Touts'),
   withMenuDesign()($withTitleStyles),
@@ -95,6 +101,7 @@ const $asSiteNavStyles = asToken(
   withMenuDesign(['List', 'Columns', 'Touts'])($withBaseSubMenuStyles),
   withMenuDesign('Columns', 2)($withColumnsSublistStyles),
   withMenuDesign('List')($withListSubmenuStyles),
+  withMenuDesign('Touts')($withToutsSublistStyles),
 );
 
 export default $asSiteNavStyles;

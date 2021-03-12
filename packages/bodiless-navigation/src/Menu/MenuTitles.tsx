@@ -28,7 +28,7 @@ import {
   Fragment,
   designable,
   withDesign,
-  replaceWith,
+  startWith,
   DesignableProps,
   DesignableComponentsProps,
 } from '@bodiless/fclasses';
@@ -89,9 +89,9 @@ const asMenuTitle = (asEditableTitle: typeof asEditable) => asToken(
 );
 
 const asEditableMenuTitle = flow(
-  replaceWith(MenuTitle),
+  startWith(MenuTitle),
   withDesign({
-    Link: asMenuLink(withBodilessLinkToggle(asBodilessLink, replaceWith(Div) as HOC)),
+    Link: asMenuLink(withBodilessLinkToggle(asBodilessLink, startWith(Div) as HOC)),
     Title: asMenuTitle(asEditable),
   }),
   withNode,
@@ -102,11 +102,11 @@ const withEditableMenuTitle = withDesign({
   Title: asEditableMenuTitle,
 });
 
-const asMenuTout = (linkNodeKey = 'link', titleNodeKey = 'title') => {
+const asMenuTout = (linkNodeKey = 'link', titleNodeKey = 'text') => {
   const transformDesign = (design: Design<any> = {}) => {
     const Link = asToken(
       withSidecarNodes(
-        design.Link || withBodilessLinkToggle(asBodilessLink, replaceWith(Div) as HOC)(),
+        design.Link || withBodilessLinkToggle(asBodilessLink, startWith(Div) as HOC)(),
         withNodeKey(linkNodeKey),
       ),
     );
@@ -117,14 +117,11 @@ const asMenuTout = (linkNodeKey = 'link', titleNodeKey = 'title') => {
     return { ...design, Link, Title };
   };
 
-  return flow(
-    // @TODO replaceWith is incorrect -- it replaces the original component with the empty tout
-    // It needs to be startWith(), but currently doesnt work that way.
-    // eslint-disable-next-line max-len
-    replaceWith(({ design, ...rest }: DesignableProps<any> & WithNodeProps) => <ToutClean design={transformDesign(design)} {...rest} />),
-    withNode,
-    withNodeKey('title'),
+  const CleanTout: ComponentType<DesignableProps<any> & WithNodeProps> = ({ design, ...rest }) => (
+    <ToutClean design={transformDesign(design)} {...rest} />
   );
+
+  return startWith(CleanTout);
 };
 
 export default MenuTitle;
