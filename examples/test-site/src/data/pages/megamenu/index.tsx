@@ -24,10 +24,7 @@ import { withBurgerMenuProvider } from '@bodiless/navigation';
 
 import Layout from '../../../components/Layout';
 import { asHeader2, asHeader1, asTealBackground } from '../../../components/Elements.token';
-
-import {
-  BurgerMenuToggler, ResponsiveMenu,
-} from '../../../components/Menu';
+import ResponsiveMenu, { BurgerMenuToggler } from '../../../components/Menu';
 
 const BurgerMenuProvider = withBurgerMenuProvider(Div) as ComponentType;
 const DemoMenu = withNodeKey({ nodeKey: 'DemoMenu' })(ResponsiveMenu) as ComponentType;

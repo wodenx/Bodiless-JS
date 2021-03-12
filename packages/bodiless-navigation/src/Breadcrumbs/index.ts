@@ -36,7 +36,7 @@ export type {
 } from './BreadcrumbStore';
 
 export {
-  asMenuBreadcrumbs,
+  asBreadcrumbs,
   BreadcrumbsClean,
   withBreadcrumbStartingTrail,
   withoutBreadcrumbStartingTrail,
@@ -50,7 +50,7 @@ export {
 } from './BreadcrumbStoreProvider';
 
 export {
-  withMenuBreadcrumbSchema,
+  withBreadcrumbEditors,
   withEditableFinalTrail,
   withEditableStartingTrail,
 } from './withEditableTrail';

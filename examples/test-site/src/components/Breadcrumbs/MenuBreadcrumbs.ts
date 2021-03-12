@@ -14,35 +14,25 @@
 
 import {
   BreadcrumbsClean,
-  asMenuBreadcrumbs,
+  asBreadcrumbs,
   withEditableStartingTrail,
   withEditableFinalTrail,
-  withMenuBreadcrumbSchema as withDefaultBreadcrumbSchema,
+  withBreadcrumbEditors as withDefaultBreadcrumbEditors,
 } from '@bodiless/navigation';
 import { asToken } from '@bodiless/fclasses';
 
-import { withMenuBreadcrumbStyles } from './MenuBreadcrumbs.token';
+import { withBreadcrumbStyles } from './MenuBreadcrumbs.token';
 
-const DEFAULT_STARTING_TRAIL_NODE_KEY = 'startingTrail';
-const DEFAULT_FINAL_TRAIL_NODE_KEY = 'finalTrail';
-
-const withMenuBreadcrumbSchema = asToken(
-  withDefaultBreadcrumbSchema,
-  withEditableStartingTrail({
-    nodeKey: DEFAULT_STARTING_TRAIL_NODE_KEY,
-    nodeCollection: 'site',
-  }, 'Enter item'),
-  withEditableFinalTrail(DEFAULT_FINAL_TRAIL_NODE_KEY, 'Enter item'),
+const withBreadcrumbEditors = asToken(
+  withDefaultBreadcrumbEditors,
+  withEditableStartingTrail({ nodeCollection: 'site' }),
+  withEditableFinalTrail(),
 );
 
 const Breadcrumbs = asToken(
-  asMenuBreadcrumbs,
-  withMenuBreadcrumbSchema,
-  withMenuBreadcrumbStyles,
+  asBreadcrumbs,
+  withBreadcrumbEditors,
+  withBreadcrumbStyles,
 )(BreadcrumbsClean);
 
 export default Breadcrumbs;
-export {
-  DEFAULT_STARTING_TRAIL_NODE_KEY,
-  DEFAULT_FINAL_TRAIL_NODE_KEY,
-};

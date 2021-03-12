@@ -14,10 +14,10 @@
 
 import React, { FC, ComponentType } from 'react';
 import {
-  Div, designable, DesignableComponentsProps, Nav as NavBase, Fragment,
+  Div, designable, DesignableProps, DesignableComponentsProps, Nav as NavBase, Fragment,
 } from '@bodiless/fclasses';
 
-type BurgerMenuComponents = {
+export type BurgerMenuComponents = {
   Wrapper: ComponentType<any>,
   Header: ComponentType<any>,
   Nav: ComponentType<any>,
@@ -25,7 +25,9 @@ type BurgerMenuComponents = {
   Overlay: ComponentType<any>,
 };
 
-type BurgerMenuProps = DesignableComponentsProps<BurgerMenuComponents>;
+export type BurgerMenuProps = DesignableProps<BurgerMenuComponents>;
+
+type BurgerMenuBaseProps = DesignableComponentsProps<BurgerMenuComponents>;
 
 const burgerMenuComponents: BurgerMenuComponents = {
   Wrapper: Div,
@@ -35,7 +37,7 @@ const burgerMenuComponents: BurgerMenuComponents = {
   Overlay: Div,
 };
 
-const BurgerMenuBase: FC<BurgerMenuProps> = ({ components, ...rest }) => {
+const BurgerMenuBase: FC<BurgerMenuBaseProps> = ({ components, ...rest }) => {
   const {
     Wrapper, Nav, Menu, Header, Overlay,
   } = components;

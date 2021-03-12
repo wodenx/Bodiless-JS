@@ -19,7 +19,7 @@ import {
 } from '@bodiless/fclasses';
 
 import { useBurgerMenuContext } from './BurgerMenuContext';
-import withBurgerMenuTogglerStyles from './BurgerMenu.token';
+import { withBurgerMenuTogglerStyles } from './BurgerMenu.token';
 
 type TogglerComponents = {
   Wrapper: ComponentType<any>,
@@ -46,8 +46,6 @@ const TogglerBase: FC<TogglerProps> = ({ components, ...rest }) => {
   );
 };
 
-const BurgerMenuTogglerClean = designable(TogglerComponents, 'BurgerMenuToggler')(TogglerBase);
-
 /**
  * HOC that adds an ability to toggle Burger Menu visibility on click.
  * It extends Component's default onClick handler if exists. Note that
@@ -69,6 +67,11 @@ const asBurgerMenuToggler = <P extends object>(Component: ComponentType<P>) => (
   return <Component {...props} onClick={extendOnClick} />;
 };
 
+const BurgerMenuTogglerClean = flow(
+  designable(TogglerComponents, 'BurgerMenuToggler'),
+  asBurgerMenuToggler,
+)(TogglerBase);
+
 /**
  * Default Burger Menu Toggler button. Toggles button icon based on the
  * burger menu state ('close' | 'menu'). Has an onClick handler that toggles
@@ -78,12 +81,9 @@ const asBurgerMenuToggler = <P extends object>(Component: ComponentType<P>) => (
  *
  * @return Burger Menu default toggler component.
  */
-const BurgerMenuDefaultToggler = flow(
-  asBurgerMenuToggler,
-  withBurgerMenuTogglerStyles,
-)(BurgerMenuTogglerClean);
+const BurgerMenuDefaultToggler = withBurgerMenuTogglerStyles(BurgerMenuTogglerClean);
 
-export default BurgerMenuDefaultToggler;
 export {
-  asBurgerMenuToggler,
+  BurgerMenuTogglerClean,
+  BurgerMenuDefaultToggler,
 };

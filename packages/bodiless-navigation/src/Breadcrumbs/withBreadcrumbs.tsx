@@ -15,7 +15,7 @@
 import React, { ComponentType, useRef } from 'react';
 import { useNode } from '@bodiless/core';
 import { BreadcrumbStore } from './BreadcrumbStore';
-import { Breadcrumbs } from './Breadcrumbs';
+import { MenuBreadcrumbs } from './Breadcrumbs';
 import { BreadcrumbStoreProvider } from './BreadcrumbStoreProvider';
 
 /**
@@ -45,7 +45,7 @@ const withBreadcrumbs = (Component: ComponentType<any>) => {
   const WithBreadcrumbs = (props: any) => (
     <>
       <Component {...props} />
-      <Breadcrumbs {...props} />
+      <MenuBreadcrumbs {...props} />
     </>
   );
   return withBreadcrumbStore(WithBreadcrumbs);

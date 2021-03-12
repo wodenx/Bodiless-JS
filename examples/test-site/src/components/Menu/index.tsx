@@ -20,8 +20,8 @@ import { withResponsiveVariants } from '@bodiless/components';
 import { breakpoints as allBreakpoints } from '../Page';
 import { asDesktopOnly, asMobileOnly } from '../Elements.token';
 
-import BodilessMenu from './Menu';
-import BodilessBurgerMenu, { BurgerMenuToggler } from './BurgerMenu';
+import Menu from './Menu';
+import BurgerMenu, { BurgerMenuToggler } from './BurgerMenu';
 
 const breakpoints = pick(allBreakpoints, 'lg');
 
@@ -36,9 +36,9 @@ const asResponsiveMenu = (DesktopMenu: ComponentType) => flow(
   }),
 );
 
-const ResponsiveMenu = asResponsiveMenu(BodilessMenu)(BodilessBurgerMenu);
+const ResponsiveMenu = asResponsiveMenu(Menu)(BurgerMenu);
 
+export default ResponsiveMenu;
 export {
-  ResponsiveMenu,
   BurgerMenuToggler,
 };

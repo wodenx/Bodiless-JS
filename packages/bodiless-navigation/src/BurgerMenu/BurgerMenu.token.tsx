@@ -85,8 +85,8 @@ const asSlideLeft = asToken(
   withDefaultBackground,
 );
 
-export default withBurgerMenuTogglerStyles;
 export {
   asSlideLeft,
   withDisabledTitleLink,
+  withBurgerMenuTogglerStyles,
 };

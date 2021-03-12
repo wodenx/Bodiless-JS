@@ -13,15 +13,13 @@
  */
 
 import asBodilessMenu from './asBodilessMenu';
+import withMenuDesign from './withMenuDesign';
+import asTopNav from './Menu.token';
 import { useIsMenuOpen } from './withMenuContext';
+import { withListSubMenu, withToutSubMenu, withColumnSubMenu } from './withSubMenu';
 import {
   asMenuTout, asMenuLink, asMenuTitle, useIsActiveTrail,
 } from './MenuTitles';
-import {
-  withListSubMenu, withToutSubMenu, withColumnSubMenu,
-} from './withSubMenu';
-
-import { withMenuDesign, asTopNav } from './Menu.token';
 
 export {
   asBodilessMenu,

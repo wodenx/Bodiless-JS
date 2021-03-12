@@ -21,7 +21,7 @@ import {
 import BurgerMenuClean from './BurgerMenuClean';
 
 import { withDisabledTitleLink } from './BurgerMenu.token';
-import { withMenuDesign } from '../Menu/Menu.token';
+import withMenuDesign from '../Menu/withMenuDesign';
 
 const DefaultOverviewLink: ComponentType<HTMLProps<HTMLAnchorElement>> = (props) => (
   <A {...props}>Overview</A>

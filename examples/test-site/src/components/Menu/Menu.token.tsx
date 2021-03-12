@@ -94,7 +94,7 @@ const $withToutsSublistStyles = withDesign({
   Item: addClasses('w-1/3'),
 });
 
-const $asSiteNavStyles = asToken(
+const $asNavStyles = asToken(
   asTopNav('List', 'Columns', 'Touts'),
   withMenuDesign()($withTitleStyles),
   withMenuDesign('Main')($withBaseMenuStyles),
@@ -104,4 +104,4 @@ const $asSiteNavStyles = asToken(
   withMenuDesign('Touts')($withToutsSublistStyles),
 );
 
-export default $asSiteNavStyles;
+export default $asNavStyles;

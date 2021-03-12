@@ -51,14 +51,23 @@ const asEditableSpan = asToken(
   // @todo add meta
 );
 
+const withDefaultNodeKeys = (defaultKey: string) => (nodeKeys?: WithNodeKeyProps) => (
+  typeof nodeKeys === 'string'
+    ? nodeKeys
+    : { nodeKey: defaultKey, ...nodeKeys }
+);
+
+const withDefaultStartingTrailNodeKey = withDefaultNodeKeys('startingTrail');
+const withDefaultFinalTrailNodeKey = withDefaultNodeKeys('finalTrail');
+
 export const withEditableStartingTrail = (
   nodeKeys?: WithNodeKeyProps,
-  placeholder?: string,
+  placeholder: string = 'Enter item',
 ) => flow(
   withBreadcrumbStartingTrail,
   withDesign({
     StartingTrail: flow(
-      asEditableTrail(nodeKeys, placeholder),
+      asEditableTrail(withDefaultStartingTrailNodeKey(nodeKeys), placeholder),
       addProps({ children: 'Home', href: '/' }),
     ),
   }),
@@ -66,19 +75,19 @@ export const withEditableStartingTrail = (
 
 export const withEditableFinalTrail = (
   nodeKeys?: WithNodeKeyProps,
-  placeholder?: string,
+  placeholder: string = 'Enter item',
 ) => flow(
   withDesign({
     FinalTrail: asToken(
       replaceWith(Span),
-      asEditable(nodeKeys, placeholder),
+      asEditable(withDefaultFinalTrailNodeKey(nodeKeys), placeholder),
       // @todo add meta
     ),
   }),
   withBreadcrumbFinalTrail,
 );
 
-export const withMenuBreadcrumbSchema = withDesign({
+export const withBreadcrumbEditors = withDesign({
   BreadcrumbLink: asToken(
     asEditableLink,
     asReadOnly,

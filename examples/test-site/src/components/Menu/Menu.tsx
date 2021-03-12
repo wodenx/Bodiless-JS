@@ -13,31 +13,32 @@
  */
 
 import { ComponentType } from 'react';
-import { flow } from 'lodash';
+import { asToken } from '@bodiless/fclasses';
 import {
   asBodilessMenu, withListSubMenu, withColumnSubMenu, withToutSubMenu, asMenuTout,
 } from '@bodiless/navigation';
 
 import { withMenuToutEditors } from '../Tout';
-import $asSiteNavStyles from './Menu.token';
+import $asNavStyles from './Menu.token';
 
-export const $asEditableMenuTout = flow(
+export const $asEditableMenuTout = asToken(
   asMenuTout(),
   withMenuToutEditors,
 );
 
-const BodilessMenuBase = flow(
+const $asMenuBase = asToken(
   asBodilessMenu(),
   withListSubMenu(),
   withColumnSubMenu(),
   withToutSubMenu($asEditableMenuTout),
+);
+
+const Menu = asToken(
+  $asMenuBase,
+  $asNavStyles,
 )('ul') as ComponentType<any>;
 
-const BodilessMenu = flow(
-  $asSiteNavStyles,
-)(BodilessMenuBase);
-
-export default BodilessMenu;
+export default Menu;
 export {
-  BodilessMenuBase,
+  $asMenuBase,
 };

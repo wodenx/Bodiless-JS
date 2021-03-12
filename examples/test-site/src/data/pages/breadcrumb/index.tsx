@@ -25,8 +25,8 @@ import {
 import { flow } from 'lodash';
 
 import Layout from '../../../components/Layout';
-import BodilessMenu from '../../../components/Menu/Menu';
-import Breadcrumbs, { DEFAULT_STARTING_TRAIL_NODE_KEY } from '../../../components/Breadcrumbs/MenuBreadcrumbs';
+import Menu from '../../../components/Menu/Menu';
+import Breadcrumbs from '../../../components/Breadcrumbs/MenuBreadcrumbs';
 import {
   withStartingTrailIcon,
   withNonLinkableItems,
@@ -38,68 +38,47 @@ import {
 } from '../../../components/Breadcrumbs/MenuBreadcrumbs.token';
 import { asHeader2, asHeader1, asItalic } from '../../../components/Elements.token';
 
+const DEFAULT_STARTING_TRAIL_NODE_KEY = 'startingTrail';
+
 const MenuBreadcrumbs = flow(
-  withEditableStartingTrail(
-    `${DEFAULT_STARTING_TRAIL_NODE_KEY}Default`,
-    'Enter item',
-  ),
+  withEditableStartingTrail(`${DEFAULT_STARTING_TRAIL_NODE_KEY}Default`),
   withStartingTrailLinkStyles,
 )(Breadcrumbs);
 
-const BreadcrumbWithStartingTrailIcon = withStartingTrailIcon(
-  `${DEFAULT_STARTING_TRAIL_NODE_KEY}Icon`,
-)(Breadcrumbs);
+const BreadcrumbWithStartingTrailIcon = withStartingTrailIcon(`${DEFAULT_STARTING_TRAIL_NODE_KEY}Icon`)(Breadcrumbs);
 
 const BreadcrumbWithNonLinkableItems = flow(
-  withEditableStartingTrail(
-    `${DEFAULT_STARTING_TRAIL_NODE_KEY}NonLinkable`,
-    'Enter item',
-  ),
+  withEditableStartingTrail(`${DEFAULT_STARTING_TRAIL_NODE_KEY}NonLinkable`),
   withStartingTrailLinkStyles,
   withNonLinkableItems,
 )(Breadcrumbs);
 
 const BreadcrumbWithBoldableFinalItem = flow(
-  withEditableStartingTrail(
-    `${DEFAULT_STARTING_TRAIL_NODE_KEY}BoldedFinal`,
-    'Enter item',
-  ),
+  withEditableStartingTrail(`${DEFAULT_STARTING_TRAIL_NODE_KEY}BoldedFinal`),
   withStartingTrailLinkStyles,
   withBoldedFinalTrail,
 )(Breadcrumbs);
 
 const BreadcrumbWithVerticalBarSeparator = flow(
-  withEditableStartingTrail(
-    `${DEFAULT_STARTING_TRAIL_NODE_KEY}VerticalBar`,
-    'Enter item',
-  ),
+  withEditableStartingTrail(`${DEFAULT_STARTING_TRAIL_NODE_KEY}VerticalBar`),
   withStartingTrailLinkStyles,
   withVerticalBarSeparator,
 )(Breadcrumbs);
 
 const BreadcrumbWithSlashSeparator = flow(
-  withEditableStartingTrail(
-    `${DEFAULT_STARTING_TRAIL_NODE_KEY}SlashSeparator`,
-    'Enter item',
-  ),
+  withEditableStartingTrail(`${DEFAULT_STARTING_TRAIL_NODE_KEY}SlashSeparator`),
   withStartingTrailLinkStyles,
   withSlashSeparator,
 )(Breadcrumbs);
 
 const BreadcrumbWithHiddenCurrentPageItem = flow(
-  withEditableStartingTrail(
-    `${DEFAULT_STARTING_TRAIL_NODE_KEY}CurrentPage`,
-    'Enter item',
-  ),
+  withEditableStartingTrail(`${DEFAULT_STARTING_TRAIL_NODE_KEY}CurrentPage`),
   withStartingTrailLinkStyles,
   withHiddenCurrentPageItem,
 )(Breadcrumbs);
 
 const MegaMenuBreadcrumbWithNonLinkableItems = flow(
-  withEditableStartingTrail(
-    `${DEFAULT_STARTING_TRAIL_NODE_KEY}MegaMenuNonLinkable`,
-    'Enter item',
-  ),
+  withEditableStartingTrail(`${DEFAULT_STARTING_TRAIL_NODE_KEY}MegaMenuNonLinkable`),
   withStartingTrailLinkStyles,
   withDesign({
     StartingTrail: asReadOnly,
@@ -118,7 +97,7 @@ export default (props: any) => (
     <Layout>
       <H1>Breadcrumb Demo</H1>
       <BreadcrumbProvider>
-        <BodilessMenu nodeKey="bodilessMenu" />
+        <Menu nodeKey="bodilessMenu" />
         <H2>Breadcrumbs with editable starting trail</H2>
         <MenuBreadcrumbs nodeKey="bodilessMenu" className="my-2" />
         <H2>Breadcrumbs with starting trail icon</H2>

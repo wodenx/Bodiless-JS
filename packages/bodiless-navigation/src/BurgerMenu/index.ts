@@ -13,7 +13,7 @@
  */
 
 import BurgerMenuClean from './BurgerMenuClean';
-import BurgerMenuDefaultToggler, { asBurgerMenuToggler } from './BurgerMenuToggler';
+import { BurgerMenuTogglerClean, BurgerMenuDefaultToggler } from './BurgerMenuToggler';
 import asBurgerMenu, { withBurgerMenuWrapper, withOverviewLink } from './asBurgerMenu';
 import {
   withBurgerMenuProvider, useBurgerMenuContext, useIsBurgerMenuVisible, useIsBurgerMenuHidden,
@@ -27,7 +27,7 @@ export {
   BurgerMenuClean,
   asBurgerMenu,
   BurgerMenuDefaultToggler,
-  asBurgerMenuToggler,
+  BurgerMenuTogglerClean,
   withOverviewLink,
   withBurgerMenuWrapper,
   withBurgerMenuProvider,
@@ -36,3 +36,8 @@ export {
   useIsBurgerMenuHidden,
   asSlideLeft,
 };
+
+export type {
+  BurgerMenuProps,
+  BurgerMenuComponents,
+} from './BurgerMenuClean';
