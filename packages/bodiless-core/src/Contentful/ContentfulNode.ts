@@ -30,16 +30,23 @@ export const getAbsoluteNodeKey = (basePath: Path, contentPath: Path) => {
   return basePathArray.concat(contentPathArray).join(delimiter);
 };
 
+type Content = {
+  [nodePath: string]: any,
+};
+
 // TODO: this class should expose a method that allows to check if node has value in store
 export default class ContentfulNode<D extends object> extends DefaultContentNode<D> {
   private baseContentPath: Path = [];
 
   // @ts-ignore has no initializer and is not definitely assigned in the constructor
-  private content: D;
+  private content: Content;
 
   static create(node: DefaultContentNode<object>, content: object) {
     const contentfulNode = new ContentfulNode(node.getActions(), node.getGetters(), node.path);
-    contentfulNode.setContent(content);
+    contentfulNode.setContent({
+      ...content,
+      ...(node instanceof ContentfulNode ? node.getContent() : {}),
+    });
     contentfulNode.setBaseContentPath(node.path);
     return contentfulNode;
   }
@@ -53,7 +60,11 @@ export default class ContentfulNode<D extends object> extends DefaultContentNode
     return (this.content as any)[contentKey] || {};
   }
 
-  public setContent(content: D) {
+  public getContent() {
+    return this.content;
+  }
+
+  public setContent(content: Content) {
     this.content = content;
   }
 

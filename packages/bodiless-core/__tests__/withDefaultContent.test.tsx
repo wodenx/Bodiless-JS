@@ -76,12 +76,11 @@ describe('withDefaultContent', () => {
           baz: 'innerContent',
         }),
         withDefaultContent({
-          baz: 'outerCotent',
+          baz: 'outerContent',
         }),
         withRootNode(defaultStore),
       )(createNodeConsumer('Foo'));
       const wrapper = mount(<Foo />);
-      console.log(wrapper.debug());
       expect(wrapper.find('Foo').html()).toBe('outerContent');
     });
   });
