@@ -67,6 +67,25 @@ const withRootNode = (store: Store) => <P extends object>(Component: ComponentTy
 };
 
 describe('withDefaultContent', () => {
+  describe('when default conteent providers are nested', () => {
+    it('returns outer default content when store is empty', () => {
+      const Foo = flow(
+        withNode,
+        withNodeKey('baz'),
+        withDefaultContent({
+          baz: 'innerContent',
+        }),
+        withDefaultContent({
+          baz: 'outerCotent',
+        }),
+        withRootNode(defaultStore),
+      )(createNodeConsumer('Foo'));
+      const wrapper = mount(<Foo />);
+      console.log(wrapper.debug());
+      expect(wrapper.find('Foo').html()).toBe('outerContent');
+    });
+  });
+
   describe('when a component with single node is wrapped', () => {
     describe('when the wrapped component node data is not empty', () => {
       test('wrapped component takes node data from store', () => {
