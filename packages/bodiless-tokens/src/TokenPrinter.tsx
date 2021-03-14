@@ -16,14 +16,13 @@ const TokenPrinter: FC<TokenPrinterProps> = props => {
     depth = 0,
   } = props;
   const keyText = designKey ? `${designKey}: ` : '';
-  const header = `${indent(depth)}${keyText}flow(\n`;
+  const header = `${indent(depth)}${keyText}asToken(\n`;
   const footer = `${indent(depth)})${depth ? ',' : ';'}\n`;
   const rows = tokens.map(s => `${indent(depth + 1)}${s},\n`);
   const designRows = Object.keys(components).map(key => {
     const C = components[key];
     return <C designKey={key} depth={depth + 2} />;
   }).filter(Boolean);
-  console.log(rows, designRows);
   if (!rows.length && !designRows.length) return null;
   const designHeader = designRows.length > 0
     ? `${indent(depth + 1)}withDesign({\n` : null;
