@@ -3,7 +3,7 @@ import {
   withMenuOptions, withContextActivator, useNode,
 } from '@bodiless/core';
 import React, {
-  ComponentType, HTMLProps, FC, useCallback, Fragment,
+  ComponentType, HTMLProps, FC, useCallback,
 } from 'react';
 import {
   DesignableComponentsProps, designable, Div, H4, H5,
@@ -24,6 +24,7 @@ type TokenPanelPaneComponents = {
   Body: ComponentType<any>,
   Title: ComponentType<any>,
   Category: ComponentType<any>,
+  CategoryWrapper: ComponentType<any>,
   Label: ComponentType<HTMLProps<HTMLLabelElement>>,
   CheckBox: ComponentType<HTMLProps<HTMLInputElement>>,
 };
@@ -33,6 +34,7 @@ const tokenPanelPaneComponents: TokenPanelPaneComponents = {
   Body: Div,
   Title: H4,
   Category: H5,
+  CategoryWrapper: Div,
   Label: StylableLabel,
   CheckBox: Input,
 };
@@ -52,7 +54,7 @@ const TokenPanelPaneBase: FC<TokenPanelPaneBaseProps> = props => {
   const map = new TokenMap<any>();
   map.add(availableTokens);
   const {
-    Wrapper, Title, Label, Category, CheckBox, Body,
+    Wrapper, Title, Label, Category, CheckBox, Body, CategoryWrapper,
   } = components;
   const { tokens = [] } = node.data;
   const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +64,7 @@ const TokenPanelPaneBase: FC<TokenPanelPaneBaseProps> = props => {
     node.setData({ tokens: Array.from(tokenSet) });
   }, [node]);
   const checkboxes = map.groups.map(cat => (
-    <Fragment key={cat}>
+    <CategoryWrapper key={cat}>
       <Category>{cat}</Category>
       {map.namesFor(cat).map(name => (
         <Label key={name}>
@@ -70,13 +72,12 @@ const TokenPanelPaneBase: FC<TokenPanelPaneBaseProps> = props => {
           {name}
         </Label>
       ))}
-    </Fragment>
+    </CategoryWrapper>
   ));
   return (
     <Wrapper>
       <Title>{title}</Title>
       <Body>
-        Body
         {checkboxes}
       </Body>
     </Wrapper>
