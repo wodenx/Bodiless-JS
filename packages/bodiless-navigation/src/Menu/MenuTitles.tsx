@@ -42,6 +42,12 @@ type MenuTitleComponents = {
 
 type MenuTitleProps = DesignableComponentsProps<MenuTitleComponents>;
 
+const DEFAULT_NODE_KEYS = {
+  toggleNodeKey: 'title$link-toggle',
+  linkNodeKey: 'title$link',
+  titleNodeKey: 'title$text',
+};
+
 /**
  * Hook which can be used to determine if a menu item is part of
  * the current active breadcrumb trail.
@@ -55,10 +61,7 @@ type MenuTitleProps = DesignableComponentsProps<MenuTitleComponents>;
 const useIsActiveTrail = () => useBreadcrumbContext()?.isActive();
 
 const asBreadcrumbSource = flow(
-  asBreadcrumbSourceBase({
-    linkNodeKey: 'title$link',
-    titleNodeKey: 'title$text',
-  }),
+  asBreadcrumbSourceBase(DEFAULT_NODE_KEYS),
   withNode,
 );
 
@@ -126,6 +129,7 @@ const asMenuTout = (linkNodeKey = 'link', titleNodeKey = 'text') => {
 
 export default MenuTitle;
 export {
+  DEFAULT_NODE_KEYS,
   asMenuLink,
   asMenuTitle,
   asMenuTout,

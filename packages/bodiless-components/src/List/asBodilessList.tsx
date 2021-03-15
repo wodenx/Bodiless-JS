@@ -27,7 +27,7 @@ import {
 import withListButtons from './withListButtons';
 import BodilessList from './List';
 import {
-  Data, UseListOverrides, FinalProps as ListProps, ListDesignableComponents,
+  ListData, UseListOverrides, ListProps, ListComponents,
 } from './types';
 
 type ComponentOrTag<P> = ComponentType<P>|keyof JSX.IntrinsicElements;
@@ -92,7 +92,7 @@ const asBodilessList = <P extends object>(
   nodeKeys?: WithNodeKeyProps,
   // @TODO - Handle default data
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  defaultData?: Data,
+  defaultData?: ListData,
   useOverrides?: UseListOverrides<P>,
 ) => (Component: ComponentOrTag<P>): ComponentType<P & WithNodeProps> => flow(
     replaceWith(BodilessList),
@@ -109,7 +109,7 @@ const asSubListWrapper = (Component: any) => withDesign<SubListWrapperComponents
   WrapperItem: replaceWith(Component),
 })(SubListWrapper);
 
-type SubListComponents = ListDesignableComponents & {
+type SubListComponents = ListComponents & {
   OuterWrapper: ComponentType<any>,
 };
 type SubListProps = Omit<ListProps, 'design'> & { design: Design<SubListComponents> };
@@ -133,15 +133,6 @@ const passWrapperDesignToSubList = (SubList: ComponentType<SubListProps>) => {
   return PassWrapperDesignToSubList;
 };
 
-const withInsertChildren = (Component: ComponentType<any>) => (
-  { insertChildren, children, ...rest }: any,
-) => (
-  <Component {...rest}>
-    {insertChildren}
-    {children}
-  </Component>
-);
-
 /**
  * HOC which can be applied to a list item to convert it to a sublist.
  */
@@ -149,8 +140,6 @@ const asSubList = (useOverrides?: UseListOverrides) => flow(
   // First, replace with a bodiless list which sets the "Wrapper" to be
   // the original item.
   asBodilessList('sublist', undefined, useOverrides),
-  // Add sublist children if insertChildren prop is supplied.
-  withInsertChildren,
   // Next, replace that "Wrapper" with our SublistWrapper component which
   // now uses the original component as the "WrapperItem"
   withDesign({

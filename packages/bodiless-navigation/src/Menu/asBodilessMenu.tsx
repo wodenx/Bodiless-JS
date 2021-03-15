@@ -17,7 +17,7 @@ import { WithNodeKeyProps } from '@bodiless/core';
 import { asBodilessList, asStylableList, asChameleonSubList } from '@bodiless/components';
 import { withDesign } from '@bodiless/fclasses';
 
-import type { UseListOverrides, ListDefaultDataType } from '@bodiless/components';
+import type { UseListOverrides, ListData } from '@bodiless/components';
 
 import withMenuContext from './withMenuContext';
 import { withEditableMenuTitle, asBreadcrumbSource } from './MenuTitles';
@@ -40,7 +40,7 @@ const withChameleonSublist = withDesign({
  */
 const asBodilessMenu = <P extends object>(
   nodeKeys?: WithNodeKeyProps,
-  defaultData?: ListDefaultDataType,
+  defaultData?: ListData,
   useOverrides: UseListOverrides<P> = () => ({}),
 ) => flow(
     asBodilessList(

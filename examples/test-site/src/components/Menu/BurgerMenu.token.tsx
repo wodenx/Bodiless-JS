@@ -14,7 +14,7 @@
 
 import { withPrependChild } from '@bodiless/core';
 import {
-  A, Div, asToken, replaceWith, startWith, withDesign, addClasses, addProps,
+  Div, asToken, replaceWith, startWith, withDesign, addClasses, HOC,
 } from '@bodiless/fclasses';
 import {
   asBurgerMenu, withMenuDesign, BurgerMenuDefaultToggler,
@@ -73,11 +73,7 @@ const $withColumnSubMenuStyles = withDesign({
 });
 
 // Example of custom OverviewLink
-const OverviewLink = asToken(
-  addProps({ children: 'Overview' }),
-)(A);
-
-const $withOverviewLink = withOverviewLink(OverviewLink);
+const $withOverviewLink = withOverviewLink('OOOO');
 
 const $withMenuStyles = asToken(
   asBurgerMenu('List', 'Columns', 'Touts'),
@@ -90,7 +86,7 @@ const $withBurgerMenuStyles = asToken(
     Menu: $withMenuStyles,
     Nav: addClasses('p-3'),
     Header: asToken(
-      startWith(Logo),
+      startWith(Logo) as HOC,
       $withBurgerMenuHeaderStyles,
     ),
   }),

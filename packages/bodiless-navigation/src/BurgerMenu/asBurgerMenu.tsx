@@ -12,46 +12,74 @@
  * limitations under the License.
  */
 
-import React, { ComponentType, HTMLProps } from 'react';
-import { useNode } from '@bodiless/core';
+import { ComponentType } from 'react';
+import isEmpty from 'lodash/isEmpty';
+import { useNode, withDefaultContent } from '@bodiless/core';
 import { asAccordionWrapper, asAccodionTitle, asAccordionBody } from '@bodiless/organisms';
 import {
-  A, Fragment, withDesign, replaceWith, asToken, addProps, Token,
+  Fragment, withDesign, replaceWith, asToken, addProps, Token, flowIf,
 } from '@bodiless/fclasses';
+import { LinkData } from '@bodiless/components';
 import BurgerMenuClean from './BurgerMenuClean';
 
 import { withDisabledTitleLink } from './BurgerMenu.token';
 import withMenuDesign from '../Menu/withMenuDesign';
-
-const DefaultOverviewLink: ComponentType<HTMLProps<HTMLAnchorElement>> = (props) => (
-  <A {...props}>Overview</A>
-);
+import { DEFAULT_NODE_KEYS } from '../Menu/MenuTitles';
 
 /**
- * HOC that adds an `OverviewLink` as an `insertChildren` prop to the menu list.
+ * HOC that adds an overview link to a burger menu sublist.  The overview link
+ * renders specified text with a link to the destination of the parent menu
+ * item.  If the parent menu item is not a link, no overview link will be
+ * rendered.
+ *
  * This HOC has to be applied on the List level (List, Tout or Column submenus).
  *
- * @param OverviewLink Component to be added to the list as an Overview Link.
+ * @param overviewText
+ * The text to display or, if your menu titles render using something other
+ * than the default title editor, then an object matching the schema of
+ * that editor.
  *
- * @return Token that adds an OverviewLink to the menu list.
+ * @return
+ * Token that adds an OverviewLink to the menu list.
  */
-const withOverviewLink = (OverviewLink: ComponentType<any>) => {
-  const Overview = (props: any) => {
-    const { node } = useNode();
-    const parentNodePath = node.path.slice(0, node.path.length - 1);
-    const linkNode = node.peer<{ href: string }>([...parentNodePath, 'title', 'link']);
+const withOverviewLink = (
+  overviewText: any = 'Overview',
+  nodeKeys = DEFAULT_NODE_KEYS,
+) => {
+  const { linkNodeKey, titleNodeKey, toggleNodeKey } = nodeKeys;
+  const overviewTitleContent = typeof overviewText === 'string'
+    ? { text: overviewText } : overviewText;
 
-    return linkNode.data.href
-      ? <OverviewLink {...props} href={linkNode.data.href} />
-      : <></>;
+  const useLinkNode = () => {
+    const { node } = useNode();
+    // @todo this will fail if the title alone has default content.
+    return node.child<LinkData>(linkNodeKey);
   };
 
-  return addProps({ insertChildren: <Overview /> }) as Token;
+  const useHasOverviewLink = () => Boolean(useLinkNode().data.href);
+
+  const useOverviewLinkContent = () => {
+    const { node } = useNode();
+    // Ensure the outermost overview link content takes precedence.
+    // Workaround for https://github.com/johnsonandjohnson/Bodiless-JS/issues/914
+    const textNode = node.child(`sublist$overview$${titleNodeKey}`);
+    const textData = isEmpty(textNode.data) ? overviewTitleContent : textNode.data;
+    return ({
+      [`sublist$overview$${toggleNodeKey}`]: { component: 'Link' },
+      [`sublist$overview$${titleNodeKey}`]: textData,
+      [`sublist$overview$${linkNodeKey}`]: useLinkNode().data,
+    });
+  };
+
+  return flowIf(useHasOverviewLink)(
+    addProps({ prependItems: ['overview'] }) as Token,
+    withDefaultContent(useOverviewLinkContent) as Token,
+  ) as Token;
 };
 
 const withBurgerMenuSchema = asToken(
   asAccordionWrapper,
-  withOverviewLink(DefaultOverviewLink),
+  withOverviewLink(),
   withDesign({
     Wrapper: asAccordionBody,
     OuterWrapper: withDesign({

@@ -17,9 +17,10 @@ import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { asBodilessList, asEditable } from '@bodiless/components';
 import {
-  withDesign, replaceWith, Div, addClasses, H1, H3,
+  withDesign, replaceWith, Div, addClasses, H1, H3, flowIf, addProps, HOC,
 } from '@bodiless/fclasses';
 import { flow } from 'lodash';
+import { useListContext } from '@bodiless/components/src/List/List';
 import Layout from '../../../components/Layout';
 // import { OuterList, OuterLinkList } from './OldListDemo';
 import ChameleonListDemo from './ChameleonListDemo';
@@ -37,6 +38,16 @@ const SuperSimpleList = flow(
     ),
   }),
 )('ul');
+
+const ListWithPrependAndContextualStyles = flow(
+  addProps({ prependItems: ['prepend', 'prepend-2'] }) as HOC,
+  withDesign({
+    Title: flowIf(() => useListContext().currentItem === 'prepend')(
+      replaceWith(() => <span>This item cannot be edited</span>),
+    ),
+  }),
+  addProps({ appendItems: ['append'] }) as HOC,
+)(SuperSimpleList);
 
 const Wrapper = addClasses('w-1/2 p-5')(Div);
 const Title = asHeader1(H1);
@@ -88,6 +99,14 @@ export default (props: any) => (
             the list are editable links.
           </p>
           <ListDesignTest />
+        </Wrapper>
+        <Wrapper>
+          <SectionHeader>List with append and item context</SectionHeader>
+          <p>
+            This list has static items inserted at the beginning and end. These
+            items cannot be removed. In addition, the first item is non-editable.
+          </p>
+          <ListWithPrependAndContextualStyles />
         </Wrapper>
       </div>
     </Layout>
