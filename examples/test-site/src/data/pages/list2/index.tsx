@@ -15,12 +15,11 @@
 import React, { ComponentType } from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
-import { asBodilessList, asEditable } from '@bodiless/components';
+import { asBodilessList, asEditable, useListContext } from '@bodiless/components';
 import {
   withDesign, replaceWith, Div, addClasses, H1, H3, flowIf, addProps, HOC,
 } from '@bodiless/fclasses';
 import { flow } from 'lodash';
-import { useListContext } from '@bodiless/components/src/List/List';
 import Layout from '../../../components/Layout';
 // import { OuterList, OuterLinkList } from './OldListDemo';
 import ChameleonListDemo from './ChameleonListDemo';
