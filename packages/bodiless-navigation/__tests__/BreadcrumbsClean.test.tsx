@@ -77,11 +77,11 @@ describe('BreadcrumbsClean', () => {
     ];
     const Breadcrumb = flowRight(
       withDesign({
-        BreadcrumbLink: flowRight(
+        Link: flowRight(
           withAttrRename('nodeKey', 'href'),
           withoutProps('nodeCollection'),
         ),
-        BreadcrumbTitle: flowRight(
+        Title: flowRight(
           withAttrRename('nodeKey', 'aria-label'),
           withoutProps('nodeCollection'),
         ),
@@ -113,11 +113,11 @@ describe('BreadcrumbsClean', () => {
     ];
     const Breadcrumb = flowRight(
       withDesign({
-        BreadcrumbLink: flowRight(
+        Link: flowRight(
           withAttrRename('nodeKey', 'href'),
           withoutProps('nodeCollection'),
         ),
-        BreadcrumbTitle: flowRight(
+        Title: flowRight(
           withAttrRename('nodeKey', 'aria-label'),
           withoutProps('nodeCollection'),
         ),
@@ -143,11 +143,11 @@ describe('BreadcrumbsClean', () => {
     ];
     const Breadcrumb = flowRight(
       withDesign({
-        BreadcrumbLink: flowRight(
+        Link: flowRight(
           withAttrRename('nodeKey', 'href'),
           withoutProps('nodeCollection'),
         ),
-        BreadcrumbTitle: flowRight(
+        Title: flowRight(
           withAttrRename('nodeKey', 'aria-label'),
           withoutProps('nodeCollection'),
         ),

@@ -80,7 +80,7 @@ export const withEditableFinalTrail = (
   withDesign({
     FinalTrail: asToken(
       replaceWith(Span),
-      asEditable(withDefaultFinalTrailNodeKey(nodeKeys), placeholder),
+      asEditableTrail(withDefaultFinalTrailNodeKey(nodeKeys), placeholder),
       // @todo add meta
     ),
   }),
@@ -88,12 +88,12 @@ export const withEditableFinalTrail = (
 );
 
 export const withBreadcrumbEditors = withDesign({
-  BreadcrumbLink: asToken(
+  Link: asToken(
     asEditableLink,
     asReadOnly,
     // @todo add meta
   ),
-  BreadcrumbTitle: asToken(
+  Title: asToken(
     asEditableSpan,
     asReadOnly,
     // @todo add meta

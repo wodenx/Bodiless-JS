@@ -62,10 +62,10 @@ const createBreadcrumbComponent = ({
     withDefaultContent(content),
     withDesign({
       // @ts-ignore
-      BreadcrumbLink: replaceWith(
+      Link: replaceWith(
         withSidecarNodes(asBodilessLink())('a'),
       ),
-      BreadcrumbTitle: replaceWith<any>(
+      Title: replaceWith<any>(
         asEditable()(React.Fragment),
       ),
     }),

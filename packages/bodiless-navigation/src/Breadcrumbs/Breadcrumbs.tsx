@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { ComponentType, HTMLProps } from 'react';
 import { useNode, withoutProps } from '@bodiless/core';
 import type { WithNodeKeyProps, WithNodeProps } from '@bodiless/core';
@@ -30,8 +31,8 @@ type BreadcrumbsComponents = {
     position: number;
     isCurrentPage: boolean;
   }>,
-  BreadcrumbLink: ComponentType<HTMLProps<HTMLAnchorElement> & WithNodeKeyProps>,
-  BreadcrumbTitle: ComponentType<HTMLProps<HTMLSpanElement> & WithNodeKeyProps>,
+  Link: ComponentType<HTMLProps<HTMLAnchorElement> & WithNodeKeyProps>,
+  Title: ComponentType<HTMLProps<HTMLSpanElement> & WithNodeKeyProps>,
   FinalTrail: ComponentType<HTMLProps<HTMLSpanElement>>,
 };
 
@@ -123,8 +124,8 @@ const BreadcrumbsClean$ = (props: CleanBreadcrumbsProps) => {
     Separator,
     BreadcrumbWrapper,
     BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbTitle,
+    Link,
+    Title,
     FinalTrail,
   } = components;
   const items$ = items.map((item: CleanBreadcrumbItemType, index: number) => {
@@ -136,7 +137,7 @@ const BreadcrumbsClean$ = (props: CleanBreadcrumbsProps) => {
       return (
         <React.Fragment key={item.uuid}>
           <BreadcrumbItem position={position$} isCurrentPage={isCurrentPage}>
-            <BreadcrumbTitle
+            <Title
               nodeKey={item.title.nodeKey}
               nodeCollection={item.title.nodeCollection}
             />
@@ -147,12 +148,12 @@ const BreadcrumbsClean$ = (props: CleanBreadcrumbsProps) => {
     return (
       <React.Fragment key={item.uuid}>
         <BreadcrumbItem position={position$} isCurrentPage={isCurrentPage}>
-          <BreadcrumbLink nodeKey={item.link.nodeKey} nodeCollection={item.link.nodeCollection}>
-            <BreadcrumbTitle
+          <Link nodeKey={item.link.nodeKey} nodeCollection={item.link.nodeCollection}>
+            <Title
               nodeKey={item.title.nodeKey}
               nodeCollection={item.title.nodeCollection}
             />
-          </BreadcrumbLink>
+          </Link>
         </BreadcrumbItem>
         {!isLastItem && <Separator key={`separator${item.uuid}`} />}
       </React.Fragment>
@@ -194,8 +195,8 @@ const BreadcrumbStartComponents: BreadcrumbsComponents = {
     withoutProps(['position', 'isCurrentPage']),
     asComponent,
   )('li'),
-  BreadcrumbLink: asComponent('a'),
-  BreadcrumbTitle: asComponent('span'),
+  Link: asComponent('a'),
+  Title: asComponent('span'),
   FinalTrail: asComponent('span'),
 };
 

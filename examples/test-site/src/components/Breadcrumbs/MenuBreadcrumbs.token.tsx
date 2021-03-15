@@ -70,7 +70,7 @@ const withStartingTrailIcon = (
 );
 
 const withNonLinkableItems = withDesign({
-  BreadcrumbLink: replaceWith(Fragment),
+  Link: replaceWith(Fragment),
 });
 
 const withBoldedFinalTrail = withDesign({
@@ -118,7 +118,7 @@ const withBreadcrumbStyles = asToken(
       addClasses('inline-flex'),
     ),
     BreadcrumbItem: stylable,
-    BreadcrumbLink: asLink,
+    Link: asLink,
   }),
   withStartingTrailLinkStyles,
   withArrowSeparator,

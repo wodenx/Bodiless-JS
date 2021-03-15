@@ -24,5 +24,5 @@ import type { TokenDef } from '@bodiless/fclasses';
 export const withBreadcrumbItemToken = (...tokenDefs: TokenDef<any>[]) => withDesign({
   StartingTrail: asToken(...tokenDefs),
   FinalTrail: asToken(...tokenDefs),
-  BreadcrumbLink: asToken(...tokenDefs),
+  Link: asToken(...tokenDefs),
 });
