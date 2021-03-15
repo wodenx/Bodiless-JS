@@ -60,6 +60,11 @@ const DEFAULT_NODE_KEYS = {
  */
 const useIsActiveTrail = () => useBreadcrumbContext()?.isActive();
 
+/**
+ * Token that can be applied to the menu Item to register it as a breadcrumb.
+ *
+ * @return Token that when applied to the menu Item registers it as a breadcrumb source.
+ */
 const asBreadcrumbSource = flow(
   asBreadcrumbSourceBase(DEFAULT_NODE_KEYS),
   withNode,
@@ -87,30 +92,22 @@ const asMenuLink = (asEditableLink: typeof asBodilessLink) => asToken(
   ),
 );
 
-const asMenuTitle = (asEditableTitle: typeof asEditable) => asToken(
-  asEditableTitle('text', 'Menu Item'),
-);
-
 const asEditableMenuTitle = flow(
   startWith(MenuTitle),
   withDesign({
     Link: asMenuLink(withBodilessLinkToggle(asBodilessLink, startWith(Div) as HOC)),
-    Title: asMenuTitle(asEditable),
+    Title: asEditable('text', 'Menu Item'),
   }),
   withNode,
   withNodeKey('title'),
 );
 
-const withEditableMenuTitle = withDesign({
-  Title: asEditableMenuTitle,
-});
-
 const asMenuTout = (linkNodeKey = 'link', titleNodeKey = 'text') => {
   const transformDesign = (design: Design<any> = {}) => {
     const Link = asToken(
       withSidecarNodes(
-        design.Link || withBodilessLinkToggle(asBodilessLink, startWith(Div) as HOC)(),
         withNodeKey(linkNodeKey),
+        design.Link || withBodilessLinkToggle(asBodilessLink, startWith(Div) as HOC)(),
       ),
     );
     const Title = asToken(
@@ -124,17 +121,18 @@ const asMenuTout = (linkNodeKey = 'link', titleNodeKey = 'text') => {
     <ToutClean design={transformDesign(design)} {...rest} />
   );
 
-  return startWith(CleanTout);
+  return flow(
+    startWith(CleanTout),
+    withNode,
+    withNodeKey('title'),
+  );
 };
 
 export default MenuTitle;
 export {
   DEFAULT_NODE_KEYS,
-  asMenuLink,
-  asMenuTitle,
-  asMenuTout,
   useIsActiveTrail,
+  asMenuTout,
   asEditableMenuTitle,
-  withEditableMenuTitle,
   asBreadcrumbSource,
 };

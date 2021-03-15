@@ -21,7 +21,7 @@ import {
   withSubLists, UseListOverrides,
 } from '@bodiless/components';
 
-import { asBreadcrumbSource, withEditableMenuTitle } from './MenuTitles';
+import { asBreadcrumbSource, asEditableMenuTitle, asMenuTout } from './MenuTitles';
 
 /**
  * Creates a stylable sublist which deletes it's data when the last item is removed.
@@ -37,7 +37,6 @@ const asMenuSubList = (titleDesign: any = {}, useOverrides: UseListOverrides = (
     asStylableList,
     asStylableSubList,
     withDeleteNodeOnUnwrap('sublist'),
-    withEditableMenuTitle,
     asBreadcrumbSource,
     withDesign({
       Title: titleDesign$,
@@ -52,33 +51,33 @@ const withSubMenuDesign = (design: Design<any>) => withDesign({
 /**
  * Helper which can be used to add a List submenu option to the menu.
  *
- * @param menuTitleDesign? optional token which will be applied to the sublist title.
+ * @param titleDesign? optional token which will be applied to the sublist title.
  *
  */
-const withListSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesign({
-  List: asMenuSubList(menuTitleDesign),
+const withListSubMenu = (titleDesign: HOC = asEditableMenuTitle) => withSubMenuDesign({
+  List: asMenuSubList(titleDesign),
 });
 
 /**
  * Helper which can be used to add a Touts submenu option to the menu.
  *
- * @param menuTitleDesign? optional token which will be applied to the sublist title.
+ * @param titleDesign? optional token which will be applied to the sublist title.
  *
  */
-const withToutSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesign({
-  Touts: asMenuSubList(menuTitleDesign),
+const withToutSubMenu = (titleDesign: HOC = asMenuTout()) => withSubMenuDesign({
+  Touts: asMenuSubList(titleDesign),
 });
 
 /**
  * Helper which can be used to add a Columns submenu option to the menu.
  *
- * @param menuTitleDesign? optional token which will be applied to the sublist title.
+ * @param titleDesign? optional token which will be applied to the sublist title.
  *
  */
-const withColumnSubMenu = (menuTitleDesign?: Design<any> | HOC) => withSubMenuDesign({
+const withColumnSubMenu = (titleDesign: HOC = asEditableMenuTitle) => withSubMenuDesign({
   Columns: asToken(
-    asMenuSubList(menuTitleDesign),
-    withSubLists(1)(asMenuSubList(menuTitleDesign, () => ({ groupLabel: 'Column Sub-Menu Item' }))),
+    asMenuSubList(titleDesign),
+    withSubLists(1)(asMenuSubList(titleDesign, () => ({ groupLabel: 'Column Sub-Menu Item' }))),
   ),
 });
 

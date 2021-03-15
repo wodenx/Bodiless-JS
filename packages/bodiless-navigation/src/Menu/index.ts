@@ -17,20 +17,16 @@ import withMenuDesign from './withMenuDesign';
 import asTopNav from './Menu.token';
 import { useIsMenuOpen } from './withMenuContext';
 import { withListSubMenu, withToutSubMenu, withColumnSubMenu } from './withSubMenu';
-import {
-  asMenuTout, asMenuLink, asMenuTitle, useIsActiveTrail,
-} from './MenuTitles';
+import { useIsActiveTrail, asMenuTout } from './MenuTitles';
 
 export {
   asBodilessMenu,
   useIsMenuOpen,
+  asMenuTout,
   useIsActiveTrail,
   withListSubMenu,
   withToutSubMenu,
   withColumnSubMenu,
-  asMenuLink,
-  asMenuTitle,
-  asMenuTout,
   withMenuDesign,
   asTopNav,
 };

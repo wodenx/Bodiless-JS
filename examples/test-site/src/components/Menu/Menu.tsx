@@ -15,22 +15,16 @@
 import { ComponentType } from 'react';
 import { asToken } from '@bodiless/fclasses';
 import {
-  asBodilessMenu, withListSubMenu, withColumnSubMenu, withToutSubMenu, asMenuTout,
+  asBodilessMenu, withListSubMenu, withColumnSubMenu, withToutSubMenu,
 } from '@bodiless/navigation';
 
-import { withMenuToutEditors } from '../Tout';
 import $asNavStyles from './Menu.token';
-
-export const $asEditableMenuTout = asToken(
-  asMenuTout(),
-  withMenuToutEditors,
-);
 
 const $asMenuBase = asToken(
   asBodilessMenu(),
   withListSubMenu(),
   withColumnSubMenu(),
-  withToutSubMenu($asEditableMenuTout),
+  withToutSubMenu(),
 );
 
 const Menu = asToken(
