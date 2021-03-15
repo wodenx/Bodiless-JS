@@ -5,8 +5,11 @@ import TokenPrinter, { withTokenPrinterKeys } from './TokenPrinter';
 import withReactivateOnRemount from './withRectivateOnRemount';
 import TokenPanel from './TokenPanel';
 import { withTokenPanelPane } from './TokenPanelPane';
+import withTokenPanelButton from './withTokenPanelButton';
 import TokenMap from './TokenMap';
 import type { TokenSelectorProps } from './withTokenSelector';
+import type { TokenPanelComponents } from './TokenPanel';
+import type { TokenPanelPaneComponents } from './TokenPanelPane';
 
 export {
   withTokensFromProps,
@@ -18,9 +21,12 @@ export {
   withReactivateOnRemount,
   TokenPanel,
   withTokenPanelPane,
+  withTokenPanelButton,
   TokenMap,
 };
 
 export type {
   TokenSelectorProps,
+  TokenPanelComponents,
+  TokenPanelPaneComponents,
 };

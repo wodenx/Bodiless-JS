@@ -36,7 +36,7 @@ const withTokenPanelPanesProps = <P extends object>(
   return WithTokenPanelPanesProps;
 };
 
-type TokenPanelComponents = {
+export type TokenPanelComponents = {
   Panel: ComponentType<any>,
   Wrapper: ComponentType<any>,
 };

@@ -19,7 +19,7 @@ import TokenMap from './TokenMap';
 
 const TOKEN_PANEL_CONTEXT_TYPE = 'token-panel';
 
-type TokenPanelPaneComponents = {
+export type TokenPanelPaneComponents = {
   Wrapper: ComponentType<any>,
   Body: ComponentType<any>,
   Title: ComponentType<any>,
