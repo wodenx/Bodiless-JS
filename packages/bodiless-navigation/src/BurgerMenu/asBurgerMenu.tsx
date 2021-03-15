@@ -72,8 +72,8 @@ const withOverviewLink = (
   };
 
   return flowIf(useHasOverviewLink)(
-    addProps({ prependItems: ['overview'] }) as Token,
-    withDefaultContent(useOverviewLinkContent) as Token,
+    addProps({ prependItems: ['overview'] }),
+    withDefaultContent(useOverviewLinkContent),
   ) as Token;
 };
 

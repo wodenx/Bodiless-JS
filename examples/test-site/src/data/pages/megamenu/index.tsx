@@ -20,14 +20,27 @@ import {
 } from '@bodiless/fclasses';
 import { observer } from 'mobx-react-lite';
 import { useNode, withNode, withNodeKey } from '@bodiless/core';
-import { withBurgerMenuProvider } from '@bodiless/navigation';
+import { withBurgerMenuProvider, withOverviewLink, withMenuDesign } from '@bodiless/navigation';
 
 import Layout from '../../../components/Layout';
 import { asHeader2, asHeader1, asTealBackground } from '../../../components/Elements.token';
 import ResponsiveMenu, { BurgerMenuToggler } from '../../../components/Menu';
 
+// Example of custom OverviewLink
+const $withMenuOverviewLink = withMenuDesign(['List', 'Columns', 'Touts'])(
+  withOverviewLink('Custom Overview Link'),
+);
+
 const BurgerMenuProvider = withBurgerMenuProvider(Div) as ComponentType;
-const DemoMenu = withNodeKey({ nodeKey: 'DemoMenu' })(ResponsiveMenu) as ComponentType;
+
+const DemoMenu = asToken(
+  withNodeKey({ nodeKey: 'DemoMenu' }),
+  $withMenuOverviewLink,
+  withDesign({
+    _default: withDesign({ Menu: $withMenuOverviewLink }),
+  }),
+)(ResponsiveMenu) as ComponentType;
+
 const BurgerMenuTogglerFullWidth = withDesign({
   Wrapper: asToken(
     asTealBackground,

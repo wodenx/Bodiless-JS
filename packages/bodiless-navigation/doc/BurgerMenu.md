@@ -1,3 +1,4 @@
+
 # Bodiless Burger Menu
 
 ### Exported HOCs
@@ -76,27 +77,13 @@ Burger Menu transforms submenus into accordions. Any item which has children ren
 
 The default "Overview" item is  `<a href="..." ...>Overview</a>`  however you can provide your Overview Link component if needed.
 ```js
-import { asToken, withDesign, addClasses, addProps } from '@bodiless/fclasses';
+import { asToken, withDesign } from '@bodiless/fclasses';
 import { asBurgerMenu, withMenuDesign, withOverviewLink } from '@bodiless/navigation';
 
 import  { DemoMenuBase }  from  './Menu';
 
-// First we create a custom OverviewLink component
-const $withOverviewLinkText = asToken(
-  addProps({ children: 'Overview Link Text'}),
-);
-
-const $withOverviewLinkStyles = asToken(
-  addClasses('underline'),
-);
-
-const OverviewLink = asToken(
-  $withOverviewLinkStyles,
-  $withOverviewLinkText,
-)(A);
-
-// Then we create a Token that can be used by withMenuDesign
-const $withOverviewLink = withOverviewLink(OverviewLink);
+// Create a Token with custom overview link text that can be used by withMenuDesign
+const $withOverviewLink = withOverviewLink('Demo Overview Link');
 
 // Create a Token that adds a custom overview link to all submenus.
 const $withBurgerMenuStyles = asToken(

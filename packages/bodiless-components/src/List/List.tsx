@@ -13,7 +13,6 @@
  */
 
 import React, {
-  Fragment,
   ComponentType,
   FC,
   useMemo,
@@ -22,7 +21,7 @@ import { flow } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { withNode } from '@bodiless/core';
 import {
-  designable, asComponent, addProps, withDesign,
+  designable, asComponent, addProps, withDesign, Fragment,
 } from '@bodiless/fclasses';
 import { useItemsMutators, useItemsAccessors } from './model';
 import {
