@@ -17,6 +17,7 @@ import {
   addClasses,
   withDesign,
   Token,
+  asToken,
 } from '@bodiless/fclasses';
 import {
   asToutVertical as asBToutVertical,
@@ -81,7 +82,7 @@ const asToutOverlayCta = withCategory('Layout')(asToutOverlayCta$ as Token);
 const asToutNoBodyNoTitle = withCategory('Structure')(asToutNoBodyNoTitle$ as Token);
 const asToutWithPaddings = withCategory('Layout')(asToutWithPaddings$ as Token);
 const asToutTextWhite = withCategory('Appearance')(asToutTextWhite$ as Token);
-const asToutMainMenu = flow(
+const asToutMainMenu = asToken(
   asToutTextWhite,
   asToutWithPaddings,
   asToutDefaultStyle,

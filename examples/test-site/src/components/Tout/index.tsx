@@ -24,7 +24,7 @@ import {
   ToutClean,
   asTestableTout,
 } from '@bodiless/organisms';
-import { withDesign } from '@bodiless/fclasses';
+import { withDesign, Token } from '@bodiless/fclasses';
 import {
   asEditableImage, asEditableLink,
 } from '../Elements.token';
@@ -76,7 +76,7 @@ export const withToutResetButtons = withDesign({
 export const asEditableTout = flow(
   withToutEditors,
   asTestableTout,
-);
+) as Token;
 
 export const asContentfulTout = (content: object) => flow(
   withToutEditors,

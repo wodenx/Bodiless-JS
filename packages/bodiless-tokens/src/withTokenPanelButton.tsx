@@ -3,10 +3,10 @@ import {
   ContextMenuFormProps, ContextMenuForm, withMenuOptions, TMenuOptionGetter,
 } from '@bodiless/core';
 import { Design, withDesign } from '@bodiless/fclasses';
-import TokenPanelClean from './TokenPanel';
+import TokenPanelClean, { TokenPanelComponents } from './TokenPanel';
 
 export type TokenPanelButtonDefinition = {
-  panelDesign?: Design<any>,
+  panelDesign?: Design<TokenPanelComponents>,
   root?: boolean,
 };
 
