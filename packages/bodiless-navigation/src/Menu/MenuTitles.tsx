@@ -14,23 +14,12 @@
 
 import React, { ComponentType, FC } from 'react';
 import { flow } from 'lodash';
-import {
-  withSidecarNodes, withNode, withNodeKey, WithNodeProps,
-} from '@bodiless/core';
+import { withSidecarNodes, withNode, withNodeKey } from '@bodiless/core';
 import { asEditable, asBodilessLink, withBodilessLinkToggle } from '@bodiless/components';
 import { ToutClean } from '@bodiless/organisms';
 import {
-  A,
-  Div,
-  HOC,
-  Design,
-  asToken,
-  Fragment,
-  designable,
-  withDesign,
-  startWith,
-  DesignableProps,
-  DesignableComponentsProps,
+  A, Div, HOC, asToken, Fragment, designable,
+  withDesign, startWith, DesignableComponentsProps,
 } from '@bodiless/fclasses';
 
 import { useBreadcrumbContext, asBreadcrumbSource as asBreadcrumbSourceBase } from '../Breadcrumbs';
@@ -92,47 +81,41 @@ const asMenuLink = (asEditableLink: typeof asBodilessLink) => asToken(
   ),
 );
 
-const asEditableMenuTitle = flow(
+/**
+ * Token that adds a default Editors to the menu Title and Link.
+ * Transforms Link into Editable Bodiless Link Toggle and Title to Editable.
+ */
+const withDefaultMenuTitleEditors = withDesign({
+  Link: asMenuLink(withBodilessLinkToggle(asBodilessLink, startWith(Div) as HOC)),
+  Title: asEditable('text', 'Menu Item'),
+});
+
+/**
+ * Token that transforms component into MenuTitle with node and 'title' nodeKey.
+ * MenuTitle has Link and Title design keys. Can be applied to the Title design key.
+ */
+const asMenuTitle = flow(
   startWith(MenuTitle),
-  withDesign({
-    Link: asMenuLink(withBodilessLinkToggle(asBodilessLink, startWith(Div) as HOC)),
-    Title: asEditable('text', 'Menu Item'),
-  }),
   withNode,
   withNodeKey('title'),
 );
 
-const asMenuTout = (linkNodeKey = 'link', titleNodeKey = 'text') => {
-  const transformDesign = (design: Design<any> = {}) => {
-    const Link = asToken(
-      withSidecarNodes(
-        withNodeKey(linkNodeKey),
-        design.Link || withBodilessLinkToggle(asBodilessLink, startWith(Div) as HOC)(),
-      ),
-    );
-    const Title = asToken(
-      design.Title || asEditable(undefined, 'Menu Item'),
-      withNodeKey(titleNodeKey),
-    );
-    return { ...design, Link, Title };
-  };
-
-  const CleanTout: ComponentType<DesignableProps<any> & WithNodeProps> = ({ design, ...rest }) => (
-    <ToutClean design={transformDesign(design)} {...rest} />
-  );
-
-  return flow(
-    startWith(CleanTout),
-    withNode,
-    withNodeKey('title'),
-  );
-};
+/**
+ * Token that transforms component into Menu Tout with node and 'title' nodeKey.
+ * Can be applied to the Title design key.
+ */
+const asMenuTout = flow(
+  startWith(ToutClean),
+  withNode,
+  withNodeKey('title'),
+);
 
 export default MenuTitle;
 export {
   DEFAULT_NODE_KEYS,
+  withDefaultMenuTitleEditors,
   useIsActiveTrail,
   asMenuTout,
-  asEditableMenuTitle,
+  asMenuTitle,
   asBreadcrumbSource,
 };

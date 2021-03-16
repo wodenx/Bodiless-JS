@@ -14,7 +14,9 @@
 
 import { ifToggledOn } from '@bodiless/core';
 import { asToken, withDesign, addClasses } from '@bodiless/fclasses';
-import { asTopNav, useIsActiveTrail, withMenuDesign } from '@bodiless/navigation';
+import {
+  asTopNav, useIsActiveTrail, withMenuDesign, withDefaultMenuTitleEditors,
+} from '@bodiless/navigation';
 
 import {
   asBold, asLightTealBackground, asAlignLeft,
@@ -37,6 +39,11 @@ const withHoverMenuBackground = asLightTealBackgroundOnHover;
  * Title Styles
  * ===========================================
  */
+
+// We need to manually pass title Editors
+const $withTitleEditors = withDesign({
+  Title: withDefaultMenuTitleEditors,
+});
 
 const $withTitleStyles = withDesign({
   Title: asToken(
@@ -98,6 +105,7 @@ const $withToutsSublistStyles = withDesign({
 
 const $asNavStyles = asToken(
   asTopNav('List', 'Columns', 'Touts'),
+  withMenuDesign(['Main', 'List', 'Columns'])($withTitleEditors),
   withMenuDesign()($withTitleStyles),
   withMenuDesign('Main')($withBaseMenuStyles),
   withMenuDesign(['List', 'Columns', 'Touts'])($withBaseSubMenuStyles),

@@ -21,7 +21,7 @@ import {
   withSubLists, UseListOverrides,
 } from '@bodiless/components';
 
-import { asBreadcrumbSource, asEditableMenuTitle, asMenuTout } from './MenuTitles';
+import { asBreadcrumbSource, asMenuTitle, asMenuTout } from './MenuTitles';
 
 /**
  * Creates a stylable sublist which deletes it's data when the last item is removed.
@@ -54,7 +54,7 @@ const withSubMenuDesign = (design: Design<any>) => withDesign({
  * @param titleDesign? optional token which will be applied to the sublist title.
  *
  */
-const withListSubMenu = (titleDesign: HOC = asEditableMenuTitle) => withSubMenuDesign({
+const withListSubMenu = (titleDesign: HOC = asMenuTitle) => withSubMenuDesign({
   List: asMenuSubList(titleDesign),
 });
 
@@ -64,7 +64,7 @@ const withListSubMenu = (titleDesign: HOC = asEditableMenuTitle) => withSubMenuD
  * @param titleDesign? optional token which will be applied to the sublist title.
  *
  */
-const withToutSubMenu = (titleDesign: HOC = asMenuTout()) => withSubMenuDesign({
+const withToutSubMenu = (titleDesign: HOC = asMenuTout) => withSubMenuDesign({
   Touts: asMenuSubList(titleDesign),
 });
 
@@ -74,7 +74,7 @@ const withToutSubMenu = (titleDesign: HOC = asMenuTout()) => withSubMenuDesign({
  * @param titleDesign? optional token which will be applied to the sublist title.
  *
  */
-const withColumnSubMenu = (titleDesign: HOC = asEditableMenuTitle) => withSubMenuDesign({
+const withColumnSubMenu = (titleDesign: HOC = asMenuTitle) => withSubMenuDesign({
   Columns: asToken(
     asMenuSubList(titleDesign),
     withSubLists(1)(asMenuSubList(titleDesign, () => ({ groupLabel: 'Column Sub-Menu Item' }))),
