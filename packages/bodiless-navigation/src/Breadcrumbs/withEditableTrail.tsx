@@ -17,11 +17,12 @@ import {
   WithNodeKeyProps, withSidecarNodes, withNode, withNodeKey, asReadOnly,
 } from '@bodiless/core';
 import {
-  Token, addProps, withDesign, replaceWith, A, Span, asToken,
+  Token, addProps, withDesign, replaceWith, A, Span, asToken, stylable,
 } from '@bodiless/fclasses';
 import { asEditable, asBodilessLink, withoutLinkWhenLinkDataEmpty } from '@bodiless/components';
 
 import { withBreadcrumbStartingTrail, withBreadcrumbFinalTrail } from './Breadcrumbs';
+import { withDefaultMenuTitleEditors } from '../Menu/MenuTitles';
 
 const asEditableTrail = (
   nodeKeys?: WithNodeKeyProps,
@@ -34,21 +35,6 @@ const asEditableTrail = (
   ),
   withNode as Token,
   withNodeKey(nodeKeys),
-);
-
-const asEditableLink = asToken(
-  replaceWith(A),
-  withoutLinkWhenLinkDataEmpty,
-  withSidecarNodes(
-    asBodilessLink(),
-  ),
-  // @todo add meta
-);
-
-const asEditableSpan = asToken(
-  replaceWith(Span),
-  asEditable('text', 'Breadcrumb Item'),
-  // @todo add meta
 );
 
 const withDefaultNodeKeys = (defaultKey: string) => (nodeKeys?: WithNodeKeyProps) => (
@@ -87,15 +73,11 @@ export const withEditableFinalTrail = (
   withBreadcrumbFinalTrail,
 );
 
-export const withBreadcrumbEditors = withDesign({
-  Link: asToken(
-    asEditableLink,
-    asReadOnly,
-    // @todo add meta
-  ),
-  Title: asToken(
-    asEditableSpan,
-    asReadOnly,
-    // @todo add meta
-  ),
-});
+// eslint-disable-next-line max-len
+export const withBreadcrumbEditors = (withTitleEditors: Token = withDefaultMenuTitleEditors) => asToken(
+  withTitleEditors,
+  withDesign({
+    Link: asToken(stylable, withoutLinkWhenLinkDataEmpty, asReadOnly),
+    Title: asReadOnly,
+  }),
+);

@@ -24,7 +24,7 @@ import { asToken } from '@bodiless/fclasses';
 import { withBreadcrumbStyles } from './MenuBreadcrumbs.token';
 
 const withBreadcrumbEditors = asToken(
-  withDefaultBreadcrumbEditors,
+  withDefaultBreadcrumbEditors(),
   withEditableStartingTrail({ nodeCollection: 'site' }),
   withEditableFinalTrail(),
 );
