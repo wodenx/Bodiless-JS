@@ -93,7 +93,6 @@ const withContentLibrary = (options: ContentLibraryOptions) => (
     const form = useContextMenuForm({ renderForm, hasSubmit: false });
     const baseOption: OptionGroupDefinition = {
       name: 'content-library',
-      group: 'content-library-group',
       label: 'Library',
       groupLabel: 'Content',
       groupMerge: 'merge',
