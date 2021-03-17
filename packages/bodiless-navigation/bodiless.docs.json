@@ -1,9 +1,9 @@
 {
   "Components": {
-  	"Navigation": {
-  		"Menu.md": "./doc/Menu.md",
-  		"BurgerMenu.md": "./doc/BurgerMenu.md",
-  		"Breadcrumbs.md": "./doc/Breadcrumbs.md"
-  	}
+    "Navigation.md": {
+      "Breadcrumbs.md": "./doc/Breadcrumbs.md",
+      "BurgerMenu.md": "./doc/BurgerMenu.md",
+      "Menu.md": "./doc/Menu.md"
+    }
   }
 }

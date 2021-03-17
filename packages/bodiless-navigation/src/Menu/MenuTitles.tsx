@@ -77,7 +77,7 @@ const MenuTitle = designable(MenuTitleComponents, 'MenuTitle')(MenuTitleBase);
 
 const asMenuLink = (asEditableLink: typeof asBodilessLink) => asToken(
   withSidecarNodes(
-    asEditableLink('link', undefined, () => ({ groupLabel: 'Menu Link' })),
+    asEditableLink('link', { component: 'Link' }, () => ({ groupLabel: 'Menu Link' })),
   ),
 );
 
