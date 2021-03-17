@@ -33,7 +33,7 @@ export type EditFlowContainerProps = StaticFlowContainerProps & {
   snapData?: SnapData,
   getDefaultWidth?: (snapData: SnapData) => string;
   maxComponents?: number,
-  minComponents?: number, 
+  minComponents?: number,
   mandatoryCategories?: string[],
   isResizeEnabled?: boolean,
 };
