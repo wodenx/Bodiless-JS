@@ -54,7 +54,7 @@ const withSubMenuDesign = (design: Design<any>) => withDesign({
  * @param withTitleDesign optional token which will be applied to the sublist title.
  *
  */
-const withListSubMenu = (withTitleDesign?: HOC) => withSubMenuDesign({
+const withListSubMenu = (withTitleDesign?: HOC | Token) => withSubMenuDesign({
   List: asMenuSubList(
     asToken(asMenuTitle, withTitleDesign),
   ),
@@ -66,7 +66,7 @@ const withListSubMenu = (withTitleDesign?: HOC) => withSubMenuDesign({
  * @param withTitleDesign optional token which will be applied to the sublist title.
  *
  */
-const withToutSubMenu = (withTitleDesign?: HOC) => withSubMenuDesign({
+const withToutSubMenu = (withTitleDesign?: HOC | Token) => withSubMenuDesign({
   Touts: asMenuSubList(
     asToken(asMenuTout, withTitleDesign),
   ),
@@ -78,7 +78,7 @@ const withToutSubMenu = (withTitleDesign?: HOC) => withSubMenuDesign({
  * @param withTitleDesign optional token which will be applied to the sublist title.
  *
  */
-const withColumnSubMenu = (withTitleDesign?: HOC) => withSubMenuDesign({
+const withColumnSubMenu = (withTitleDesign?: HOC | Token) => withSubMenuDesign({
   Columns: asToken(
     asMenuSubList(
       asToken(asMenuTitle, withTitleDesign),

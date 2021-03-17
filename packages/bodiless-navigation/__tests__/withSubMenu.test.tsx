@@ -20,6 +20,7 @@ import { mount } from 'enzyme';
 
 import {
   withListSubMenu, withMenuDesign, withColumnSubMenu, withToutSubMenu,
+  withDefaultMenuTitleEditors,
 } from '../src';
 import MenuBase, {
   withListSubmenuItems, withColumnsSubmenuItems, withToutsSubmenuItems, withMainMenuItems,
@@ -38,6 +39,9 @@ describe('Bodiless Menu', () => {
     const menuItems = ['Item 1', 'Item 2', 'Item 3'];
     const DefaultMenu = flow(
       withMainMenuItems(...menuItems),
+      withMenuDesign('Main')(withDesign({
+        Title: withDefaultMenuTitleEditors,
+      })),
     )(MenuBase);
 
     const wrapper = mount(<DefaultMenu />);
@@ -52,7 +56,7 @@ describe('Bodiless Menu', () => {
   it('withListSubMenu may be used to add a List submenu', () => {
     const subMenuItems = ['List 1', 'List 2', 'List 3'];
     const MenuWithList = flow(
-      withListSubMenu(),
+      withListSubMenu(withDefaultMenuTitleEditors),
       withListSubmenuItems(...subMenuItems),
       withSubMenuDesign('List'),
     )(MenuBase);
@@ -69,7 +73,7 @@ describe('Bodiless Menu', () => {
   it('withColumnSubMenu may be used to add a Columns submenu', () => {
     const subMenuItems = ['Column Submenu 1', 'Column Submenu 2', 'Column Submenu 3'];
     const MenuWithColumns = flow(
-      withColumnSubMenu(),
+      withColumnSubMenu(withDefaultMenuTitleEditors),
       withColumnsSubmenuItems(...subMenuItems),
       withSubMenuDesign('Columns'),
       withMenuDesign('Columns', 2)(
@@ -96,7 +100,7 @@ describe('Bodiless Menu', () => {
   it('withToutSubMenu may be used to add a Columns submenu', () => {
     const subMenuItems = ['Tout 1', 'Tout 2', 'Tout 3'];
     const MenuWithTouts = flow(
-      withToutSubMenu(),
+      withToutSubMenu(withDefaultMenuTitleEditors),
       withToutsSubmenuItems(...subMenuItems),
       withSubMenuDesign('Touts'),
     )(MenuBase);
