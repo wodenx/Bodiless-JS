@@ -20,6 +20,7 @@ import {
   asBurgerMenu, withMenuDesign, BurgerMenuDefaultToggler, asSlideLeft,
 } from '@bodiless/navigation';
 
+import { $withTitleEditors } from './Menu.token';
 import Logo from '../Layout/logo';
 import { asDefaultLogoStyle } from '../Layout/token';
 import {
@@ -73,6 +74,7 @@ const $withColumnSubMenuStyles = withDesign({
 
 const $withMenuStyles = asToken(
   asBurgerMenu('List', 'Columns', 'Touts'),
+  withMenuDesign()($withTitleEditors),
   withMenuDesign(['List', 'Columns', 'Touts'])($withBaseSubMenuStyles, $withBoldAccordionTitleStyles),
   withMenuDesign('Columns')($withColumnSubMenuStyles),
 );

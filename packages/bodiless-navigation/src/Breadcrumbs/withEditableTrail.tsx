@@ -22,7 +22,6 @@ import {
 import { asEditable, asBodilessLink, withoutLinkWhenLinkDataEmpty } from '@bodiless/components';
 
 import { withBreadcrumbStartingTrail, withBreadcrumbFinalTrail } from './Breadcrumbs';
-import { withDefaultMenuTitleEditors } from '../Menu/MenuTitles';
 
 const asEditableTrail = (
   nodeKeys?: WithNodeKeyProps,
@@ -73,8 +72,7 @@ export const withEditableFinalTrail = (
   withBreadcrumbFinalTrail,
 );
 
-// eslint-disable-next-line max-len
-export const withBreadcrumbEditors = (withTitleEditors: Token = withDefaultMenuTitleEditors) => asToken(
+export const withBreadcrumbEditors = (withTitleEditors?: Token) => asToken(
   withTitleEditors,
   withDesign({
     Link: asToken(stylable, withoutLinkWhenLinkDataEmpty, asReadOnly),

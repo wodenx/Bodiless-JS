@@ -115,3 +115,6 @@ const $asNavStyles = asToken(
 );
 
 export default $asNavStyles;
+export {
+  $withTitleEditors,
+};

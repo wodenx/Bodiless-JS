@@ -1,4 +1,5 @@
 
+
 # Bodiless Navigation Menu
 
 ### Exported HOCs
@@ -16,10 +17,20 @@ There are several menu-specific HOCs provided by `@bodiless/navigation` that can
 ### Bodiless Menu Structure
 Bodiless Menu is based on the List API. At its simplest, the menu structure can be defined as follows:
 ```js
-import { asBodilessMenu } from '@bodiless/navigation';
+import { asBodilessMenu, withDefaultMenuTitleEditors, withMenuDesign } from '@bodiless/navigation';
 
-// Creates a basic one level unstyled menu with Editable titles by default.
-export const DemoMenu = asBodilessMenu('simple-menu-demo')('ul');
+// Note that the menu does not come with default Title Editors
+// First lets create specify Editors for our titles:
+const $withTitleEditors = withDesign({
+  Title: withDefaultMenuTitleEditors,
+});
+
+// Creates a basic one level unstyled menu with Editable titles.
+export const DemoMenu = flow(
+  asBodilessMenu('simple-menu-demo'),
+  // Add Title editors to the main menu items.
+  withMenuDesign('Main')($withTitleEditors),
+)('ul');
 ```
 
 #### Menu Sublists
@@ -157,6 +168,7 @@ Here is the complete example of the demo bodiless menu:
 import { asToken } from '@bodiless/fclasses';
 import {
   asTopNav, withMenuDesign, asBodilessMenu, withColumnSubMenu, withToutSubMenu,
+  withDefaultMenuTitleEditors,
 } from '@bodiless/navigation';
 import {
   $withTitleStyles,
@@ -165,23 +177,28 @@ import {
   $withColumnsSublistStyles,
 } from './DemoMenu.token';
 
-const $withSiteMenuSchema = asToken(
+const $withMenuSchema = asToken(
   asBodilessMenu('demo-menu'),
   withListSubMenu(),
   withColumnSubMenu(),
   withToutSubMenu(),
 );
 
-const $withSiteMenuDesign = asToken(
+const $withTitleEditors = withDesign({
+  Title: withDefaultMenuTitleEditors,
+});
+
+const $withMenuDesign = asToken(
   asTopNav('List', 'Columns', 'Touts'),
   withMenuDesign()($withTitleStyles),
+  withMenuDesign(['Main', 'List', 'Columns'])($withTitleEditors),
   withMenuDesign('Main')($withBaseMenuStyles),
   withMenuDesign(['List', 'Columns', 'Touts'])($withBaseSubMenuStyles),
   withMenuDesign('Columns', 2)($withColumnsSublistStyles),
 );
 
 export const SiteDemoMenu = asToken(
-  $withSiteMenuSchema,
-  $withSiteMenuDesign
+  $withMenuSchema,
+  $withMenuDesign,
 )('ul');
 ```

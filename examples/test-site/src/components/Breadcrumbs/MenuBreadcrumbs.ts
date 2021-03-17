@@ -18,13 +18,14 @@ import {
   withEditableStartingTrail,
   withEditableFinalTrail,
   withBreadcrumbEditors as withDefaultBreadcrumbEditors,
+  withDefaultMenuTitleEditors,
 } from '@bodiless/navigation';
 import { asToken } from '@bodiless/fclasses';
 
 import { withBreadcrumbStyles } from './MenuBreadcrumbs.token';
 
 const withBreadcrumbEditors = asToken(
-  withDefaultBreadcrumbEditors(),
+  withDefaultBreadcrumbEditors(withDefaultMenuTitleEditors),
   withEditableStartingTrail({ nodeCollection: 'site' }),
   withEditableFinalTrail(),
 );

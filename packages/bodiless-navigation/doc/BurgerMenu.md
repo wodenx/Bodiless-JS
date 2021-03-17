@@ -18,24 +18,32 @@ The Burger menu, as well as Bodiless Menu, is based on the List API. Burger menu
 ```js
 import { asToken } from '@bodiless/fclasses';
 import {
-  asBodilessMenu, withListSubMenu, withColumnSubMenu,
-  withToutSubMenu, withBurgerMenuWrapper,
+  asBodilessMenu, withListSubMenu, withColumnSubMenu, withMenuDesign,
+  withToutSubMenu, withBurgerMenuWrapper, withDefaultMenuTitleEditors,
 } from '@bodiless/navigation';
 
 // Define menu schema first
-// Note that $withSiteMenuSchema is the same for the Top Menu and Burger Menu.
-const $withSiteMenuSchema = asToken(
+// Note that $withMenuSchema is the same for the Top Menu and Burger Menu.
+const $withMenuSchema = asToken(
   asBodilessMenu('demo-menu'),
   withListSubMenu(), // Add an ability to create a List submenu
   withColumnSubMenu(), // Add an ability to create a Columns submenu
   withToutSubMenu(), // Add an ability to create a Touts submenu
 );
 
-// Create Base Menu
-const DemoMenuBase = $withSiteMenuSchema('ul');
+// Menu doesn't provide any default editors so we need to configure one.
+// We will use the default `withDefaultMenuTitleEditors` HOC to add editors.
+const $withTitleEditors = withDesign({
+  Title: withDefaultMenuTitleEditors,
+});
 
-// Wrap menu schema in the burger menu chrome.
-const DemoBurgerMenu = withBurgerMenuWrapper(DemoMenuBase);
+// Compose burger menu by wrapping menu schema into burger menu chrome.
+const DemoBurgerMenu = asToken(
+  $withMenuSchema
+  withBurgerMenuWrapper,
+  // Configure title editors for all Titles.
+  withMenuDesign()($withTitleEditors),
+)('ul');
 ```
 
 The code above would wrap `DemoMenuBase` in the burger menu chrome. The final component would look something like this:
@@ -302,9 +310,15 @@ const $withBoldAccordionTitle = withDesign({
   }),
 });
 
+// Menu Title Editors
+const $withTitleEditors = withDesign({
+  Title: withDefaultMenuTitleEditors,
+});
+
 // Compose Menu Token
 const $withBurgerMenuStyles = asToken(
   asBurgerMenu('List', 'Columns', 'Touts'),
+  withMenuDesign()($withTitleEditors),
   withMenuDesign(['List', 'Columns', 'Touts'])(
     $withBoldAccordionTitle,
     $withOverviewLink,
