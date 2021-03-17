@@ -30,3 +30,5 @@ export type {
   TokenPanelComponents,
   TokenPanelPaneComponents,
 };
+
+export * from './TokenEditor';

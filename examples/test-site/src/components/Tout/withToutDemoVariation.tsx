@@ -1,13 +1,13 @@
-import { withTokenEditorFlowContainerItem } from '@bodiless/token-editor';
-import type { TokenEditorComponentDef } from '@bodiless/token-editor';
+import { withTokenEditorFlowContainerItem } from '@bodiless/tokens';
+import type { TokenEditorComponentDef } from '@bodiless/tokens';
 import flow from 'lodash/flow';
 
 import { withDesign, addProps, Token } from '@bodiless/fclasses';
 import { ToutComponents, ToutClean } from '@bodiless/organisms';
-import { asEditableTout } from '../../../components/Tout';
-import * as styleTokens from '../../../components/Tout/token';
+import { asEditableTout } from '.';
+import * as styleTokens from './token';
 
-import { tokenPanelStyles, withTokenEditorStyles } from './TokenEditor';
+import { tokenPanelStyles, withTokenEditorStyles } from '../TokenEditor';
 
 const tokens: TokenEditorComponentDef['tokens'] = {
   ...styleTokens,

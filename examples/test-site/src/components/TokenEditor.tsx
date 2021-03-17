@@ -8,7 +8,7 @@ import { asAccordionWrapper, asAccodionTitle, asAccordionBody } from '@bodiless/
 import { withChild } from '@bodiless/core';
 import {
   asHeader3, asBold, asTextWhite, asTealBackground,
-} from '../../../components/Elements.token';
+} from './Elements.token';
 
 export const tokenPanelStyles = {
   Panel: withDesign({

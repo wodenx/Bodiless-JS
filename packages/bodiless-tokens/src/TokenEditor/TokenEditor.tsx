@@ -6,12 +6,11 @@ import {
 } from '@bodiless/fclasses';
 import { FlowContainer } from '@bodiless/layouts-ui';
 import {
-  TokenPrinter, withTokenNamesFromData,
-} from '@bodiless/tokens';
-import {
   useNode, WithNodeKeyProps, withNodeKey, withNodeDataHandlers, withNode,
 } from '@bodiless/core';
 import flow from 'lodash/flow';
+import TokenPrinter from '../TokenPrinter';
+import { withTokenNamesFromData } from '../withTokenSelector';
 import type { TokenEditorComponents, TokenEditorProps } from './types';
 
 const DEMO_NODE_KEY = 'demo';

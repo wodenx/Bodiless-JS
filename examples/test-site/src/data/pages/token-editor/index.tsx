@@ -19,7 +19,7 @@ import { FlowContainer } from '@bodiless/layouts-ui';
 import { Section, addClasses, H1 } from '@bodiless/fclasses';
 import flow from 'lodash/flow';
 import Layout from '../../../components/Layout';
-import withToutDemoVariation from './withToutDemoVariation';
+import withToutDemoVariation from '../../../components/Tout/withToutDemoVariation';
 import { asHeader1 } from '../../../components/Elements.token';
 import { withFullWidthConstraint } from '../../../components/FlowContainer/token';
 import withRichTextVariations from '../../../components/FlowContainer/withRichTextVariations';
@@ -36,7 +36,7 @@ const Intro = addClasses('my-2')(Section);
 export default (props: any) => (
   <Page {...props}>
     <Layout>
-      <PageTitle>Token Editor</PageTitle>
+      <PageTitle>Token Editor (Experimental)</PageTitle>
       <Intro>
         You can add a token editor for a tout to the flow container below and use
         it to explore the tokens available for touts.

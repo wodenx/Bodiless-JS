@@ -4,15 +4,14 @@ import {
   addProps, asToken, startWith, Token, Design,
 } from '@bodiless/fclasses';
 import {
-  withTokensFromProps, withTokenPanelPane,
-  withTokenPanelButton,
-  TokenPanelComponents,
-} from '@bodiless/tokens';
-import {
   withDefaultContent, useNode, withContextActivator, withActivatorWrapper,
 } from '@bodiless/core';
 import flow from 'lodash/flow';
 import { ifComponentSelector } from '@bodiless/layouts';
+import withTokensFromProps from '../withTokensFromProps';
+import { withTokenPanelPane } from '../TokenPanelPane';
+import withTokenPanelButton from '../withTokenPanelButton';
+import type { TokenPanelComponents } from '../TokenPanel';
 import TokenEditor, { DEMO_NODE_KEY } from './TokenEditor';
 import { TokenEditorComponentDef } from './types';
 
