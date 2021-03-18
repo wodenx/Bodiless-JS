@@ -22,7 +22,7 @@ import {
   withDesign, startWith, DesignableComponentsProps,
 } from '@bodiless/fclasses';
 
-import { useBreadcrumbContext, asBreadcrumbSource as asBreadcrumbSourceBase } from '../Breadcrumbs';
+import { asBreadcrumbSource as asBreadcrumbSourceBase } from '../Breadcrumbs/asBreadcrumb';
 
 type MenuTitleComponents = {
   Link: ComponentType<any>,
@@ -36,18 +36,6 @@ const DEFAULT_NODE_KEYS = {
   linkNodeKey: 'title$link',
   titleNodeKey: 'title$text',
 };
-
-/**
- * Hook which can be used to determine if a menu item is part of
- * the current active breadcrumb trail.
- *
- * This hook is only accurate if
- * - The menu is inside a BreadcrumbStoreProvider.
- * - The menu item has been wrapped in asBreadcrumb
- *
- * @return true if the item is in the active trail, false otherwise.
- */
-const useIsActiveTrail = () => useBreadcrumbContext()?.isActive();
 
 /**
  * Token that can be applied to the menu Item to register it as a breadcrumb.
@@ -130,7 +118,6 @@ export {
   DEFAULT_NODE_KEYS,
   withMenuTitleEditors,
   withDefaultMenuTitleEditors,
-  useIsActiveTrail,
   asMenuTout,
   asMenuTitle,
   asBreadcrumbSource,

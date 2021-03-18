@@ -41,44 +41,44 @@ import { asHeader2, asHeader1, asItalic } from '../../../components/Elements.tok
 const DEFAULT_STARTING_TRAIL_NODE_KEY = 'startingTrail';
 
 const MenuBreadcrumbs = flow(
-  withEditableStartingTrail(`${DEFAULT_STARTING_TRAIL_NODE_KEY}Default`),
+  withEditableStartingTrail(undefined, `${DEFAULT_STARTING_TRAIL_NODE_KEY}Default`),
   withStartingTrailLinkStyles,
 )(Breadcrumbs);
 
 const BreadcrumbWithStartingTrailIcon = withStartingTrailIcon(`${DEFAULT_STARTING_TRAIL_NODE_KEY}Icon`)(Breadcrumbs);
 
 const BreadcrumbWithNonLinkableItems = flow(
-  withEditableStartingTrail(`${DEFAULT_STARTING_TRAIL_NODE_KEY}NonLinkable`),
+  withEditableStartingTrail(undefined, `${DEFAULT_STARTING_TRAIL_NODE_KEY}NonLinkable`),
   withStartingTrailLinkStyles,
   withNonLinkableItems,
 )(Breadcrumbs);
 
 const BreadcrumbWithBoldableFinalItem = flow(
-  withEditableStartingTrail(`${DEFAULT_STARTING_TRAIL_NODE_KEY}BoldedFinal`),
+  withEditableStartingTrail(undefined, `${DEFAULT_STARTING_TRAIL_NODE_KEY}BoldedFinal`),
   withStartingTrailLinkStyles,
   withBoldedFinalTrail,
 )(Breadcrumbs);
 
 const BreadcrumbWithVerticalBarSeparator = flow(
-  withEditableStartingTrail(`${DEFAULT_STARTING_TRAIL_NODE_KEY}VerticalBar`),
+  withEditableStartingTrail(undefined, `${DEFAULT_STARTING_TRAIL_NODE_KEY}VerticalBar`),
   withStartingTrailLinkStyles,
   withVerticalBarSeparator,
 )(Breadcrumbs);
 
 const BreadcrumbWithSlashSeparator = flow(
-  withEditableStartingTrail(`${DEFAULT_STARTING_TRAIL_NODE_KEY}SlashSeparator`),
+  withEditableStartingTrail(undefined, `${DEFAULT_STARTING_TRAIL_NODE_KEY}SlashSeparator`),
   withStartingTrailLinkStyles,
   withSlashSeparator,
 )(Breadcrumbs);
 
 const BreadcrumbWithHiddenCurrentPageItem = flow(
-  withEditableStartingTrail(`${DEFAULT_STARTING_TRAIL_NODE_KEY}CurrentPage`),
+  withEditableStartingTrail(undefined, `${DEFAULT_STARTING_TRAIL_NODE_KEY}CurrentPage`),
   withStartingTrailLinkStyles,
   withHiddenCurrentPageItem,
 )(Breadcrumbs);
 
 const MegaMenuBreadcrumbWithNonLinkableItems = flow(
-  withEditableStartingTrail(`${DEFAULT_STARTING_TRAIL_NODE_KEY}MegaMenuNonLinkable`),
+  withEditableStartingTrail(undefined, `${DEFAULT_STARTING_TRAIL_NODE_KEY}MegaMenuNonLinkable`),
   withStartingTrailLinkStyles,
   withDesign({
     StartingTrail: asReadOnly,

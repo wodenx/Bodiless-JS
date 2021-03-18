@@ -29,6 +29,18 @@ const breadcrumbContext = createContext<BreadcrumbItemType | undefined>(undefine
 export const useBreadcrumbContext = () => useContext(breadcrumbContext);
 export const BreadcrumbContextProvider = breadcrumbContext.Provider;
 
+/**
+ * Hook which can be used to determine if a menu item is part of
+ * the current active breadcrumb trail.
+ *
+ * This hook is only accurate if
+ * - The menu is inside a BreadcrumbStoreProvider.
+ * - The menu item has been wrapped in asBreadcrumb
+ *
+ * @return true if the item is in the active trail, false otherwise.
+ */
+export const useIsActiveTrail = () => useBreadcrumbContext()?.isActive();
+
 const isSSR = () => !(
   typeof window !== 'undefined'
   && window.document

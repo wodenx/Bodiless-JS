@@ -26,8 +26,8 @@ import { $withBreadcrumbStyles } from './MenuBreadcrumbs.token';
 
 const $withBreadcrumbEditors = asToken(
   withBreadcrumbEditors(withDefaultMenuTitleEditors),
-  withEditableStartingTrail({ nodeCollection: 'site' }),
-  withEditableFinalTrail(),
+  withEditableStartingTrail(withDefaultMenuTitleEditors, { nodeCollection: 'site' }),
+  withEditableFinalTrail(withDefaultMenuTitleEditors),
 );
 
 const Breadcrumbs = asToken(

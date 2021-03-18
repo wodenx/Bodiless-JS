@@ -18,14 +18,13 @@ import asTopNav from './Menu.token';
 import { useIsMenuOpen } from './withMenuContext';
 import { withListSubMenu, withToutSubMenu, withColumnSubMenu } from './withSubMenu';
 import {
-  useIsActiveTrail, asMenuTout, withMenuTitleEditors, withDefaultMenuTitleEditors,
+  asMenuTout, withMenuTitleEditors, withDefaultMenuTitleEditors,
 } from './MenuTitles';
 
 export {
   asBodilessMenu,
   useIsMenuOpen,
   asMenuTout,
-  useIsActiveTrail,
   withListSubMenu,
   withToutSubMenu,
   withColumnSubMenu,

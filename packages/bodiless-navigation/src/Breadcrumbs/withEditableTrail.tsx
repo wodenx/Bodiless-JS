@@ -13,28 +13,15 @@
  */
 
 import { flow } from 'lodash';
+import { WithNodeKeyProps, withNodeKey, asReadOnly } from '@bodiless/core';
+import { withoutLinkWhenLinkDataEmpty } from '@bodiless/components';
 import {
-  WithNodeKeyProps, withSidecarNodes, withNode, withNodeKey, asReadOnly,
-} from '@bodiless/core';
-import {
-  Token, addProps, withDesign, replaceWith, A, Span, asToken,
+  Token, addProps, withDesign, asToken,
 } from '@bodiless/fclasses';
-import { asEditable, asBodilessLink, withoutLinkWhenLinkDataEmpty } from '@bodiless/components';
 
 import { withBreadcrumbStartingTrail, withBreadcrumbFinalTrail } from './Breadcrumbs';
 
-const asEditableTrail = (
-  nodeKeys?: WithNodeKeyProps,
-  placeholder?: string,
-) => asToken(
-  replaceWith(A),
-  asEditable('text', placeholder),
-  withSidecarNodes(
-    asBodilessLink('link'),
-  ),
-  withNode as Token,
-  withNodeKey(nodeKeys),
-);
+import { asMenuTitle, withDefaultMenuTitleEditors } from '../Menu/MenuTitles';
 
 const withDefaultNodeKeys = (defaultKey: string) => (nodeKeys?: WithNodeKeyProps) => (
   typeof nodeKeys === 'string'
@@ -46,33 +33,37 @@ const withDefaultStartingTrailNodeKey = withDefaultNodeKeys('startingTrail');
 const withDefaultFinalTrailNodeKey = withDefaultNodeKeys('finalTrail');
 
 export const withEditableStartingTrail = (
+  withTitleEditors: Token = withDefaultMenuTitleEditors,
   nodeKeys?: WithNodeKeyProps,
-  placeholder: string = 'Enter item',
 ) => flow(
   withBreadcrumbStartingTrail,
   withDesign({
-    StartingTrail: flow(
-      asEditableTrail(withDefaultStartingTrailNodeKey(nodeKeys), placeholder),
-      addProps({ children: 'Home', href: '/' }),
+    StartingTrail: asToken(
+      asMenuTitle,
+      withTitleEditors,
+      addProps({ href: '/' }) as Token,
+      withNodeKey(withDefaultStartingTrailNodeKey(nodeKeys)),
     ),
   }),
 );
 
 export const withEditableFinalTrail = (
+  withTitleEditors: Token = withDefaultMenuTitleEditors,
   nodeKeys?: WithNodeKeyProps,
-  placeholder: string = 'Enter item',
 ) => flow(
+  withBreadcrumbFinalTrail,
   withDesign({
     FinalTrail: asToken(
-      replaceWith(Span),
-      asEditableTrail(withDefaultFinalTrailNodeKey(nodeKeys), placeholder),
-      // @todo add meta
+      asMenuTitle,
+      withTitleEditors,
+      withNodeKey(withDefaultFinalTrailNodeKey(nodeKeys)),
     ),
   }),
-  withBreadcrumbFinalTrail,
 );
 
-export const withBreadcrumbEditors = (withTitleEditors?: Token) => asToken(
+export const withBreadcrumbEditors = (
+  withTitleEditors: Token = withDefaultMenuTitleEditors,
+) => asToken(
   withDesign({ Link: withoutLinkWhenLinkDataEmpty }),
   withTitleEditors,
   withDesign({

@@ -20,6 +20,7 @@ export {
   default as asBreadcrumb,
   useBreadcrumbContext,
   asBreadcrumbSource,
+  useIsActiveTrail,
 } from './asBreadcrumb';
 
 export type {
