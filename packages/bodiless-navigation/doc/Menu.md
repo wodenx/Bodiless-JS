@@ -11,19 +11,19 @@ There are several menu-specific HOCs provided by `@bodiless/navigation` that can
  - `withColumnSubMenu` - Helper, which can be used to add a Columns submenu option to the menu.
  - `asTopNav` - Helper, which allows specifying which submenu types should have default navigation styling added.
  - `withMenuDesign` - Helper, which makes it easier to target a particular type of submenu. The first parameter is a list of the submenu key(s), and the second param is the design keys depth to which the tokens provided as a second argument should be applied. It also accepts the special key 'Main' to apply the design to the top-level menu.
+ - `withMenuTitleEditors` - A helper to apply provided `withTitleEditors` Token to the Title menu key. Applies `withDefaultMenuTitleEditors` token by default.
  - `useIsActiveTrail` - Hook, which can be used to determine if a menu item is part of the current active breadcrumb trail.
  - `useIsMenuOpen` - Hook, which can be used to determine if any submenus are open and have its context activated.
 
 ### Bodiless Menu Structure
 Bodiless Menu is based on the List API. At its simplest, the menu structure can be defined as follows:
 ```js
-import { asBodilessMenu, withDefaultMenuTitleEditors, withMenuDesign } from '@bodiless/navigation';
+import { asBodilessMenu, withMenuTitleEditors, withMenuDesign } from '@bodiless/navigation';
 
-// Note that the menu does not come with default Title Editors
-// First lets create specify Editors for our titles:
-const $withTitleEditors = withDesign({
-  Title: withDefaultMenuTitleEditors,
-});
+// Menu doesn't provide any default editors so we need to configure one.
+// We can use the `withMenuTitleEditors` helper to add editors.
+// It accepts an optional `withTitleEditors` param that defaults to withDefaultMenuTitleEditors.
+const $withTitleEditors = withMenuTitleEditors();
 
 // Creates a basic one level unstyled menu with Editable titles.
 export const DemoMenu = flow(
@@ -168,7 +168,7 @@ Here is the complete example of the demo bodiless menu:
 import { asToken } from '@bodiless/fclasses';
 import {
   asTopNav, withMenuDesign, asBodilessMenu, withColumnSubMenu, withToutSubMenu,
-  withDefaultMenuTitleEditors,
+  withMenuTitleEditors,
 } from '@bodiless/navigation';
 import {
   $withTitleStyles,
@@ -184,9 +184,7 @@ const $withMenuSchema = asToken(
   withToutSubMenu(),
 );
 
-const $withTitleEditors = withDesign({
-  Title: withDefaultMenuTitleEditors,
-});
+const $withTitleEditors = withMenuTitleEditors();
 
 const $withMenuDesign = asToken(
   asTopNav('List', 'Columns', 'Touts'),

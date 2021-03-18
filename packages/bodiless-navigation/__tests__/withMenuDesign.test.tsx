@@ -18,7 +18,7 @@ import { mount } from 'enzyme';
 import { withDesign, addProps } from '@bodiless/fclasses';
 import {
   withListSubMenu, withMenuDesign, withColumnSubMenu, withToutSubMenu,
-  withDefaultMenuTitleEditors,
+  withMenuTitleEditors,
 } from '../src';
 import MenuBase, { withCompleteDataStructure } from './TestMenu';
 
@@ -43,11 +43,7 @@ const TestMenu = flow(
   withListSubMenu(),
   withColumnSubMenu(),
   withToutSubMenu(),
-  withMenuDesign()(
-    withDesign({
-      Title: withDefaultMenuTitleEditors,
-    }),
-  ),
+  withMenuDesign()(withMenuTitleEditors()),
   withCompleteDataStructure,
   // Just some IDs to find element
   withDesign({

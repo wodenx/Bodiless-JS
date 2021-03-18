@@ -20,7 +20,7 @@ import { mount } from 'enzyme';
 
 import {
   withListSubMenu, withMenuDesign, withColumnSubMenu, withToutSubMenu,
-  withDefaultMenuTitleEditors,
+  withMenuTitleEditors, withDefaultMenuTitleEditors,
 } from '../src';
 import MenuBase, {
   withListSubmenuItems, withColumnsSubmenuItems, withToutsSubmenuItems, withMainMenuItems,
@@ -39,9 +39,7 @@ describe('Bodiless Menu', () => {
     const menuItems = ['Item 1', 'Item 2', 'Item 3'];
     const DefaultMenu = flow(
       withMainMenuItems(...menuItems),
-      withMenuDesign('Main')(withDesign({
-        Title: withDefaultMenuTitleEditors,
-      })),
+      withMenuDesign('Main')(withMenuTitleEditors()),
     )(MenuBase);
 
     const wrapper = mount(<DefaultMenu />);

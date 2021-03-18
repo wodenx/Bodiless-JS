@@ -22,6 +22,7 @@ import { observer } from 'mobx-react-lite';
 import { flowRight } from 'lodash';
 import type { BreadcrumbItemType as BreadcrumbStoreItemType } from './BreadcrumbStore';
 import { useBreadcrumbStore } from './BreadcrumbStoreProvider';
+import { asStylableBreadcrumbs } from './Breadcrumb.token';
 
 type BreadcrumbsComponents = {
   StartingTrail: ComponentType<HTMLProps<HTMLSpanElement>>,
@@ -313,6 +314,7 @@ const withoutFinalTrail = addProps({
 const asBreadcrumbs = flowRight(
   observer,
   withBreadcrumbItemsFromStore,
+  asStylableBreadcrumbs,
 );
 
 /**

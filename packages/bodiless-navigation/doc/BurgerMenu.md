@@ -19,7 +19,7 @@ The Burger menu, as well as Bodiless Menu, is based on the List API. Burger menu
 import { asToken } from '@bodiless/fclasses';
 import {
   asBodilessMenu, withListSubMenu, withColumnSubMenu, withMenuDesign,
-  withToutSubMenu, withBurgerMenuWrapper, withDefaultMenuTitleEditors,
+  withToutSubMenu, withBurgerMenuWrapper, withMenuTitleEditors,
 } from '@bodiless/navigation';
 
 // Define menu schema first
@@ -32,10 +32,9 @@ const $withMenuSchema = asToken(
 );
 
 // Menu doesn't provide any default editors so we need to configure one.
-// We will use the default `withDefaultMenuTitleEditors` HOC to add editors.
-const $withTitleEditors = withDesign({
-  Title: withDefaultMenuTitleEditors,
-});
+// We can use the `withMenuTitleEditors` helper to add editors.
+// It accepts an optional `withTitleEditors` param that defaults to withDefaultMenuTitleEditors.
+const $withTitleEditors = withMenuTitleEditors();
 
 // Compose burger menu by wrapping menu schema into burger menu chrome.
 const DemoBurgerMenu = asToken(
@@ -284,22 +283,16 @@ export const $asDemoBurgerMenu = asToken(
 ### Burger Menu Example
 Here is the complete example of the demo burger menu with custom overview link and bold accordion titles:
 ```js
-import { withDesign, asToken, addClasses, addProps } from '@bodiless/fclasses';
+import { withDesign, asToken, addClasses } from '@bodiless/fclasses';
 import {
   withOverviewLink, asBurgerMenu, withMenuDesign, asSlideLeft,
-  withBurgerMenuWrapper,
+  withBurgerMenuWrapper, withMenuTitleEditors,
 } from '@bodiless/navigation';
 
 import  { DemoMenuBase }  from  './Menu';
 
-// Create a custom OverviewLink component
-const OverviewLink = asToken(
-  addProps({ children: 'Overview Link Text'}),
-  addClasses('underline'),
-)(A);
-
-// Create a Token that can be used by withMenuDesign
-const $withOverviewLink = withOverviewLink(OverviewLink);
+// Create a OverviewLink Token that can be used by withMenuDesign
+const $withOverviewLink = withOverviewLink('Overview Link Text');
 
 // Create a Token for styling Accordion Labels
 const $withBoldAccordionTitle = withDesign({
@@ -311,9 +304,7 @@ const $withBoldAccordionTitle = withDesign({
 });
 
 // Menu Title Editors
-const $withTitleEditors = withDesign({
-  Title: withDefaultMenuTitleEditors,
-});
+const $withTitleEditors = withMenuTitleEditors();
 
 // Compose Menu Token
 const $withBurgerMenuStyles = asToken(

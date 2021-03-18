@@ -13,8 +13,21 @@
  */
 
 /* eslint-disable import/prefer-default-export */
-import { withDesign, asToken } from '@bodiless/fclasses';
+import { stylable, withDesign, asToken } from '@bodiless/fclasses';
 import type { TokenDef } from '@bodiless/fclasses';
+
+/**
+ * Makes all Breadcrumb design components stylable.
+ */
+export const asStylableBreadcrumbs = withDesign({
+  StartingTrail: stylable,
+  Separator: stylable,
+  BreadcrumbWrapper: stylable,
+  BreadcrumbItem: stylable,
+  Link: stylable,
+  Title: stylable,
+  FinalTrail: stylable,
+});
 
 /**
  * Applies supplied tokenDefs to all breadcrumb items.

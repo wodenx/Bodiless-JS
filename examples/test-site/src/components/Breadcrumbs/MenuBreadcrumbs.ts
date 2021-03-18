@@ -17,23 +17,23 @@ import {
   asBreadcrumbs,
   withEditableStartingTrail,
   withEditableFinalTrail,
-  withBreadcrumbEditors as withDefaultBreadcrumbEditors,
+  withBreadcrumbEditors,
   withDefaultMenuTitleEditors,
 } from '@bodiless/navigation';
 import { asToken } from '@bodiless/fclasses';
 
-import { withBreadcrumbStyles } from './MenuBreadcrumbs.token';
+import { $withBreadcrumbStyles } from './MenuBreadcrumbs.token';
 
-const withBreadcrumbEditors = asToken(
-  withDefaultBreadcrumbEditors(withDefaultMenuTitleEditors),
+const $withBreadcrumbEditors = asToken(
+  withBreadcrumbEditors(withDefaultMenuTitleEditors),
   withEditableStartingTrail({ nodeCollection: 'site' }),
   withEditableFinalTrail(),
 );
 
 const Breadcrumbs = asToken(
   asBreadcrumbs,
-  withBreadcrumbEditors,
-  withBreadcrumbStyles,
+  $withBreadcrumbEditors,
+  $withBreadcrumbStyles,
 )(BreadcrumbsClean);
 
 export default Breadcrumbs;

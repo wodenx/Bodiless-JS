@@ -17,7 +17,7 @@ import {
   WithNodeKeyProps, withSidecarNodes, withNode, withNodeKey, asReadOnly,
 } from '@bodiless/core';
 import {
-  Token, addProps, withDesign, replaceWith, A, Span, asToken, stylable,
+  Token, addProps, withDesign, replaceWith, A, Span, asToken,
 } from '@bodiless/fclasses';
 import { asEditable, asBodilessLink, withoutLinkWhenLinkDataEmpty } from '@bodiless/components';
 
@@ -75,7 +75,7 @@ export const withEditableFinalTrail = (
 export const withBreadcrumbEditors = (withTitleEditors?: Token) => asToken(
   withTitleEditors,
   withDesign({
-    Link: asToken(stylable, withoutLinkWhenLinkDataEmpty, asReadOnly),
+    Link: asToken(withoutLinkWhenLinkDataEmpty, asReadOnly),
     Title: asReadOnly,
   }),
 );

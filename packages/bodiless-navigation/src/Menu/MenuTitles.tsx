@@ -18,7 +18,7 @@ import { withSidecarNodes, withNode, withNodeKey } from '@bodiless/core';
 import { asEditable, asBodilessLink, withBodilessLinkToggle } from '@bodiless/components';
 import { ToutClean } from '@bodiless/organisms';
 import {
-  A, Div, HOC, asToken, Fragment, designable,
+  A, Div, HOC, Token, asToken, Fragment, designable,
   withDesign, startWith, DesignableComponentsProps,
 } from '@bodiless/fclasses';
 
@@ -77,7 +77,7 @@ const MenuTitle = designable(MenuTitleComponents, 'MenuTitle')(MenuTitleBase);
 
 const asMenuLink = (asEditableLink: typeof asBodilessLink) => asToken(
   withSidecarNodes(
-    asEditableLink('link', { component: 'Link' }, () => ({ groupLabel: 'Menu Link' })),
+    asEditableLink('link', undefined, () => ({ groupLabel: 'Menu Link' })),
   ),
 );
 
@@ -88,6 +88,18 @@ const asMenuLink = (asEditableLink: typeof asBodilessLink) => asToken(
 const withDefaultMenuTitleEditors = withDesign({
   Link: asMenuLink(withBodilessLinkToggle(asBodilessLink, startWith(Div) as HOC)),
   Title: asEditable('text', 'Menu Item'),
+});
+
+/**
+ * A helper to apply provided `withTitleEditors` Token to the Title menu key.
+ * Applies `withDefaultMenuTitleEditors` token by default.
+ *
+ * @param withTitleEditors Token that will be applied to the Title key
+ */
+const withMenuTitleEditors = (
+  withTitleEditors: HOC | Token = withDefaultMenuTitleEditors,
+) => withDesign({
+  Title: withTitleEditors,
 });
 
 /**
@@ -113,6 +125,7 @@ const asMenuTout = flow(
 export default MenuTitle;
 export {
   DEFAULT_NODE_KEYS,
+  withMenuTitleEditors,
   withDefaultMenuTitleEditors,
   useIsActiveTrail,
   asMenuTout,

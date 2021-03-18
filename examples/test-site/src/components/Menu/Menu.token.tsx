@@ -15,7 +15,7 @@
 import { ifToggledOn } from '@bodiless/core';
 import { asToken, withDesign, addClasses } from '@bodiless/fclasses';
 import {
-  asTopNav, useIsActiveTrail, withMenuDesign, withDefaultMenuTitleEditors,
+  asTopNav, useIsActiveTrail, withMenuDesign, withMenuTitleEditors,
 } from '@bodiless/navigation';
 
 import {
@@ -41,9 +41,7 @@ const withHoverMenuBackground = asLightTealBackgroundOnHover;
  */
 
 // We need to manually pass title Editors
-const $withTitleEditors = withDesign({
-  Title: withDefaultMenuTitleEditors,
-});
+const $withTitleEditors = withMenuTitleEditors();
 
 const $withTitleStyles = withDesign({
   Title: asToken(

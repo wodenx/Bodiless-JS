@@ -107,7 +107,7 @@ const withStartingTrailLinkStyles = withDesign({
   StartingTrail: asLink,
 });
 
-const withBreadcrumbStyles = asToken(
+const $withBreadcrumbStyles = asToken(
   withDesign({
     Separator: asToken(
       replaceWith(Span),
@@ -125,7 +125,7 @@ const withBreadcrumbStyles = asToken(
 );
 
 export {
-  withBreadcrumbStyles,
+  $withBreadcrumbStyles,
   withStartingTrailIcon,
   withNonLinkableItems,
   withBoldedFinalTrail,
