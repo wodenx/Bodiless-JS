@@ -86,8 +86,11 @@ const asMenuLink = (asEditableLink: typeof asBodilessLink) => asToken(
  * Transforms Link into Editable Bodiless Link Toggle and Title to Editable.
  */
 const withDefaultMenuTitleEditors = withDesign({
-  Link: asMenuLink(withBodilessLinkToggle(asBodilessLink, startWith(Div) as HOC)),
-  Title: asEditable('text', 'Menu Item'),
+  Link: asMenuLink(withBodilessLinkToggle(asBodilessLink, startWith(Div) as HOC, true)),
+  Title: flow(
+    startWith(Fragment),
+    asEditable('text', 'Menu Item'),
+  ),
 });
 
 /**

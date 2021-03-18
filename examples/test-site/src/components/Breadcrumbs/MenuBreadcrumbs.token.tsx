@@ -103,6 +103,9 @@ const withSlashSeparator = withDesign({
   Separator: withSeparator('/'),
 });
 
+// Only apply asLink to the Link component and not the _default one. ( LinkToggle )
+const withLinkToggleStyles = withDesign({ Link: asLink });
+
 const withStartingTrailLinkStyles = withDesign({
   StartingTrail: asLink,
 });
@@ -118,7 +121,7 @@ const $withBreadcrumbStyles = asToken(
       addClasses('inline-flex'),
     ),
     BreadcrumbItem: stylable,
-    Link: asLink,
+    Link: withLinkToggleStyles,
   }),
   withStartingTrailLinkStyles,
   withArrowSeparator,

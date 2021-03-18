@@ -73,9 +73,10 @@ export const withEditableFinalTrail = (
 );
 
 export const withBreadcrumbEditors = (withTitleEditors?: Token) => asToken(
+  withDesign({ Link: withoutLinkWhenLinkDataEmpty }),
   withTitleEditors,
   withDesign({
-    Link: asToken(withoutLinkWhenLinkDataEmpty, asReadOnly),
+    Link: asReadOnly,
     Title: asReadOnly,
   }),
 );

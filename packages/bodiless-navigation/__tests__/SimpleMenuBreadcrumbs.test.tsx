@@ -17,24 +17,27 @@ import React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import cheerio from 'cheerio';
-import { withDefaultContent, withSidecarNodes, ifToggledOn } from '@bodiless/core';
-import { asBodilessLink, asEditable } from '@bodiless/components';
+import { withDefaultContent, ifToggledOn } from '@bodiless/core';
 import {
   replaceWith,
   withDesign,
   addProps,
 } from '@bodiless/fclasses';
-import { flowRight } from 'lodash';
+import { flow, flowRight } from 'lodash';
 
 import {
   asBodilessMenu, withListSubMenu, withBreadcrumbStartingTrail,
-  BreadcrumbsClean, asBreadcrumbs, withBreadcrumbStore,
+  BreadcrumbsClean, asBreadcrumbs, withBreadcrumbStore, withBreadcrumbEditors,
+  withDefaultMenuTitleEditors,
 } from '../src';
 import type { BreadcrumbStoreItemsReducer } from '../src/Breadcrumbs/Breadcrumbs';
 
 const { DefaultContentNode } = require('@bodiless/core');
 
-const Breadcrumbs = asBreadcrumbs(BreadcrumbsClean);
+const Breadcrumbs = flow(
+  asBreadcrumbs,
+  withBreadcrumbEditors(withDefaultMenuTitleEditors),
+)(BreadcrumbsClean);
 
 const setPagePath = (pagePath: string) => {
   Object.defineProperty(DefaultContentNode.prototype, 'pagePath', {
@@ -60,15 +63,6 @@ const createBreadcrumbComponent = ({
 
   return flowRight(
     withDefaultContent(content),
-    withDesign({
-      // @ts-ignore
-      Link: replaceWith(
-        withSidecarNodes(asBodilessLink())('a'),
-      ),
-      Title: replaceWith<any>(
-        asEditable()(React.Fragment),
-      ),
-    }),
     withBreadcrumbStore,
   )(BreadcrumbComponent);
 };

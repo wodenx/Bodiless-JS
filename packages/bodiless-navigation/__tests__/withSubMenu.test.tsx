@@ -45,7 +45,7 @@ describe('Bodiless Menu', () => {
     const wrapper = mount(<DefaultMenu />);
     expect(wrapper.find('li[data-test="menu-item"]').length).toBe(3);
 
-    const menuTitles = wrapper.find('div[data-test="menu-title"]');
+    const menuTitles = wrapper.find('a[data-test="menu-title"]');
     expect(menuTitles.length).toBe(menuItems.length);
 
     menuTitles.forEach((title, i) => expect(title.text()).toBe(menuItems[i]));
@@ -62,7 +62,7 @@ describe('Bodiless Menu', () => {
     const wrapper = mount(<MenuWithList />);
     expect(wrapper.find('ul[data-test-submenu="list-submenu"]').length).toBe(1);
 
-    const subMenuTitles = wrapper.find('div[data-test-submenu="list-submenu-title"]');
+    const subMenuTitles = wrapper.find('a[data-test-submenu="list-submenu-title"]');
     expect(subMenuTitles.length).toBe(subMenuItems.length);
 
     subMenuTitles.forEach((title, i) => expect(title.text()).toBe(subMenuItems[i]));
@@ -87,9 +87,9 @@ describe('Bodiless Menu', () => {
     expect(wrapper.find('ul[data-test-submenu="columns-submenu"]').length).toBe(1);
     expect(wrapper.find('ul[data-test-submenu="sub-column-submenu"]').length).toBe(1);
 
-    expect(wrapper.find('div[data-test-submenu="columns-submenu-title"]').length).toBe(1);
+    expect(wrapper.find('a[data-test-submenu="columns-submenu-title"]').length).toBe(1);
 
-    const columnSubMenuTitles = wrapper.find('div[data-test-submenu="sub-column-submenu-title"]');
+    const columnSubMenuTitles = wrapper.find('a[data-test-submenu="sub-column-submenu-title"]');
     expect(columnSubMenuTitles.length).toBe(subMenuItems.length);
 
     columnSubMenuTitles.forEach((title, i) => expect(title.text()).toBe(subMenuItems[i]));

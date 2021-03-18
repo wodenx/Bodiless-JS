@@ -105,7 +105,8 @@ describe('withMenuDesign', () => {
     const wrapper = mount(<Wrapper />);
 
     expect(wrapper.find('ul[data-test-submenu="menu"]').length).toBe(5); // Menu, List, Tout, Columns(x2)
-    expect(wrapper.find('div[data-test-submenu="menu-title"]').length).toBe(11); // 3 Top, 2 List, 2 Touts, 2 Columns, 2 Sub Columns
+    expect(wrapper.find('a[data-test-submenu="menu-title"]').length).toBe(9); // 3 Top, 2 List, 2 Columns, 2 Sub Columns
+    expect(wrapper.find('div[data-test-submenu="menu-title"]').length).toBe(2); // 2 Touts
     expect(wrapper.find('li[data-test-submenu="menu-item"]').length).toBe(11); // 3 Top, 2 List, 2 Touts, 2 Columns, 2 Sub Columns
   });
 
@@ -178,7 +179,7 @@ describe('withMenuDesign', () => {
     const wrapper = mount(<Wrapper />);
 
     expect(wrapper.find('ul[data-test-submenu="list"]').length).toBe(1);
-    expect(wrapper.find('div[data-test-submenu="list-title"]').length).toBe(2);
+    expect(wrapper.find('a[data-test-submenu="list-title"]').length).toBe(2);
     expect(wrapper.find('li[data-test-submenu="list-item"]').length).toBe(2);
 
     expect(wrapper.find('ul[data-test-submenu="touts"]').length).toBe(1);
@@ -186,7 +187,7 @@ describe('withMenuDesign', () => {
     expect(wrapper.find('li[data-test-submenu="touts-item"]').length).toBe(2);
 
     expect(wrapper.find('ul[data-test-submenu="columns"]').length).toBe(2); // with sub-column
-    expect(wrapper.find('div[data-test-submenu="columns-title"]').length).toBe(4);
+    expect(wrapper.find('a[data-test-submenu="columns-title"]').length).toBe(4);
     expect(wrapper.find('li[data-test-submenu="columns-item"]').length).toBe(4);
   });
 

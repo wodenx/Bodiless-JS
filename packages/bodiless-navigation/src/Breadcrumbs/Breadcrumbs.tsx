@@ -14,9 +14,11 @@
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { ComponentType, HTMLProps } from 'react';
-import { useNode, withoutProps } from '@bodiless/core';
+import { useNode, withoutProps, withNode } from '@bodiless/core';
 import type { WithNodeKeyProps, WithNodeProps } from '@bodiless/core';
-import { asComponent, designable, addProps } from '@bodiless/fclasses';
+import {
+  asComponent, designable, addProps, Fragment,
+} from '@bodiless/fclasses';
 import type { DesignableComponentsProps } from '@bodiless/fclasses';
 import { observer } from 'mobx-react-lite';
 import { flowRight } from 'lodash';
@@ -39,11 +41,9 @@ type BreadcrumbsComponents = {
 
 type CleanBreadcrumbItemType = {
   uuid: string | number;
-  title: WithNodeProps;
-  link: WithNodeProps;
   position: number;
   isCurrentPage: boolean;
-};
+} & WithNodeProps;
 
 /**
  * contains breadcrumb item public properties
@@ -106,6 +106,8 @@ const firstItemHomeLinkReducer = (
   .filter(item => !(hasStartingTrail && item.isFirst() && item.hasPath('/')))
   .map(item => item.uuid);
 
+const ItemNodeProvider = withNode(Fragment) as ComponentType<WithNodeProps>;
+
 type CleanBreadcrumbsProps = Omit<BreadcrumbsProps, 'itemsReducer'>;
 const BreadcrumbsClean$ = (props: CleanBreadcrumbsProps) => {
   const {
@@ -138,23 +140,28 @@ const BreadcrumbsClean$ = (props: CleanBreadcrumbsProps) => {
       return (
         <React.Fragment key={item.uuid}>
           <BreadcrumbItem position={position$} isCurrentPage={isCurrentPage}>
-            <Title
-              nodeKey={item.title.nodeKey}
-              nodeCollection={item.title.nodeCollection}
-            />
+            <ItemNodeProvider nodeKey={item.nodeKey} nodeCollection={item.nodeCollection}>
+              <Title />
+            </ItemNodeProvider>
           </BreadcrumbItem>
         </React.Fragment>
       );
     }
     return (
+      // @todo ideally we'd use the MenuTitle to render the Link/Title to avoid future
+      // issues if one or the other changes (and to allow injecting a different component).
+      // Can we do this in a backwards compatible way? Or maybe just update the design keys.
+      // so withDesign({ Title: ..., Link: ... })
+      // -->
+      // withDesign({ Title: withDesign({ Title: ..., Link: ... })})
+      // as for menu items themselves...
       <React.Fragment key={item.uuid}>
         <BreadcrumbItem position={position$} isCurrentPage={isCurrentPage}>
-          <Link nodeKey={item.link.nodeKey} nodeCollection={item.link.nodeCollection}>
-            <Title
-              nodeKey={item.title.nodeKey}
-              nodeCollection={item.title.nodeCollection}
-            />
-          </Link>
+          <ItemNodeProvider nodeKey={item.nodeKey} nodeCollection={item.nodeCollection}>
+            <Link>
+              <Title />
+            </Link>
+          </ItemNodeProvider>
         </BreadcrumbItem>
         {!isLastItem && <Separator key={`separator${item.uuid}`} />}
       </React.Fragment>
@@ -238,18 +245,14 @@ const withBreadcrumbItemsFromStore = (Component: ComponentType<BreadcrumbsProps 
       .reduce<CleanBreadcrumbItemType[]>(
         (prev, current, index) => {
           if (current === undefined) return prev;
-          const linkNodePath = current.link.nodePath.replace(`${basePath}$`, '');
           const titleNodePath = current.title.nodePath.replace(`${basePath}$`, '');
+          // @todo probably a better way to get the nodeKey...
+          const temp = titleNodePath.split('$');
+          const nodeKey = temp.slice(0, temp.length - 1).join('$');
           prev.push({
             uuid: current.uuid,
-            link: {
-              nodeKey: linkNodePath,
-              nodeCollection,
-            },
-            title: {
-              nodeKey: titleNodePath,
-              nodeCollection,
-            },
+            nodeKey,
+            nodeCollection,
             position: index + 1,
             isCurrentPage: current.isLast() && store.hasCurrentPageItem(),
           });
