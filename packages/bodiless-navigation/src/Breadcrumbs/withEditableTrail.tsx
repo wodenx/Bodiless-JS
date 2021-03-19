@@ -14,13 +14,11 @@
 
 import { flow } from 'lodash';
 import { WithNodeKeyProps, withNodeKey, asReadOnly } from '@bodiless/core';
-import { withoutLinkWhenLinkDataEmpty } from '@bodiless/components';
 import {
   Token, addProps, withDesign, asToken,
 } from '@bodiless/fclasses';
 
 import { withBreadcrumbStartingTrail, withBreadcrumbFinalTrail } from './Breadcrumbs';
-
 import { asMenuTitle, withDefaultMenuTitleEditors } from '../Menu/MenuTitles';
 
 const withDefaultNodeKeys = (defaultKey: string) => (nodeKeys?: WithNodeKeyProps) => (
@@ -63,11 +61,6 @@ export const withEditableFinalTrail = (
 
 export const withBreadcrumbEditors = (
   withTitleEditors: Token = withDefaultMenuTitleEditors,
-) => asToken(
-  withDesign({ Link: withoutLinkWhenLinkDataEmpty }),
-  withTitleEditors,
-  withDesign({
-    Link: asReadOnly,
-    Title: asReadOnly,
-  }),
-);
+) => withDesign({
+  Title: asToken(withTitleEditors, asReadOnly),
+});

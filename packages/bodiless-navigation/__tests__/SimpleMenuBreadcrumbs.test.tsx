@@ -253,7 +253,7 @@ describe('asBreadcrumbsClean', () => {
     });
     const TestBreadcrumbs = flowRight(
       withDesign({
-        BreadcrumbItem: ifToggledOn(
+        Item: ifToggledOn(
           ({ isCurrentPage }: any) => isCurrentPage,
         )(addProps({ className: 'font-bold' })),
       }),
@@ -268,7 +268,7 @@ describe('asBreadcrumbsClean', () => {
     });
     const TestBreadcrumbs = flowRight(
       withDesign({
-        BreadcrumbItem: ifToggledOn(
+        Item: ifToggledOn(
           ({ isCurrentPage }: any) => isCurrentPage,
         )(addProps({ className: 'font-bold' })),
       }),

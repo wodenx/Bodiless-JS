@@ -15,9 +15,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { ComponentType, HTMLProps } from 'react';
 import { useNode, withoutProps, withNode } from '@bodiless/core';
-import type { WithNodeKeyProps, WithNodeProps } from '@bodiless/core';
+import type { WithNodeProps } from '@bodiless/core';
 import {
-  asComponent, designable, addProps, Fragment,
+  asComponent, designable, addProps, Fragment, withDesign, replaceWith,
 } from '@bodiless/fclasses';
 import type { DesignableComponentsProps } from '@bodiless/fclasses';
 import { observer } from 'mobx-react-lite';
@@ -26,16 +26,17 @@ import type { BreadcrumbItemType as BreadcrumbStoreItemType } from './Breadcrumb
 import { useBreadcrumbStore } from './BreadcrumbStoreProvider';
 import { asStylableBreadcrumbs } from './Breadcrumb.token';
 
+import MenuTitle from '../Menu/MenuTitles';
+
 type BreadcrumbsComponents = {
   StartingTrail: ComponentType<HTMLProps<HTMLSpanElement>>,
   Separator: ComponentType<HTMLProps<HTMLSpanElement>>,
-  BreadcrumbWrapper: ComponentType<HTMLProps<HTMLUListElement>>,
-  BreadcrumbItem: ComponentType<HTMLProps<HTMLLIElement> & {
+  Wrapper: ComponentType<HTMLProps<HTMLUListElement>>,
+  Item: ComponentType<HTMLProps<HTMLLIElement> & {
     position: number;
     isCurrentPage: boolean;
   }>,
-  Link: ComponentType<HTMLProps<HTMLAnchorElement> & WithNodeKeyProps>,
-  Title: ComponentType<HTMLProps<HTMLSpanElement> & WithNodeKeyProps>,
+  Title: ComponentType<HTMLProps<HTMLSpanElement>>,
   FinalTrail: ComponentType<HTMLProps<HTMLSpanElement>>,
 };
 
@@ -125,9 +126,8 @@ const BreadcrumbsClean$ = (props: CleanBreadcrumbsProps) => {
   const {
     StartingTrail,
     Separator,
-    BreadcrumbWrapper,
-    BreadcrumbItem,
-    Link,
+    Wrapper,
+    Item,
     Title,
     FinalTrail,
   } = components;
@@ -137,45 +137,39 @@ const BreadcrumbsClean$ = (props: CleanBreadcrumbsProps) => {
     // increment position by 1 if there is starting trail item
     const position$ = hasStartingTrail$ ? position + 1 : position;
     if (isLastItem && renderLastItemWithoutLink$) {
+      const TitleWithNoLink = withDesign({
+        Link: replaceWith(Fragment),
+      })(Title);
       return (
         <React.Fragment key={item.uuid}>
-          <BreadcrumbItem position={position$} isCurrentPage={isCurrentPage}>
+          <Item position={position$} isCurrentPage={isCurrentPage}>
             <ItemNodeProvider nodeKey={item.nodeKey} nodeCollection={item.nodeCollection}>
-              <Title />
+              <TitleWithNoLink />
             </ItemNodeProvider>
-          </BreadcrumbItem>
+          </Item>
         </React.Fragment>
       );
     }
     return (
-      // @todo ideally we'd use the MenuTitle to render the Link/Title to avoid future
-      // issues if one or the other changes (and to allow injecting a different component).
-      // Can we do this in a backwards compatible way? Or maybe just update the design keys.
-      // so withDesign({ Title: ..., Link: ... })
-      // -->
-      // withDesign({ Title: withDesign({ Title: ..., Link: ... })})
-      // as for menu items themselves...
       <React.Fragment key={item.uuid}>
-        <BreadcrumbItem position={position$} isCurrentPage={isCurrentPage}>
+        <Item position={position$} isCurrentPage={isCurrentPage}>
           <ItemNodeProvider nodeKey={item.nodeKey} nodeCollection={item.nodeCollection}>
-            <Link>
-              <Title />
-            </Link>
+            <Title />
           </ItemNodeProvider>
-        </BreadcrumbItem>
+        </Item>
         {!isLastItem && <Separator key={`separator${item.uuid}`} />}
       </React.Fragment>
     );
   });
   const finalTrailItemPosition = (hasStartingTrail$ ? 1 : 0) + items$.length + 1;
   return (
-    <BreadcrumbWrapper>
+    <Wrapper>
       { hasStartingTrail$
         && (
         <>
-          <BreadcrumbItem position={1} isCurrentPage={false} key="startingTrail">
+          <Item position={1} isCurrentPage={false} key="startingTrail">
             <StartingTrail />
-          </BreadcrumbItem>
+          </Item>
           { (items$.length > 0 || hasFinalTrail$)
             && <Separator key="startingTrailSeparator" />}
         </>
@@ -186,26 +180,25 @@ const BreadcrumbsClean$ = (props: CleanBreadcrumbsProps) => {
         <>
           { items$.length > 0
             && <Separator key="finalTrailSeparator" />}
-          <BreadcrumbItem key="finalTrail" position={finalTrailItemPosition} isCurrentPage={false}>
+          <Item key="finalTrail" position={finalTrailItemPosition} isCurrentPage={false}>
             <FinalTrail />
-          </BreadcrumbItem>
+          </Item>
         </>
         )}
-    </BreadcrumbWrapper>
+    </Wrapper>
   );
 };
 
 const BreadcrumbStartComponents: BreadcrumbsComponents = {
-  StartingTrail: asComponent('span'),
+  StartingTrail: MenuTitle,
   Separator: asComponent('span'),
-  BreadcrumbWrapper: asComponent('ul'),
-  BreadcrumbItem: flowRight(
+  Wrapper: asComponent('ul'),
+  Item: flowRight(
     withoutProps(['position', 'isCurrentPage']),
     asComponent,
   )('li'),
-  Link: asComponent('a'),
-  Title: asComponent('span'),
-  FinalTrail: asComponent('span'),
+  Title: MenuTitle,
+  FinalTrail: MenuTitle,
 };
 
 /**

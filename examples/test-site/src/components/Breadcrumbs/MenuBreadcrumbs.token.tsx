@@ -25,16 +25,15 @@ import {
 import {
   withBreadcrumbStartingTrail,
   withoutBreadcrumbFinalTrail,
+  withBreadcrumbItemToken,
 } from '@bodiless/navigation';
 import {
   asToken,
-  stylable,
   addClasses,
   addProps,
   withDesign,
   replaceWith,
   A,
-  Ul,
   Span,
   Fragment,
 } from '@bodiless/fclasses';
@@ -69,18 +68,20 @@ const withStartingTrailIcon = (
   }),
 );
 
-const withNonLinkableItems = withDesign({
-  Link: replaceWith(Fragment),
-});
+const withNonLinkableItems = withBreadcrumbItemToken(
+  withDesign({
+    Link: replaceWith(Fragment),
+  }),
+);
 
 const withBoldedFinalTrail = withDesign({
-  BreadcrumbItem: ifToggledOn(({ isCurrentPage }: any) => isCurrentPage)(asBold),
+  Item: ifToggledOn(({ isCurrentPage }: any) => isCurrentPage)(asBold),
   FinalTrail: asBold,
 });
 
 const withHiddenCurrentPageItem = flow(
   withDesign({
-    BreadcrumbItem: ifToggledOn(
+    Item: ifToggledOn(
       ({ isCurrentPage }: any) => isCurrentPage,
     )(replaceWith(() => <></>)),
   }),
@@ -104,7 +105,11 @@ const withSlashSeparator = withDesign({
 });
 
 // Only apply asLink to the Link component and not the _default one. ( LinkToggle )
-const withLinkToggleStyles = withDesign({ Link: asLink });
+const withLinkToggleStyles = withDesign({
+  Link: withDesign({
+    Link: asLink,
+  }),
+});
 
 const withStartingTrailLinkStyles = withDesign({
   StartingTrail: asLink,
@@ -112,16 +117,9 @@ const withStartingTrailLinkStyles = withDesign({
 
 const $withBreadcrumbStyles = asToken(
   withDesign({
-    Separator: asToken(
-      replaceWith(Span),
-      addClasses('mx-1'),
-    ),
-    BreadcrumbWrapper: asToken(
-      replaceWith(Ul),
-      addClasses('inline-flex'),
-    ),
-    BreadcrumbItem: stylable,
-    Link: withLinkToggleStyles,
+    Separator: addClasses('mx-1'),
+    Wrapper: addClasses('inline-flex'),
+    Title: withLinkToggleStyles,
   }),
   withStartingTrailLinkStyles,
   withArrowSeparator,

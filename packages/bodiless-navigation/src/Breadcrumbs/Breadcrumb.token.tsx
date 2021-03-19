@@ -22,9 +22,8 @@ import type { TokenDef } from '@bodiless/fclasses';
 export const asStylableBreadcrumbs = withDesign({
   StartingTrail: stylable,
   Separator: stylable,
-  BreadcrumbWrapper: stylable,
+  Wrapper: stylable,
   BreadcrumbItem: stylable,
-  Link: stylable,
   Title: stylable,
   FinalTrail: stylable,
 });
@@ -37,5 +36,5 @@ export const asStylableBreadcrumbs = withDesign({
 export const withBreadcrumbItemToken = (...tokenDefs: TokenDef<any>[]) => withDesign({
   StartingTrail: asToken(...tokenDefs),
   FinalTrail: asToken(...tokenDefs),
-  Link: asToken(...tokenDefs),
+  Title: asToken(...tokenDefs),
 });
