@@ -34,6 +34,8 @@ class MockContentNode<D> implements ContentNode<D> {
   );
 
   hasError = jest.fn().mockReturnValue(false);
+
+  proxy = jest.fn();
 }
 
 /**

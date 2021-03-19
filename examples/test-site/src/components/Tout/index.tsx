@@ -25,9 +25,8 @@ import {
   asTestableTout,
 } from '@bodiless/organisms';
 import { withDesign } from '@bodiless/fclasses';
-import {
-  asEditableImage, asEditableLink, asEditable,
-} from '../Elements.token';
+import { asEditableLink, asEditable } from '../Elements.token';
+import { asEditableImage } from '../Image';
 import {
   withEditorBasic,
   withEditorSimple,
@@ -104,3 +103,4 @@ export const asContentfulTout = (content: object) => flow(
 
 const Tout = asEditableTout(ToutClean);
 export default Tout;
+export { asTestableTout };

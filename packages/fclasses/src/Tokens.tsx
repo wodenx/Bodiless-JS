@@ -39,7 +39,7 @@ type HOC<P extends object = any, Q extends object = P> = (
 /**
  * Properties of tokens.
  */
-type TokenProps<P> = {
+export type TokenProps<P> = {
   /**
    * The filter (if any) which should be applied when this token is composed.
    */
