@@ -29,15 +29,15 @@ import { asStylableBreadcrumbs } from './Breadcrumb.token';
 import MenuTitle from '../Menu/MenuTitles';
 
 type BreadcrumbsComponents = {
-  StartingTrail: ComponentType<HTMLProps<HTMLSpanElement>>,
+  StartingTrail: ComponentType<any>,
   Separator: ComponentType<HTMLProps<HTMLSpanElement>>,
   Wrapper: ComponentType<HTMLProps<HTMLUListElement>>,
   Item: ComponentType<HTMLProps<HTMLLIElement> & {
     position: number;
     isCurrentPage: boolean;
   }>,
-  Title: ComponentType<HTMLProps<HTMLSpanElement>>,
-  FinalTrail: ComponentType<HTMLProps<HTMLSpanElement>>,
+  Title: ComponentType<any>,
+  FinalTrail: ComponentType<any>,
 };
 
 type CleanBreadcrumbItemType = {
