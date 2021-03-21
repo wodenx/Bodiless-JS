@@ -55,13 +55,6 @@ const asFancyWrapper = withDesign({
 
 const TokenPanel = asFancyWrapper(TokenPaneLClean);
 
-export const withCategory = <P extends object>(category?: string) => (...hocs: Token[]) => (
-  asToken(
-    ...hocs,
-    category ? asToken.meta.term('Categories')(category) : undefined,
-  )
-);
-
 const withFlowContainerFirstItemNode = (nodeKey: string) => <P extends object>(
   Component: ComponentType<P & WithNodeKeyProps>,
 ) => {

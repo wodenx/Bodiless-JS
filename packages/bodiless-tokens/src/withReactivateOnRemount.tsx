@@ -2,7 +2,7 @@ import React, { FC, ComponentType } from 'react';
 import { useEditContext, useActivateOnEffect, useActivateOnEffectActivator } from '@bodiless/core';
 import { v4 } from 'uuid';
 
-export const useRectivateOnRemount = (uuid: string) => {
+export const useReactivateOnRemount = (uuid: string) => {
   const context = useEditContext();
   const { setId } = useActivateOnEffect();
   if (context.isInnermost) setId(uuid);
@@ -12,7 +12,7 @@ const withReactivateOnRemount = (
   uuid: string = v4(),
 ) => <P extends object>(Component: ComponentType<P>) => {
   const WithReactivateOnRemount: FC<P> = props => {
-    useRectivateOnRemount(uuid);
+    useReactivateOnRemount(uuid);
     return <Component {...props} />;
   };
   return WithReactivateOnRemount;

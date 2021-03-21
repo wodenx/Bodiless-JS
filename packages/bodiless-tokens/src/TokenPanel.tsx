@@ -1,11 +1,11 @@
-import React, { ComponentType, FC } from 'react';
+import React, { ComponentType, FC, HTMLProps } from 'react';
 import {
   useEditContext,
 } from '@bodiless/core';
 import { flow } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import {
-  DesignableComponentsProps, designable,
+  DesignableComponentsProps, designable, StylableProps, Div,
 } from '@bodiless/fclasses';
 import { TMenuOption } from '@bodiless/core/src';
 import type { TokenPanelPaneProps } from './TokenPanelPane';
@@ -39,6 +39,7 @@ const withTokenPanelPanesProps = <P extends object>(
 export type TokenPanelComponents = {
   Panel: ComponentType<any>,
   Wrapper: ComponentType<any>,
+  Empty: ComponentType<any>,
 };
 
 type TokenPanelProps = WithTokenPanelPanesProps & DesignableComponentsProps<TokenPanelComponents>;
@@ -46,13 +47,18 @@ type TokenPanelProps = WithTokenPanelPanesProps & DesignableComponentsProps<Toke
 const tokenPanelComponents: TokenPanelComponents = {
   Wrapper: 'div' as any,
   Panel: TokenPanelPane,
+  Empty: (props: HTMLProps<HTMLDivElement> & StylableProps) => (
+    <Div {...props}>
+      No component selected
+    </Div>
+  ),
 };
 
 const TokenPanel: FC<TokenPanelProps> = props => {
   const { panesProps, components: C } = props;
   const content = (panesProps.length > 0)
     ? panesProps.map(p => <C.Panel {...p} key={p.node.path.join('$')} />)
-    : <div>No component is selected.</div>;
+    : <C.Empty />;
   return (
     <C.Wrapper data-bl-activator>
       {content}
