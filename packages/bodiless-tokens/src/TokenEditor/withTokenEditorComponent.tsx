@@ -45,7 +45,7 @@ const withTokenEditorComponent = (
       startWith(Component) as HOC,
       withActivatorWrapper('onClick', 'div') as HOC,
       withContextActivator('onClick') as HOC,
-      withTokensFromProps,
+      withTokensFromProps as HOC,
       withTokenPanelPane(),
       addProps({ availableTokens: tokens }) as HOC,
       withTokenPanelButton({ panelDesign }) as HOC,

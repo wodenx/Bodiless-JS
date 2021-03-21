@@ -16,7 +16,6 @@ import React, { ComponentType, FC } from 'react';
 import {
   union, difference, capitalize,
 } from 'lodash';
-import type { HOC } from './Tokens';
 
 type Classes = string | string[];
 
@@ -33,6 +32,8 @@ export type StylableProps = {
 type Classable = {
   className?: string,
 };
+
+export type HOC = <P extends object>(C: ComponentType<P> | string) => ComponentType<P>;
 
 export type Condition = <T extends StylableProps>(args?: T) => boolean;
 const alwaysTrueCondition = () => true;
@@ -53,8 +54,7 @@ const modifyClassesIf = (operation: 'add' | 'remove') => (condition: Condition) 
     ModifyClasses.displayName = `${capitalize(operation)}Classes`;
     return ModifyClasses;
   };
-  hoc.flow = hoc as HOC;
-  return hoc as HOC;
+  return hoc;
 };
 
 /**
