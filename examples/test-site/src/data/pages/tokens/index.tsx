@@ -16,7 +16,7 @@ import { graphql } from 'gatsby';
 import { flow } from 'lodash';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import {
-  H1, addProps, withDesign, replaceWith, H3, H2, addClasses, Token, asToken,
+  H1, addProps, withDesign, replaceWith, H3, H2, addClasses,
 } from '@bodiless/fclasses';
 import {
   ToutClean, asAccordionBody, asAccodionTitle, asAccordionWrapper,
