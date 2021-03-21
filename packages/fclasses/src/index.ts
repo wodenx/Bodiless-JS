@@ -53,8 +53,9 @@ export * from './StyledHTML';
 
 export { asToken, withTokenFilter } from './Tokens';
 export type {
-  TokenFilterTest, Token, TokenDef, HOC,
-  TokenMeta, ComponentWithMeta, ComponentOrTag,
+  TokenFilterTest, Token, TokenDef,
+  TokenMeta, ComponentWithMeta, ComponentOrTag, TokenProps,
+  HOC,
 } from './Tokens';
 
 export { withShowDesignKeys } from './Context';
