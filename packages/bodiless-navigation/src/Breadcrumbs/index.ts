@@ -51,7 +51,6 @@ export {
 } from './BreadcrumbStoreProvider';
 
 export {
-  withBreadcrumbEditors,
   withEditableFinalTrail,
   withEditableStartingTrail,
 } from './withEditableTrail';

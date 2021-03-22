@@ -13,7 +13,7 @@
  */
 
 import { flow } from 'lodash';
-import { WithNodeKeyProps, withNodeKey, asReadOnly } from '@bodiless/core';
+import { WithNodeKeyProps, withNodeKey } from '@bodiless/core';
 import {
   Token, addProps, withDesign, asToken,
 } from '@bodiless/fclasses';
@@ -58,9 +58,3 @@ export const withEditableFinalTrail = (
     ),
   }),
 );
-
-export const withBreadcrumbEditors = (
-  withTitleEditors: Token = withDefaultMenuTitleEditors,
-) => withDesign({
-  Title: asToken(withTitleEditors, asReadOnly),
-});

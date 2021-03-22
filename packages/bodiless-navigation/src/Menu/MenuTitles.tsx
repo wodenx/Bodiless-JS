@@ -18,7 +18,7 @@ import { withSidecarNodes, withNode, withNodeKey } from '@bodiless/core';
 import { asEditable, asBodilessLink, withBodilessLinkToggle } from '@bodiless/components';
 import { ToutClean } from '@bodiless/organisms';
 import {
-  A, Div, HOC, Token, asToken, Fragment, designable,
+  A, Div, HOC, Token, asToken, Fragment, designable, TokenDef,
   withDesign, startWith, DesignableComponentsProps,
 } from '@bodiless/fclasses';
 
@@ -87,11 +87,12 @@ const withDefaultMenuTitleEditors = withDesign({
  *
  * @param withTitleEditors Token that will be applied to the Title key
  */
-const withMenuTitleEditors = (
+const withMenuTitleEditors = <P extends object>(
   withTitleEditors: HOC | Token = withDefaultMenuTitleEditors,
+  ...tokenDefs: TokenDef<P>[]
 ) => withDesign({
-  Title: withTitleEditors,
-});
+    Title: asToken(withTitleEditors, ...tokenDefs),
+  });
 
 /**
  * Token that transforms component into MenuTitle with node and 'title' nodeKey.

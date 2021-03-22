@@ -12,22 +12,22 @@
  * limitations under the License.
  */
 
+import { asReadOnly } from '@bodiless/core';
 import {
   BreadcrumbsClean,
   asBreadcrumbs,
   withEditableStartingTrail,
   withEditableFinalTrail,
-  withBreadcrumbEditors,
-  withDefaultMenuTitleEditors,
+  withMenuTitleEditors,
 } from '@bodiless/navigation';
 import { asToken } from '@bodiless/fclasses';
 
 import { $withBreadcrumbStyles } from './MenuBreadcrumbs.token';
 
 const $withBreadcrumbEditors = asToken(
-  withBreadcrumbEditors(withDefaultMenuTitleEditors),
-  withEditableStartingTrail(withDefaultMenuTitleEditors, { nodeCollection: 'site' }),
-  withEditableFinalTrail(withDefaultMenuTitleEditors),
+  withMenuTitleEditors(undefined, asReadOnly),
+  withEditableStartingTrail(undefined, { nodeCollection: 'site' }),
+  withEditableFinalTrail(),
 );
 
 const Breadcrumbs = asToken(

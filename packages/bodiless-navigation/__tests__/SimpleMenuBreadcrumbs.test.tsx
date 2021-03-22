@@ -17,18 +17,13 @@ import React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import cheerio from 'cheerio';
-import { withDefaultContent, ifToggledOn } from '@bodiless/core';
-import {
-  replaceWith,
-  withDesign,
-  addProps,
-} from '@bodiless/fclasses';
+import { withDefaultContent, ifToggledOn, asReadOnly } from '@bodiless/core';
+import { replaceWith, withDesign, addProps } from '@bodiless/fclasses';
 import { flow, flowRight } from 'lodash';
 
 import {
   asBodilessMenu, withListSubMenu, withBreadcrumbStartingTrail,
-  BreadcrumbsClean, asBreadcrumbs, withBreadcrumbStore, withBreadcrumbEditors,
-  withDefaultMenuTitleEditors,
+  BreadcrumbsClean, asBreadcrumbs, withBreadcrumbStore, withMenuTitleEditors,
 } from '../src';
 import type { BreadcrumbStoreItemsReducer } from '../src/Breadcrumbs/Breadcrumbs';
 
@@ -36,7 +31,7 @@ const { DefaultContentNode } = require('@bodiless/core');
 
 const Breadcrumbs = flow(
   asBreadcrumbs,
-  withBreadcrumbEditors(withDefaultMenuTitleEditors),
+  withMenuTitleEditors(undefined, asReadOnly),
 )(BreadcrumbsClean);
 
 const setPagePath = (pagePath: string) => {

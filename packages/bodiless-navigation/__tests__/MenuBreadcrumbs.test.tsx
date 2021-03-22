@@ -18,18 +18,17 @@ import { flow, flowRight } from 'lodash';
 import { mount, ReactWrapper } from 'enzyme';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import cheerio from 'cheerio';
-import { withDefaultContent } from '@bodiless/core';
+import { withDefaultContent, asReadOnly } from '@bodiless/core';
 import {
   asBodilessMenu, withListSubMenu, withColumnSubMenu, withToutSubMenu,
-  withBreadcrumbStore, asBreadcrumbs, BreadcrumbsClean, withBreadcrumbEditors,
-  withDefaultMenuTitleEditors,
+  withBreadcrumbStore, asBreadcrumbs, BreadcrumbsClean, withMenuTitleEditors,
 } from '../src';
 
 const { DefaultContentNode } = require('@bodiless/core');
 
 const Breadcrumbs = flow(
   asBreadcrumbs,
-  withBreadcrumbEditors(withDefaultMenuTitleEditors),
+  withMenuTitleEditors(undefined, asReadOnly),
 )(BreadcrumbsClean);
 
 const setPagePath = (pagePath: string) => {

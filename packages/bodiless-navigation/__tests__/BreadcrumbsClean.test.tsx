@@ -14,19 +14,11 @@
 
 import React, { ComponentType } from 'react';
 import { mount } from 'enzyme';
-import {
-  withDesign, addProps, withoutProps,
-} from '@bodiless/fclasses';
+import { asReadOnly } from '@bodiless/core';
+import { withDesign, addProps, withoutProps } from '@bodiless/fclasses';
 import { flowRight } from 'lodash';
-import {
-  BreadcrumbsClean,
-  withBreadcrumbStartingTrail,
-  withoutBreadcrumbFinalTrail,
-} from '../src/Breadcrumbs';
-import {
-  withBreadcrumbEditors,
-  withDefaultMenuTitleEditors,
-} from '../src';
+import { BreadcrumbsClean, withBreadcrumbStartingTrail, withoutBreadcrumbFinalTrail } from '../src/Breadcrumbs';
+import { withMenuTitleEditors } from '../src';
 
 const withAttrRename = (oldAttr: string, newAttr: string) => (Component: ComponentType) => {
   const WithAttrRename = (props: any) => {
@@ -41,7 +33,7 @@ const withAttrRename = (oldAttr: string, newAttr: string) => (Component: Compone
 };
 
 const TestBreadcrumbs = flowRight(
-  withBreadcrumbEditors(withDefaultMenuTitleEditors),
+  withMenuTitleEditors(undefined, asReadOnly),
 )(BreadcrumbsClean);
 
 describe('BreadcrumbsClean', () => {
@@ -51,7 +43,6 @@ describe('BreadcrumbsClean', () => {
   });
   it('allows adding starting trail and design it using design api', () => {
     const Breadcrumb = flowRight(
-      withBreadcrumbEditors(withDefaultMenuTitleEditors),
       withDesign({
         StartingTrail: addProps({
           'aria-label': 'starting-trail',
