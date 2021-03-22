@@ -30,6 +30,19 @@ const withDefaultNodeKeys = (defaultKey: string) => (nodeKeys?: WithNodeKeyProps
 const withDefaultStartingTrailNodeKey = withDefaultNodeKeys('startingTrail');
 const withDefaultFinalTrailNodeKey = withDefaultNodeKeys('finalTrail');
 
+/**
+ * Enables rendering of the starting trail for a Breadcrumb component with a provided Editors.
+ * Uses `withDefaultMenuTitleEditors` by default, pre-configured with a link to the home page.
+ *
+ * @param withTitleEditors
+ * Editors token that will be applied to the Title key of the StartingTrail component.
+ *
+ * @param nodeKeys
+ * Optional nodeKeys of type `WithNodeKeyProps` that will be applied to the StartingTrail.
+ *
+ * @return
+ * Token that adds starting trail with provided Title Editors and nodeKeys.
+ */
 export const withEditableStartingTrail = (
   withTitleEditors: Token = withDefaultMenuTitleEditors,
   nodeKeys?: WithNodeKeyProps,
@@ -45,6 +58,19 @@ export const withEditableStartingTrail = (
   }),
 );
 
+/**
+ * Enables rendering of the final trail for a Breadcrumb component with a provided Editors.
+ * Uses `withDefaultMenuTitleEditors` by default.
+ *
+ * @param withTitleEditors
+ * Editors token that will be applied to the Title key of the FinalTrail component.
+ *
+ * @param nodeKeys
+ * Optional nodeKeys of type `WithNodeKeyProps` that will be applied to the FinalTrail.
+ *
+ * @return
+ * Token that adds final trail with provided Title Editors and nodeKeys.
+ */
 export const withEditableFinalTrail = (
   withTitleEditors: Token = withDefaultMenuTitleEditors,
   nodeKeys?: WithNodeKeyProps,

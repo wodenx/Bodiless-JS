@@ -29,6 +29,11 @@ const BurgerMenuContext = createContext<BurgerMenuContextType>({
   toggle: () => null,
 });
 
+/**
+ * A Hook to get the current Burger Menu `isVisible` and `toggle()` context values.
+ *
+ * @return The current Burger Menu `isVisible` and `toggle()` context values.
+ */
 const useBurgerMenuContext = () => useContext(BurgerMenuContext);
 
 /**

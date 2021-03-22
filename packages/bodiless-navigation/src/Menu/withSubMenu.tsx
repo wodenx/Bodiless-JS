@@ -96,5 +96,4 @@ export {
   withListSubMenu,
   withToutSubMenu,
   withColumnSubMenu,
-  withSubMenuDesign,
 };

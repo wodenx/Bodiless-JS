@@ -61,6 +61,11 @@ const MenuTitleComponents: MenuTitleComponents = {
   Title: Fragment,
 };
 
+/**
+ * Clean component that renders Menu Titles.
+ *
+ * @see MenuTitleComponents for a list of design components.
+ */
 const MenuTitle = designable(MenuTitleComponents, 'MenuTitle')(MenuTitleBase);
 
 const asMenuLink = (asEditableLink: typeof asBodilessLink) => asToken(

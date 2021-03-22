@@ -67,6 +67,14 @@ const asBurgerMenuToggler = <P extends object>(Component: ComponentType<P>) => (
   return <Component {...props} onClick={extendOnClick} />;
 };
 
+/**
+ * Clean Unstyled version of Burger Menu Toggler button.
+ * Has an onClick handler that toggles BurgerMenuContext 'isVisible' prop.
+ *
+ * For this button to work both burger menu and toggler button should be inside BurgerMenuContext.
+ *
+ * @return Burger Menu default toggler component.
+ */
 const BurgerMenuTogglerClean = flow(
   designable(TogglerComponents, 'BurgerMenuToggler'),
   asBurgerMenuToggler,

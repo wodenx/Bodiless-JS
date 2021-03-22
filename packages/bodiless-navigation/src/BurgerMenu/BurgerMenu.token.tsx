@@ -23,59 +23,53 @@ import {
   asElementToken, asDisabled,
 } from '../token';
 
-const withTransformStyles = asToken(
-  addClasses('transform'),
-  asElementToken('Transforms')('Transform'),
-);
-
-const withSlideInTranslateStyles = asToken(
-  addClasses('-translate-x-full'),
-  asElementToken('Transforms')('Translate'),
-);
-
-const withFullScreenStyles = asToken(
-  withFullWidthStyles,
-  withFullHeightStyles,
-  withNoInsetStyles,
-  asFixed,
-  withFullZIndex,
-);
-
-const withSlideInAnimationStyles = asToken(
-  withTransformStyles,
-  withSlideInTranslateStyles,
-  addClassesIf(useIsBurgerMenuHidden)('animate-slide-out'),
-  addClassesIf(useIsBurgerMenuVisible)('animate-slide-in'),
-  asElementToken('Transitions')('Animation'),
-);
-
-const withTogglerButtonStyles = asToken(
-  withMaterialIconsFont,
-  withPointerCursorStyles,
-);
-
-const withBurgerMenuTogglerStyles = withDesign({
-  Button: withTogglerButtonStyles,
-});
-
 const withSlideInOutAnimation = withDesign({
-  Wrapper: withSlideInAnimationStyles,
+  Wrapper: asToken(
+    addClasses('transform -translate-x-full'),
+    addClassesIf(useIsBurgerMenuHidden)('animate-slide-out'),
+    addClassesIf(useIsBurgerMenuVisible)('animate-slide-in'),
+    asElementToken('Transitions')('Animation'),
+  ),
 });
 
 const asFullScreen = withDesign({
-  Wrapper: withFullScreenStyles,
+  Wrapper: asToken(
+    withFullWidthStyles,
+    withFullHeightStyles,
+    withNoInsetStyles,
+    asFixed,
+    withFullZIndex,
+  ),
 });
 
 const withDefaultBackground = withDesign({
   Wrapper: withLightGrayBg,
 });
 
+/**
+ * A Token that adds styles to the Button component of Burger Menu Toggler.
+ * Adds a material-icon class and pointer styles.
+ *
+ * @return Token that adds styles to the Button component.
+ */
+const withBurgerMenuTogglerStyles = withDesign({
+  Button: asToken(
+    withMaterialIconsFont,
+    withPointerCursorStyles,
+  ),
+});
+
+/**
+ * A Token that disables pointer events on the Title element.
+ *
+ * @return Token that disables pointer events on the Title element.
+ */
 const withDisabledTitleLink = withDesign({
   Title: asDisabled,
 });
 
 /**
- * An HOC that adds styles and transitions needed for a slide-in animation for the Burger menu.
+ * A Token that adds styles and transitions needed for a slide-in animation for the Burger menu.
  *
  * @return Token that applies required styles for slide-in animation.
  */

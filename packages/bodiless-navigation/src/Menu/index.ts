@@ -17,14 +17,11 @@ import withMenuDesign from './withMenuDesign';
 import asTopNav from './Menu.token';
 import { useIsMenuOpen } from './withMenuContext';
 import { withListSubMenu, withToutSubMenu, withColumnSubMenu } from './withSubMenu';
-import {
-  asMenuTout, withMenuTitleEditors, withDefaultMenuTitleEditors,
-} from './MenuTitles';
+import { withMenuTitleEditors, withDefaultMenuTitleEditors } from './MenuTitles';
 
 export {
   asBodilessMenu,
   useIsMenuOpen,
-  asMenuTout,
   withListSubMenu,
   withToutSubMenu,
   withColumnSubMenu,
