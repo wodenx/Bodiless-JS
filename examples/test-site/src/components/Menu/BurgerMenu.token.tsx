@@ -15,6 +15,7 @@
 import { withPrependChild } from '@bodiless/core';
 import {
   Div, asToken, replaceWith, startWith, withDesign, addClasses, HOC,
+  withoutProps,
 } from '@bodiless/fclasses';
 import {
   asBurgerMenu, withMenuDesign, BurgerMenuDefaultToggler, asSlideLeft,
@@ -46,6 +47,7 @@ const $withBurgerMenuHeaderStyles = asToken(
   asDefaultLogoStyle,
   withDesign({
     SiteReturn: asToken(
+      withoutProps('design'),
       withPrependChild(BurgerMenuDefaultToggler, 'MenuToggler'),
       asTealBackground,
       withDesign({
