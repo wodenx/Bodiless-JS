@@ -164,22 +164,6 @@ export const BurgerMenuToggler = asToken(
 )(BurgerMenuDefaultToggler);
 ```
 
-You can also use `asBurgerMenuToggler` to transform any component to the burger menu toggler. It extends components `onClick` handler if exists with `toggle()` function that toggles burger menu visibility.
-```js
-import { asToken, addProps, addClasses } from '@bodiless/fclasses';
-import { asBurgerMenuToggler } from '@bodiless/navigation';
-
-// Create an <span> element with 'Toggle Burger Menu' text.
-const TogglerBase = asToken(
-  addProps({ children: 'Toggle Burger Menu'}),
-  addClasses('cursor-pointer underline'),
-)(Span);
-
-// Add onClick that toggles burger menu
-export const DemoToggler = asBurgerMenuToggler(TogglerBase);
-```
-
-
 ### Styling Burger Menu
 As Bodiless Navigation Menu, Burger menu is also built on top of the list API. In most cases, the Burger menu is constructed by wrapping an unstyled navigation menu in the burger menu chrome. It has the following structure:
 ```html
