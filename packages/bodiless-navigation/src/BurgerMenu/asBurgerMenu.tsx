@@ -17,14 +17,14 @@ import isEmpty from 'lodash/isEmpty';
 import { useNode, withDefaultContent } from '@bodiless/core';
 import { asAccordionWrapper, asAccodionTitle, asAccordionBody } from '@bodiless/organisms';
 import {
-  Fragment, withDesign, replaceWith, asToken, addProps, Token, flowIf,
+  Fragment, withDesign, replaceWith, asToken, addProps, Token, flowIf, startWith,
 } from '@bodiless/fclasses';
 import { LinkData } from '@bodiless/components';
 import BurgerMenuClean from './BurgerMenuClean';
 
 import { withDisabledTitleLink } from './BurgerMenu.token';
 import withMenuDesign from '../Menu/withMenuDesign';
-import { DEFAULT_NODE_KEYS } from '../Menu/MenuTitles';
+import MenuTitle, { DEFAULT_NODE_KEYS } from '../Menu/MenuTitles';
 
 /**
  * HOC that adds an overview link to a burger menu sublist.  The overview link
@@ -83,7 +83,7 @@ const withBurgerMenuSchema = asToken(
   withDesign({
     Wrapper: asAccordionBody,
     OuterWrapper: withDesign({
-      Title: asAccodionTitle,
+      Title: asToken(asAccodionTitle, withDisabledTitleLink),
     }),
   }),
   asToken.meta.term('Attribute')('Submenu'),
@@ -113,9 +113,11 @@ const withBurgerMenuWrapper = <P extends object>(Component: ComponentType<P>) =>
  * @return Token that applies default burger menu styles based on provided keys.
  */
 const asBurgerMenu = (...keys: string[]) => asToken(
+  // We need to replace Tout with the MenuTitle in burger menu.
+  keys.includes('Touts')
+    ? withMenuDesign('Touts')(withDesign({ Title: startWith(MenuTitle) }))
+    : {},
   withMenuDesign(keys)(withBurgerMenuSchema),
-  withDisabledTitleLink,
-  // @todo what meta?
 );
 
 export default asBurgerMenu;

@@ -60,12 +60,12 @@ const withBurgerMenuTogglerStyles = withDesign({
 });
 
 /**
- * A Token that disables pointer events on the Title element.
+ * A Token that disables pointer events on the accordion Label element.
  *
- * @return Token that disables pointer events on the Title element.
+ * @return Token that disables pointer events on the accordion Label element.
  */
 const withDisabledTitleLink = withDesign({
-  Title: asDisabled,
+  Label: asDisabled,
 });
 
 /**
