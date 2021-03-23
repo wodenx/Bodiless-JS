@@ -3,6 +3,91 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.70](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.69...v0.0.70) (2021-02-24)
+
+
+### Bug Fixes
+
+* **starter:** Highlighting Link in Tout replaced it with actual href link ([#844](https://github.com/johnsonandjohnson/bodiless-js/issues/844)) ([4f70f1e](https://github.com/johnsonandjohnson/bodiless-js/commit/4f70f1e20f2d7787f1c6340d6704dd59f8eaa22f)), closes [#616](https://github.com/johnsonandjohnson/bodiless-js/issues/616)
+* **test-site:** Add nodekey to limited flow container. ([#890](https://github.com/johnsonandjohnson/bodiless-js/issues/890)) ([1e340ad](https://github.com/johnsonandjohnson/bodiless-js/commit/1e340ad5e1461d76d3273ec87371871c14d8cfa6))
+
+
+### Features
+
+* **layouts:** Enable Nested Flow Containers ([#843](https://github.com/johnsonandjohnson/bodiless-js/issues/843)) ([8fb6418](https://github.com/johnsonandjohnson/bodiless-js/commit/8fb641827f71d5ec736d9406cee4a84f79ed97b6))
+* **search:** Search Component - Type Ahead ([#832](https://github.com/johnsonandjohnson/bodiless-js/issues/832)) ([b2d3373](https://github.com/johnsonandjohnson/bodiless-js/commit/b2d3373bee45df7227bcbb08a930edcd23d46322))
+
+
+
+
+
+## [0.0.69](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.68...v0.0.69) (2021-02-12)
+
+
+### Features
+
+* **core:** Make text editors designable ([#837](https://github.com/johnsonandjohnson/bodiless-js/issues/837)) ([8a507bd](https://github.com/johnsonandjohnson/bodiless-js/commit/8a507bd64ef204a37218ac0ebe80a9f15ef99d91))
+* **fclasses:** Add configurable attribute for design keys ([#822](https://github.com/johnsonandjohnson/bodiless-js/issues/822)) ([546b606](https://github.com/johnsonandjohnson/bodiless-js/commit/546b6065ec3aacb79e3335a5b82168866928e6cc))
+
+
+
+
+
+## [0.0.68](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.67...v0.0.68) (2021-01-25)
+
+
+### Bug Fixes
+
+* **organisms:** Fix Menu item overlap after mouseover ([#785](https://github.com/johnsonandjohnson/bodiless-js/issues/785)) ([cf4445e](https://github.com/johnsonandjohnson/bodiless-js/commit/cf4445ead6bdd80a4034048ec6ea7782ca18cc83))
+* **organisms:** Remove w-content token from Menu and move it to test site ([#818](https://github.com/johnsonandjohnson/bodiless-js/issues/818)) ([3e6847f](https://github.com/johnsonandjohnson/bodiless-js/commit/3e6847f387615846bd0e30be92c99ba647d21ebe))
+
+
+
+
+
+## [0.0.67](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.66...v0.0.67) (2021-01-12)
+
+
+### Features
+
+* **components:** Allow sanitizers for editable text. ([#784](https://github.com/johnsonandjohnson/bodiless-js/issues/784)) ([b9fd92a](https://github.com/johnsonandjohnson/bodiless-js/commit/b9fd92a1fac440165622cf9d0fefe43c6c4d32ec)), closes [#796](https://github.com/johnsonandjohnson/bodiless-js/issues/796)
+* **layout:** fix rtl flow container.  ([#775](https://github.com/johnsonandjohnson/bodiless-js/issues/775)) ([4be9cec](https://github.com/johnsonandjohnson/bodiless-js/commit/4be9ceca7a9d0986cd231d43f5eeabe28b9eea1a))
+
+
+
+
+
+## [0.0.66](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.65...v0.0.66) (2020-12-29)
+
+
+### Features
+
+* **components:** Implement responsive search box ([#766](https://github.com/johnsonandjohnson/bodiless-js/issues/766)) ([e1bac0b](https://github.com/johnsonandjohnson/bodiless-js/commit/e1bac0ba40b57d4c209a68bdf113d23e53742350))
+* **richtext:** paste links into richtext ([#769](https://github.com/johnsonandjohnson/bodiless-js/issues/769)) ([db78b74](https://github.com/johnsonandjohnson/bodiless-js/commit/db78b74426b1185788dc23b867664180bb388f24))
+
+
+
+
+
+## [0.0.65](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.64...v0.0.65) (2020-12-23)
+
+**Note:** Version bump only for package @bodiless/test-site
+
+
+
+
+
+## [0.0.64](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.63...v0.0.64) (2020-12-16)
+
+
+### Bug Fixes
+
+* replace colon in json file names ([#751](https://github.com/johnsonandjohnson/bodiless-js/issues/751)) ([a453af5](https://github.com/johnsonandjohnson/bodiless-js/commit/a453af5e513d955a35e65f6dd222982710eac0fc))
+
+
+
+
+
 ## [0.0.63](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.62...v0.0.63) (2020-12-08)
 
 **Note:** Version bump only for package @bodiless/test-site

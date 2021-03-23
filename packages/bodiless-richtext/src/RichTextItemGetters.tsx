@@ -215,13 +215,16 @@ const getSelectorButton = <P extends object> (Component: RichTextComponent) => (
     },
   }[Component.type];
   const { ClickableWrapper } = useUI();
-  const Button:ComponentType = withToggle({
-    toggle: ({ editor }) => {
-      toggleFuc({ editor, name: Component.id });
-    },
-    isActive: (editor) => has(Component.id, editor),
-    icon: 'none',
-  })(ClickableWrapper);
+  const Button = flow(
+    withToggle({
+      toggle: ({ editor }) => {
+        toggleFuc({ editor, name: Component.id });
+      },
+      isActive: (editor) => has(Component.id, editor),
+      icon: 'none',
+    }),
+    withoutProps(['componentName']),
+  )(ClickableWrapper);
   return <Button><Component {...props}>{ Component.id }</Component></Button>;
 };
 
@@ -253,10 +256,22 @@ const getGlobalButtons = (components: RichTextComponents) => {
   );
 };
 
+const getDeserializers = (
+  components: RichTextComponents,
+) => Object.keys(components).reduce((prev: object, key: string) => {
+  const Component = components[key];
+  return {
+    ...prev,
+    // eslint-disable-next-line no-prototype-builtins
+    ...(Component.hasOwnProperty('htmlDeserializer') ? { [key]: Component.htmlDeserializer } : {}),
+  };
+}, {});
+
 export {
   getPlugins,
   getSelectorButtons,
   getHoverButtons,
   getGlobalButtons,
   getInlineButtons,
+  getDeserializers,
 };

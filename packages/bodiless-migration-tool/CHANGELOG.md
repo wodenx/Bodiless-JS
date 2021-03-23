@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.70](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.69...v0.0.70) (2021-02-24)
+
+**Note:** Version bump only for package @bodiless/migration-tool
+
+
+
+
+
+## [0.0.69](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.68...v0.0.69) (2021-02-12)
+
+
+### Features
+
+* **bodiless-components,bodiless-migration-tool,gatsby-theme-bodiless:** Bodiless Image supports Img Title ([#755](https://github.com/johnsonandjohnson/bodiless-js/issues/755)) ([45ed2aa](https://github.com/johnsonandjohnson/bodiless-js/commit/45ed2aab856af2d12fb251bb795372e42ba864e5))
+
+
+
+
+
+## [0.0.68](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.67...v0.0.68) (2021-01-25)
+
+**Note:** Version bump only for package @bodiless/migration-tool
+
+
+
+
+
+## [0.0.67](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.66...v0.0.67) (2021-01-12)
+
+**Note:** Version bump only for package @bodiless/migration-tool
+
+
+
+
+
+## [0.0.66](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.65...v0.0.66) (2020-12-29)
+
+**Note:** Version bump only for package @bodiless/migration-tool
+
+
+
+
+
+## [0.0.65](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.64...v0.0.65) (2020-12-23)
+
+**Note:** Version bump only for package @bodiless/migration-tool
+
+
+
+
+
+## [0.0.64](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.63...v0.0.64) (2020-12-16)
+
+
+### Bug Fixes
+
+* replace colon in json file names ([#751](https://github.com/johnsonandjohnson/bodiless-js/issues/751)) ([a453af5](https://github.com/johnsonandjohnson/bodiless-js/commit/a453af5e513d955a35e65f6dd222982710eac0fc))
+
+
+
+
+
 ## [0.0.63](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.62...v0.0.63) (2020-12-08)
 
 **Note:** Version bump only for package @bodiless/migration-tool

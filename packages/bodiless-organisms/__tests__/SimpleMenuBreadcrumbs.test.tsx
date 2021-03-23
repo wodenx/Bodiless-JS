@@ -65,10 +65,10 @@ const createBreadcrumbComponent = ({
     withDefaultContent(content),
     withDesign({
       // @ts-ignore
-      BreadcrumbLink: replaceWith(withSidecarNodes(
-        asBodilessLink(),
-      ))('a'),
-      BreadcrumbTitle: replaceWith(
+      BreadcrumbLink: replaceWith(
+        withSidecarNodes(asBodilessLink())('a'),
+      ),
+      BreadcrumbTitle: replaceWith<any>(
         asEditable()(React.Fragment),
       ),
     }),
@@ -283,6 +283,16 @@ describe('asBreadcrumbsClean', () => {
       }),
     )(BaseBreadcrumbs);
     const wrapper = mount(<TestBreadcrumbs />);
+    expect(breadcrumbHtml(wrapper)).toMatchSnapshot();
+  });
+  it('preserves breadcrumbs on rerender', () => {
+    setPagePath('/products/productA');
+    const Breadcrumb = createBreadcrumbComponent({
+      content: generate2LevelMenuContent(),
+    });
+    const wrapper = mount(<Breadcrumb />);
+    // trigger rerender
+    wrapper.setProps({});
     expect(breadcrumbHtml(wrapper)).toMatchSnapshot();
   });
 });

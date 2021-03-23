@@ -3,6 +3,82 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.70](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.69...v0.0.70) (2021-02-24)
+
+
+### Bug Fixes
+
+* **starter:** Highlighting Link in Tout replaced it with actual href link ([#844](https://github.com/johnsonandjohnson/bodiless-js/issues/844)) ([4f70f1e](https://github.com/johnsonandjohnson/bodiless-js/commit/4f70f1e20f2d7787f1c6340d6704dd59f8eaa22f)), closes [#616](https://github.com/johnsonandjohnson/bodiless-js/issues/616)
+
+
+### Features
+
+* **search:** Search Component - Type Ahead ([#832](https://github.com/johnsonandjohnson/bodiless-js/issues/832)) ([b2d3373](https://github.com/johnsonandjohnson/bodiless-js/commit/b2d3373bee45df7227bcbb08a930edcd23d46322))
+
+
+
+
+
+## [0.0.69](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.68...v0.0.69) (2021-02-12)
+
+
+### Features
+
+* **fclasses:** Add configurable attribute for design keys ([#822](https://github.com/johnsonandjohnson/bodiless-js/issues/822)) ([546b606](https://github.com/johnsonandjohnson/bodiless-js/commit/546b6065ec3aacb79e3335a5b82168866928e6cc))
+
+
+
+
+
+## [0.0.68](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.67...v0.0.68) (2021-01-25)
+
+
+### Bug Fixes
+
+* **organisms:** Remove w-content token from Menu and move it to test site ([#818](https://github.com/johnsonandjohnson/bodiless-js/issues/818)) ([3e6847f](https://github.com/johnsonandjohnson/bodiless-js/commit/3e6847f387615846bd0e30be92c99ba647d21ebe))
+
+
+
+
+
+## [0.0.67](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.66...v0.0.67) (2021-01-12)
+
+
+### Features
+
+* **components:** Allow sanitizers for editable text. ([#784](https://github.com/johnsonandjohnson/bodiless-js/issues/784)) ([b9fd92a](https://github.com/johnsonandjohnson/bodiless-js/commit/b9fd92a1fac440165622cf9d0fefe43c6c4d32ec)), closes [#796](https://github.com/johnsonandjohnson/bodiless-js/issues/796)
+
+
+
+
+
+## [0.0.66](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.65...v0.0.66) (2020-12-29)
+
+
+### Features
+
+* **components:** Implement responsive search box ([#766](https://github.com/johnsonandjohnson/bodiless-js/issues/766)) ([e1bac0b](https://github.com/johnsonandjohnson/bodiless-js/commit/e1bac0ba40b57d4c209a68bdf113d23e53742350))
+
+
+
+
+
+## [0.0.65](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.64...v0.0.65) (2020-12-23)
+
+**Note:** Version bump only for package @bodiless/gatsby-starter-bodiless
+
+
+
+
+
+## [0.0.64](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.63...v0.0.64) (2020-12-16)
+
+**Note:** Version bump only for package @bodiless/gatsby-starter-bodiless
+
+
+
+
+
 ## [0.0.63](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.62...v0.0.63) (2020-12-08)
 
 **Note:** Version bump only for package @bodiless/gatsby-starter-bodiless

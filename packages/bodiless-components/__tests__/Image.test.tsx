@@ -24,7 +24,7 @@ const setEditMode = (isEdit: boolean) => {
 setEditMode(true);
 
 // eslint-disable-next-line import/first
-import Image from '../src/Image';
+import { Image } from '../src/Image';
 
 let wrapper: ReactWrapper;
 let menuButton: ReactWrapper;
@@ -76,7 +76,11 @@ describe('image interactions', () => {
 
     const imageAlt = menuForm.find('input#image-alt');
     expect(imageAlt).toHaveLength(1);
-    expect(imageAlt.prop('value')).toBe('Alt Text');
+    expect(imageAlt.prop('value')).toBe('');
+
+    const imageTitle = menuForm.find('input#image-title');
+    expect(imageTitle).toHaveLength(1);
+    expect(imageTitle.prop('value')).toBe('');
 
     const cancelButton = menuForm.find('button[aria-label="Cancel"]');
     expect(cancelButton).not.toBeUndefined();

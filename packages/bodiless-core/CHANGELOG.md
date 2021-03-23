@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.70](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.69...v0.0.70) (2021-02-24)
+
+
+### Features
+
+* **bodiless-core-ui:** activate context for group in Local context menu ([#861](https://github.com/johnsonandjohnson/bodiless-js/issues/861)) ([2581ada](https://github.com/johnsonandjohnson/bodiless-js/commit/2581adae82a986670a56e83178f93f5cfd3fe2a2))
+
+
+
+
+
+## [0.0.69](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.68...v0.0.69) (2021-02-12)
+
+
+### Features
+
+* **components:** add a go to link for bodiless links in edit mode. ([#823](https://github.com/johnsonandjohnson/bodiless-js/issues/823)) ([dd85931](https://github.com/johnsonandjohnson/bodiless-js/commit/dd85931f7d118cc9849b58bdcb80a27c612ea64e)), closes [#585](https://github.com/johnsonandjohnson/bodiless-js/issues/585)
+* **core:** Make text editors designable ([#837](https://github.com/johnsonandjohnson/bodiless-js/issues/837)) ([8a507bd](https://github.com/johnsonandjohnson/bodiless-js/commit/8a507bd64ef204a37218ac0ebe80a9f15ef99d91))
+
+
+
+
+
+## [0.0.68](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.67...v0.0.68) (2021-01-25)
+
+**Note:** Version bump only for package @bodiless/core
+
+
+
+
+
+## [0.0.67](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.66...v0.0.67) (2021-01-12)
+
+**Note:** Version bump only for package @bodiless/core
+
+
+
+
+
+## [0.0.66](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.65...v0.0.66) (2020-12-29)
+
+**Note:** Version bump only for package @bodiless/core
+
+
+
+
+
+## [0.0.65](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.64...v0.0.65) (2020-12-23)
+
+**Note:** Version bump only for package @bodiless/core
+
+
+
+
+
+## [0.0.64](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.63...v0.0.64) (2020-12-16)
+
+
+### Features
+
+* Modify new page creation ([#673](https://github.com/johnsonandjohnson/bodiless-js/issues/673)) ([7af4642](https://github.com/johnsonandjohnson/bodiless-js/commit/7af46424eee422b4c4d6b3a55f25d0c80eac4d61))
+
+
+
+
+
 ## [0.0.63](https://github.com/johnsonandjohnson/bodiless-js/compare/v0.0.62...v0.0.63) (2020-12-08)
 
 **Note:** Version bump only for package @bodiless/core

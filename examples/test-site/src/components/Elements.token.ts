@@ -18,7 +18,6 @@ import {
   asBodilessLink,
   asEditable as asEditableCore,
 } from '@bodiless/components';
-import { asBodilessImage } from '@bodiless/components-ui';
 import {
   asResponsive21By9Embed,
   asResponsive16By9Embed,
@@ -32,6 +31,7 @@ import {
   asUnderline,
   asAlignJustify,
 } from './ElementDefault.token';
+import { WithNodeKeyProps } from '../../../../packages/bodiless-organisms/node_modules/@bodiless/core/lib';
 
 /* Page Structure */
 const asBlockItem = addClasses('p-1 w-full');
@@ -78,14 +78,23 @@ const asBlockQuote = addClasses('block mx-4');
 
 /* Image component */
 const asImage = addClasses('');
-const asEditableImage = asBodilessImage;
 const asImageRounded = addClasses('rounded-lg');
 
 /* Link component */
 const asEditableLink = asBodilessLink;
 
 /* Edit component */
-const asEditable = asEditableCore;
+const asEditable = (nodeKeys?: WithNodeKeyProps, placeholder?: string) => asEditableCore(
+  nodeKeys,
+  placeholder,
+  // Overrides to add auto-superscript.
+  () => ({
+    sanitizer: (html: string) => html
+      .split('')
+      .map(c => ('©'.includes(c) ? `<sup>${c}</sup>` : c))
+      .join(''),
+  }),
+);
 
 // Tout Components
 const asCta = addClasses('bg-orange-700 hover:bg-orange-600 text-center text-white p-2 rounded');
@@ -116,7 +125,6 @@ export {
   asLightTealBackground,
   asLightTealBackgroundOnHover,
   asImage,
-  asEditableImage,
   asEditableLink,
   asEditable,
   asImageRounded,
