@@ -14,29 +14,25 @@
 
 import { flow } from 'lodash';
 import {
-  withContextActivator,
-  withDefaultContent,
-  withMenuOptions,
-  withResetButton,
-  withSidecarNodes,
+  withContextActivator, withDefaultContent, withMenuOptions,
+  withResetButton, withSidecarNodes,
 } from '@bodiless/core';
-import {
-  ToutClean,
-  asTestableTout,
-} from '@bodiless/organisms';
-import { withDesign } from '@bodiless/fclasses';
+import { ToutClean, asTestableTout } from '@bodiless/organisms';
+import { withDesign, startWith } from '@bodiless/fclasses';
+import { GatsbyLink } from '@bodiless/gatsby-theme-bodiless';
+
 import { asEditableLink, asEditable } from '../Elements.token';
 import { asEditableImage } from '../Image';
-import {
-  withEditorBasic,
-  withEditorSimple,
-} from '../Editors';
+import { withEditorBasic, withEditorSimple } from '../Editors';
 
 export const withToutEditors = flow(
   withDesign({
     Image: asEditableImage('image'),
-    ImageLink: withSidecarNodes(
-      asEditableLink('link'),
+    ImageLink: flow(
+      withSidecarNodes(
+        asEditableLink('link'),
+      ),
+      startWith(GatsbyLink),
     ),
     Title: withEditorSimple('title', 'Tout Title Text'),
     Link: flow(
@@ -44,6 +40,7 @@ export const withToutEditors = flow(
       withSidecarNodes(
         asEditableLink('link', undefined, () => ({ groupLabel: 'CTA' })),
       ),
+      startWith(GatsbyLink),
     ),
     Body: withEditorBasic('body', 'Tout Body Text'),
   }),
@@ -52,8 +49,11 @@ export const withToutEditors = flow(
 export const withMenuToutEditors = flow(
   withDesign({
     Image: asEditableImage('image'),
-    ImageLink: withSidecarNodes(
-      asEditableLink('link'),
+    ImageLink: flow(
+      withSidecarNodes(
+        asEditableLink('link'),
+      ),
+      startWith(GatsbyLink),
     ),
     Title: asEditable('text', 'Tout Title'),
     Link: flow(
@@ -61,6 +61,7 @@ export const withMenuToutEditors = flow(
       withSidecarNodes(
         asEditableLink('link', undefined, () => ({ groupLabel: 'CTA' })),
       ),
+      startWith(GatsbyLink),
     ),
     Body: withEditorBasic('body', 'Tout Body'),
   }),

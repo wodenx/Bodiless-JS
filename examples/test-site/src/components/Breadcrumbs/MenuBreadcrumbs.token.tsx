@@ -37,6 +37,7 @@ import {
   Span,
   Fragment,
 } from '@bodiless/fclasses';
+import { GatsbyLink } from '@bodiless/gatsby-theme-bodiless';
 
 import {
   asBold,
@@ -63,7 +64,7 @@ const withStartingTrailIcon = (
         addProps({ href: '/' }),
         withNode,
         withNodeKey(nodeKeys),
-      )(A),
+      )(GatsbyLink),
     ),
   }),
 );
