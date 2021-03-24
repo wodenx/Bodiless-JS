@@ -72,9 +72,7 @@ export const asEditorToken = (...attributes: string[]) => (...defs: TokenDef<any
 
 )
 
-export const asBold = asTypographyToken('Font Weight')(
-  withComponent(Strong)
-);
+export const asBold = asTypographyToken('Font Weight')();
 export const asItalic = asTypographyToken('Font Style')();
 export const asUnderline = asTypographyToken('Text Decoration')(
   addClasses('underline')
@@ -112,20 +110,23 @@ To attach metadata to a token, you simplly provide an object as one of the
 arguments to `asToken`.  This should have a `categories` key, which is itself
 consists of any number of facets, each of which is an array of terms.
 
-Note that it's up to you how you want to classify your tokens -- Bodiless
+It's up to you how you want to classify your tokens -- Bodiless
 allows arbitrary "categories".  Here we specify 3 categories for each token:
 - `Component`: The name of the component to which the token can be applied. We use
   `Element` to indicate that these tokens apply to any HTML element.
 - `Category`: An arbitrary classification for the token.  For element tokens
   we simply use the classification system set forth by Tailwind.
 
-Note also that in addition to styling tokens, we create a "behavioral" token
-`withLinkEditor`. This is an example of how Bodiless extends the notion of
+Note that we have created "empty" tokens for `asBold` and `asItalic`. As we'll see,
+creating these empty tokens will facilitate making site-wide changes to styling.
+
+Note also that in addition to styling tokens, we have created a "behavioral"
+token `withLinkEditor`. This is an example of how Bodiless extends the notion of
 design tokens beyond the purely visual sphere. *Any bit of reusable styling or
 behavior which can be applied to a component is considered a "Token" in
 Bodiless* Here, `withLinkEditor` is just a pass-through to
 [`asBodilessLink`](../../../Components/Link) -- but we could customize it here
-(eg to provide a different href normalizer).  Also, defining it at site level
+(eg to provide a different href normalizer). Also, defining it at site level
 allows us to attach metadata to it.
 
 Now let's move another "behavioral" token to the site level. 
@@ -197,6 +198,7 @@ fixed on each page.
     export const withPrimaryHeaderStyles = asTypographyToken('Header')(
       startWith(H1),
       addClasses('text-3xl'),
+      asBold,
     );
     export const withPrimaryHeaderEditor = asEditorToken('Text Editor')(
       asEditable('title', 'Page Title');
@@ -224,9 +226,11 @@ fixed on each page.
    (http://localhost:8000/gallery) and it should run exactly as it did before,
    except the gallery title is not bold.
 
-1. In `src/componets/Elements.token.ts` add a tailwind to class to `asBold`. 
+1. In `src/componets/Element/token.ts` add a tailwind to class to `asBold`. 
     ```
-    const asBold = addClasses('font-bold');
+    const asBold = asTypographyToken('font-weight')(
+      addClasses('font-bold'),
+    );
     ```
 1. Visit the homepage & gallery page (http://localhost:8000/gallery) and both
    `h1` titles should be bold.
@@ -239,7 +243,12 @@ a corresponding HOC. This will:
 * make them easy to extend or modify.
 * allow them to be published as a package to be shared among sites with similar designs.
 
-> **TIP**: By convention all Element Token HOC's start with `as`.
+> Note on naming conventions: In general, we being HOC's with `as...` or
+> `with...`, but it's sometimes hard to know when to use each. One rule of thumb
+> we've found helpful is to use `with...` when your token is adding somethign
+> (`withLinkStyles`, `withLinkEditors `), and `as...` when it is defining a
+> complete, composed variation of a component (`asLink`) -- though we sometimes
+> also use `as...` for primitive tokens which toggle state (`asBold`, `asItalic`).
 
 ### Changing or customizing an element token
 
@@ -247,11 +256,15 @@ Let's imagine that the design system for your site was updated, to decrease the
 font-weight for "bold" text. If the `asBold()` token HOC is used consistently
 across your site, then implementing this change is as easy as replacing:
 
-    const asBold = addClasses('font-bold');
+    const asBold = asTypographyToken('font-weight')(
+      addClasses('font-bold'),
+    );
 
 with
 
-    const asBold = addClasses('font-semibold');
+    const asBold = asTypographyToken('font-weight')(
+      addClasses('font-semibold'),
+    );
 
 
 Similarly - let's say you are extending or customizing a design system from
@@ -260,11 +273,27 @@ system are exported from a package, then in your own `Elements.token.tsx` you
 can simply:
 
     import { asBold as asBoldBase } from 'some-design-system';
-    export asBold = flow(
+    export asBold = asTypographyToken('font-weight')(
       asBoldBase,
       addClasses('font-semibold'),
       removeClasses('font-bold')
     );
+
+Of course, this is a bit of a contrived example, since the token only adds a
+single class, but imagine that the base design system dictated that all bolded
+text had a particualr color, eg:
+
+    const asBold = asTypographyToken('Font Weight', 'Text Color')(
+      addClasses('font-bold text-blue'),
+    );
+
+you could then extend it to change the font weight but retain the color
+as defined in the parent design system.
+
+> NOTE: Using `removeClasses` as described above is no longer recommended.
+> Instead, we recommend assigning consistent metadata and using token filtering
+> to replace selected tokens.
+> [Read More](../../Architecture/FClasses#metadata-and-filters).
 
 ### The FClasses API
 
@@ -286,7 +315,7 @@ to make it more flexible and reusable.
 
 1. Within `CaptionedImage.tsx`, the first step is to define all the individual
    sub-components of our `CaptionedImage` and ensure that they are *stylable*
-   via the [FClasses API](../Architecture/FClasses). 
+   via the [FClasses API](../Architecture/FClasses#). 
 
    * First, we define the expected type of each individual component. Here we
      require that each be stylable via FClasses (i.e., accept `StylableProps`).
