@@ -22,17 +22,30 @@ module.exports = {
     './lib/**/!(*.d).{ts,js,jsx,tsx}',
   ],
   theme: {
-    aspectRatio: { // defaults to {}
-      none: 0,
-      square: [1, 1],
-      '16/9': [16, 9],
-      '4/3': [4, 3],
-      '21/9': [21, 9],
+    extend: {
+      minWidth: {
+        full: '100%',
+      },
+      zIndex: {
+        full: '999',
+      },
+      keyframes: {
+        'slide-in': {
+          '100%': { transform: 'translateX(0%)' },
+        },
+        'slide-out': {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+      },
+      animation: {
+        'slide-in': 'slide-in .5s forwards',
+        'slide-out': 'slide-out .5s forwards',
+      },
     },
   },
-  variants: {},
-  plugins: [
-    // eslint-disable-next-line
-    require('tailwindcss-aspect-ratio'),
-  ],
+  variants: {
+    overflow: ['responsive', 'hover', 'focus'],
+    position: ['responsive', 'hover', 'focus'],
+  },
 };

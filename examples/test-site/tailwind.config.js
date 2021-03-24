@@ -412,26 +412,6 @@ module.exports = mergeWithBodilessConfigs({
       outline: {
         black: 'black auto 1px',
       },
-      /**
-       * @TODO This should be moved to @bodiless/navigation
-       * ===========================================
-       */
-      zIndex: {
-        full: '999',
-      },
-      keyframes: {
-        'slide-in': {
-          '100%': { transform: 'translateX(0%)' },
-        },
-        'slide-out': {
-          '0%': { transform: 'translateX(0%)' },
-          '100%': { transform: 'translateX(-100%)' },
-        },
-      },
-      animation: {
-        'slide-in': 'slide-in .5s forwards',
-        'slide-out': 'slide-out .5s forwards',
-      },
     },
 
     /*
@@ -657,10 +637,7 @@ module.exports = mergeWithBodilessConfigs({
   |
   */
 
-  variants: {
-    overflow: ['responsive', 'hover', 'focus'],
-    position: ['responsive', 'hover', 'focus'],
-  },
+  variants: {},
 
   corePlugins: {},
 

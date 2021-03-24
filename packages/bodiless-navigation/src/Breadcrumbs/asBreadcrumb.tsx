@@ -26,6 +26,9 @@ import { useBreadcrumbStore, asHiddenBreadcrumbSource } from './BreadcrumbStoreP
 
 const breadcrumbContext = createContext<BreadcrumbItemType | undefined>(undefined);
 
+/**
+ * A Hook to get the current Breadcrumb Item context values.
+ */
 export const useBreadcrumbContext = () => useContext(breadcrumbContext);
 export const BreadcrumbContextProvider = breadcrumbContext.Provider;
 
