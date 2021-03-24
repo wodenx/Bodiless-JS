@@ -336,24 +336,25 @@ First, create your configured editor. Create a `withSimpleEditor.tsx` file
 alongside your `index.tsx` file in the gallery page folder with the following
 contents:
 
-```
+```ts
 import { flow } from 'lodash';
 import { RichText } from '@bodiless/richtext-ui';
 import {
   Strong,
   addClasses,
   withDesign,
+  asToken,
 } from '@bodiless/fclasses';
 import {
   withComponent,
 } from '@bodiless/richtext';
-import { asBodilessLink } from '@bodiless/components';
-import withEditor from '../../../components/Editors/withEditor';
+import { asBodilessLink, withPlaceholder } from '@bodiless/components';
+import { withChild, withNodeKey } from '@bodiless/core';
 
 const asBold = withComponent(Strong);
 const asItalic = addClasses('');
 const asUnderline = addClasses('underline');
-const asLink = flow(asBodilessLink(), addClasses('text-blue-700 underline'));
+const asLink = asToken(asBodilessLink(), addClasses('text-blue-700 underline'));
 
 const simpleDesign = {
   Bold: asBold,
@@ -362,8 +363,19 @@ const simpleDesign = {
   Link: asLink,
 };
 
-const SimpleEditor = withDesign(simpleDesign)(RichText);
-export default withEditor(SimpleEditor);
+const withSimpleEditor = (nodeKey?: string, placeholder?: string) => flow(
+  addClasses('overflow-hidden'),
+  withChild(
+    flow(
+      withDesign(simpleDesign),
+      withPlaceholder(placeholder),
+      withNodeKey(nodeKey),
+    )(RichText),
+    'Editor',
+  ),
+);
+
+export default withSimpleEditor;
 ```
 
 Now
@@ -407,7 +419,7 @@ Next, we defined how the user would interact with these options (what each would
 be named, how it could be applied, what icon (if any) would represent it, etc).
 BodilessJS provides some defaults for common use cases, and we used them here:
 
-```
+```ts
 const simpleDesign = {
   Bold: asBold,
   Italic: asItalic,
@@ -421,8 +433,17 @@ to the component to which it was applied (just as `asEditable()` added an editor
 for unformatted text):
 
 ```
-const SimpleEditor = withDesign(simpleDesign)(RichText);
-export default withEditor(SimpleEditor);
+const withSimpleEditor = (nodeKey?: string, placeholder?: string) => flow(
+  addClasses('overflow-hidden'),
+  withChild(
+    flow(
+      withDesign(simpleDesign),
+      withPlaceholder(placeholder),
+      withNodeKey(nodeKey),
+    )(RichText),
+    'Editor',
+  ),
+);
 ```
 
 The BodilessJS `RichText` component is highly configurable, and supports far

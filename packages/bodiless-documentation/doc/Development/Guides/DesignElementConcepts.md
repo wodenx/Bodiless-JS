@@ -23,36 +23,148 @@ to apply the same design system to multiple sites, extending it as needed.
   [Bodiless Design System](../../Design/DesignSystem). Even if you don't
   follow everything, it will give essential insight into the "why" of
   what you will do in this tutorial.
+* Acquire a basic understanding of utiltiy first CSS (aka "Atomic" or "Functional" CSS)
+  and the [Tailwind](https://tailwindcss.com/) library.  There are many excellent
+  articles on the web on this topic.  While you can use the Bodiless design system
+  with other css-in-js paradigms, this is the one we recommend.
 
-## 1. Convert the Gallery to use Site's Simple Editor
+## 1. Make the editor and typography reusable
 
-In this step we are going to refactor the gallery page to use a rich text editor
-that is defined at site level, rather than a custom editor defined at page
-level. In general, the types of editors available on a site should be
+In this step we are going to move the editor and typograpy tokens definitions
+from page level to site level.  In general, the types of editors available on a site should be
 standardized to provide a consistent user experience. There is rarely a need for
-custom editors on individual pages. The Bodiless Starter provides a [set of
-three predefined
-editors](https://github.com/johnsonandjohnson/Bodiless-JS/blob/master/examples/starter/src/components/Editors/index.tsx).
-These can (and should) be customized to suit the needs of your site, but here we
-use one as-is.
+custom editors on individual pages.  Similarly, a sites typography should also be
+consistent.
 
-1. Replace `import withSimpleEditor from './withSimpleEditor';` 
-   with `import { withEditorBasic } from '../../../components/Editors';`
-1. Replace `const Body = withSimpleEditor('body', 'Body')(Fragment);`
-   with `const Body = withEditorBasic('body', 'Body')(Fragment);`
+If it does not exist already, create a `/src/components/Elements` directory
+at the root of your project.  In this, create a `tokens.ts` file, and ddd
+the follwing lines there:
+
+```ts
+import {
+  Strong,
+  addClasses,
+  asToken,
+} from '@bodiless/fclasses';
+import type {
+  WithNodeKeyProps,
+} from '@bodiless/core';
+import {
+  asBodilessLink,
+} from '@bodiless/components';
+
+export const asTypographyToken = (...attributes: string[]) => (...defs: TokenDef<any>[]) => asToken(
+  ...defs,
+  categories: {
+    Component: ]'Element'],
+    Category: ['Typography'],
+    Attribute: attributes,
+  },
+);
+
+export const asEditorToken = (...attributes: string[]) => (...defs: TokenDef<any>) => asToken(
+  ...defs,
+  categories: {
+    Component: ]'Element'],
+    Category: ['Editors'],
+    Attribute: attributes,
+  },
+
+)
+
+export const asBold = asTypographyToken('Font Weight')(
+  withComponent(Strong)
+);
+export const asItalic = asTypographyToken('Font Style')();
+export const asUnderline = asTypographyToken('Text Decoration')(
+  addClasses('underline')
+);
+export const withLinkStyles = asTypographyToken('Text Decoration', 'Text Color')(
+  addClasses('text-blue-700 underline'));
+);
+export const withLinkEditors = (nodeKeys?: WithNodeKeyProps) => asEditorToken('Link Editor')(
+  asBodilessLink(nodeKeys),
+);
+```
+
+Remove the corresponding typography tokens (`asBold`, etc) from
+`/src/data/pages/gallery/withSimpleEditor.tsx`.
+
+> NOTE: If you're not familiar with the idea of design tokens and how
+> they are implemented in Bodiless, please read the [introduction to
+> the Bodiless Design System](../../../Design/DesignSystem).
+
+The first thing to note in the code above is the use of `asToken`. This is a
+composition utility provided by the Bodiless
+[FClasses](../../Architecture/FClasses) package. It is similar to the `flow`
+utility from Lodash: it accepts a list of higher order components and returns a
+new higher order component which composes them. However, `asToken` adds some
+additional functionality. In this example, we use it to specify
+*metadata* which should attached to the resulting token.
+
+This metadata is useful for several reasons:
+- It encourages us to think of tokens in a structured way
+- It provides a basis for browsing and editing tokens using the Bodiless token
+  browser (experimental).
+- It allows *fitering* of tokens (we'll get to this in a later tutorial).
+
+To attach metadata to a token, you simplly provide an object as one of the
+arguments to `asToken`.  This should have a `categories` key, which is itself
+consists of any number of facets, each of which is an array of terms.
+
+Note that it's up to you how you want to classify your tokens -- Bodiless
+allows arbitrary "categories".  Here we specify 3 categories for each token:
+- `Component`: The name of the component to which the token can be applied. We use
+  `Element` to indicate that these tokens apply to any HTML element.
+- `Category`: An arbitrary classification for the token.  For element tokens
+  we simply use the classification system set forth by Tailwind.
+
+Note also that in addition to styling tokens, we create a "behavioral" token
+`withLinkEditor`. This is an example of how Bodiless extends the notion of
+design tokens beyond the purely visual sphere. *Any bit of reusable styling or
+behavior which can be applied to a component is considered a "Token" in
+Bodiless* Here, `withLinkEditor` is just a pass-through to
+[`asBodilessLink`](../../../Components/Link) -- but we could customize it here
+(eg to provide a different href normalizer).  Also, defining it at site level
+allows us to attach metadata to it.
+
+Now let's move another "behavioral" token to the site level. 
+- Move `withSimpleEditor` from `/src/data/pages/gallery` to `/src/components/Element`.
+- Remove the typography tokens (`asBold`, etc). and instead import them from `./tokens`.
+- Replace `asLink` with a composition of the link styles and the link editor:
+  ```
+  const asLink = asToken(withLinkStyles, withLinkEditor);
+  ```
+- Finally, add some metadata to the `withSimpleEditorToken`:
+
+```ts
+const withSimpleEditor = (nodeKey?: string, placeholder?: string) => asEditorToken('Text Editor')(
+  addClasses('overflow-hidden'),
+  withChild(
+    flow(
+      withDesign(simpleDesign),
+      withPlaceholder(placeholder),
+      withNodeKey(nodeKey),
+    )(RichText),
+    'Editor',
+  ),
+);
+```
+
+Now let's use these site-level tokens on our gallery page:
+1. Create an `index.ts` file in `/src/components/Editors` with the following contents:
+   ```ts
+   import withSimpleEditor from './withSimpleEditor`;
+   export * from './tokens';
+   export { withSimpleEditor }
+   ```
+1. In `/src/data/pages/gallery`, replace
+   `import withSimpleEditor from './withSimpleEditor';` with
+   `import { withSimpleEditor } from '../../../components/Element';`
 1. Repeat above steps in `CaptionedImage.tsx`
 1. Delete the file `withSimpleEditor.tsx`
 1. Run your site and visit the gallery page (http://localhost:8000/gallery) and
-   it should run exactly as it did before, with slightly different choices for
-   the Rich Text Editor in the body of the gallery page.
-
-Note: that our rich text editor is exported as a *higher order component*
-(`withEditorBasic`) rather than as a regular component. We will see this
- pattern below in applying *design tokens*. And in fact, our editor HOC
-is very like a design token. It expresses a standardized bit of functionality
-which can be applied uniformly across the site--only in this case, instead
-of representing visual design, it represents behavior. We could think of
-`withEditorBasic()` as a sort of "behavior token".
+   it should run exactly as it did before.
 
 ## 2. Make the Gallery reusable.
 
@@ -80,18 +192,18 @@ design system using a shared set of tokens. This way if we change the style of
 the primary header, it will apply throughout the site instead of having to be
 fixed on each page.
 
-1. In `src/components/Elements.token.ts` let's define some new primary header tokens:
-    ```
-    const asPrimaryHeader = flow(
+1. In `src/components/Elements/token.ts` let's define some new primary header tokens:
+    ```ts
+    export const withPrimaryHeaderStyles = asTypographyToken('Header')(
       startWith(H1),
-      asHeader1,
-      asBold,
+      addClasses('text-3xl'),
     );
-    const asEditablePrimaryHeader = asEditable('title', 'Page Title');
-    ````
+    export const withPrimaryHeaderEditor = asEditorToken('Text Editor')(
+      asEditable('title', 'Page Title');
+    ```
     The first of these defines the styles that should be applied to an `h1` when
     used as a page title, and is a standard design token. The second defines
-    the kind of editor which should be used for page titles, and is an example
+    the kind of editor which should be used for page titles, and is another example
     of what we call "behavioral" tokens -- tokens which express behavior or
     functionality rather than visual design.  We export these separately to
     facilitate placing *non-editable* page titles on pages where that may
@@ -101,10 +213,10 @@ fixed on each page.
 
 1. Import these tokens on both gallery page `index.jsx` & homepage `index.jsx`
    and replace the current `PrimaryHeader` definitions and references:
-   ```
+   ```ts
    cosnt PrimaryHeader = flow(
-     asPrimaryHeader,
-     asEditablePrimaryHeader,
+     withPrimaryHeaderStyles,
+     withPrimaryHeaderEditor,
    )();
    ```
 
