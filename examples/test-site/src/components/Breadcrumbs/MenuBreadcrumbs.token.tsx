@@ -33,7 +33,6 @@ import {
   addProps,
   withDesign,
   replaceWith,
-  A,
   Span,
   Fragment,
 } from '@bodiless/fclasses';
