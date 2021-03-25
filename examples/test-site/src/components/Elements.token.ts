@@ -14,7 +14,9 @@
 
 import { flow } from 'lodash';
 import { WithNodeKeyProps } from '@bodiless/core';
-import { addClasses, removeClasses } from '@bodiless/fclasses';
+import {
+  addClasses, removeClasses, asToken, Token,
+} from '@bodiless/fclasses';
 import {
   asBodilessLink,
   asEditable as asEditableCore,
@@ -32,6 +34,13 @@ import {
   asUnderline,
   asAlignJustify,
 } from './ElementDefault.token';
+
+export const withCategory = <P extends object>(category?: string) => (...hocs: Token[]) => (
+  asToken(
+    ...hocs,
+    category ? asToken.meta.term('Category')(category) : undefined,
+  )
+);
 
 /* Page Structure */
 const asBlockItem = addClasses('p-1 w-full');

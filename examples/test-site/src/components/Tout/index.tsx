@@ -18,7 +18,7 @@ import {
   withResetButton, withSidecarNodes,
 } from '@bodiless/core';
 import { ToutClean, asTestableTout } from '@bodiless/organisms';
-import { withDesign, startWith } from '@bodiless/fclasses';
+import { withDesign, startWith, Token } from '@bodiless/fclasses';
 import { GatsbyLink } from '@bodiless/gatsby-theme-bodiless';
 
 import { asEditableLink, asEditable } from '../Elements.token';
@@ -93,7 +93,7 @@ export const withToutResetButtons = withDesign({
 export const asEditableTout = flow(
   withToutEditors,
   asTestableTout,
-);
+) as Token;
 
 export const asContentfulTout = (content: object) => flow(
   withToutEditors,
