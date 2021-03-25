@@ -210,38 +210,29 @@ BodilessJS has built-in support for editable images and links, so let's add an
 image link to our page.
 
 Change the imports from `@bodiless/components` and `@bodiless/fclasses`;
-```
+
+```ts
 import { H1, Img, A, addClasses } from '@bodiless/fclasses';
 import { asEditable, asBodilessLink } from '@bodiless/components';
 import { asBodilessImage } from '@bodiless/components-ui';
 ```
 
 Now define your editable `Image` and `Link` components:
-```
+
+```ts
 const Link = asBodilessLink('hero-link')(A);
 const Image = asBodilessImage('hero-image')(Img);
-
 ```
 
 And add the following above the `<PrimaryHeader>` tag:
+
 ```
 {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
 <Link><Image /></Link>
 ```
-*Note - the jsx-a11y linting rule is disable because the Link component provides
-its own `href` attribute from the content.*
 
-Example test site also offers image components with default placeholders that
-make this easier and there is one for landscape placeholder. So an alternative
-that can be used and does the same as above (with the exception of nodekeys will
-be 'link' & 'image' instead of 'hero-link' & 'hero-image'):
-```
-import { LandscapeLinkableImage } from '../../../components/Image';
-```
-And add the following above the `<PrimaryHeader>` tag:
-```
-<LandscapeLinkableImage />
-```
+> Note - the jsx-a11y linting rule is disable because the Link component provides
+> its own `href` attribute from the content.*
 
 Reload your page and click on the image placeholder. Image and link edit buttons
 will appear; you can use them to upload and image and set the `href` of the
@@ -253,6 +244,7 @@ data you entered for the link, the second the data you entered for the image. As
 with the simple editable, the names of these files are defined by the 'nodeKey'
 passed as an argument to `asBodilessLink` and `asBodilessImage`. This could also
 have been supplied in JSX:
+
 ```
 <Link nodeKey="hero-link">
   <Image nodeKey="hero-image" />
@@ -272,29 +264,10 @@ current page. All the `json` files are saved in the page's directory:
 what about content which should appear on multiple pages - or on every page?
 BodilessJS uses "node collections" to manage such content.
 
-To make the copyright notice (which appears in the footer of every page) editable:
+Let's convert this page to a template, and add an editable copyright notice which
+will be the same on every page.
 
-Open `src/components/Layout/footerBasic.tsx` and add the `Editable` import:
-
-```
-import { Editable } from '@bodiless/components';
-```
-
-Now replace the contents of the
-```
-<p>
-  &copy; Copyright 2019-20 Johnson &amp; Johnson
-</p>
-```
-with
-```
-<Editable nodeKey="copyright" nodeCollection="site" placeholder="Copyright Notice" />
-```
-
-!> **Important** Starter kit comes with two Footers: `footerBasic.tsx` is simple
-non-editable for tutorial purposes. `footer.tsx` is more complex with already
-editable fields and rendering dates. By default we use 'footer.tsx', so make
-sure to change the footer import in `src/components/Layout/index.tsx`.
+** TBD ***
 
 Reload your page (or any page). Note that the copyright field is now editable.
 Give the site a new notice. Navigate to a different page. See that the notice
@@ -587,6 +560,7 @@ To create the actual components add the following imports:
 
 ```
 import { flow } from 'lodash';
+import { startWith } from '@bodiless/core';
 import { withTerm, withTitle } from '@bodiless/layouts';
 import { FlowContainer } from '@bodiless/layouts-ui';
 ```

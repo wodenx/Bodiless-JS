@@ -57,7 +57,6 @@ export const asTypographyToken = (...attributes: string[]) => (...defs: TokenDef
   ...defs,
   categories: {
     Component: ]'Element'],
-    Category: ['Typography'],
     Attribute: attributes,
   },
 );
@@ -66,7 +65,6 @@ export const asEditorToken = (...attributes: string[]) => (...defs: TokenDef<any
   ...defs,
   categories: {
     Component: ]'Element'],
-    Category: ['Editors'],
     Attribute: attributes,
   },
 
@@ -114,8 +112,9 @@ It's up to you how you want to classify your tokens -- Bodiless
 allows arbitrary "categories".  Here we specify 3 categories for each token:
 - `Component`: The name of the component to which the token can be applied. We use
   `Element` to indicate that these tokens apply to any HTML element.
-- `Category`: An arbitrary classification for the token.  For element tokens
-  we simply use the classification system set forth by Tailwind.
+- 'Attribute': The atttribute(s) which this token specifies. The general convention
+  here is that two tokens which specify the same attribute should not be applied
+  at the same time.
 
 Note that we have created "empty" tokens for `asBold` and `asItalic`. As we'll see,
 creating these empty tokens will facilitate making site-wide changes to styling.
@@ -194,22 +193,30 @@ the primary header, it will apply throughout the site instead of having to be
 fixed on each page.
 
 1. In `src/components/Elements/token.ts` let's define some new primary header tokens:
+
     ```ts
     export const withPrimaryHeaderStyles = asTypographyToken('Header')(
       startWith(H1),
       addClasses('text-3xl'),
       asBold,
     );
+
     export const withPrimaryHeaderEditor = asEditorToken('Text Editor')(
       asEditable('title', 'Page Title');
+    );
+    export const asPrimaryHeader = asToken(
+      withPrimaryHeaderEditor, withPrimaryHeaderStyles
+    );
     ```
+  
     The first of these defines the styles that should be applied to an `h1` when
     used as a page title, and is a standard design token. The second defines
     the kind of editor which should be used for page titles, and is another example
     of what we call "behavioral" tokens -- tokens which express behavior or
     functionality rather than visual design.  We export these separately to
     facilitate placing *non-editable* page titles on pages where that may
-    be appropriate.
+    be appropriate. For conveniens, we also export an `asPrimaryHeader` token
+    which composes them.
   
 1. Remember to add imports needed & export these new tokens.
 
@@ -332,7 +339,7 @@ to make it more flexible and reusable.
      stylable versions of basic HTML elements exported by
      [`@bodiless/fclasses`](https://github.com/johnsonandjohnson/Bodiless-JS/blob/master/packages/fclasses/src/StyledHTML.tsx).
         ```
-        const captionedImageStart:CaptionedImageComponents = {
+        const captionedImageComponentw:CaptionedImageComponents = {
           Wrapper: Section,
           Image: Img,
           Body: Div,
@@ -345,7 +352,7 @@ to make it more flexible and reusable.
    make a captioned image. This is really the base template for our component.
    Combining the defaults defined above with this layout, we will render an
    `img` & `div` wrapped in a `section`.
-    ```
+    ```ts
     const CaptionedImageBase: FC<Props> = ({ components }) => {
       const {
         Wrapper,
@@ -364,7 +371,7 @@ to make it more flexible and reusable.
     
     Note: that the actual sub-components here are *injected*; that is, they
     are passed into the component via a `components` prop. We defined
-    the defaults for these components above (`captionedImageStart`), but
+    the defaults for these components above (`captionedImageComponents`), but
     we will actually render whatever we are passed.
     
 1. The usual pattern, however, is not to pass these components directly.
@@ -373,74 +380,70 @@ to make it more flexible and reusable.
    applied to the defaults. (Note, we are also using `withNode` to give our
    component a place to store its data. This is unrelated to the design, and you
    should already be familiar with this pattern from the previous tutorial.
- 
-    ```
-    const CaptionedImageClean = flow(
-      designable(captionedImageStart),
-      withNode,
-    )(CaptionedImageBase);
-    ```
+   ```ts
+   const CaptionedImageClean = flow(
+     designable(captionedImageStart, 'CaptionedImage'),
+     withNode,
+   )(CaptionedImageBase);
+   ```
+   > Note the second argument to `designable`.  It is a human-readable label
+   > which can appear in the markup to help you identify what design keys are
+   > producing a apecific element.
     
-   Next, lets pass in some HOC's via `withDesign` to make our component editable.
-   
-    ```
-    const asEditableCaptionedImage = flow(
-      withDesign({
-        Image: asBodilessImage('image'),
-        Body: withEditorBasic(
-          'body',
-          'Caption',
-        ),
-      }),
-    );
-    ```
-
-    You will notice that this HOC (`asEditableCaptionedImage()`) is a very
-    similar to the "behavior token" we used earlier to make a text field
-    editable (`withEditorBasic()`). Only here, the token applies to a *compound*
-    component, not to a single element. This is accomplished through `withDesign()`.
-    
-    `withDesign()` takes a a "Design": object whose keys are the names of the
-    sub-components which belong to our `CaptionedImage`, and whose values are
-    higher-order components which should be applied to each. It returns an HOC
-    which can be applied to our `CaptionedImage` to style (or otherwise alter)
-    it's subcomponents.
-
-    Note, that the HOC's (`asBodilessImage` and `withEditorBasic`) are defined at
-    the site level. For now, they are just pass-through's to the core Bodiless
-    utilities - but in many cases you will want to customize them further at
-    site level (for example, to provide a different image selector, or a rich
-    text editor which uses site-specific components to render formatted text).
-    Using the site-level tokens here ensures that such changes to the editorial
-    interface are applied consistently across the site.
+1. Next, lets pass in some HOC's via `withDesign` to make our component editable.
+   ```ts
+   const withCaptionedImageEditors = asToken(
+     withDesign({
+       Image: asBodilessImage('image'),
+       Body: withSimpleEditor('body', 'Caption'),
+     }),
+     {
+       categories: {
+         Component: ['CaptionedImage'],
+         Attribute: ['Editor'],
+       },
+     },
+   );
+   ```
+   You will notice that this token (`withCaptionedImageEditors()`) is a very
+   similar to the "behavior token" we used earlier to make a text field
+   editable (`withSimpleEditor()`). Only here, the token applies to a *compound*
+   component, not to a single element. This is accomplished through `withDesign()`.
+  
+   `withDesign()` takes a a "Design": object whose keys are the names of the
+   sub-components which belong to our `CaptionedImage`, and whose values are
+   tokens (higher-order components) which should be applied to each. It returns
+   an token which can be applied to our `CaptionedImage` to style (or otherwise
+   alter) it's subcomponents.
 
 1. Lastly, lets combine these together and export. 
-    ```
-    const CaptionedImage = asCaptionedImage(CaptionedImageClean);
+
+    ```ts
+    const CaptionedImageDefault = withCaptionedImageEditors(CaptionedImageClean);
     export default CaptionedImage;
     export {
-      CaptionedImage,
+      CaptionedImageDefault,
       CaptionedImageClean,
-      asEditableCaptionedImage,
+      withCaptionedImageEditors,
     };
     ```
-  It's worth looking at exactly what we're exporting:
-
-  * `CaptionedImageClean` is the most basic version of our component. It will
-    serve as the base to which design tokens can be applied, and can be used in
-    contexts where we don't want to allow the content to be edited.
-  * `asEditableCaptionedImage` is a *component level* token which makes our
-    clean component editable, and can be applied wherever we do want to allow
-    the content to be edited.
-  * `CaptionedImage` combines the above and is exported for convenience, since
-    we expect that in most cases we'll want the component to be editable.
-
-  Note, that we have not, as yet, applied any styling or design tokens.
+    It's worth looking at exactly what we're exporting:
+  
+    * `CaptionedImageClean` is the most basic version of our component. It will
+      serve as the base to which design tokens can be applied, and can be used in
+      contexts where we don't want to allow the content to be edited.
+    * `withCaptionedImageEditors` is a *component level* token which makes our
+      clean component editable, and can be applied wherever we do want to allow
+      the content to be edited.
+    * `CaptionedImageDefault` combines the above and is exported for convenience,
+      since we expect that in most cases we'll want the component to be editable.
+  
+    Note, that we have not, as yet, applied any styling or design tokens.
 
 1. As a final step in this file, we make sure the imports are correct. This is
    pretty self explanatory. If you forget one you will be warned and it won't
    work!
-    ```
+    ```ts
     import React, { FC } from 'react';
     import { asBodilessImage } from '@bodiless/components-ui';
     import { withNode } from '@bodiless/core';
@@ -465,53 +468,138 @@ that our design calls for a page header block on the homepage with image and
 a header text.
 
 1. On the homepage, import the `CaptionedImage` component and define this new variation:
+   ```ts
+   import { withCaptionedImageEditors } from '../../components/Gallery-Design/CaptionedImage';
+   import { withPrimaryHeaderStyles } from '../../components/Element';
+  
+   const PageHeader = asToken(
+     withCaptionedImageEditors,
+     withDesign({
+       Body: withPrimaryHeaderStyles,
+     }),
+   )(CaptionedImageClean);
+   ```
 
-    ```
-    import { CaptionedImage } from '../../components/Gallery-Design/CaptionedImage';
-    
-    const PageHeader = flow(
-      withDesign({
-        Body: replaceWith(PrimaryHeader),
-      }),
-    )(CaptionedImage);
-    ```
+    You can see we "modified the design" of the original captioned image, applying
+    the styles and base element we previously defined for primary headers.
 
-    You can see we "modified the design" of the original captioned image, replacing
-    the body (previously defined as a `div` wrapped in `asBasicEditor`) with our
-    `PrimaryHeader.
+    Note that so far we have only applied *styling* to the image caption, we
+    have not changed its *behavior*: It is still editable using the rich text
+    editor that was originally defined in `withCaptionedImageEditors`, not the
+    plain text editor that we want to use for our page titles.
 
-    Note the use of the `replaceWith` HOC here.  Remember that the object
-    passed to `withDesign` is always a set of higher-order components.  In most
-    cases you will just want to use these to apply styling to the default elements
-    defined in the component's design.  For example, we might have written:
-    ```
-    const PageHeader = flow(
-       withDesign({
-        Body: asHeaderPrimary,
-      }),
-    )(CaptionedImage);
-    ```
-    Here, however, the default element is a `div`, while we want a `h1`, so we have to replace it.
-    
-    On the homepage remove the combination of HeaderImage & PrimaryHeader
+    To swap out the editors we have three options:
 
-    ```
-      <div className="flex my-3 w-full">
-        <HeaderImage />
-      </div>
-      <PrimaryHeader />
-    ```
+    1. Replace.
+       ```ts
+       const PageTopper = asToken(
+         withCaptionedImageEditors,
+         withDesign({
+           Body: replaceWith(PrimaryHeader),
+         }),
+       )(CationedImageClean);
+       ```
+
+       Note the use of the `replaceWith` HOC here. This will remove any tokens
+       previously applied to the design key.  It's a good option if you know
+       (as here) exaclty how and where your component will be used.
+
+    2. Recompose.
+
+       But what if we want to create a reusable token, `asPageTopper`, which can be
+       composed with other tokens to make a captioned image into a special page
+       header? Then, using `replaceWith` could have unpredictable results, for
+       example:
+
+       ```ts
+       const withBlueBody = withDesign({
+         Body: addClasses('text-blue'),
+       });
+       const CustomPageTopper = asToken(
+         withCaptionedImageEditors,
+         withBlueBody,
+         asPageTopper,
+       )(CaptionedImageClean);
+       ```
+       Here, the `asPageTopper` token will silently replace the body, removing the
+       blue text style applied by `withBlueBody`;
+
+       In such cases, it is much better practice to create a token which
+       *recomposes* the original and is designed to apply to the clean version.
+
+       ```ts
+       const asPageTopper = asToken({
+         withDesign({
+           Body: asPrimaryHeader,
+           Image: asBodilessImage('image'),
+         })
+       });
+       ...
+       const PageTopper = asPageTopper(CaptionedImageClean);
+       const BluePageTopper = asToken(
+         withDesign({
+           withDesign({
+             Body: addClasses('text-blue'),
+           }),
+         asPageTopper,
+       )(CaptionedImageClean);
+       ```
+
+       This has the advantage of clearly specifying from the ground up how the
+       page topper should look and behave, but it's a bit verbose and requires
+       you to re-define the image editor as well as the text editor.
+
+    3. Reset
+
+       If you have defined consistent token metadata, a third option is to reset
+       the editor applied by the original token and add your own:
+  
+       ```ts
+       import { withTokenFilter } from '@bodiless/fclasses';
+
+       const asPageTopper = withDesign({
+         Body: asToken(
+           withTokenFilter((t: Token) => !t.categories.Attribute.includes('Editor')),
+           asPrimaryHeader,
+         ),
+       });
+       ...
+       const PageTopper = asToken(
+         withCaptionedImageEditors,
+         asPageTopper,
+       )(CaptionedImageClean);
+  
+       const CustomPageTopper = asToken(
+         withCaptionedImageEditors,
+         withBlueBody,
+         asPageTopper,
+       )(CaptionedImageClean);
+       ```
+
+       Here, `withTokenFilter` will selectively reset any tokens which match the
+       filter function, in this case allowing us to remove any previously defined
+       editor and supply a new one.
+
     
-    and replace with 
-    
-    ```
-      <PageHeader />
-    ```
-    
-    Reload the homepage and make sure it renders as expected. We could take
-    this a step farther and move our `HeaderImage` to `src/components` and reuse
-    it across all the pages. It could also have linkable header image, apply the title
-    over the image, etc. We will leave this as exercise for you to do on your own.
+1. Next, on the homepage, remove the combination of HeaderImage & PrimaryHeader
+
+   ```
+     <div className="flex my-3 w-full">
+       <HeaderImage />
+     </div>
+     <PrimaryHeader />
+   ```
+   
+   and replace with 
+   
+   ```
+     <PageHeader />
+   ```
+   
+   Reload the homepage and make sure it renders as expected. We could take
+   this a step farther and move our `HeaderImage` to `src/components` and reuse
+   it across all the pages. It could also have linkable header image, apply the title
+   over the image, etc. We will leave this as exercise for you to do on your own.
 
 While this a simple component we are wrapping in the design, proceeding in this
 manner as the components grow in either functionality or complexity gives us a
@@ -530,60 +618,65 @@ this can easily be achieved.
 
 ## 6. Continue with wrapping the `Gallery` with Design API
 
-1. The current files in Gallery folder contain the templates defining how
-your component functions. Let's create a `token.tsx` and move the
-design styles to a separate file.
+1. The current files in Gallery folder contain the templates defining how your
+   component functions. Let's create a `token.tsx` and move the design styles to
+   a separate file.
 
-    ```
+    ```ts
     import {
       withDesign,
       addClasses,
+      asToken,
     } from '@bodiless/fclasses';
+  
+    export const withGalleryDesign = (...attributes: string[]) => (design: Design<GalleryComponents>) => asToken(
+      withDesign(design),
+      categories: {
+        Component: ['Gallery'],
+        Attribute: attributes,
+      },
+    );
 
-    const asGalleryDefaultStyle = withDesign({
+    export const withGalleryMargin = withGalleryDesign('Margin')({
       Wrapper: addClasses('my-2'),
+    });
+  
+    export const withGalleryTypography = withGalleryDesign('Font Size')({
       Header: addClasses('text-2xl'),
     });
 
-    const asImageTile = withDesign({
+    export const withImageTileStyles = withGalleryDesign('Margin', 'Border')({
       Wrapper: addClasses('mx-2 border-8'),
       Image: addClasses('w-full'),
     });
 
-    const asBlueBorder = withDesign({
+    export const withBlueBorder = withGalleryDesign('Color', 'Border Color')({
       Wrapper: addClasses('border-blue-400'),
     });
 
-    const asRedBorder = withDesign({
+    export const withRedBorder = withGalleryDesign('Color', 'Border Color')({
       Wrapper: addClasses('border-red-400'),
     });
-    const asGreenBorder = withDesign({
+
+    export const withGreenBorder = withGalleryDesign('Color', 'Border Color')({
       Wrapper: addClasses('border-green-400'),
     });
 
-    export {
-      asImageTile,
-      asBlueBorder,
-      asRedBorder,
-      asGreenBorder,
-      asGalleryDefaultStyle,
-    }
     ```
     
     These HOC's themselves can be considered "Component Tokens" which describe
     design elements which can be applied to the components as a whole. In other
     words, "Component Tokens" are no different than normal Element tokens except
-    they apply to multiple sub-components. In `asImageTile`, you can see we added
-    margin, border to the wrapper and made sure the image shows full-width. All tokens
-    here were taken from the existing `Gallery/index.tsx` file.
-    
-    **TIP**: By convention all Component Tokens start with `as`.
+    they apply to multiple sub-components. In `withImageTileStyles`, you can see
+    we added margin, border to the wrapper and made sure the image shows
+    full-width. All tokens here were taken from the existing `Gallery/index.tsx`
+    file.
 
 1. Let's update the `Gallery/index.tsx` and use the component tokens in place
 of the current styling. In addition, let's wrap the Gallery Component in the
 Design API as well, using the same method we just did.
 
-    ```
+    ```ts
     import React, { FC } from 'react';
     import {
       H2,
@@ -596,34 +689,38 @@ Design API as well, using the same method we just did.
       replaceWith,
     } from '@bodiless/fclasses';
     import { withNode } from '@bodiless/core';
-    import { flow } from 'lodash';
     import { withTitle, withFacet } from '@bodiless/layouts';
     import { FlowContainer } from '@bodiless/layouts-ui';
-    import { withEditorBasic } from '../Editors';
+    import { withSimpleEditor } from './Element';
     import CaptionedImage from './CaptionedImage';
     import {
-      asImageTile,
-      asGreenBorder,
-      asBlueBorder,
-      asRedBorder,
-      asGalleryDefaultStyle,
+      withsImageTileStyles,
+      withGreenBorder,
+      withBlueBorder,
+      withRedBorder,
+      withGalleryMargin,
+      withGalleryTypography,
     } from './token';
 
     const galleryDesign = varyDesign(
       {
         ImageTile: flow(
           replaceWith(CaptionedImage),
-          asImageTile,
+          withImageTileStyles,
           stylable,
           withTitle('ImageTitle'),
         ),
       },
       {
-        Red: withFacet('Color')('Red')(asRedBorder as HOC),
-        Green: withFacet('Color')('Green')(asGreenBorder as HOC),
-        Blue: withFacet('Color')('Blue')(asBlueBorder as HOC),
+        Red: withFacet('Color')('Red')(withRedBorder as HOC),
+        Green: withFacet('Color')('Green')(withGreenBorder as HOC),
+        Blue: withFacet('Color')('Blue')(withBlueBorder as HOC),
       },
     )();
+  
+    const GalleryBody: FC = () => (
+      <FlowContainer nodeKey="body" design={galleryDesign} />
+    );
 
     export type GalleryComponents = {
       Wrapper: ComponentType<StylableProps>,
@@ -631,10 +728,10 @@ Design API as well, using the same method we just did.
       Body: ComponentType<StylableProps>,
     };
 
-    const galleryStart:GalleryComponents = {
+    const galleryComponents:GalleryComponents = {
       Wrapper: Section,
       Header: H2,
-      Body: Div,
+      Body: GalleryBody,
     };
 
     type Props = DesignableComponentsProps<GalleryComponents> & { };
@@ -654,33 +751,31 @@ Design API as well, using the same method we just did.
       );
     };
 
-    const GalleryBody: FC = () => (
-      <FlowContainer nodeKey="body" design={galleryDesign} />
-    );
 
     const GalleryClean = flow(
       designable(galleryStart),
       withNode,
     )(GalleryBase);
+  
+    const withGalleryEditors = withDesign({
+      Header: withSimpleEditor('header', 'Gallery Header),
+    });
 
     const asGallery = flow(
-      asGalleryDefaultStyle,
-      withDesign({
-        Header:  withEditorBasic(
-          'gallery_header',
-          'Gallery Header',
-        ),
-        Body: replaceWith(GalleryBody),
-      }),
+      withGalleryMargins,
+      withGalleryTypography,
+      withGalleryEditors,
     );
 
-    const Gallery = asGallery(GalleryClean);
+    const GalleryDefault = asGallery(GalleryClean);
     export default Gallery;
     export {
       Gallery,
       GalleryClean,
       asGallery,
+      withGalleryEditors,
     };
+    export * from './token';
     ```
 
 All of this should look familiar now and shouldn't need more explanation.
