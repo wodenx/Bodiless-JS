@@ -76,18 +76,36 @@ const asBreadcrumb = ({
     if (store === undefined) return <Component {...props} />;
     const titleNode = node.child<object>(titleNodeKey);
     const linkNode = node.child<LinkData>(linkNodeKey);
+
+    /*
+     * When Column Item has a submenu it adds a 'sublist' nodeKey.
+     * It results in invalid final node key for that Item. For example:
+     *
+     * SubColumn Item:
+     * MainMenu$3ece0670-b7b7-448d-9a82-15d9b2400408$sublist$default$sublist$default$title
+     *
+     * Column Title (Invalid):
+     * MainMenu$3ece0670-b7b7-448d-9a82-15d9b2400408$sublist$default$sublist$title
+     *
+     * Column Title above has an extra '$sublist' node key. Menu saves data for the Column Title as
+     * MainMenu$3ece0670-b7b7-448d-9a82-15d9b2400408$sublist$default$title
+     */
+    const nodePath = node.path[node.path.length - 1] === 'sublist'
+      ? node.path.slice(0, -1)
+      : node.path;
+
     // We need an id which will be the same for all breadcrumb sources which
     // render the same data.  Node path works well for this.
-    const id = node.path.join('$');
+    const id = nodePath.join('$');
     const item = new BreadcrumbItem({
       uuid: id,
       title: {
         data: titleNode.data,
-        nodePath: [...node.path, titleNodeKey].join('$'),
+        nodePath: [...nodePath, titleNodeKey].join('$'),
       },
       link: {
         data: linkNode.data.href,
-        nodePath: [...node.path, linkNodeKey].join('$'),
+        nodePath: [...nodePath, linkNodeKey].join('$'),
       },
       parent: current,
       store,

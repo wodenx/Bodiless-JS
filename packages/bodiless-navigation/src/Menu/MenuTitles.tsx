@@ -42,10 +42,7 @@ const DEFAULT_NODE_KEYS = {
  *
  * @return Token that when applied to the menu Item registers it as a breadcrumb source.
  */
-const asBreadcrumbSource = flow(
-  asBreadcrumbSourceBase(DEFAULT_NODE_KEYS),
-  withNode,
-);
+const asBreadcrumbSource = asBreadcrumbSourceBase(DEFAULT_NODE_KEYS);
 
 const MenuTitleBase: FC<MenuTitleProps> = ({ components, ...rest }) => {
   const { Link, Title } = components;

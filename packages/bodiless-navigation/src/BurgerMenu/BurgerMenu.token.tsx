@@ -39,6 +39,7 @@ const asFullScreen = withDesign({
     withNoInsetStyles,
     asFixed,
     withFullZIndex,
+    addClasses('overflow-y-scroll'),
   ),
 });
 
