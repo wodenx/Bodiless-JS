@@ -1,14 +1,14 @@
 # Design Element Concepts
 
 In this guide, we will continue the gallery tutorial to apply some design
-element concepts and
-implement some best practices. We will also introduce the Bodiless Design API.
-You can [read more about it here](../../Design/DesignSystem), but at a high level
-this is a set of tools and patterns for applying a *Design System* to a React
-site. It encourages defining the building blocks of the system (tokens,
-elements, components) at the site level, and then applying them consistently
-across your site--or even abstracting them to a reusable package, allowing you
-to apply the same design system to multiple sites, extending it as needed.
+element concepts and implement some best practices. We will also introduce the
+Bodiless Design API. You can
+[read more about it here](../../Design/DesignSystem), but at a high level this
+is a set of tools and patterns for applying a *Design System* to a React site.
+It encourages defining the building blocks of the system (tokens, elements,
+components) at the site level, and then applying them consistently across your
+site--or even abstracting them to a reusable package, allowing you to apply the
+same design system to multiple sites, extending it as needed.
 
 ## Prerequisites
 
