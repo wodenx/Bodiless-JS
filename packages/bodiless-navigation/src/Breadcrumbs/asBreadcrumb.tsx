@@ -72,10 +72,8 @@ const asBreadcrumb = ({
   const AsBreadcrumb = observer((props: P) => {
     const current = useBreadcrumbContext();
     const store = useBreadcrumbStore();
-    const { node } = useNode();
     if (store === undefined) return <Component {...props} />;
-    const titleNode = node.child<object>(titleNodeKey);
-    const linkNode = node.child<LinkData>(linkNodeKey);
+    const { node } = useNode();
 
     /*
      * When Column Item has a submenu it adds a 'sublist' nodeKey.
@@ -93,6 +91,10 @@ const asBreadcrumb = ({
     const nodePath = node.path[node.path.length - 1] === 'sublist'
       ? node.path.slice(0, -1)
       : node.path;
+
+    const node$ = node.peer(nodePath);
+    const titleNode = node$.child<object>(titleNodeKey);
+    const linkNode = node$.child<LinkData>(linkNodeKey);
 
     // We need an id which will be the same for all breadcrumb sources which
     // render the same data.  Node path works well for this.
