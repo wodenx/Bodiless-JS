@@ -55,20 +55,23 @@ import {
 
 export const asTypographyToken = (...attributes: string[]) => (...defs: TokenDef<any>[]) => asToken(
   ...defs,
-  categories: {
-    Component: ]'Element'],
-    Attribute: attributes,
+  {
+    categories: {
+      Component: ['Element'],
+      Attribute: attributes,
+    },
   },
 );
 
-export const asEditorToken = (...attributes: string[]) => (...defs: TokenDef<any>) => asToken(
+export const asEditorToken = (...attributes: string[]) => (...defs: TokenDef<any>[]) => asToken(
   ...defs,
-  categories: {
-    Component: ]'Element'],
-    Attribute: attributes,
+  {
+    categories: {
+      Component: ['Element'],
+      Attribute: attributes,
+    },
   },
-
-)
+);
 
 export const asBold = asTypographyToken('Font Weight')();
 export const asItalic = asTypographyToken('Font Style')();
@@ -196,16 +199,12 @@ fixed on each page.
 
     ```ts
     export const withPrimaryHeaderStyles = asTypographyToken('Header')(
-      startWith(H1),
       addClasses('text-3xl'),
       asBold,
     );
 
     export const withPrimaryHeaderEditor = asEditorToken('Text Editor')(
       asEditable('title', 'Page Title');
-    );
-    export const asPrimaryHeader = asToken(
-      withPrimaryHeaderEditor, withPrimaryHeaderStyles
     );
     ```
   
@@ -223,10 +222,10 @@ fixed on each page.
 1. Import these tokens on both gallery page `index.jsx` & homepage `index.jsx`
    and replace the current `PrimaryHeader` definitions and references:
    ```ts
-   cosnt PrimaryHeader = flow(
+   cosnt PrimaryHeader = asToken(
      withPrimaryHeaderStyles,
      withPrimaryHeaderEditor,
-   )();
+   )(H1);
    ```
 
 1. Run your site and visit the homepage & gallery page
