@@ -26,12 +26,12 @@ directory. The URI path for the page will be the relative to the directory.
 For example, if your site is served at "mysite.com", the directory at
 `src/data/pages/foo/bar` will be served at `mysite.com/foo/bar`.
 
-Create a directory at `src/data/pages/gallery` and place an `index.tsx` file in
+Create a directory at `src/data/pages/example` and place an `index.tsx` file in
 that directory (Note: typescript is not a requirement. You can create an
 `index.jsx` instead, but you will have to remove the type information from the
 examples below). You can use the following as a starting point:
 
-```
+```ts
 import React from 'react';
 import { graphql } from 'gatsby';
 import { Page, PageProps } from '@bodiless/gatsby-theme-bodiless';
@@ -107,16 +107,16 @@ higher-order components. This is the pattern used in the examples below, and the
 Begin by refactoring the page title using this pattern. Add the following
 imports to your `index.tsx`:
 
-```
+```ts
 import { addClasses, H1 } from '@bodiless/fclasses';
 ```
 
 Now, create a reusable primary header token by adding the following above the
 default export:
 
-```
-const asPrimaryHeader = addClasses('text-3xl font-bold');
-const PrimaryHeader = asPrimaryHeader(H1);
+```ts
+const withPrimaryHeaderStyles = addClasses('text-3xl font-bold');
+const PrimaryHeader = withPrimaryHeaderStyles(H1);
 ```
 
 A *design token* for our sites primary headers, and a component to which that
@@ -125,19 +125,19 @@ will become more apparent once the
 [Design API](../Architecture/FClasses?id=the-design-api) is in use.
 
 Now replace the `<h1 ...>` tag:
-```
+```ts
 <PrimaryHeader>About BodilessJS</PrimaryHeader>
 ```
 Note that the token is applied to the imported `H1` component. This is because
 the class utilities provided by `@bodiless/fclasses` must operate on a
 `stylable` component. The definition of `H1` (from `@bodiless/fclasses`) should
 make this clear:
-```
+```ts
 export const H1 = stylable<HTMLProps<HTMLHeadElement>>('h1');
 ```
 We could have defined our token as:
-```
-const asPrimaryHeader = flow(stylable, addClasses('text-3xl font-bold`))
+```ts
+const withPrimaryHeaderStyles = flow(stylable, addClasses('text-3xl font-bold`))
 ```
 but, fortunately, you don't have to, since `@bodiless/fclasses` exports a
 stylable version of every HTML element. If you revisit the
@@ -152,19 +152,19 @@ To make the title of our page editable BodilessJS provides some core components.
 The simplest of these is`Editable` - a simple, unformatted text field.
 
 Add the following import to the top of your index.tsx:
-```
+```ts
 import { asEditable } from '@bodiless/components';
 import { flow } from 'lodash';
 ```
 And then update your `PrimaryHeader` definition to make it editable:
-```
+```ts
 const PrimaryHeader = flow(
   asEditable('title', 'Title'),
-  asPrimaryHeader,
+  withPrimaryHeaderStyles,
 )(H1);
 ```
 
-Navigate to `localhost:8005/gallery` again. You'll see that the "About Us" text
+Navigate to `localhost:8005/my-first-page` again. You'll see that the "About Us" text
 has been replaced by an editable field with placeholder text. Click on the title
 and start typing. Refresh the page - the title has been saved!
 
@@ -174,8 +174,10 @@ The `asEditable()` HOC used above, adds a special `Editable` component as a
 child of the wrapped component. The above is exactly equivalent to (and could
 have been written as):
 
-```
-<PrimaryHeader><Editable nodeKey="title" placeholder="Title" /></PrimaryHeader>
+```ts
+<PrimaryHeader>
+  <Editable nodeKey="title" placeholder="Title" />
+</PrimaryHeader>
 ```
 
 (Again, the version using HOC's shows it's real value when using the
@@ -191,7 +193,7 @@ The `nodeKey` you provided as an argument to `asEditable()` (or as a prop to
 content, you should see a `title.json` file at `src/data/pages/gallery`, and it
 should look something like this:
 
-```
+```json
 {
   "text": "Whatever you entered..."
 }
@@ -231,7 +233,7 @@ And add the following above the `<PrimaryHeader>` tag:
 <Link><Image /></Link>
 ```
 
-> Note - the jsx-a11y linting rule is disable because the Link component provides
+> Note - the jsx-a11y linting rule is disabled because the Link component provides
 > its own `href` attribute from the content.*
 
 Reload your page and click on the image placeholder. Image and link edit buttons
@@ -286,7 +288,7 @@ collection contains content limited to the current page. The site collection
 contains data available to all pages. The content provided in these collections
 is defined by the GraphQL query fragments you included in your page query:
 
-```
+```ts
 export const query = graphql`
   query($slug: String!) {
     ...PageQuery
@@ -405,7 +407,7 @@ Finally, we created a HOC which would add a simple rich text editor as a child
 to the component to which it was applied (just as `asEditable()` added an editor
 for unformatted text):
 
-```
+```ts
 const withSimpleEditor = (nodeKey?: string, placeholder?: string) => flow(
   addClasses('overflow-hidden'),
   withChild(
@@ -431,7 +433,7 @@ add a gallery to our landing page.
 Create a new `CaptionedImage.tsx` file in your `src/data/pages/gallery`
 directory with the following contents:
 
-```
+```ts
 import React, { FC, HTMLProps } from 'react';
 import { asBodilessImage } from '@bodiless/components-ui';
 import { withNode } from '@bodiless/core';
@@ -558,7 +560,7 @@ pattern can be found in
 
 To create the actual components add the following imports:
 
-```
+```ts
 import { flow } from 'lodash';
 import { startWith } from '@bodiless/core';
 import { withTerm, withTitle } from '@bodiless/layouts';

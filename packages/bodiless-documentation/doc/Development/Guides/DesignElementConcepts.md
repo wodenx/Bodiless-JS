@@ -36,15 +36,19 @@ standardized to provide a consistent user experience. There is rarely a need for
 custom editors on individual pages.  Similarly, a sites typography should also be
 consistent.
 
+### Move typography tokens.
+
 If it does not exist already, create a `/src/components/Elements` directory
 at the root of your project.  In this, create a `tokens.ts` file, and ddd
 the follwing lines there:
 
 ```ts
 import {
-  Strong,
   addClasses,
   asToken,
+} from '@bodiless/fclasses';
+import type {
+  TokenDef
 } from '@bodiless/fclasses';
 import type {
   WithNodeKeyProps,
@@ -79,15 +83,16 @@ export const asUnderline = asTypographyToken('Text Decoration')(
   addClasses('underline')
 );
 export const withLinkStyles = asTypographyToken('Text Decoration', 'Text Color')(
-  addClasses('text-blue-700 underline'));
+  addClasses('text-blue-700 underline'),
 );
-export const withLinkEditors = (nodeKeys?: WithNodeKeyProps) => asEditorToken('Link Editor')(
+export const withLinkEditor = (nodeKeys?: WithNodeKeyProps) => asEditorToken('Link Editor')(
   asBodilessLink(nodeKeys),
 );
 ```
 
 Remove the corresponding typography tokens (`asBold`, etc) from
-`/src/data/pages/gallery/withSimpleEditor.tsx`.
+`/src/data/pages/gallery/withSimpleEditor.tsx`, and replace them with
+those we have just created:
 
 > NOTE: If you're not familiar with the idea of design tokens and how
 > they are implemented in Bodiless, please read the [introduction to
@@ -131,33 +136,57 @@ Bodiless* Here, `withLinkEditor` is just a pass-through to
 (eg to provide a different href normalizer). Also, defining it at site level
 allows us to attach metadata to it.
 
+Actually, `withLinkEditor` is not itself a token; it is a *token generator*. That is,
+it is a function which accepts some parameters and *returns* a token.  In this
+case, it accpets a node key, and returns a token which makes a link editable, and
+stores its data at the specified location.  This pattern is very common in
+Bodiless.
+
+Note that here, since we are placing the editable link in a rich text editor,
+we don't need to specify the node key.  The rich text editor itself will
+manage the storage locations assigned to its children.
+
+## Move the text editor token.
+
 Now let's move another "behavioral" token to the site level. 
 - Move `withSimpleEditor` from `/src/data/pages/gallery` to `/src/components/Element`.
 - Remove the typography tokens (`asBold`, etc). and instead import them from `./tokens`.
 - Replace `asLink` with a composition of the link styles and the link editor:
-  ```
-  const asLink = asToken(withLinkStyles, withLinkEditor);
-  ```
-- Finally, add some metadata to the `withSimpleEditorToken`:
 
-```ts
-const withSimpleEditor = (nodeKey?: string, placeholder?: string) => asEditorToken('Text Editor')(
-  addClasses('overflow-hidden'),
-  withChild(
-    flow(
-      withDesign(simpleDesign),
-      withPlaceholder(placeholder),
-      withNodeKey(nodeKey),
-    )(RichText),
-    'Editor',
-  ),
-);
-```
+  ```ts
+  import {
+    asBold, asItalic, asUnderline, withLinkStyles, withLinkEditor
+  } from './tokens';
+
+  const simpleDesign = {
+    Bold: asBold,
+    Italic: asItalic,
+    Underline: asUnderline,
+    Link: asToken(withLinkStyles, withLinkEditor()),
+  };
+  ```
+
+- Finally, add some metadata to our new `withSimpleEditor` token by wrapping it
+  in `asEditorToken`:
+
+  ```ts
+  const withSimpleEditor = (nodeKey?: string, placeholder?: string) => asEditorToken('Text Editor')(
+    addClasses('overflow-hidden'),
+    withChild(
+      flow(
+        withDesign(simpleDesign),
+        withPlaceholder(placeholder),
+        withNodeKey(nodeKey),
+      )(RichText),
+      'Editor',
+    ),
+  );
+  ```
 
 Now let's use these site-level tokens on our gallery page:
-1. Create an `index.ts` file in `/src/components/Editors` with the following contents:
+1. Create an `index.ts` file in `/src/components/Element` with the following contents:
    ```ts
-   import withSimpleEditor from './withSimpleEditor`;
+   import withSimpleEditor from './withSimpleEditor';
    export * from './tokens';
    export { withSimpleEditor }
    ```
@@ -188,8 +217,8 @@ maintain.
 
 ## 3. Create a re-useable Primary Header for the site
 
-Within `data/pages/gallery/index.jsx` (gallery page) & `data/pages/index.jsx`
-(homepage) you can see we use similar `PrimaryHeader` components, but they don't
+In the `index.tsx' on the two gallery pages you created in the previous tutorial,
+you can see we use similar `PrimaryHeader` components, but they don't
 quite match: the one on the gallery page is bold. Let's bring them both into the
 design system using a shared set of tokens. This way if we change the style of
 the primary header, it will apply throughout the site instead of having to be
@@ -204,7 +233,7 @@ fixed on each page.
     );
 
     export const withPrimaryHeaderEditor = asEditorToken('Text Editor')(
-      asEditable('title', 'Page Title');
+      asEditable('title', 'Page Title'),
     );
     ```
   
@@ -219,7 +248,7 @@ fixed on each page.
   
 1. Remember to add imports needed & export these new tokens.
 
-1. Import these tokens on both gallery page `index.jsx` & homepage `index.jsx`
+1. Import these tokens on both gallery pages `index.jsx`
    and replace the current `PrimaryHeader` definitions and references:
    ```ts
    cosnt PrimaryHeader = asToken(
