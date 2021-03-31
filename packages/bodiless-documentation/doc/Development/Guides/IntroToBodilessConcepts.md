@@ -26,7 +26,7 @@ directory. The URI path for the page will be the relative to the directory.
 For example, if your site is served at "mysite.com", the directory at
 `src/data/pages/foo/bar` will be served at `mysite.com/foo/bar`.
 
-Create a directory at `src/data/pages/example` and place an `index.tsx` file in
+Create a directory at `src/data/pages/my-first-page` and place an `index.tsx` file in
 that directory (Note: typescript is not a requirement. You can create an
 `index.jsx` instead, but you will have to remove the type information from the
 examples below). You can use the following as a starting point:
@@ -151,6 +151,7 @@ You can read more about this pattern for building out a site's UI in our
 To make the title of our page editable BodilessJS provides some core components.
 The simplest of these is`Editable` - a simple, unformatted text field.
 
+
 Add the following import to the top of your index.tsx:
 ```ts
 import { asEditable } from '@bodiless/components';
@@ -223,7 +224,11 @@ Now define your editable `Image` and `Link` components:
 
 ```ts
 const Link = asBodilessLink('hero-link')(A);
-const Image = asBodilessImage('hero-image')(Img);
+const Image = asBodilessImage('hero-image', {
+  src: 'http://via.placeholder.com/6000x1200.png',
+  alt: 'Hero Image',
+  title: 'Hero Image',
+})(Img);
 ```
 
 And add the following above the `<PrimaryHeader>` tag:
@@ -258,6 +263,11 @@ is a child of the link, its content file is namespaced to its parent. This
 allows you to compose editable primitives into reusable components. We'll come
 back to this later.
 
+Note also the second argument to `asBodilessImage` above.  This is a way to provide
+a placeholder value for the image data when no image has been uploaded.  Here we use it
+to provide a landscape placeholder to improve the layout of an empty page.  Of course,
+the image is not actually constrained, and will take the dimensions of any file you upload.
+
 ## 5. Editing Site Level Data
 
 Up to now, all the editable components manage content which is limited to the
@@ -266,22 +276,33 @@ current page. All the `json` files are saved in the page's directory:
 what about content which should appear on multiple pages - or on every page?
 BodilessJS uses "node collections" to manage such content.
 
-Let's convert this page to a template, and add an editable copyright notice which
-will be the same on every page.
+Add the following to your `index.tsx`:
+```ts
+const Footer = asEditable(
+  { nodeKey: 'footer', nodeCollection: 'site' }.
+  'Footer text',
+)(Section);
+```
+and, just before the closing `</Layout>` tag:
+```
+<Footer />
+```
 
-** TBD ***
+Make a copy of your whole `src/data/pages/my-first-page` directory at
+`src/data/pages/gallery`.
 
-Reload your page (or any page). Note that the copyright field is now editable.
-Give the site a new notice. Navigate to a different page. See that the notice
-you entered is the same on all pages.
+Reload either page. Type some text into the footer. Navigate to the other page.
+See that the notice you entered is the same on both.
 
-Look in `src/data/site`.  You should see a `copyright.json` file containing the
+Look in `src/data/site`.  You should see a `footer.json` file containing the
 text you entered.
 
-The magic here is the `nodeCollection` prop on `Editable`.  Any BodilessJS
-editable component takes both `nodeKey` and `nodeCollection` props.  The
-default `nodeCollection` is `page` -- or the `nodeCollection` of the
-parent element, if one exists.
+The magic here is the `nodeCollection` attribute passed in the first argument to
+`asEditable`. Like any other BodilessJS `asEditable...` or `asBodiless...` hoc,
+this one can accept either a string or an object as its first argument. The
+object allows you to specify which "collection" the node should belong to. The
+default `nodeCollection` is `page` -- or the `nodeCollection` of the parent
+element, if one exists.
 
 BodilessJS provides two default Node Collections: `page` and `site`. The page
 collection contains content limited to the current page. The site collection
@@ -299,17 +320,14 @@ export const query = graphql`
 
 You can create additional collections by writing your own queries.
 
-> Note that in the above example, we use `Editable` directly, rather than `asEditable()`.
-This is because `asEditable()` does not currently support specifying a node collection.
-
 ## 6. Configure the Rich Text Editor
 
 The BodilessJS core component:`RichText` is used to make the body of the page
 editable - allowing editors to add some text formatting.
 
 First, create your configured editor. Create a `withSimpleEditor.tsx` file
-alongside your `index.tsx` file in the gallery page folder with the following
-contents:
+alongside your `index.tsx` file in the new gallery page folder with the
+following contents:
 
 ```ts
 import { flow } from 'lodash';
