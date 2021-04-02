@@ -104,9 +104,9 @@ export const replaceable = <P extends object> (Component:ComponentOrTag<P>): Com
  * Unlike `replaceWith`, this function replaces the base component but leaves
  * any previously applied tokens intact.
  *
- * > **Important Note** `startWith` can only be used in the context of `withDesign` 
+ * > **Important Note** `startWith` can only be used in the context of `withDesign`
  *
- * @param ReplacementComponent 
+ * @param ReplacementComponent
  * The component to use as a replacement
  *
  * @return
