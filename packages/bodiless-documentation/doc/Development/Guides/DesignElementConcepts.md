@@ -376,7 +376,7 @@ to make it more flexible and reusable.
    `img` & `div` wrapped in a `section`.
     ```ts
     type CaptionedImageBaseProps = DesignableComponentsProps<CaptionedImageComponents> & { };
-    const CaptionedImageBase: FC<CaptionedImageBaseProps> = ({ components }) => {
+    const CaptionedImageBase: FC<CaptionedImageBaseProps> = ({ components, ...rest }) => {
       const {
         Wrapper,
         Image,
@@ -384,7 +384,7 @@ to make it more flexible and reusable.
       } = components;
 
       return (
-        <Wrapper>
+        <Wrapper {...rest}>
           <Image />
           <Body />
         </Wrapper>
@@ -396,6 +396,10 @@ to make it more flexible and reusable.
     are passed into the component via a `components` prop. We defined
     the defaults for these components above (`captionedImageComponents`), but
     we will actually render whatever we are passed.
+
+    > Fpr cpnvenience, we pass the rest of the props through to our `Wrapper`
+    > component. This will allow our component to behave as expected when it
+    > receives normal html element props (like `className` or `id`).
     
 1. The usual pattern, however, is not to pass these components directly.
    Instead, let's wrap our component with `designable` to allow consumers to
@@ -435,8 +439,8 @@ to make it more flexible and reusable.
 
    const withCaptionedImageEditors = asCaptionedImageToken('Editor')(
      withDesign({
-       Image: withCaptionedImageTitleEditor,
-       Body: withCaptionedImageImageEditor,
+       Image: withCaptionedImageImageEditor,
+       Body: withCaptionedImageTitleEditor,
      }) as HOC,
    );
    ```
