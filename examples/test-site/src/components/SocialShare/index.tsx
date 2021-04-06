@@ -43,6 +43,7 @@ import imgTwitter from './images/twitter.png';
 import imgTwitterRnd from './images/twitterimg.png';
 import imgEmail from './images/email.png';
 import imgEmailRnd from './images/emailimg.png';
+import { useFieldApi } from 'informed';
 
 type ProviderProps = {
   name: string;
@@ -277,13 +278,13 @@ const dropZoneUI: Partial<TImagePickerUI> = {
   UploadArea: () => <DropZoneUploadArea>Drag a file or click here to upload.</DropZoneUploadArea>,
 };
 
-const SocialShareFormImage = (props: FormBodyProps) => {
+const SocialShareFormImage = () => {
   const { ComponentFormText } = useMenuOptionUI();
-  const { formapi } = props;
+  const fieldApi = useFieldApi(metaSocialShareImageName);
   return (
     <DropZoneWrapper>
       <ComponentFormText field={metaSocialShareImageName} id="social-share-img-src" />
-      <ImageDropZone formApi={formapi} targetFieldName={metaSocialShareImageName} ui={dropZoneUI} />
+      <ImageDropZone fieldApi={fieldApi} ui={dropZoneUI} />
     </DropZoneWrapper>
   );
 };
