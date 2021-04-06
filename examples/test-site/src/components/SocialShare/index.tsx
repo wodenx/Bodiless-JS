@@ -15,7 +15,6 @@ import React, { FunctionComponent as FC } from 'react';
 import Helmet from 'react-helmet';
 import { flow, flowRight } from 'lodash';
 import { useMenuOptionUI } from '@bodiless/core';
-import type { FormBodyProps } from '@bodiless/core';
 import {
   withMeta,
   asBodilessHelmet,
@@ -26,6 +25,7 @@ import {
 } from '@bodiless/components';
 import { SocialShare as SocialShareClean } from '@bodiless/organisms';
 import type { SocialShareProvider } from '@bodiless/organisms';
+import { useFieldApi } from 'informed';
 import asSimpleSocialShare, {
   asOrangeSocialShare,
   DropZoneWrapper,
@@ -43,7 +43,6 @@ import imgTwitter from './images/twitter.png';
 import imgTwitterRnd from './images/twitterimg.png';
 import imgEmail from './images/email.png';
 import imgEmailRnd from './images/emailimg.png';
-import { useFieldApi } from 'informed';
 
 type ProviderProps = {
   name: string;
