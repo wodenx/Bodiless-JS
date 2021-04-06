@@ -27,6 +27,10 @@ export type ComponentSelectorProps = ItemListProps & {
    * List of categories which should always be shown in the filters.
    */
   mandatoryCategories?: string[];
+  /**
+   * List of categories which should never be shown in the filters.
+   */
+  blacklistCategories?: string[];
 };
 
 export type Categories = {
