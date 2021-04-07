@@ -30,40 +30,15 @@ enum Scale {
 }
 
 const ItemList: React.FC<ItemListProps> = props => {
-  const { components, onSelect, blacklistCategories = [] } = props;
+  const { components, onSelect } = props;
   const finalUI = useContext(uiContext);
   const [scale, setScale] = useState(Scale.Full);
-  const blacklistTerms = ['N/A'];
 
   // Function to build a default title for a component from its categories.
   const title = (component: ComponentWithMeta) => component.title || component.displayName;
-  // const title = (
-  //   component: ComponentWithMeta,
-  // ) => component.title || Object.keys(component.categories || { title: [component.displayName] })
-  //   .filter(c => !blacklistCategories.includes(c))
-  //   .reduce((list, category) => [...list, ...component.categories![category]], [] as string[])
-  //   .filter(t => !blacklistTerms.includes(t))
-  //   .reverse()
-  //   .join(' ');
 
   // Function to build a defaul t description for a component from its categories.
   const description = (component: ComponentWithMeta) => component.description || 'No description';
-  // const description = (
-  //   component: ComponentWithMeta,
-  // ) => (
-  //   component.description
-  //     ? <p>{component.description}</p>
-  //     : (
-  //       <ul>
-  //         {Object.keys(component.categories || {})
-  //           .filter(cat => !blacklistCategories?.includes(cat))
-  //           .reduce(
-  //             (list, cat) => [...list, `${cat}: ${component.categories![cat].join(',')}`], [] as string[],
-  //           )
-  //           .map(s => <li>{s}</li>)}
-  //       </ul>
-  //     )
-  // );
 
   const getRowHeight = () => {
     if (components.length <= scale) {

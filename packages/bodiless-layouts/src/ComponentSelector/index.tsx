@@ -42,9 +42,13 @@ const applyMandatoryCategories = (
 ) => {
   mandatoryCategories.forEach(mandatoryCategory => {
     components.forEach((component: any) => {
-      if (!(mandatoryCategory in component.categories)) {
+      const { categories = {} } = component;
+      if (!Object.getOwnPropertyNames(categories).includes(mandatoryCategory)) {
         // eslint-disable-next-line no-param-reassign
-        component.categories[mandatoryCategory] = ['N/A'];
+        component.categories = {
+          ...categories,
+          [mandatoryCategory]: ['N/A'],
+        };
       }
     });
   });

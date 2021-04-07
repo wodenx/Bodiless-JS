@@ -33,7 +33,9 @@ import {
   designable,
   extendDesignable,
   varyDesign,
+  varyDesigns,
   extendDesign,
+  extendDesigns,
   withFinalDesign,
 } from './Design';
 import type {
@@ -80,7 +82,9 @@ export {
   designable,
   extendDesignable,
   varyDesign,
+  varyDesigns,
   extendDesign,
+  extendDesigns,
   asComponent,
   addClassesIf,
   removeClassesIf,
