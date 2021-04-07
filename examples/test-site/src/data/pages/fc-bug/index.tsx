@@ -15,16 +15,9 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
-import { asToken, Div } from '@bodiless/fclasses';
 import { FlowContainer } from '@bodiless/layouts-ui';
 import Layout from '../../../components/Layout';
-import { asBlue, asBox } from './Box';
 import withBasicVariations from './Basic';
-
-const Box = asToken(
-  asBox,
-  asBlue,
-)(Div);
 
 const FC = withBasicVariations(FlowContainer as any);
 
