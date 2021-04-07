@@ -27,10 +27,6 @@ export type ComponentSelectorProps = ItemListProps & {
    * List of categories which should always be shown in the filters.
    */
   mandatoryCategories?: string[];
-  /**
-   * List of categories which should never be shown in the filters.
-   */
-  blacklistCategories?: string[];
 };
 
 export type Categories = {
@@ -75,6 +71,10 @@ export type ItemListProps = {
    * Callback when one or more components are selected.
    */
   onSelect: (names: string[]) => void,
+  /**
+   * List of categories which should never be shown in the filters.
+   */
+  blacklistCategories?: string[];
 };
 
 export type FinalUI = {

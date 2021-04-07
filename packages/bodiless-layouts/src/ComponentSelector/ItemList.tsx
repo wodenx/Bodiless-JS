@@ -30,9 +30,41 @@ enum Scale {
 }
 
 const ItemList: React.FC<ItemListProps> = props => {
-  const { components, onSelect } = props;
+  const { components, onSelect, blacklistCategories = [] } = props;
   const finalUI = useContext(uiContext);
   const [scale, setScale] = useState(Scale.Full);
+  const blacklistTerms = ['N/A'];
+
+  // Function to build a default title for a component from its categories.
+  const title = (component: ComponentWithMeta) => component.title || component.displayName;
+  // const title = (
+  //   component: ComponentWithMeta,
+  // ) => component.title || Object.keys(component.categories || { title: [component.displayName] })
+  //   .filter(c => !blacklistCategories.includes(c))
+  //   .reduce((list, category) => [...list, ...component.categories![category]], [] as string[])
+  //   .filter(t => !blacklistTerms.includes(t))
+  //   .reverse()
+  //   .join(' ');
+
+  // Function to build a defaul t description for a component from its categories.
+  const description = (component: ComponentWithMeta) => component.description || 'No description';
+  // const description = (
+  //   component: ComponentWithMeta,
+  // ) => (
+  //   component.description
+  //     ? <p>{component.description}</p>
+  //     : (
+  //       <ul>
+  //         {Object.keys(component.categories || {})
+  //           .filter(cat => !blacklistCategories?.includes(cat))
+  //           .reduce(
+  //             (list, cat) => [...list, `${cat}: ${component.categories![cat].join(',')}`], [] as string[],
+  //           )
+  //           .map(s => <li>{s}</li>)}
+  //       </ul>
+  //     )
+  // );
+
   const getRowHeight = () => {
     if (components.length <= scale) {
       return 'auto';
@@ -89,13 +121,14 @@ const ItemList: React.FC<ItemListProps> = props => {
       <finalUI.ItemBoxWrapper style={boxStyle} key={Component.displayName}>
         <finalUI.ItemBox key={Component.displayName}>
           <finalUI.TitleWrapper style={outerStyle}>
-            {Component.title || Component.displayName || 'Untitled'}
+            {title(Component)}
           </finalUI.TitleWrapper>
           <div
             className="bl-outerTransform bl-relative bl-w-full bl-bg-white"
           >
             <Component />
           </div>
+          {description(Component) && (
           <Tooltip
             placement="rightBottom"
             mouseLeaveDelay={0}
@@ -104,9 +137,9 @@ const ItemList: React.FC<ItemListProps> = props => {
             }}
             overlay={(
               <finalUI.ComponentDescriptionWrapper>
-                <h3>{Component.title}</h3>
+                <h3>{title(Component)}</h3>
                 <finalUI.ComponentDescriptionStyle>
-                  <p>{Component.description}</p>
+                  {description(Component)}
                 </finalUI.ComponentDescriptionStyle>
               </finalUI.ComponentDescriptionWrapper>
           )}
@@ -115,6 +148,7 @@ const ItemList: React.FC<ItemListProps> = props => {
               info
             </finalUI.ComponentDescriptionIcon>
           </Tooltip>
+          )}
           <finalUI.ComponentSelectButton
             type="submit"
             onClick={() => onSelect([Component.displayName])}

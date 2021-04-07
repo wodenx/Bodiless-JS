@@ -143,7 +143,11 @@ const ComponentSelector: React.FC<ComponentSelectorProps> = props => {
               activeSearch={activeSearch}
               setActiveSearch={setActiveSearch}
             />
-            <ItemList onSelect={onSelect} components={newCompRender} />
+            <ItemList
+              onSelect={onSelect}
+              components={newCompRender}
+              blacklistCategories={blacklistCategories}
+            />
           </finalUI.FlexSectionFull>
         </finalUI.MasterWrapper>
       </uiContext.Provider>
