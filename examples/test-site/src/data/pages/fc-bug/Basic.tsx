@@ -1,7 +1,7 @@
 import {
-  withDesign, asToken, varyDesigns, Div, addProps, HOC, startWith,
+  withDesign, asToken, varyDesigns, Div, addProps, HOC, startWith, addClasses,
 } from '@bodiless/fclasses';
-import { withAllTitlesFromTerms } from '@bodiless/layouts';
+import { withAllTitlesFromTerms, ifComponentSelector } from '@bodiless/layouts';
 import pick from 'lodash/pick';
 import {
   asBox, asBlue, asOrange, asRounded, asSquare, withBlueBorder, withTealBorder, asTeal,
@@ -51,10 +51,20 @@ const colors = {
   ),
 };
 
+// We define a custom preview.  These tokens will only be applied
+// when the component is rendered in the component selector.
+const withCustomPreview = ifComponentSelector(
+  addProps({ children: 'this is preview' }),
+  addClasses('text-center italic'),
+);
+
 const variations = varyDesigns<any>(
   base,
   borders,
   colors,
+  // Custom preview token uses an empty string key since the design has only
+  // a single key and will be combined with all variants.
+  { '': withCustomPreview },
 );
 
 // const basicDesign$ = {

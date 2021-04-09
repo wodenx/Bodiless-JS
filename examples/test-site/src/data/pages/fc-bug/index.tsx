@@ -19,13 +19,13 @@ import { FlowContainer } from '@bodiless/layouts-ui';
 import Layout from '../../../components/Layout';
 import withBasicVariations from './Basic';
 
-const FC = withBasicVariations(FlowContainer as any);
+const FCDemo = withBasicVariations(FlowContainer as any);
 
 export default (props: any) => (
   <Page {...props}>
     <Layout>
       <h1 className="text-3xl font-bold">Flow Container Bugs</h1>
-      <FC nodekey="foo" />
+      <FCDemo nodekey="foo" />
     </Layout>
   </Page>
 );

@@ -70,91 +70,135 @@ via the add button on the toolbar.
 ### Adding components to the FlowContainer
 
 The FlowContainer uses the Design API to collect the components to make available 
-for placement. This can be passed in using the `design` prop, or by using the 
-higher order component: `withDesign`.
+for placement:
 
 ``` js
+import { FlowContainer } from '@bodiless/layouts-ui";
+
 design = {
     Card: flow(startWith(Card), asDefaultCard),
     CardVertical: flow(startWith(Card), asVerticalCard, asDefaultCard),
   }
 const SiteFlowContainer = withDesign(design)(FlowContainer);
-
-or
-
-<FlowContainer design={design} />
 ```
 
-> *(Note: the last example should only be used if there is no more reuse.*
-`withDesign` *can be used over and over)*.
-
-In either case you can use the `startWith` HOC to declare the base component and 
+Use the `startWith` HOC to declare the base component and 
 then use any other hoc that will add to this specific version.
 
-### Meta data HOCs
+> Note that we import the flow container from `@bodiless/layouts-ui`, not
+> directlly from `@bodiless/layouts`.  All Bodiless components which
+> have a content-editor facing UI have a corresponding UI package
+> which defines the look and feel of that UI.
 
-To add meta data (used by the flowContainer in its component selector) the following 
-HOCs are available.
+### Metadata and Component Selector Filters
 
-* **`withName`**: can be used to set the name that will appear in the component selector.
+The facets and terms of the search filters which appear in the component selector
+are defined by metadata attached to the components.  Each component aggregates
+the metadata attached to all the tokens which have been applied to the
+component:
 
-  ``` js
-  {
-    Card:  flow(startWith(Card), withName('Card')),
-  }
-  ```
+```js
+const asBlueCard = asToken({
+  withDesign({ Wrapper: withBlueBorder }),
+  asToken.meta.term('Color')('Blue'),
+});
+const asRedCard = asToken({
+  withDesign({ Wrapper: withRedBorder }),
+  asToken.meta.term('Color')('Red'),
+});
+const ColoredCardsFC = withDesign({
+  BlueCard: asToken(startWith(Card), asDefaultCard, asBlueCard),
+  RedCard: asToken(startWith(Card), asDefaultCard, asRedCard),
+})(FlowContainer);
+```
+The above will cause the component selector to display a  "Color" filter
+with checkboxes for "Red" and "Blue".
 
-  > There is also an appended version of `withTitle` called `withAppendTitle` which will 
-  just add to the title that already exists.
+#### Mandatory Categories
+To reduce visual noise, the component selector will only display filters for
+categories in which all the currently filtered components have at least one
+term. For example:
 
----
+```js
+const ColoredCardsFC = withDesign({
+  PlainCard: asToken(startWith(Card), asDefaultCard),
+  BlueCard: asToken(startWith(Card), asDefaultCard, asBlueCard),
+  RedCard: asToken(startWith(Card), asDefaultCard, asRedCard),
+})(FlowContainer);
+```
 
-* **`withDesc`**: can be used to set the description that is used in the component selector.
+will not display the Color filter by default unless the `PlainCard`
+is filtered out (for example by a text search).
 
-  ``` js
-  {
-    Card:  flow(startWith(Card), withDesc('The Card highlights something special on which an visitor can act.')),
-  }
-  ```
+To force a category to appear, you can specify it using the `mandatoryCategories`
+prop to the flow container:
+```js
+const FCWithMandatoryColorFilter = addProps({ mandatoryCategories: ['Color'] })(FlowContainer);
+```
 
-  >There is also an append version of `withDesc` called `withAppendDesc` which will add to 
-  the title that already exists.
-  
----
+#### Blacklisted Categories
+Depending on the kind of metadata you attach to tokens, it may be desirable
+to exclude certain categories from appearing.  This can be done via the
+`blacklistCategories` prop:
+```js
+const asBlueCard = asToken({
+  withDesign({ Wrapper: withBlueBorder }),
+  asToken.meta.term('Color')('Blue'),
+  asToken.meta.term('Design System')('JnJ'),
+});
+const FCWithBlacklistedCategory = asToken(
+  withDesign({
+    BlueCard: asToken(startWith(Card), asDefaultCard, asBlueCard),
+  }),
+  addProps({ blacklistCateogries: ['Design System' ] }),
+)(FlowContainer);
+```
+Only the "Color" filter will be displayed (not the "Design System" filter).
 
-* **`withTerm`**: can be used to add a term to a category that the component selector will 
-use when giving facets.
-  
-  ``` js
-  {
-    Card:  flow(startWith(Card), withTerm('Type')('Card')),
-  }
-  ```
+#### Other metadata
+In addition to categories, compnents can have `title` and a `description`
+properties. These are used to provide more information about the component
+to the editor, and for searching.
+```js
+const ColoredCardsFC = withDesign({
+  PlainCard: asToken(startWith(Card), asDefaultCard, { title: 'Card with no color' }),
+  BlueCard: asToken(startWith(Card), asDefaultCard, asBlueCard, { title: 'Blue Card' }),
+  RedCard: asToken(startWith(Card), asDefaultCard, asRedCard, { title: 'Red Card; }),
+})(FlowContainer);
+```
 
----
+Often an explicit title is not necessary, and `@bodiless/layouts` provides
+a helper token which causes all the components in the flow container
+to receive a default title based on their metadata:
+```js
+const ColoredCardsFCWithDefaultTitles = asToken({
+  withDesign({
+    PlainCard: asToken(startWith(Card), asDefaultCard),
+    BlueCard: asToken(startWith(Card), asDefaultCard, asBlueCard),
+    RedCard: asToken(startWith(Card), asDefaultCard, asRedCard),
+  }),
+  withAllTitlesFromTerms({ blacklistCategories: ['Design System'] }),
+})(FlowContainer);
+```
+The default title will only be applied if the component does not have
+an explicit title.
 
-* **`withFacet`**: is similar to `withTerm` but it appends the term to the title, and adds 
-the category and term to the description as well as taking a hoc that will be applyed to the component.
-
-  ``` js
-  {
-  Card:  flow(startWith(Card), withFacet('Color')('Red')(asRedCard)),
-  }
-  ```
-
-  > *If you are going to use a lot of `withFacet`'s with the same category you can create a new function that defines the category.*
-  >
-  > *For example:*
-  >
-  > ``` js
-  > const withType = withFacet('Type');
-  > {
-  >  Card:  flow(startWith(Card), withType('Card')(asCard)),
-  > } ```
-  
----
-
-Also one can use the Design API function to combine designs in diffent variations.
+### Using `varyDesign`
+If you have a component with many variations which you want to make
+available in a flow container, it can be tiresome to list them all in
+a design, eg:
+```js
+const FCWithManyCardVariations = withDesign({
+  BlueRoundedHorizontalCard = asToken(startWith(Card), asDefaultCard, asBlueCard, asRoundedCard, asHorizontalCard),
+  BlueRoundedVerticalCard = asToken(startWith(Card), asDefaultCard, asBlueCard, asRoundedCard, asVerticalCard),
+  BlueSquareHorizontalCard = asToken(startWith(Card), asDefaultCard, asBlueCard, asHorizontalCard),
+  BlueSquareVerticalCard = asToken(startWith(Card), asDefaultCard, asBlueCard, asVerticalCard),
+  ...
+})(FlowContainer);
+```
+To simplify this process, you can use the
+[`varyDesign`](../../Development/Architecture/FClasses#design-variants)
+function exported from `@bodiless/fclasses`.
 
 ### Control Component Widths
 
@@ -215,10 +259,53 @@ example:
 
 ### Limit Number of Components
 
-**`maxComponents`** will limit the number of components that can be added to the 
-Flow Container. If the number of components equals the value of maxComponents then 
-the add button will not be visible. If a component is removed and the number of components
-is less than the max value then the add button will reappear.
+**`maxComponents`** will limit the number of components that can be added to the
+Flow Container. If the number of components equals the value of maxComponents
+then the add button will not be visible. If a component is removed and the
+number of components is less than the max value then the add button will
+reappear.
+
+**`minComponents`** will limit the number of componetns that can be removed from
+th Flow Container. If the number of components is less than or equal to the
+value of minComponents then the delete button will not be visible.
+
+### Component Selector Preview
+The component selector displays a preview of each component to help the
+content editor understand what she is selecting.  By default, this is
+simply a scaled version of the original component. In some cases, it may
+be desirable to render a custom preview (for example, the actual rich text
+component is just an empty box, so instead we render its format bar as
+a preview).
+
+To facilitate custom previews, the flow container provides a React context
+informing each component whether it is being rendered in the component
+selector or on the actua page.  A component can use this to change the
+way it renders in each context.  For example:
+```js
+import { ifComponentSelector } from '@bodiless/layouts';
+
+const withCustomPreview = ifComponentSelector(
+  addProps({ children: 'this is a preview' }),
+  addClasses('text-center italic'),
+);
+
+const variations = varyDesigns<any>(
+  base,
+  borders,
+  colors,
+  { '': withCustomPreview },
+);
+```
+Here, `ifComponentSelector` consumes the context provided by the flow ontainer
+and provides a
+[flow toggle](../../Development/Architecture/FClasses#flow-toggles) which
+applies a set of tokens only if the component is being rendered as a preview
+inside the component selector.
+
+Note how we applied `withCustomPreview` to all variations by adding a
+design with a single key to the list of designs provided to `varyDesigns`.
+Because there is only one key which is being applied to all variations, we
+can use an empty string.
 
 ---
 
