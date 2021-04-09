@@ -72,7 +72,7 @@ const variations = varyDesigns<any>(
   { '': withCustomPreview },
 );
 
-const basicDesign = {
+export const basicDesign = {
   Default: asToken(startWith(Div), asBox),
   Orange: asToken(startWith(Div), asBox, asOrange),
   Blue: asToken(startWith(Div), asBox, asBlue),
