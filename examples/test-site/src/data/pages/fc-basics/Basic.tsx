@@ -1,8 +1,13 @@
+import flow from 'lodash/flow';
 import {
   withDesign, asToken, varyDesigns, Div, addProps, HOC, startWith, addClasses,
 } from '@bodiless/fclasses';
-import { withAllTitlesFromTerms, ifComponentSelector } from '@bodiless/layouts';
+import {
+  withAllTitlesFromTerms, ifComponentSelector, withTailwindWidthConstraints,
+} from '@bodiless/layouts';
 import pick from 'lodash/pick';
+import resolveConfig from 'tailwindcss/resolveConfig';
+import tailwindConfig from '../../../../tailwind.config';
 import {
   asBox, asBlue, asOrange, asRounded, asSquare, withBlueBorder, withTealBorder, asTeal,
 } from './Box';
@@ -53,7 +58,7 @@ const colors = {
 
 // We define a custom preview.  These tokens will only be applied
 // when the component is rendered in the component selector.
-const withCustomPreview = ifComponentSelector(
+export const withCustomPreview = ifComponentSelector(
   addProps({ children: 'this is preview' }),
   addClasses('text-center italic'),
 );
@@ -67,18 +72,31 @@ const variations = varyDesigns<any>(
   { '': withCustomPreview },
 );
 
-// const basicDesign$ = {
-//   Default: asToken(replaceWith(Div), asBox),
-//   Orange: asToken(replaceWith(Div), asBox, asOrange),
-//   Blue: asToken(replaceWith(Div), asBox, asBlue),
-//   Teal: asToken(replaceWith(Div), asBox, asTeal),
-// };
+const basicDesign = {
+  Default: asToken(startWith(Div), asBox),
+  Orange: asToken(startWith(Div), asBox, asOrange),
+  Blue: asToken(startWith(Div), asBox, asBlue),
+  Teal: asToken(startWith(Div), asBox, asTeal),
+};
+
+// Create a function which takes a set of tailwind classes and returns
+// a token which constrains the widths of flow container items. This
+// is usually done at the site level, using the sites tailwind config.
+export const withWidthConstraints = flow(
+  resolveConfig,
+  withTailwindWidthConstraints,
+)(tailwindConfig);
 
 const asBasicFlowContainer = asToken(
+  // withDesign(basicDesign),
   withAllTitlesFromTerms({ blacklistCategories }),
   withDesign(variations) as HOC,
   addProps({ blacklistCategories }),
   addProps({ mandatoryCategories: ['Color'] }),
+  // withWidthConstraints('w-100 w-1/2 sm:w-1/2 sm:w-full lg:w-1/2 lg:w-full'),
+  // withWidthConstraints('lg:w-1/2 lg:w-full'),
+  // addProps({ maxComponents: 2 }),
+  // addProps({ minComponents: 1 }),
 );
 
 export default asBasicFlowContainer;

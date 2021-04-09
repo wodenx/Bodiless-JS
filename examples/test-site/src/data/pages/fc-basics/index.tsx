@@ -25,7 +25,7 @@ export default (props: any) => (
   <Page {...props}>
     <Layout>
       <h1 className="text-3xl font-bold">Flow Container Bugs</h1>
-      <FCDemo nodekey="foo" />
+      <FCDemo nodeKey="foo" />
     </Layout>
   </Page>
 );

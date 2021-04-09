@@ -184,6 +184,7 @@ The default title will only be applied if the component does not have
 an explicit title.
 
 ### Using `varyDesign`
+
 If you have a component with many variations which you want to make
 available in a flow container, it can be tiresome to list them all in
 a design, eg:
@@ -200,12 +201,40 @@ To simplify this process, you can use the
 [`varyDesign`](../../Development/Architecture/FClasses#design-variants)
 function exported from `@bodiless/fclasses`.
 
-### Control Component Widths
+### Constraining Component Widths
 
-The Flow Container controls the width of components by setting different classes on their 
-wrapper component. The Flow Container uses a set of tailwind width classes by default. 
+The Flow Container controls the width of components by setting different classes
+on their wrapper component. The Flow Container uses a set of tailwind width
+classes by default. These set the available widths to 1/4, 1/3, 1/2, 2/3, 3/4
+and full for all viewport sizes except "small", and to full only for small
+viewports.
+
+If you are using tailwind, the easiest way to define a new set of width
+constraints is using the `withTailwindWidthConstraints` helper. You pass it your
+fully resolved tailwind configuration, and it returns a function which accepts a
+list of tailwind width classes and returns a token which constrains flow
+container items to those widths:
+```js
+import rewolveConfig from 'tailwindcss/resolveconfig';
+import tailwindConfig from './path/to/your/tailwind.config';
+
+const withWidthConstraints = flow(
+  resolveConfig,
+  withTailwindWidthConstraints,
+)(tailwindConfig);
+
+const ConstrainedFlowContainer = withWidthConstraints('lg:w-1/2 lg:w-full')(FlowContainer);
+```
+Note that we specify our constraints with a responsive prefix. The flow container will
+apply these constraints only at the specified viewport size. Tailwind is "mobile first",
+so to change the constraints at the smallest viewports, we would use no prefix:
+
+```js
+withWidthConstraints('w-1/2 w-full lg:w-1/3 lg:w-1/4 lg:w-1/2 lg:w-2/3 lg:w-3/4 lg:w-full');
+```
+
+#### Advanced usage
 The `snapData` prop allows the user to provide a function that can set any set of classes.
-
 This function should take an object with a className property (which is a string of the
 current classes) and a width property. It then returns an object with a className property
 (an updated version of the className) and a width property (the width to which it should snap). 
@@ -248,13 +277,16 @@ corresponds and a class to used.
 
 #### Default Width
 
-One can set the default width classes via the `getDefaultWidth` prop.  The prop is a function that will 
-be passed the snapData function.  It is expected to return a string of the starting classes
+One can set the default width classes via the `getDefaultWidth` prop. The prop
+is a function that will be passed the snapData function. It is expected to
+return a string of the starting classes
 
 example:
 
 ```js
-<FlowContainer getDefaultWidth={() => 'w-full lg:w-1/4'} />
+const FlowContainerWithDefaultWidth = addProps({
+  getDefaultWidth: () => 'w-full lg:w-1/4',
+})(FlowContainer);
 ```
 
 ### Limit Number of Components
@@ -306,7 +338,3 @@ Note how we applied `withCustomPreview` to all variations by adding a
 design with a single key to the list of designs provided to `varyDesigns`.
 Because there is only one key which is being applied to all variations, we
 can use an empty string.
-
----
-
-## Architectural Details
