@@ -14,6 +14,7 @@
     "build:env-vars": "cross-env NODE_ENV=production lerna run build:env-vars --stream",
     "build:doc": "cross-env NODE_ENV=production lerna run build:doc --stream",
     "build:api-doc": "cross-env NODE_ENV=production lerna run build:api-doc --stream",
+    "check": "cross-env NODE_ENV=production lerna run check --stream",
     "clean": "lerna run clean && rimraf .eslintcache examples/*/.env.development examples/*/.env.production",
     "cy:run": "cypress run --browser chrome --record --key 0dcfb624-e152-453a-9375-aa710adb57ab",
     "cy:open": "cypress open",
@@ -47,7 +48,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run lint"
+      "pre-push": "npm run lint && npm run check"
     }
   },
   "dependencies": {

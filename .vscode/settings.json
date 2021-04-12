@@ -3,7 +3,7 @@
   // https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
   // By default this extension will only trigger for .js files, but not for .ts and .tsx.
   // Use eslint.validate to allow extension to process .ts and .tsx files.
-  "typescript.tsdk": "./node_modules/typescript/lib",
+  // "typescript.tsdk": "./node_modules/typescript/lib",
   "eslint.alwaysShowStatus": true,
   "eslint.provideLintTask": false,
   "eslint.packageManager": "npm",

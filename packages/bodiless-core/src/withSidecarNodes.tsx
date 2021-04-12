@@ -14,6 +14,7 @@
 
 import React, { createContext, useContext, ComponentType } from 'react';
 import { flowRight } from 'lodash';
+import type { HOC } from '@bodiless/fclasses';
 import { NodeContext } from './NodeProvider';
 import type { NodeMap } from './NodeProvider';
 
@@ -66,8 +67,6 @@ const endSidecarNodes = <P extends object>(Component: ComponentType<P>|string) =
   EndSidecarNodes.displayName = 'EndSidecarNodes';
   return EndSidecarNodes;
 };
-
-type HOC = (Component: ComponentType<any>) => ComponentType<any>;
 
 /**
  * `withSidecarNodes` allows you to establish a `ContentNode` sub-hierarchiy which should

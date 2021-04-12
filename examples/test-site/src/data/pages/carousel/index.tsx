@@ -12,6 +12,8 @@
  * limitations under the License.
  */
 
+// @ts-nocheck
+
 import React from 'react';
 import { graphql } from 'gatsby';
 import { Page } from '@bodiless/gatsby-theme-bodiless';

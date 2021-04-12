@@ -19,9 +19,9 @@ import {
 } from '@bodiless/core';
 import {
   addClasses,
-  withoutProps,
   hasProp,
   removeClassesIf,
+  withoutProps,
 } from '@bodiless/fclasses';
 import { Div } from '@bodiless/ui';
 

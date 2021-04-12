@@ -39,7 +39,6 @@ import {
 import type {
   Design,
   DesignableProps,
-  DesignElement,
   DesignableComponentsProps,
   DesignableComponents,
 } from './Design';
@@ -47,17 +46,14 @@ import {
   flowIf, hasProp, withoutProps, withOnlyProps, replaceOnEffect,
   withDisplayName,
 } from './hoc-util';
+import type { Condition } from './hoc-util';
 import Fragment from './Fragment';
 import withDesignAt from './withDesignAt';
 
 export * from './StyledHTML';
 
 export { asToken, withTokenFilter } from './Tokens';
-export type {
-  TokenFilterTest, Token, TokenDef,
-  TokenMeta, ComponentWithMeta, ComponentOrTag, TokenProps,
-  HOC,
-} from './Tokens';
+export * from './types';
 
 export { withShowDesignKeys } from './Context';
 
@@ -94,7 +90,7 @@ export type {
   StylableProps,
   Design,
   DesignableProps,
-  DesignElement,
   DesignableComponentsProps,
   DesignableComponents,
+  Condition,
 };

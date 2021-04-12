@@ -17,7 +17,8 @@ import React, {
 } from 'react';
 import { WithNodeKeyProps, withSidecarNodes, withBodilessData } from '@bodiless/core';
 import {
-  HOC, applyDesign, asComponent, Design, extendDesignable,
+  HOC, applyDesign, Design, extendDesignable, DesignableComponents,
+  DesignableProps, DesignableComponentsProps, ComponentOrTag,
 } from '@bodiless/fclasses';
 import { omit } from 'lodash';
 import type {
@@ -54,6 +55,9 @@ const useChameleonContext = (): ChameleonState => {
   return value;
 };
 
+type Designable<C extends DesignableComponents = DesignableComponents>
+  = HOC<{}, DesignableProps<C>, DesignableComponentsProps<C>>;
+
 /**
  * @private
  *
@@ -62,13 +66,12 @@ const useChameleonContext = (): ChameleonState => {
  *
  * @param Component
  */
-const applyChameleonDesign = <P extends object>(Component: ComponentType<P> | string) => {
+const applyChameleonDesign = (Component: ComponentOrTag<any>): Designable => {
   const apply = (design: Design<ChameleonComponents> = {}) => {
-    const Component$ = asComponent(Component as ComponentType<P>);
     const start = Object.keys(design).reduce((acc, key) => ({
       ...acc,
-      [key]: Component$,
-    }), { [DEFAULT_KEY]: Component$ });
+      [key]: Component,
+    }), { [DEFAULT_KEY]: Component });
     return applyDesign(start)(design);
   };
   return extendDesignable()(apply, 'Chameleon');
