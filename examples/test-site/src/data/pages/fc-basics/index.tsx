@@ -18,6 +18,7 @@ import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { FlowContainer } from '@bodiless/layouts-ui';
 import Layout from '../../../components/Layout';
 import withBasicVariations from './Basic';
+import ChameleonBox from './ChameleonBox';
 
 const FCDemo = withBasicVariations(FlowContainer as any);
 
@@ -26,6 +27,7 @@ export default (props: any) => (
     <Layout>
       <h1 className="text-3xl font-bold">Flow Container Bugs</h1>
       <FCDemo nodeKey="foo" />
+      <ChameleonBox />
     </Layout>
   </Page>
 );
