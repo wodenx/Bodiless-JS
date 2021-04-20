@@ -431,7 +431,7 @@ export const varyDesign = flowDesignsWith(varyDesign$);
 export const extendDesign = flowDesignsWith(extendDesign$);
 
 /**
- * Creates a new desigh which constists of all possible combindations of the
+ * Creates a new design which consists of all possible combinations of the
  * design keys of the specified designs.
  *
  * @param designs

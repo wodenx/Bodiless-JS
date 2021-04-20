@@ -111,7 +111,7 @@ const ColoredCardsFC = withDesign({
   RedCard: asToken(startWith(Card), asDefaultCard, asRedCard),
 })(FlowContainer);
 ```
-The above will cause the component selector to display a  "Color" filter
+The above will cause the component selector to display a "Color" filter
 with checkboxes for "Red" and "Blue".
 
 #### Mandatory Categories
@@ -150,7 +150,7 @@ const FCWithBlacklistedCategory = asToken(
   withDesign({
     BlueCard: asToken(startWith(Card), asDefaultCard, asBlueCard),
   }),
-  addProps({ blacklistCateogries: ['Design System' ] }),
+  addProps({ blacklistCateogries: ['Design System'] }),
 )(FlowContainer);
 ```
 Only the "Color" filter will be displayed (not the "Design System" filter).
@@ -311,7 +311,7 @@ a preview).
 
 To facilitate custom previews, the flow container provides a React context
 informing each component whether it is being rendered in the component
-selector or on the actua page.  A component can use this to change the
+selector or on the actual page.  A component can use this to change the
 way it renders in each context.  For example:
 ```js
 import { ifComponentSelector } from '@bodiless/layouts';
