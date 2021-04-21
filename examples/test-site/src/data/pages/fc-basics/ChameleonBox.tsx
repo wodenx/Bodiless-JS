@@ -4,13 +4,16 @@ import {
   asBox, asBlue, asOrange, asTeal, withBlueBorder,
 } from './Box';
 
-const useToggleOverrides = () => ({
-  groupLabel: 'Fill',
-  label: () => (useChameleonContext().isOn ? 'Teal' : 'Blue'),
-});
+const useToggleOverrides = () => {
+  const isOn = useChameleonContext();
+  return {
+    groupLabel: 'Fill',
+    label: isOn ? 'Teal' : 'Blue',
+  };
+};
 
 export const useSwapOverrides = () => ({
-  gropuLabel: 'Fill',
+  groupLabel: 'Fill',
 });
 
 const ChameleonBox = asToken(

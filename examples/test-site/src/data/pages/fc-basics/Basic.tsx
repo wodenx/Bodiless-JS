@@ -1,3 +1,4 @@
+import React from 'react';
 import flow from 'lodash/flow';
 import {
   withDesign, asToken, varyDesigns, Div, addProps, HOC, startWith, addClasses,
@@ -87,10 +88,13 @@ export const withWidthConstraints = flow(
   withTailwindWidthConstraints,
 )(tailwindConfig);
 
+const TestCase = startWith(() => <div>This is a component with no metadata</div>);
+
 const asBasicFlowContainer = asToken(
   // withDesign(basicDesign),
   withAllTitlesFromTerms({ blacklistCategories }),
   withDesign(variations) as HOC,
+  withDesign({ TestCase }),
   addProps({ blacklistCategories }),
   addProps({ mandatoryCategories: ['Color'] }),
   // withWidthConstraints('w-100 w-1/2 sm:w-1/2 sm:w-full lg:w-1/2 lg:w-full'),
