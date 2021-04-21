@@ -37,7 +37,7 @@ const ItemList: React.FC<ItemListProps> = props => {
   // Function to build a default title for a component from its categories.
   const title = (component: ComponentWithMeta) => component.title || component.displayName;
 
-  // Function to build a defaul t description for a component from its categories.
+  // Function to build a default description for a component from its categories.
   const description = (component: ComponentWithMeta) => component.description || 'No description';
 
   const getRowHeight = () => {

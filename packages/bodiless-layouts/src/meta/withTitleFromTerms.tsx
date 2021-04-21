@@ -53,10 +53,10 @@ const getTitleFromTerms = (
 };
 
 /**
- * Createw a token which adds a `title` property to a component. This is derived from all
+ * Creates a token which adds a `title` property to a component. This is derived from all
  * terms which have been applied to that component.
  *
- * The new title will only be added if the component does not aleady have a title.
+ * The new title will only be added if the component does not already have a title.
  *
  * @param ops
  * Options for generating the title.
@@ -68,11 +68,6 @@ const withTitleFromTerms = (ops: WithTitleFromTermsProps = {}): Token => (
   (Component: ComponentOrTag<any>) => asToken({
     title: getTitleFromTerms(Component as ComponentWithMeta<any>, ops),
   })(Component)
-  // (Component: ComponentOrTag<any>) => {
-  //   const WithTitleFromTerms: ComponentWithMeta = (props: any) => <Component {...props} />;
-  //   WithTitleFromTerms.title = getTitleFromTerms(Component as ComponentWithMeta<any>, ops);
-  //   return WithTitleFromTerms;
-  // }
 );
 
 /**
