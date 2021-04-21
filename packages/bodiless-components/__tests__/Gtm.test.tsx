@@ -98,7 +98,7 @@ describe('DataLayer process', () => {
       wrapper.unmount();
     });
 
-    it('adds GTM form snippet when UI is editable', () => {
+    it.only('adds GTM form snippet when UI is editable', () => {
       const data = dataSet[0];
       const withDataLayerItemPageType = withDataLayerItem({
         name: data.name,
@@ -119,6 +119,7 @@ describe('DataLayer process', () => {
         );
       };
       const wrapper = mount(<TestMetaComponent />);
+      console.log(wrapper.debug());
       expect(wrapper.find('WithEditFormSnippet')).toHaveLength(1);
       wrapper.unmount();
     });

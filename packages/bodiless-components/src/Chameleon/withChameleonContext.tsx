@@ -13,12 +13,12 @@
  */
 
 import React, {
-  createContext, useContext, FC, ComponentType, Fragment,
+  createContext, useContext, FC, Fragment,
 } from 'react';
 import { WithNodeKeyProps, withSidecarNodes, withBodilessData } from '@bodiless/core';
 import {
   HOC, applyDesign, Design, extendDesignable, DesignableComponents,
-  DesignableProps, DesignableComponentsProps, ComponentOrTag,
+  DesignableProps, DesignableComponentsProps, ComponentOrTag, Token,
 } from '@bodiless/fclasses';
 import { omit } from 'lodash';
 import type {
@@ -80,8 +80,8 @@ const applyChameleonDesign = (Component: ComponentOrTag<any>): Designable => {
 const withChameleonContext = (
   nodeKeys: WithNodeKeyProps,
   defaultData?: ChameleonData,
-): HOC => <P extends object>(Component: ComponentType<P>|string) => {
-  const WithChameleonContext: FC<P & ChameleonButtonProps> = props => (
+): Token => Component => {
+  const WithChameleonContext: FC<any> = props => (
     <ChameleonContext.Provider value={{
       isOn: getIsOn(props),
       activeComponent: getActiveComponent(props),
@@ -90,7 +90,7 @@ const withChameleonContext = (
     }}
     >
       <Component
-        {...omit(props, 'componentData', 'components', 'setComponentData') as P}
+        {...omit(props, 'componentData', 'components', 'setComponentData') as any}
       />
     </ChameleonContext.Provider>
   );

@@ -12,9 +12,9 @@
  * limitations under the License.
  */
 
-import React, { createContext, useContext, ComponentType } from 'react';
-import { flowRight } from 'lodash';
-import type { HOC } from '@bodiless/fclasses';
+import React, { createContext, useContext } from 'react';
+import type { HOC, Token } from '@bodiless/fclasses';
+import { asToken } from '@bodiless/fclasses';
 import { NodeContext } from './NodeProvider';
 import type { NodeMap } from './NodeProvider';
 
@@ -28,8 +28,8 @@ const SidecarNodeContext = createContext<NodeMap<any>[]>([]);
  *
  * @param Component Any component which uses the Bodiless ContentNode system.
  */
-const startSidecarNodes = <P extends object>(Component: ComponentType<P>|string) => {
-  const StartSidecarNodes = (props: P) => {
+const startSidecarNodes: Token = Component => {
+  const StartSidecarNodes = (props: any) => {
     const oldValue = useContext(SidecarNodeContext);
     const newValue = [...oldValue, useContext(NodeContext)];
     return (
@@ -50,8 +50,8 @@ const startSidecarNodes = <P extends object>(Component: ComponentType<P>|string)
  *
  * @param Component Any component which uses the Bodiless ContentNode system.
  */
-const endSidecarNodes = <P extends object>(Component: ComponentType<P>|string) => {
-  const EndSidecarNodes = (props: P) => {
+const endSidecarNodes: Token = Component => {
+  const EndSidecarNodes = (props: any) => {
     const oldValue = useContext(SidecarNodeContext);
     if (oldValue.length === 0) return <Component {...props} />;
     const newNodeProviderValue = oldValue[oldValue.length - 1];
@@ -97,6 +97,11 @@ const withSidecarNodes = (...hocs: HOC[]) => flowRight(
   ...hocs,
   endSidecarNodes,
 );
+// const withSidecarNodes = (...hocs: HOC[]) => asToken(
+//   endSidecarNodes,
+//   ...hocs.reverse(),
+//   startSidecarNodes,
+// );
 
 export default withSidecarNodes;
 export { startSidecarNodes, endSidecarNodes };
