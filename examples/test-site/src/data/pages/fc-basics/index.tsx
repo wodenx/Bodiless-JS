@@ -25,7 +25,7 @@ const FCDemo = withBasicVariations(FlowContainer as any);
 export default (props: any) => (
   <Page {...props}>
     <Layout>
-      <h1 className="text-3xl font-bold">Flow Container Bugs</h1>
+      <h1 className="text-3xl font-bold">Flow Container Basics</h1>
       <FCDemo nodeKey="foo" />
       <ChameleonBox />
     </Layout>
