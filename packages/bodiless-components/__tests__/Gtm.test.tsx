@@ -98,7 +98,7 @@ describe('DataLayer process', () => {
       wrapper.unmount();
     });
 
-    it.only('adds GTM form snippet when UI is editable', () => {
+    it('adds GTM form snippet when UI is editable', () => {
       const data = dataSet[0];
       const withDataLayerItemPageType = withDataLayerItem({
         name: data.name,

@@ -14,7 +14,7 @@
 
 import React, { createContext, useContext } from 'react';
 import type { HOC, Token } from '@bodiless/fclasses';
-import { asToken } from '@bodiless/fclasses';
+import { flowRight } from 'lodash';
 import { NodeContext } from './NodeProvider';
 import type { NodeMap } from './NodeProvider';
 
@@ -96,12 +96,7 @@ const withSidecarNodes = (...hocs: HOC[]) => flowRight(
   startSidecarNodes,
   ...hocs,
   endSidecarNodes,
-);
-// const withSidecarNodes = (...hocs: HOC[]) => asToken(
-//   endSidecarNodes,
-//   ...hocs.reverse(),
-//   startSidecarNodes,
-// );
+) as Token;
 
 export default withSidecarNodes;
 export { startSidecarNodes, endSidecarNodes };
