@@ -22,7 +22,7 @@ const ChameleonBox = asToken(
   // asBodilessChameleon('chameleon', undefined, useSwapOverrides),
   withBlueBorder,
   withDesign({
-    Teal: asToken(asTeal, { title: 'Color Tesl' }),
+    Teal: asToken(asTeal, { title: 'Color Teal' }),
     Orange: asOrange,
     _default: asBlue,
   }),
