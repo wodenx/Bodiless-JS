@@ -9,7 +9,7 @@ export const asBox = asToken(
 
 export const withBlueBorder = asToken(
   addClasses('border-blue-800 border-8'),
-  asToken.meta.term('Color')('Blue=Border'),
+  asToken.meta.term('Color')('Blue-Border'),
   asToken.meta.term('Attribute')('border'),
 );
 
