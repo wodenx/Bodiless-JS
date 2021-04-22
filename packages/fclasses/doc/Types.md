@@ -20,7 +20,7 @@ with the BodilessJS documentation on
 - **Base Component** The component to which a token or HOC applies.
 - **Enhanced Component** The component returned by a token or HOC.
 - **Enhancer** A token or HOC which introducres new props in the enhanced
-  compoennt.
+  component.
 - **Injector** A token or HOC which provides a value for one of the base
   component's props. That prop becomes optional in the enhanced component.
 - **Token Generator** A function which takes some parameters and returns a token
