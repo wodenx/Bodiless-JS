@@ -107,7 +107,7 @@ export const withLocalContextMenu: HOC = Component => {
 // @TODO: Combine withNode and withNodeDataHandlers and fix types
 /**
  * Creates an HOC which reads data from the current content node and injects two
- * props to th target component:
+ * props to the target component:
  * - `componentData`: The `data` property from the node.
  * - `setComponentData`: A function which calls the `setData` method
  *    on the node,
@@ -116,7 +116,7 @@ export const withLocalContextMenu: HOC = Component => {
  * A default value for `componentData` when the node's `data` property is empty.
  *
  * @returns
- * A component 3hich passes data handlers to the base component.
+ * A component which passes data handlers to the base component.
  */
 export const withNodeDataHandlers = <D extends object>(
   defaultData?: D,

@@ -119,7 +119,6 @@ describe('DataLayer process', () => {
         );
       };
       const wrapper = mount(<TestMetaComponent />);
-      console.log(wrapper.debug());
       expect(wrapper.find('WithEditFormSnippet')).toHaveLength(1);
       wrapper.unmount();
     });

@@ -128,8 +128,8 @@ const asEditable = (
   // @TODO: Use withChild.
   const useOverrides = useOverrides$ || (() => ({}));
   const EditableChild = asToken(
-    withNodeKey(nodeKeys),
     withPlaceholder(placeholder),
+    withNodeKey(nodeKeys),
   )(Editable);
   const AsEditable: FC<any> = props => {
     const {
