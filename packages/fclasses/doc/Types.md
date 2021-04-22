@@ -68,7 +68,7 @@ const A1T2 = <A1 foo="foo" />;
 const A1T3 = <A1 foo="foo" bar="bar" baz="baz" />;
 ```
 Some things to note:
-- We give the enhanced componennt an explicit name (`Withhild`) so that it is
+- We give the enhanced component an explicit name (`Withld`) so that it is
   easily identifiable in the React debugger.
 - We do not eplicitly type the base component parameter (`C`); this is handled
   by the `Token` type.
