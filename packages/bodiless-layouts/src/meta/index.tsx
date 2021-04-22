@@ -129,6 +129,7 @@ const withFacet = (cat: string) => (term: string) => (...hocs: HOC[]) => asToken
   withAppendDesc(`${cat}: ${term}\n`),
 );
 
+export * from './withTitleFromTerms';
 export {
   withMeta,
   withTitle,

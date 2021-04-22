@@ -33,6 +33,7 @@ export type EditFlowContainerProps = DesignableComponentsProps & HTMLProps<HTMLD
   maxComponents?: number,
   minComponents?: number,
   mandatoryCategories?: string[],
+  blacklistCategoris?: string[],
   isResizeEnabled?: boolean,
 };
 export type WidthClassTuple = {
