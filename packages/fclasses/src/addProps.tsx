@@ -18,7 +18,7 @@ import { Condition } from './hoc-util';
 type NotAFunction = { [key: string]: any, bind?: never, call?: never };
 
 /**
- * Creates an HOC that njects the specified props to the base compnent.
+ * Creates an HOC that injects the specified props to the base component.
  *
  * Any props passed to the resulting component will take precedence
  * over those specified here.
