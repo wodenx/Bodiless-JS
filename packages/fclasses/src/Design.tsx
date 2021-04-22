@@ -211,7 +211,7 @@ export const replaceWith = <P extends object>(Replacement: ComponentOrTag<P>) =>
   (() => {
     const ReplaceWith = (props: P) => <Replacement {...props} />;
     return ReplaceWith;
-  }) as Token, // Must cast bc we don't take a `Comoonent` parameter.
+  }) as Token, // Must cast bc we don't take a `Component` parameter.
 );
 
 export const remove = <P extends React.HTMLAttributes<HTMLBaseElement>> () => (props:P) => {
