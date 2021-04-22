@@ -49,7 +49,7 @@ const Base2: FC<Base2Props> = () => null;
 
 const Base3: FC<BaseProps & Base2Props> = () => null;
 ```
-Then we might define a generic token generator producing a token which iinserts
+Then we might define a generic token generator producing a token which inserts
 a child as:
 ```ts
 const withChild = (Child: ComponentOrTag<any>): Token => C => {
