@@ -317,7 +317,7 @@ export const withFinalDesign = <C extends DesignableComponents>(
   };
 
 type TransformDesign = (design?: Design<any>) => Design<any>|undefined;
-type Designable<C extends DesignableComponents = DesignableComponents>
+export type Designable<C extends DesignableComponents = DesignableComponents>
   = HOC<{}, DesignableProps<C>, DesignableComponentsProps<C>>;
 
 /**

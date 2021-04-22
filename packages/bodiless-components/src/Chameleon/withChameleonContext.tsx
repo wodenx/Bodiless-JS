@@ -17,9 +17,9 @@ import React, {
 } from 'react';
 import { WithNodeKeyProps, withSidecarNodes, withBodilessData } from '@bodiless/core';
 import {
-  HOC, applyDesign, Design, extendDesignable, DesignableComponents,
-  DesignableProps, DesignableComponentsProps, ComponentOrTag, Token,
+  applyDesign, extendDesignable, ComponentOrTag, Token,
 } from '@bodiless/fclasses';
+import type { Designable, Design } from '@bodiless/fclasses';
 import { omit } from 'lodash';
 import type {
   ChameleonState, ChameleonData, ChameleonButtonProps, ChameleonComponents,
@@ -54,9 +54,6 @@ const useChameleonContext = (): ChameleonState => {
   if (!value) throw new Error('No active chameleon context');
   return value;
 };
-
-type Designable<C extends DesignableComponents = DesignableComponents>
-  = HOC<{}, DesignableProps<C>, DesignableComponentsProps<C>>;
 
 /**
  * @private
