@@ -19,7 +19,7 @@ with the BodilessJS documentation on
 - **Token** A unit of design or behavior, expressed as a higher order component.
 - **Base Component** The component to which a token or HOC applies.
 - **Enhanced Component** The component returned by a token or HOC.
-- **Enhancer** A token or HOC which introducres new props in the enhanced
+- **Enhancer** A token or HOC which introduces new props in the enhanced
   component.
 - **Injector** A token or HOC which provides a value for one of the base
   component's props. That prop becomes optional in the enhanced component.
