@@ -23,7 +23,7 @@ same design system to multiple sites, extending it as needed.
   [Bodiless Design System](../../Design/DesignSystem). Even if you don't
   follow everything, it will give essential insight into the "why" of
   what you will do in this tutorial.
-* Acquire a basic understanding of utiltiy first CSS (aka "Atomic" or "Functional" CSS)
+* Acquire a basic understanding of utility first CSS (aka "Atomic" or "Functional" CSS)
   and the [Tailwind](https://tailwindcss.com/) library.  There are many excellent
   articles on the web on this topic.  While you can use the Bodiless design system
   with other css-in-js paradigms, this is the one we recommend.
