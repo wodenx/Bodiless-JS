@@ -40,6 +40,7 @@ import {
   withoutProps,
   withExtendHandler,
   withOnlyProps,
+  withResizeDetector,
 } from './hoc';
 import { ifToggledOff, ifToggledOn, withFlowToggle } from './withFlowToggle';
 import { ifEditable, ifReadOnly, useEditToggle } from './withEditToggle';
@@ -64,7 +65,7 @@ import {
   useNotify,
 } from './NotificationProvider';
 import withNotificationButton from './withNotificationButton';
-import withChild from './withChild';
+import withChild, { withAppendChild, withPrependChild } from './withChild';
 import asBodilessComponent, { withActivatorWrapper, withBodilessData } from './asBodilessComponent';
 import type { Options as BodilessOptions, AsBodiless } from './asBodilessComponent';
 import { useMenuOptionUI } from './components/ContextMenuContext';
@@ -117,11 +118,14 @@ export {
   ifReadOnly,
   withoutProps,
   withOnlyProps,
+  withResizeDetector,
   ActivateOnEffectProvider,
   withActivateOnEffect,
   useActivateOnEffect,
   useActivateOnEffectActivator,
   withChild,
+  withAppendChild,
+  withPrependChild,
   ifToggledOff,
   ifToggledOn,
   withFlowToggle,
