@@ -415,7 +415,7 @@ to make it more flexible and reusable.
    ```
    > Note the second argument to `designable`.  It is a human-readable label
    > which can appear in the markup to help you identify what design keys are
-   > producing a apecific element.
+   > producing a specific element.
     
 1. Next, lets pass in some HOC's via `withDesign` to make our component editable.
    ```ts
