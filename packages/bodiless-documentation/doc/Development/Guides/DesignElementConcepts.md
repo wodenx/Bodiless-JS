@@ -397,7 +397,7 @@ to make it more flexible and reusable.
     the defaults for these components above (`captionedImageComponents`), but
     we will actually render whatever we are passed.
 
-    > Fpr cpnvenience, we pass the rest of the props through to our `Wrapper`
+    > For convenience, we pass the rest of the props through to our `Wrapper`
     > component. This will allow our component to behave as expected when it
     > receives normal html element props (like `className` or `id`).
     
