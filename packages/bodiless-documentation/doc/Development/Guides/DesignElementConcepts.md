@@ -272,7 +272,7 @@ a corresponding HOC. This will:
 
 > Note on naming conventions: In general, we being HOC's with `as...` or
 > `with...`, but it's sometimes hard to know when to use each. One rule of thumb
-> we've found helpful is to use `with...` when your token is adding somethign
+> we've found helpful is to use `with...` when your token is adding something
 > (`withLinkStyles`, `withLinkEditors `), and `as...` when it is defining a
 > complete, composed variation of a component (`asLink`) -- though we sometimes
 > also use `as...` for primitive tokens which toggle state (`asBold`, `asItalic`).
