@@ -238,7 +238,7 @@ fixed on each page.
     of what we call "behavioral" tokens -- tokens which express behavior or
     functionality rather than visual design.  We export these separately to
     facilitate placing *non-editable* page titles on pages where that may
-    be appropriate. For conveniens, we also export an `asPrimaryHeader` token
+    be appropriate. For convenience, we also export an `asPrimaryHeader` token
     which composes them.
   
 1. Remember to add imports needed & export these new tokens.
