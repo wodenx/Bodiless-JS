@@ -849,7 +849,6 @@ Design API as well, using the same method we just did.
       );
     };
 
-
     const GalleryClean = flow(
       designable(galleryStart),
       withNode,
