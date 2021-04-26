@@ -651,7 +651,7 @@ our design calls for a page header block with image and a header text.
 
        This has the advantage of clearly specifying from the ground up how the
        page topper should look and behave, but it's a bit verbose and requires
-       you to re-compose the image editor as well as the text editor.
+       you to recompose the image editor as well as the text editor.
 
     3. Reset
 
