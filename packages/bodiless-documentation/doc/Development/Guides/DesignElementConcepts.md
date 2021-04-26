@@ -40,7 +40,7 @@ consistent.
 
 If it does not exist already, create a `/src/components/Elements` directory
 at the root of your project.  In this, create a `tokens.ts` file, and ddd
-the follwing lines there:
+the following lines there:
 
 ```ts
 import {
