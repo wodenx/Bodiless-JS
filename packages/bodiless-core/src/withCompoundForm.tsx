@@ -71,7 +71,7 @@ const Form = <D extends object>(props: FormProps<D>) => {
   const submitValues = (values: any) => {
     snippets.forEach(s => {
       if (s.submitValues) {
-        s.submitValues(values[s.id]);
+        s.submitValues(values[s.id] || {});
       }
     });
   };
@@ -97,7 +97,7 @@ const Form = <D extends object>(props: FormProps<D>) => {
       <>
         {snippets$.map(s => (
           <Scope scope={s.id} key={s.id}>
-            {s.render(renderProps)}
+            {s.render({ ...renderProps, scope: s.id })}
           </Scope>
         ))}
       </>
