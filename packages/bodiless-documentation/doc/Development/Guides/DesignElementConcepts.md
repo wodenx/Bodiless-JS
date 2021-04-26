@@ -417,7 +417,7 @@ to make it more flexible and reusable.
    > which can appear in the markup to help you identify what design keys are
    > producing a specific element.
     
-1. Next, lets pass in some HOC's via `withDesign` to make our component editable.
+1. Next, let's pass in some HOC's via `withDesign` to make our component editable.
    ```ts
    export const asCaptionedImageToken = (...attributes: string[]) => (...defs: TokenDef<any>[]) => asToken(
      ...defs,
