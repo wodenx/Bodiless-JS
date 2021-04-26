@@ -453,8 +453,8 @@ to make it more flexible and reusable.
    `withDesign()` takes a a "Design": object whose keys are the names of the
    sub-components which belong to our `CaptionedImage`, and whose values are
    tokens (higher-order components) which should be applied to each. It returns
-   an token which can be applied to our `CaptionedImage` to style (or otherwise
-   alter) it's subcomponents.
+   a token which can be applied to our `CaptionedImage` to style (or otherwise
+   alter) its sub-components.
 
    Note: in the above example we create *element* level tokens
    (`withCaptionedImageTitleEditor`, `withCaptionedImageImageEditor`) which we
