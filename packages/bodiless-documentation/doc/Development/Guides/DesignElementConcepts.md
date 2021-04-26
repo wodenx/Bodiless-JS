@@ -608,7 +608,7 @@ our design calls for a page header block with image and a header text.
 
        Note the use of the `replaceWith` HOC here. This will remove any tokens
        previously applied to the design key.  It's a good option if you know
-       (as here) exaclty how and where your component will be used.
+       (as here) exactly how and where your component will be used.
 
     2. Recompose.
 
