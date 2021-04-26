@@ -621,7 +621,7 @@ system. Usually these tokens would be defined elsewhere (most likely under you
 pattern can be found in
 [Design System documentation](../../Design/DesignSystem).
 
-now we'll use these tokens to define the components which will be available
+Now we'll use these tokens to define the components which will be available
 for placement in our gallery:
 
 ``` js
