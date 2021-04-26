@@ -110,7 +110,7 @@ It's up to you how you want to classify your tokens -- Bodiless
 allows arbitrary "categories".  Here we specify 3 categories for each token:
 - `Component`: The name of the component to which the token can be applied. We use
   `Element` to indicate that these tokens apply to any HTML element.
-- 'Attribute': The atttribute(s) which this token specifies. The general convention
+- 'Attribute': The attribute(s) which this token specifies. The general convention
   here is that two tokens which specify the same attribute should not be applied
   at the same time.
 
