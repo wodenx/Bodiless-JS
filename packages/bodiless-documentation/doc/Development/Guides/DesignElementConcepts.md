@@ -180,8 +180,8 @@ Now let's use these site-level tokens on our gallery page:
    export * from './tokens';
    export { withSimpleEditor }
    ```
-1. In `/src/data/pages/gallery`, replace
-   `import withSimpleEditor from './withSimpleEditor';` with
+1. In `/src/data/pages/gallery`, replace  
+   `import withSimpleEditor from './withSimpleEditor';` with  
    `import { withSimpleEditor } from '../../../components/Element';`
 1. Repeat above steps in `CaptionedImage.tsx`
 1. Delete the file `withSimpleEditor.tsx`
