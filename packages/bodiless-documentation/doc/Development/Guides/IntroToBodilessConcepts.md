@@ -662,7 +662,7 @@ a set of available components.  In both cases. we start with the special
 
 Next, replace the `Body` of the gallery with a flow container (a flexbox-based
 layout builder) which makes our three tiles available for placement by a content
-edtior.
+editor.
 
 ```ts
 const Body = withDesign(design)(FlowContainer);
