@@ -603,7 +603,7 @@ our design calls for a page header block with image and a header text.
          withDesign({
            Body: replaceWith(PrimaryHeader),
          }),
-       )(CationedImage);
+       )(CaptionedImage);
        ```
 
        Note the use of the `replaceWith` HOC here. This will remove any tokens
