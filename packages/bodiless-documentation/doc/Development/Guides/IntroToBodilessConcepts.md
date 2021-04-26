@@ -68,10 +68,9 @@ A few things to note:
 1. A page query incorporating two fragments, also defined in
    `gatsby-theme-bodiless` ensures that Bodiless is able to find and load
    content for the page.
-1. Styling uses [Tailwind](https://tailwindcss.com). *More about this later*.
 
 Now start the development server (`npm run start`) and navigate to
-`localhost:8000/gallery`. This is just a basic Gatsby page - nothing remarkable
+`localhost:8000/my-first-page`. This is just a basic Gatsby page - nothing remarkable
 yet (except Gatsby itself, of course!).
 
 ### Creating Pages from the UI
@@ -102,7 +101,8 @@ However, we recommend using
 ["Functional" or "Atomic" CSS](https://johnpolacek.github.io/the-case-for-atomic-css/),
 and building your UI as a set of composable *Design Tokens* expressed as React
 higher-order components. This is the pattern used in the examples below, and the
-`@bodiless/fclasses` library contains some utilities to make it easier.
+`@bodiless/fclasses` library contains some utilities to make it easier.  We also
+use the [Tailwind](https://tailwindcss.com) library to generate our utiltiy classes.
 
 Begin by refactoring the page title using this pattern. Add the following
 imports to your `index.tsx`:
@@ -141,33 +141,32 @@ const withPrimaryHeaderStyles = flow(stylable, addClasses('text-3xl font-bold`))
 ```
 but, fortunately, you don't have to, since `@bodiless/fclasses` exports a
 stylable version of every HTML element. If you revisit the
-localhost:8005/gallery the header is rendered with the h1 and new classes.
+localhost:8005/my-first-page the header is rendered with the h1 and new classes.
 
 You can read more about this pattern for building out a site's UI in our
 [Design System documentation](../../Design/DesignSystem).
 
 ## 3. Making the Page Title Editable
 
-To make the title of our page editable BodilessJS provides some core components.
-The simplest of these is`Editable` - a simple, unformatted text field.
-
+Bodiless provides a number of core HOC's To make various components editable.
+The simplest of these is`asEditable` - a simple, unformatted text field.
 
 Add the following import to the top of your index.tsx:
 ```ts
 import { asEditable } from '@bodiless/components';
-import { flow } from 'lodash';
+import { addClasses, H1, asToken } from '@bodiless/fclasses';
 ```
 And then update your `PrimaryHeader` definition to make it editable:
 ```ts
-const PrimaryHeader = flow(
+const PrimaryHeader = asToken(
   asEditable('title', 'Title'),
   withPrimaryHeaderStyles,
 )(H1);
 ```
 
-Navigate to `localhost:8005/my-first-page` again. You'll see that the "About Us" text
-has been replaced by an editable field with placeholder text. Click on the title
-and start typing. Refresh the page - the title has been saved!
+Navigate to `localhost:8005/my-first-page` again. Click on the "About
+BodilessJS" text and start typing. The text is editable! Now refresh the page.
+The title has been saved!
 
 ### What's happening here?
 
@@ -191,7 +190,7 @@ POSTS in the network tab of your dev tools as you type).
 
 The `nodeKey` you provided as an argument to `asEditable()` (or as a prop to
 `Editable`) tells BodilessJS *where* to store the JSON file. After adding some
-content, you should see a `title.json` file at `src/data/pages/gallery`, and it
+content, you should see a `title.json` file at `src/data/pages/my-first-page`, and it
 should look something like this:
 
 ```json
@@ -206,6 +205,11 @@ courtesy of `gatsby-source-filesystem` and hot reload. Or, open the same url in
 a different browser window and start editing - the changes will propagate to the
 other window in near-realtime. Cool!
 
+Note the use of `asToken` in the above code. This is a custom composition
+utility provided by BodilessJS. We will go into it in more detail in subsequent
+tutorials; for now, just treat it as an equivalent to Lodash
+[flow](https://lodash.com/docs/4.17.15#flow).
+
 
 ## 4. Adding Images and Links to the Page
 
@@ -215,7 +219,7 @@ image link to our page.
 Change the imports from `@bodiless/components` and `@bodiless/fclasses`;
 
 ```ts
-import { H1, Img, A, addClasses } from '@bodiless/fclasses';
+import { H1, Img, A, addClasses, asToken } from '@bodiless/fclasses';
 import { asEditable, asBodilessLink } from '@bodiless/components';
 import { asBodilessImage } from '@bodiless/components-ui';
 ```
@@ -245,7 +249,7 @@ Reload your page and click on the image placeholder. Image and link edit buttons
 will appear; you can use them to upload and image and set the `href` of the
 link.
 
-Look in `src/data/pages/gallery`. You should now see two new `json` files:
+Look in `src/data/pages/my-first-page`. You should now see two new `json` files:
 `hero-link.json` and `hero-link$hero-image.json`. The first will contain the
 data you entered for the link, the second the data you entered for the image. As
 with the simple editable, the names of these files are defined by the 'nodeKey'
@@ -279,11 +283,13 @@ BodilessJS uses "node collections" to manage such content.
 Add the following to your `index.tsx`:
 ```ts
 const Footer = asEditable(
-  { nodeKey: 'footer', nodeCollection: 'site' }.
+  { nodeKey: 'footer', nodeCollection: 'site' },
   'Footer text',
 )(Section);
 ```
+
 and, just before the closing `</Layout>` tag:
+
 ```
 <Footer />
 ```
@@ -320,6 +326,8 @@ export const query = graphql`
 
 You can create additional collections by writing your own queries.
 
+> For the remainder of this guide, you should work with in the `gallery` page.
+
 ## 6. Configure the Rich Text Editor
 
 The BodilessJS core component:`RichText` is used to make the body of the page
@@ -330,24 +338,36 @@ alongside your `index.tsx` file in the new gallery page folder with the
 following contents:
 
 ```ts
-import { flow } from 'lodash';
 import { RichText } from '@bodiless/richtext-ui';
 import {
   Strong,
   addClasses,
   withDesign,
   asToken,
+  Token,
+  replaceWith,
+  Em,
+  A,
 } from '@bodiless/fclasses';
-import {
-  withComponent,
-} from '@bodiless/richtext';
 import { asBodilessLink, withPlaceholder } from '@bodiless/components';
 import { withChild, withNodeKey } from '@bodiless/core';
 
-const asBold = withComponent(Strong);
-const asItalic = addClasses('');
+const asBold = asToken(
+  replaceWith(Strong),
+  addClasses('font-bold'),
+);
+
+const asItalic = asToken(
+  replaceWith(Em),
+);
+
 const asUnderline = addClasses('underline');
-const asLink = asToken(asBodilessLink(), addClasses('text-blue-700 underline'));
+
+const asLink = asToken(
+  replaceWith(A),
+  asBodilessLink(),
+  addClasses('text-blue-700 underline')
+);
 
 const simpleDesign = {
   Bold: asBold,
@@ -356,38 +376,38 @@ const simpleDesign = {
   Link: asLink,
 };
 
-const withSimpleEditor = (nodeKey?: string, placeholder?: string) => flow(
+const withSimpleEditor = (nodeKey?: string, placeholder?: string) => asToken(
   addClasses('overflow-hidden'),
-  withChild(
-    flow(
+  withChild(RichText, 'Editor'),
+  withDesign({
+    Editor: asToken(
       withDesign(simpleDesign),
       withPlaceholder(placeholder),
       withNodeKey(nodeKey),
-    )(RichText),
-    'Editor',
-  ),
+    ),
+  }),
 );
 
 export default withSimpleEditor;
 ```
 
-Now
+Now, in your `index.tsx` in the `gallery` directory:
 - import `Div` from `@bodiless/fclasses` by adding it into the import.
-  ```
-  import { H1, addClasses, Div, } from '@bodiless/fclasses';
+  ```ts
+  import { H1, Img, A, addClasses, asToken, Section, Div } from '@bodiless/fclasses';
   ```
 - import your `withSimpleEditor` HOC into your `index.tsx`:
-  ```
+  ```ts
   import withSimpleEditor from './withSimpleEditor';
   ```
 - create a `Body` component:
-  ```
+  ```ts
   const Body = withSimpleEditor('body', 'Body')(Div);
   ```
 - and replace the *lorem ipsum* paragraph with the following:
-```
-<Body />
-```
+  ```ts
+  <Body />
+  ```
 
 Visit your page again. Start typing in the *Body* field. Select some text. Add
 some formatting. Now check out `body.json` in your `src/data/pages/gallery`
@@ -401,11 +421,23 @@ To configure `RichText` editor, we specified what components should be used to
 render different text formatting options. Normally, these would be defined by
 the styleguide of a site. Here we used very simple ones:
 
-```
-const asBold = withComponent(Strong);
-const asItalic = addClasses('');
+```ts
+const asBold = asToken(
+  replaceWith(Strong),
+  addClasses('font-bold'),
+);
+
+const asItalic = asToken(
+  replaceWith(Em),
+);
+
 const asUnderline = addClasses('underline');
-const asLink = flow(asBodilessLink(), addClasses('text-blue-700 underline'));
+
+const asLink = asToken(
+  replaceWith(A),
+  asBodilessLink(),
+  addClasses('text-blue-700 underline')
+);
 ```
 
 Next, we defined how the user would interact with these options (what each would
@@ -426,16 +458,16 @@ to the component to which it was applied (just as `asEditable()` added an editor
 for unformatted text):
 
 ```ts
-const withSimpleEditor = (nodeKey?: string, placeholder?: string) => flow(
+const withSimpleEditor = (nodeKey?: string, placeholder?: string) => asToken(
   addClasses('overflow-hidden'),
-  withChild(
-    flow(
+  withChild(RichText, 'Editor'),
+  withDesign({
+    Editor: asToken(
       withDesign(simpleDesign),
       withPlaceholder(placeholder),
       withNodeKey(nodeKey),
-    )(RichText),
-    'Editor',
-  ),
+    ),
+  }),
 );
 ```
 
@@ -456,23 +488,27 @@ import React, { FC, HTMLProps } from 'react';
 import { asBodilessImage } from '@bodiless/components-ui';
 import { withNode } from '@bodiless/core';
 import {
-  Img, Section, Div, addClasses, stylable,
+  Img, Section, Div, addClasses, stylable, asToken,
 } from '@bodiless/fclasses';
-import { flow } from 'lodash';
 import withSimpleEditor from './withSimpleEditor';
 
 const Wrapper = Section;
-const Image = flow(addClasses('w-full'), asBodilessImage('image'))(Img);
+const Image = asToken(addClasses('w-full'), asBodilessImage('image'))(Img);
 const Body = withSimpleEditor('caption', 'Caption')(Div);
 
-const CaptionedImage: FC<HTMLProps<HTMLElement>> = props => (
+const CaptionedImageBase: FC<HTMLProps<HTMLElement>> = props => (
   <Wrapper {...props}>
     <Image />
     <Body />
   </Wrapper>
 );
 
-export default withNode(stylable(CaptionedImage));
+const CaptionedImage = asToken(
+  stylable,
+  withNode,
+)(CaptionedImageBase);
+
+export default CaptionedImage;
 ```
 
 The pattern here should be familiar: stylable primitives are imported and add
@@ -485,10 +521,10 @@ API.
 
 Next create a `Gallery.tsx` file as follows:
 
-```
+```ts
 import React, { FC, HTMLProps } from 'react';
 import {
-  H2, Section, Div, addClasses, stylable,
+  H2, Section, Div, addClasses, stylable, asToken,
 } from '@bodiless/fclasses';
 import { withNode } from '@bodiless/core';
 import CaptionedImage from './CaptionedImage';
@@ -499,7 +535,7 @@ const Wrapper = addClasses('my-2')(Section);
 const Header = addClasses('text-2xl')(H2);
 const Body = addClasses('flex')(Div);
 
-const Gallery: FC<HTMLProps<HTMLDivElement>> = ({ children, ...rest }) => (
+const GalleryBase: FC<HTMLProps<HTMLDivElement>> = ({ children, ...rest }) => (
   <Wrapper {...rest}>
     <Header>Gallery</Header>
     <Body>
@@ -508,15 +544,24 @@ const Gallery: FC<HTMLProps<HTMLDivElement>> = ({ children, ...rest }) => (
   </Wrapper>
 );
 
+const Gallery = asToken(
+  stylable,
+  withNode,
+)(GalleryBase);
+
 export const GalleryTile = asGalleryTile(CaptionedImage);
-export default withNode(stylable(Gallery));
+export default Gallery;
 ```
+
 Once again we see the same compositional pattern. Finally, import this into your
 `index.tsx`
-```
+
+```ts
 import Gallery, { GalleryTile } from './Gallery';
 ```
+
 And place it on the page after the `<Body />` tag:
+
 ```
 <Gallery nodeKey="gallery">
   <GalleryTile nodeKey="tile1" />
@@ -562,10 +607,10 @@ First create some styled variations of`GalleryTile` with different colored
 borders. Add the following to `Gallery.tsx` just after the line where
 `asGalleryTile` is defined:
 
-```
+```ts
 const withBlueBorder = addClasses('border-blue-400');
-const withGreenBorder = addClasses('border-green-400');
-const withRedBorder = addClasses('border-red-400');
+const withTealBorder = addClasses('border-teal-400');
+const withOrangeBorder = addClasses('border-orange-400');
 ```
 
 No new components have been created. Instead, *design tokens* which describe
@@ -576,107 +621,94 @@ system. Usually these tokens would be defined elsewhere (most likely under you
 pattern can be found in
 [Design System documentation](../../Design/DesignSystem).
 
-To create the actual components add the following imports:
-
-```ts
-import { flow } from 'lodash';
-import { startWith } from '@bodiless/core';
-import { withTerm, withTitle } from '@bodiless/layouts';
-import { FlowContainer } from '@bodiless/layouts-ui';
-```
-
-Add the following to `Gallery.tsx` just
-after withColoredBorder styling code in previous step:
-
-The FlowContainer takes a design prop that is part of the
-[Design API](../Architecture/FClasses?id=the-design-api). This is how we pass in
-the components that can be used in the grid. we will also use the hoc
-`withTitle` to provide a Title for each component in the selector.
+now we'll use these tokens to define the components which will be available
+for placement in our gallery:
 
 ``` js
 const design = {
-  BlueImageTile: flow(
-    startWith(CaptionedImage),
-    asGalleryTile,
-    withBlueBorder,
-    withTitle('Blue Image Tile'),
-  ),
-  GreenImageTile: flow(
-    startWith(CaptionedImage),
-    asGalleryTile,
-    withGreenBorder,
-    withTitle('Green Image Tile'),
-  ),
-  RedImageTile: flow(
-    startWith(CaptionedImage),
-    asGalleryTile,
-    withRedBorder,
-    withTitle('Red Image Tile')
-  ),
-}
+    BlueImageTile: asToken(
+      replaceWith(CaptionedImage),
+      asGalleryTile,
+      withBlueBorder,
+      { title: 'Blue Image Tile' },
+      asToken.meta.term('Color')('Blue'),
+    ),
+    TealImageTile: asToken(
+      replaceWith(CaptionedImage),
+      asGalleryTile,
+      withTealBorder,
+      { title: 'Teal Image Tile' },
+      asToken.meta.term('Color')('Teal'),
+    ),
+    OrangeImageTile: asToken(
+      replaceWith(CaptionedImage),
+      asGalleryTile,
+      withOrangeBorder,
+      { title: 'Orange Image Tile' },
+      asToken.meta.term('Color')('Orange'),
+    ),
+  };
 ```
 
-The lodash `flow` utility is used to compose tokens onto the`CaptionedImage`
+The `asToken` utility is used to compose tokens onto the`CaptionedImage`
 component. In addition to the styling, *metadata* is attached to our components
-(via `withTitle`). This will control how an editor can view and search for the
-components.
+(via the `{ title: '...' }` objects). This will control how an editor can view
+and search for the components.
 
-Design is an object of HOC so with use the `startWith` HOC to say which
-component we are starting with.
+The `design` object here is similar to the one we used above to populate the
+rich text editor.  It is a keyed set of HOC's which are used to produce
+a set of available components.  In both cases. we start with the special
+`replaceWith` HOC, which injects the specified component as a starting point.
 
-Finally, replace the main content of `Gallery` with the flowContainer grid.
+Next, replace the `Body` of the gallery with a flow container (a flexbox-based
+layout builder) which makes our three tiles available for placement by a content
+edtior.
 
-- First replace the `Body` component definition:
-
-  ``` js
-  const Body = addClasses('flex')(Div);
-  ```
-
-  with
-
-  ``` js
-  const Body: FC = () => (
-    <FlowContainer nodeKey="body" design={design} />
-  );
-  ```
-
-- Then remove the children where the `<Body />` tag appears - change
-
-  ``` js
-  <Body>
-    {children}
-  </Body>
-  ```
-
-  to
-
-  ``` js
-  <Body />
-  ```
+```ts
+const Body = withDesign(design)(FlowContainer);
+```
+And remove the children where the `<Body />` tag appears - change
+``` js
+<Body>
+  {children}
+</Body>
+```
+to
+``` js
+<Body />
+```
 
 Now remove the following from `index.tsx`:
-```
+
+```ts
 <Gallery nodeKey="gallery">
   <GalleryTile nodeKey="tile1" />
   <GalleryTile nodeKey="tile2" />
 </Gallery>
 ```
 And replace with:
-```
+```ts
 <Gallery nodeKey="gallery" />
 ```
-Don't forget to modify the import:
-```
-import Gallery from './Gallery';
+
+Be sure to update the imports in `Gallery.tsx`.  They should now be:
+```ts
+import React, { FC, HTMLProps } from 'react';
+import {
+  H2, Section, Div, addClasses, stylable, asToken, replaceWith, withDesign, addProps,
+} from '@bodiless/fclasses';
+import { FlowContainer } from '@bodiless/layouts-ui';
+import { withNode } from '@bodiless/core';
+import CaptionedImage from './CaptionedImage';
 ```
 
-Reload your page. Click below the "Gallery" title. Notice that a plus-sign (+)
-icon appears on the left sidebar. Click it to open the component selector.
-You'll see the three styled components rendered. You can filter them by the
-facets on the left, or search for them by name--both using the metadata you
-attached above.
+Reload your page. Click on the "Empty Flow container" text below the "Gallery"
+title. Notice that a plus-sign (+) icon appears on the context menu. Click it to
+open the component selector. You'll see the three styled components rendered.
+You can filter them by the facets on the left, or search for them by name--both
+using the metadata you attached above.
 
-Click one of the components to select it. It will be inserted at full width into
+Click one of the components to select it. It will be inserted at 1/4 width into
 your gallery. You can use the resize handle at right edge to change its
 size--notice that it snaps to a predefined grid (the grid stops are
 configurable). Add another component and use the drag handle at the upper left
@@ -684,7 +716,7 @@ to reorder them. Notice that they will flow to fill a row as long as there is
 space, and flow to the next row when the space is exhausted.
 
 Click on the image to upload images, and edit the caption text. Use the
-trash-can icon on the sidebar to remove components from the grid.
+trash-can icon on the context menu to remove components from the grid.
 
 If you look in your `src/data/pages/gallery` directory, you will see new `json`
 files. Each tile you add to the grid will have its own set of files, keyed with
@@ -708,30 +740,3 @@ components. The component selector supports this pattern by providing
 sophisticated search and filter capabilities allowing a content editor to find
 the exact component they are looking for quickly and easily. You can read more
 about this in our [Core Principles](../../About/CorePrinciples).
-
-With this in mind we can use the `varyDesign` function to refactor the design we
-use in the Gallery.
-
-This function takes any number of designs, and produces a new design which
-combines each key of the each design with each key of all the others -- for
-example, if your designs were { A, B } and {C, D}, your new design would be {
-AC, AD, BC, BD }. In our case:
-
-``` js
-const galleryDesign = varyDesign(
-  {
-    ImageTile: flow(
-      replaceWith(CaptionedImage),
-      stylable,
-      asGalleryTile,
-      withTitle('ImageTitle'),
-    ),
-  },
-  {
-    Red: withFacet('Color')('Red')(withRedBorder),
-    Green: withFacet('Color')('Green')(withGreenBorder),
-    Blue: withFacet('Color')('Blue')(withBlueBorder),
-  },
-)();
-
-```
