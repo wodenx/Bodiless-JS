@@ -141,7 +141,7 @@ const withPrimaryHeaderStyles = flow(stylable, addClasses('text-3xl font-bold`))
 ```
 but, fortunately, you don't have to, since `@bodiless/fclasses` exports a
 stylable version of every HTML element. If you revisit the
-localhost:8005/my-first-page the header is rendered with the h1 and new classes.
+`localhost:8005/my-first-page` the header is rendered with the h1 and new classes.
 
 You can read more about this pattern for building out a site's UI in our
 [Design System documentation](../../Design/DesignSystem).
