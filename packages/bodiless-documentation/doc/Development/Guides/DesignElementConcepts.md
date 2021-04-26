@@ -30,7 +30,7 @@ same design system to multiple sites, extending it as needed.
 
 ## 1. Make the editor and typography reusable
 
-In this step we are going to move the editor and typograpy tokens definitions
+In this step we are going to move the editor and typography tokens definitions
 from page level to site level.  In general, the types of editors available on a site should be
 standardized to provide a consistent user experience. There is rarely a need for
 custom editors on individual pages.  Similarly, a sites typography should also be
