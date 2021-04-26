@@ -207,7 +207,7 @@ maintain.
 
 ## 3. Create a re-useable Primary Header for the site
 
-In the `index.tsx' on the two pages you created in the previous tutorial,
+In the `index.tsx` on the two pages you created in the previous tutorial,
 you can see we duplicate the same `PrimaryHeader` component.
 quite match: the one on the gallery page is bold. Let's bring them both into the
 design system using a shared set of tokens. This way if we change the style of
