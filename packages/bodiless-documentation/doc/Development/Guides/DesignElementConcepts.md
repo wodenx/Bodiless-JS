@@ -792,7 +792,7 @@ Design API as well, using the same method we just did.
     import { withSimpleEditor } from './Element';
     import CaptionedImage from './CaptionedImage';
     import {
-      withsImageTileStyles,
+      withImageTileStyles,
       withGreenBorder,
       withBlueBorder,
       withRedBorder,
