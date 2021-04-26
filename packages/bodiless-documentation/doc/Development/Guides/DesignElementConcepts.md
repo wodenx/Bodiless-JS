@@ -97,7 +97,7 @@ additional functionality. In this example, we use it to specify
 *metadata* which should attached to the resulting token.
 
 This metadata is useful for several reasons:
-- It encourages us to think of tokens in a structured way
+- It encourages us to think of tokens in a structured way.
 - It provides a basis for browsing and editing tokens using the Bodiless token
   browser (experimental).
 - It allows *fitering* of tokens (we'll get to this in a later tutorial).
