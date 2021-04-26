@@ -461,7 +461,7 @@ to make it more flexible and reusable.
    then use in `withDesign`. This is to facilitate later *re-composition* of the
    compound component (see below).
 
-1. Now lets add styling tokens:
+1. Now let's add styling tokens:
    ```ts
    const withFullWidth = asElementToken('Width')(
      addClasses('w-full'),
