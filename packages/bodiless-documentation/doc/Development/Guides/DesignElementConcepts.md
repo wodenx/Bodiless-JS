@@ -479,7 +479,7 @@ to make it more flexible and reusable.
    ```
    These are very similar to the tokens we created for the primary header.
 
-   Note that `withFullWidth` is probably reusable and belongs in `src/components/Element`.
+   Note that `withFullWidth` is probably reusable and belongs in `src/components/Element`.  
    Note also that `withCaptionedImageStyles` is not strictly necessary (it simply
    repeats `withFullWidth`), but creating it now will make it easier should
    we wish to apply other image styles in the future.
