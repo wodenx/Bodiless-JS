@@ -102,7 +102,7 @@ However, we recommend using
 and building your UI as a set of composable *Design Tokens* expressed as React
 higher-order components. This is the pattern used in the examples below, and the
 `@bodiless/fclasses` library contains some utilities to make it easier.  We also
-use the [Tailwind](https://tailwindcss.com) library to generate our utiltiy classes.
+use the [Tailwind](https://tailwindcss.com) library to generate our utility classes.
 
 Begin by refactoring the page title using this pattern. Add the following
 imports to your `index.tsx`:
