@@ -128,7 +128,7 @@ allows us to attach metadata to it.
 
 Actually, `withLinkEditor` is not itself a token; it is a *token generator*. That is,
 it is a function which accepts some parameters and *returns* a token.  In this
-case, it accpets a node key, and returns a token which makes a link editable, and
+case, it accepts a node key, and returns a token which makes a link editable, and
 stores its data at the specified location.  This pattern is very common in
 Bodiless.
 
