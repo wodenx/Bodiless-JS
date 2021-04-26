@@ -311,7 +311,7 @@ can simply:
 
 Of course, this is a bit of a contrived example, since the token only adds a
 single class, but imagine that the base design system dictated that all bolded
-text had a particualr color, eg:
+text had a particular color, e.g.:
 
 ```ts
   const asBold = asElementToken('Font Weight', 'Text Color')(
