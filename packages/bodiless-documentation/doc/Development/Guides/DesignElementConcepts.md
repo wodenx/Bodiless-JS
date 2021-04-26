@@ -102,7 +102,7 @@ This metadata is useful for several reasons:
   browser (experimental).
 - It allows *fitering* of tokens (we'll get to this in a later tutorial).
 
-To attach metadata to a token, you simplly provide an object as one of the
+To attach metadata to a token, you simply provide an object as one of the
 arguments to `asToken`.  This should have a `categories` key, which is itself
 consists of any number of facets, each of which is an array of terms.
 
