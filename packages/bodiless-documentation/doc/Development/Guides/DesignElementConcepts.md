@@ -136,7 +136,7 @@ Note that here, since we are placing the editable link in a rich text editor,
 we don't need to specify the node key.  The rich text editor itself will
 manage the storage locations assigned to its children.
 
-## Move the text editor token.
+### Move the text editor token.
 
 Now let's move another "behavioral" token to the site level. 
 - Move `withSimpleEditor` from `/src/data/pages/gallery` to `/src/components/Element`.
