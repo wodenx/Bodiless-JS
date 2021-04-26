@@ -242,7 +242,7 @@ And add the following above the `<PrimaryHeader>` tag:
 <Link><Image /></Link>
 ```
 
-> Note - the jsx-a11y linting rule is disabled because the Link component provides
+> *Note - the jsx-a11y linting rule is disabled because the Link component provides
 > its own `href` attribute from the content.*
 
 Reload your page and click on the image placeholder. Image and link edit buttons
