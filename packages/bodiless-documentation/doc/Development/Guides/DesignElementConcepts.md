@@ -325,7 +325,7 @@ as defined in the parent design system.
 > NOTE: Using `removeClasses` as described above is no longer recommended.
 > Instead, we recommend assigning consistent metadata and using token filtering
 > to replace selected tokens.
-> [Read More](../../Architecture/FClasses#metadata-and-filters).
+> [Read More](../Architecture/FClasses#metadata-and-filters).
 
 ### The FClasses API
 
