@@ -96,6 +96,35 @@ export const replaceable = <P extends object> (Component:ComponentOrTag<P>): Com
   };
   return Replaceable;
 };
+/**
+ * Creates an HOC which replaces a base component with a specified replacement.
+ * Unlike `replaceWith`, this function replaces the base component but leaves
+ * any previously applied tokens intact.
+ *
+ * > **Important Note** `startWith` can only be used in the context of `withDesign`
+ *
+ * @param ReplacementComponent
+ * The component to use as a replacement
+ *
+ * @return
+ * HOC which removes the original component and renders the replacement instead.
+ *
+ * @see `replaceWith`
+ * @example
+ *  ```js
+ *  const ExampleBase = ({ components: C, ...rest }) => <C.Tag {...rest} />;
+ *  const ExampleClean = designable({ Tag: Span })(ExampleBase);
+ *  const Example = withDesign({
+ *    Tag: addClasses('text-blue'),
+ *  })(Example); // <span className="text-blue" />
+ *  const StartWith = withDesign({
+ *    Tag: startWith(Div),
+ *  })(Example) // <div className="text-blue" />
+ *  const ReplaceWith = withDesign({
+ *    Tag: replaceWith(Div),
+ *  })(Example) // <div />
+ *  ```
+ */
 export const startWith = (ReplacementComponent: ComponentType<any>): HOC => Component => {
   const StartWith: FC<any> = props => {
     const UpstreamComponent = useContext(DesignContext);
@@ -195,16 +224,23 @@ export const withDesign = <C extends DesignableComponents = any>(
 
 /**
  * Returns a Token which replaces the component to which it is applied with another.
+ * Unlike `startWith`, this replaces the component along with any hoc's which
+ * had previously been applied.
  *
  * @param Replacement
  * The component or tag to use as a replacement.
  *
+ * @returns
+ * An HOC which renders the replacement in place of the target.
+ *
+ * @see `startWith`
+ *
  * @example
- * ```
- * const Start = () => <div />
- * const Replaced = replaceWith('span')(Start);
- * <Start /> === '<div />'
- * <Replaced /> ==== '<span />'
+ * ```js
+ * import { Div, replaceWith } from `@bodiless/fclasses`;
+ * const StartBase = Div; // <div />
+ * const Start = addClasses('text-blue')(Start); // <div className="text-blue" />
+ * const Replaced = replaceWith('span')(Start); // <span />
  * ```
  */
 export const replaceWith = <P extends object>(Replacement: ComponentOrTag<P>) => asToken(

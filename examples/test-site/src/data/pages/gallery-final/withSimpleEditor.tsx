@@ -21,8 +21,8 @@ import {
   Design,
   startWith,
 } from '@bodiless/fclasses';
-import { asBodilessLink } from '@bodiless/components';
-import withEditor from '../../../components/Editors/withEditor';
+import { asBodilessLink, withPlaceholder } from '@bodiless/components';
+import { withNodeKey, withChild } from '@bodiless/core';
 
 const asBold = startWith(Strong);
 const asItalic = addClasses('');
@@ -36,5 +36,16 @@ const simpleDesign: Design = {
   Link: asLink,
 };
 
-const SimpleEditor = withDesign(simpleDesign)(RichText);
-export default withEditor(SimpleEditor);
+const withSimpleEditor = (nodeKey?: string, placeholder?: string) => asToken(
+  addClasses('overflow-hidden'),
+  withChild(
+    asToken(
+      withDesign(simpleDesign),
+      withPlaceholder(placeholder),
+      withNodeKey(nodeKey),
+    )(RichText),
+    'Editor',
+  ),
+);
+
+export default withSimpleEditor;
