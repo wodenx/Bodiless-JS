@@ -12,11 +12,12 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { FC } from 'react';
 import { graphql } from 'gatsby';
-import flow from 'lodash/flow';
 import { Page as BasePage } from '@bodiless/gatsby-theme-bodiless';
-import { H1, H2, addClasses } from '@bodiless/fclasses';
+import {
+  H1, H2, addClasses, asToken,
+} from '@bodiless/fclasses';
 import {
   withNavigationButtons,
   withCarouselDots,
@@ -41,19 +42,19 @@ const Page = asLtrPage(BasePage);
 const Title = addClasses('text-3xl font-bold')(H1);
 const SubTitle = addClasses('text-2xl font-bold')(H2);
 
-const OnlyNavButtonsCarousel = flow(
+const OnlyNavButtonsCarousel = asToken(
   withNavigationButtons,
   withNavButtonsStyles,
   asAccessibleCarousel,
 )(Carousel);
 
-const OnlyDotsButtonsCarousel = flow(
+const OnlyDotsButtonsCarousel = asToken(
   withCarouselDots(CAROUSEL_NODE_KEY),
   withDotStyles,
   asAccessibleCarousel,
 )(Carousel);
 
-const AutoPlayDefaultIntervalCarousel = flow(
+const AutoPlayDefaultIntervalCarousel = asToken(
   withAutoPlay,
   withAutoPlayInterval(),
   withAutoPlayButton,
@@ -61,7 +62,7 @@ const AutoPlayDefaultIntervalCarousel = flow(
   asAccessibleCarousel,
 )(Carousel);
 
-const NavAndDotsCarousel = flow(
+const NavAndDotsCarousel = asToken(
   withCarouselDots(CAROUSEL_NODE_KEY),
   withDotStyles,
   withNavigationButtons,
@@ -69,7 +70,7 @@ const NavAndDotsCarousel = flow(
   asAccessibleCarousel,
 )(Carousel);
 
-const NavAndAutoplayCarousel = flow(
+const NavAndAutoplayCarousel = asToken(
   withNavigationButtons,
   withNavButtonsStyles,
   withAutoPlayInterval(6000),
@@ -78,7 +79,7 @@ const NavAndAutoplayCarousel = flow(
   asAccessibleCarousel,
 )(Carousel);
 
-const DotsAndAutoplayCarousel = flow(
+const DotsAndAutoplayCarousel = asToken(
   withCarouselDots(CAROUSEL_NODE_KEY),
   withDotStyles,
   withAutoPlay,
@@ -88,7 +89,7 @@ const DotsAndAutoplayCarousel = flow(
   asAccessibleCarousel,
 )(Carousel);
 
-const NavAndDotsAndAutoplayCarousel = flow(
+const NavAndDotsAndAutoplayCarousel = asToken(
   withCarouselDots(CAROUSEL_NODE_KEY),
   withDotStyles,
   withNavigationButtons,
@@ -100,7 +101,7 @@ const NavAndDotsAndAutoplayCarousel = flow(
   asAccessibleCarousel,
 )(Carousel);
 
-const AutoPlayCustomIntervalCarousel = flow(
+const AutoPlayCustomIntervalCarousel = asToken(
   withAutoPlay,
   withAutoPlayInterval(10000),
   withAutoPlayButton,
@@ -127,12 +128,15 @@ const CarouselExamples = () => (
     <NavAndDotsAndAutoplayCarousel nodeKey="navAndDotsAndAutoPlay" />
     <SubTitle>Autoplay with 10 second interval</SubTitle>
     <AutoPlayCustomIntervalCarousel nodeKey="autoplayCustomInterval" />
-    <SubTitle>Chameleon that lets you choose from 4 components: Linkable, Gatsby (Performance) Image, Horizontal Card, Video</SubTitle>
+    <SubTitle>
+      Chameleon that lets you choose from 4 components: Linkable, Gatsby (Performance) Image,
+      Horizontal Card, Video
+    </SubTitle>
     <ChameleonCarousel nodeKey="chameleon" />
   </>
 );
 
-const CarouselPage = (props: any) => (
+const CarouselPage: FC<any> = props => (
   <Page {...props}>
     <Layout>
       <CarouselExamples />

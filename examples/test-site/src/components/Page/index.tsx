@@ -12,8 +12,8 @@
  * limitations under the License.
  */
 
-import React, { ComponentType } from 'react';
-import { asToken } from '@bodiless/fclasses';
+import React from 'react';
+import { asToken, Token } from '@bodiless/fclasses';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { withPageDimensionsContext, BreakpointsType } from '@bodiless/components';
 import Helmet from 'react-helmet';
@@ -40,14 +40,14 @@ const asResponsivePage = asToken(
   withPageDimensionsContext({ breakpoints }),
 )(Page);
 
-const asRtlPage = (PageComponent: ComponentType) => (props: any) => (
+const asRtlPage: Token = PageComponent => props => (
   <>
     <PageComponent {...props} />
     <Helmet htmlAttributes={{ dir: 'rtl' }} />
   </>
 );
 
-const asLtrPage = (PageComponent: ComponentType) => (props: any) => (
+const asLtrPage: Token = PageComponent => props => (
   <>
     <PageComponent {...props} />
     <Helmet htmlAttributes={{ dir: 'ltr' }} />

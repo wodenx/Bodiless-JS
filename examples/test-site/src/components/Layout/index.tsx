@@ -34,12 +34,12 @@ const SiteFooter = asSiteFooter(Footer);
 const Container = asToken(
   asPageContainer,
   asYMargin,
-)(Div) as ComponentType;
+)(Div);
 
 const SiteProviders = asToken(
   withBreadcrumbStore,
   withBurgerMenuProvider,
-)(Fragment) as ComponentType;
+)(Fragment);
 
 type LayoutComponents = {
   Breadcrumbs: ComponentType<any>,
@@ -47,7 +47,7 @@ type LayoutComponents = {
 
 type LayoutProps = DesignableComponentsProps<LayoutComponents>;
 
-const BaseLayout: ComponentType<LayoutProps> = ({ children, components }) => {
+const BaseLayout: FC<LayoutProps> = ({ children, components }) => {
   const { Breadcrumbs } = components;
   return (
     <>

@@ -9,6 +9,7 @@
   "scripts": {
     "bootstrap": "npx lerna bootstrap --hoist --strict",
     "build": "cross-env NODE_ENV=production lerna run build --stream",
+    "build:only": "cross-env NODE_ENV=production lerna run build --stream --scope ",
     "build:packages": "cross-env NODE_ENV=production lerna run build --stream --no-private",
     "build:watch": "cross-env NODE_ENV=development lerna run build:watch --parallel",
     "build:env-vars": "cross-env NODE_ENV=production lerna run build:env-vars --stream",
