@@ -14,7 +14,7 @@
 
 import React, { ComponentType, Fragment, FC } from 'react';
 import {
-  Div, designable, addClasses, replaceWith, asToken, flowIf,
+  Div, designable, addClasses, replaceWith, DesignableComponentsProps, asToken, flowIf,
 } from '@bodiless/fclasses';
 import { useNode, withNodeKey } from '@bodiless/core';
 import { withSearchResult } from '@bodiless/search';
@@ -41,7 +41,13 @@ const SiteProviders = asToken(
   withBurgerMenuProvider,
 )(Fragment) as ComponentType;
 
-const BaseLayout: FC<any> = ({ children, components }) => {
+type LayoutComponents = {
+  Breadcrumbs: ComponentType<any>,
+};
+
+type LayoutProps = DesignableComponentsProps<LayoutComponents>;
+
+const BaseLayout: ComponentType<LayoutProps> = ({ children, components }) => {
   const { Breadcrumbs } = components;
   return (
     <>

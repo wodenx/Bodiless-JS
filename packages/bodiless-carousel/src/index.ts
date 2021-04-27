@@ -1,5 +1,5 @@
 /**
- * Copyright © 2020 Johnson & Johnson
+ * Copyright © 2021 Johnson & Johnson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,15 +12,4 @@
  * limitations under the License.
  */
 
-import {
-  addClasses,
-  withDesign,
-} from '@bodiless/fclasses';
-
-// Currently doesn't add any classes but used as example to where to put them.
-const asCarouselDefaultStyle = withDesign({
-  Wrapper: addClasses(''),
-  Slider: addClasses(''),
-});
-
-export default asCarouselDefaultStyle;
+export * from './components';

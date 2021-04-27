@@ -12,9 +12,11 @@
  * limitations under the License.
  */
 
+import React, { ComponentType } from 'react';
 import { asToken } from '@bodiless/fclasses';
 import { Page } from '@bodiless/gatsby-theme-bodiless';
 import { withPageDimensionsContext, BreakpointsType } from '@bodiless/components';
+import Helmet from 'react-helmet';
 
 // @ts-ignore Could not find a declaration file
 import resolveConfig from 'tailwindcss/resolveConfig';
@@ -38,7 +40,23 @@ const asResponsivePage = asToken(
   withPageDimensionsContext({ breakpoints }),
 )(Page);
 
+const asRtlPage = (PageComponent: ComponentType) => (props: any) => (
+  <>
+    <PageComponent {...props} />
+    <Helmet htmlAttributes={{ dir: 'rtl' }} />
+  </>
+);
+
+const asLtrPage = (PageComponent: ComponentType) => (props: any) => (
+  <>
+    <PageComponent {...props} />
+    <Helmet htmlAttributes={{ dir: 'ltr' }} />
+  </>
+);
+
 export default asResponsivePage;
 export {
   breakpoints,
+  asRtlPage,
+  asLtrPage,
 };
