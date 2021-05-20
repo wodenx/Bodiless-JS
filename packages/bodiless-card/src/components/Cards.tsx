@@ -27,7 +27,7 @@ import {
   addProps,
   DesignableProps,
 } from '@bodiless/fclasses';
-import { withNode, withResizeDetector } from '@bodiless/core';
+import { withNode } from '@bodiless/core';
 
 export type CardComponents = {
   Wrapper: ComponentType<StylableProps>,
@@ -83,7 +83,7 @@ const CardBase: FC<CardBaseProps> = ({ components, ...rest }) => {
 
 const CardClean = flow(
   designable(cardComponentStart, 'Card'),
-  withResizeDetector,
+  // withResizeDetector,
   withNode,
 )(CardBase);
 
