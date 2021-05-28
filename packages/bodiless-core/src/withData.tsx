@@ -14,14 +14,31 @@
 
 import React from 'react';
 import { HOC } from '@bodiless/fclasses';
+import identity from 'lodash/identity';
 
 export type HasDataProp<D> = {
   componentData: D;
+  mapDataToProps?: (data: D) => D,
 };
 
+/**
+ * Spreads data from the `componentData` prop to the props of the wrapped component.
+ *
+ * Also nhances the wrapped component with a 'mapDataToProps' prop, which accepts
+ * a processing function to be applied to the `componentData`prop before
+ * spreading. This is useful if you want to perform final processing of the data
+ * before passing it to the component.
+ *
+ * @param Component
+ * The component which will receive the componentData as props.
+ *
+ * @return
+ * A component which accepts additional `componentData` and `mapDataToProps` props
+ * which are used to generate props for the original component.
+ */
 const withData: HOC<{}, HasDataProp<any>> = Component => {
-  const WithData = ({ componentData, ...rest }: HasDataProp<any>) => (
-    <Component {...rest} {...componentData} />
+  const WithData = ({ componentData, mapDataToProps = identity, ...rest }: HasDataProp<any>) => (
+    <Component {...rest} {...mapDataToProps(componentData)} />
   );
   return WithData;
 };
