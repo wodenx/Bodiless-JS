@@ -22,7 +22,7 @@ type Props = {
   preset: GatsbyImagePresets
 };
 
-const withGatsbyImageLogger = (preset: GatsbyImagePresets): Token => Component => {
+const withGatsbyImageLogger = (preset?: GatsbyImagePresets): Token => Component => {
   const WithGatsbyImageLogger: FC<any> = props => {
     const { node } = useNode<any>();
     const { preset: presetFromProps } = props as Props;
