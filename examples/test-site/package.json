@@ -24,6 +24,7 @@
     "@bodiless/core-ui": "^0.2.3",
     "@bodiless/documentation": "^0.2.3",
     "@bodiless/fclasses": "^0.2.3",
+    "@bodiless/filtering": "^0.2.3",
     "@bodiless/gatsby-plugin-ssi": "^0.2.3",
     "@bodiless/gatsby-theme-bodiless": "^0.2.3",
     "@bodiless/layouts": "^0.2.3",

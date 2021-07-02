@@ -52,11 +52,11 @@ const FilterByGroupBase: FC<FilterByGroupBaseProps> = ({
     Filter,
   } = components;
 
-  const { setSelectedTag } = useFilterByGroupContext();
+  const { clearSelectedTags } = useFilterByGroupContext();
 
   const onReset = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    setSelectedTag();
+    clearSelectedTags();
   };
 
   return (

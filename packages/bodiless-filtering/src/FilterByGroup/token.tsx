@@ -13,13 +13,21 @@
  */
 
 import { flow } from 'lodash';
-import { withDesign, addClasses, asToken } from '@bodiless/fclasses';
+import {
+  withDesign,
+  addClasses,
+  asToken,
+  addProps,
+} from '@bodiless/fclasses';
 import { ifViewportIsNot } from '@bodiless/components';
 import {
   asAccordionWrapper,
   asAccordionBody,
   asAccordionTitle,
 } from '@bodiless/accordion';
+import {
+  withAnyTag,
+} from './Filter.token';
 
 const asResponsiveAccordionTitle = asToken(
   asAccordionTitle,
@@ -36,7 +44,7 @@ const asExpandedOnDesktopBody = asToken(
 );
 
 const asResponsiveFilterByGroup = flow(
-  ifViewportIsNot(['lg', 'xl', 'xxl'])(
+  ifViewportIsNot(['lg', 'xl', '2xl'])(
     withDesign({
       FilterWrapper: asAccordionWrapper,
       FilterTitle: asResponsiveAccordionTitle,
@@ -44,6 +52,23 @@ const asResponsiveFilterByGroup = flow(
       ResetButton: asExpandedOnDesktopBody,
     }),
   ),
+);
+
+export const withMultipleAllowedTags = asToken(
+  addProps({
+    multipleAllowedTags: true,
+  }),
+);
+
+export const withSingleAllowedTag = asToken(
+  addProps({
+    multipleAllowedTags: false,
+  }),
+  withDesign({
+    Filter: asToken(
+      withAnyTag,
+    ),
+  }),
 );
 
 export {
