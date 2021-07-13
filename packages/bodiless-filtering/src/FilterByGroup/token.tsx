@@ -18,6 +18,7 @@ import {
   asToken,
   addProps,
   replaceWith,
+  addPropsIf,
 } from '@bodiless/fclasses';
 import { ifViewportIsNot, ifViewportIs } from '@bodiless/components';
 import {
@@ -59,7 +60,7 @@ const asResponsiveFilterByGroup = asToken(
       FilterTitle: asResponsiveAccordionTitle,
       FilterBody: asExpandedOnDesktopBody,
       ResetButton: asExpandedOnDesktopBody,
-      RefineButton: addProps(useRefineButtonProps),
+      RefineButton: addPropsIf(() => true)(useRefineButtonProps),
     }),
   ),
   ifViewportIs(['lg', 'xl', '2xl'])(
