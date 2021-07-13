@@ -91,7 +91,14 @@ const useFilterByGroupStore = (settings: FilterByGroupStoreSettings) => {
     ]);
   };
 
-  const isTagSelected = (tag: Tag) => selectedTags.find(tag$ => tag.isEqual(tag$)) !== undefined;
+  const isTagSelected = (tag: Tag) => {
+    if (!multipleAllowedTags && tag.id === TAG_ANY_KEY) {
+      // For radios, return true for ANY tag if no other tags are selected.
+      const tagsInCategory = selectedTags.filter(t => t.categoryId === tag.categoryId);
+      if (tagsInCategory.length === 0) return true;
+    }
+    return selectedTags.find(tag$ => tag.isEqual(tag$)) !== undefined;
+  };
 
   const getSelectedTags = () => selectedTags;
 

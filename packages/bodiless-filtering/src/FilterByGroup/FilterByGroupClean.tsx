@@ -29,7 +29,9 @@ const FilterByGroupComponentsStart:FilterByGroupComponents = {
   FilterTitle: H3,
   ContentWrapper: Div,
   ResetButton: Button,
+  FilterBody: Div,
   Filter: FilterClean,
+  RefineButton: Button,
 };
 
 type FilterByGroupBaseProps =
@@ -49,7 +51,9 @@ const FilterByGroupBase: FC<FilterByGroupBaseProps> = ({
     FilterTitle,
     ContentWrapper,
     ResetButton,
+    FilterBody,
     Filter,
+    RefineButton,
   } = components;
 
   const { clearSelectedTags } = useFilterByGroupContext();
@@ -66,7 +70,10 @@ const FilterByGroupBase: FC<FilterByGroupBaseProps> = ({
           <FilterTitle>{filterTitle}</FilterTitle>
           <ResetButton onClick={onReset}>{resetButtonText}</ResetButton>
         </FilterHeader>
-        <Filter />
+        <FilterBody>
+          <Filter />
+          <RefineButton />
+        </FilterBody>
       </FilterWrapper>
       <ContentWrapper>
         {children}

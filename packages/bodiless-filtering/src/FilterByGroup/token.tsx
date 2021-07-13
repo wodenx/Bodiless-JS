@@ -18,12 +18,14 @@ import {
   addClasses,
   asToken,
   addProps,
+  replaceWith,
 } from '@bodiless/fclasses';
-import { ifViewportIsNot } from '@bodiless/components';
+import { ifViewportIsNot, ifViewportIs } from '@bodiless/components';
 import {
   asAccordionWrapper,
   asAccordionBody,
   asAccordionTitle,
+  useAccordionContext,
 } from '@bodiless/accordion';
 import {
   withAnyTag,
@@ -43,13 +45,27 @@ const asExpandedOnDesktopBody = asToken(
   }),
 );
 
+const useRefineButtonProps = () => {
+  const { setExpanded } = useAccordionContext();
+  return {
+    children: 'Refine',
+    onClick: () => setExpanded(false),
+  };
+};
+
 const asResponsiveFilterByGroup = flow(
   ifViewportIsNot(['lg', 'xl', '2xl'])(
     withDesign({
       FilterWrapper: asAccordionWrapper,
       FilterTitle: asResponsiveAccordionTitle,
-      Filter: asExpandedOnDesktopBody,
+      FilterBody: asExpandedOnDesktopBody,
       ResetButton: asExpandedOnDesktopBody,
+      RefineButton: addProps(useRefineButtonProps),
+    }),
+  ),
+  ifViewportIs(['lg', 'xl', '2xl'])(
+    withDesign({
+      RefineButton: replaceWith(() => null),
     }),
   ),
 );

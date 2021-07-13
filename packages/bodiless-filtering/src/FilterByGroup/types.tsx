@@ -30,7 +30,9 @@ export type FilterByGroupComponents = {
   FilterTitle: ComponentType<any>,
   ContentWrapper: ComponentType<any>,
   ResetButton: ComponentType<any>,
+  FilterBody: ComponentType<any>,
   Filter: ComponentType<any>,
+  RefineButton: ComponentType<any>,
 };
 
 export type FilterComponents = {
