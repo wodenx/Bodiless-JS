@@ -13,9 +13,8 @@
  */
 
 import React, { FC } from 'react';
-import { flow } from 'lodash';
 import {
-  designable, Div, Button, withoutProps, H3, DesignableComponentsProps,
+  designable, Div, Button, withoutProps, H3, DesignableComponentsProps, asToken,
 } from '@bodiless/fclasses';
 import FilterClean from './Filter';
 import { useFilterByGroupContext, withFilterByGroupContext } from './FilterByGroupContext';
@@ -82,7 +81,7 @@ const FilterByGroupBase: FC<FilterByGroupBaseProps> = ({
   );
 };
 
-const FilterByGroupClean = flow(
+const FilterByGroupClean = asToken(
   withoutProps(['suggestions']),
   designable(FilterByGroupComponentsStart, 'FilterByGroup'),
   asResponsiveFilterByGroup,

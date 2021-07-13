@@ -12,7 +12,6 @@
  * limitations under the License.
  */
 
-import { flow } from 'lodash';
 import {
   withDesign,
   addClasses,
@@ -53,7 +52,7 @@ const useRefineButtonProps = () => {
   };
 };
 
-const asResponsiveFilterByGroup = flow(
+const asResponsiveFilterByGroup = asToken(
   ifViewportIsNot(['lg', 'xl', '2xl'])(
     withDesign({
       FilterWrapper: asAccordionWrapper,

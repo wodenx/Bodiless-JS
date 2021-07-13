@@ -18,12 +18,11 @@ import React, {
   useContext,
   createContext,
   FC,
-  ComponentType,
 } from 'react';
 import { v1 } from 'uuid';
 import { uniqBy } from 'lodash';
 import { TagButtonProps } from '@bodiless/components';
-import { Injector, addProps } from '@bodiless/fclasses';
+import { Injector, addProps, Enhancer } from '@bodiless/fclasses';
 import {
   FBGContextOptions,
   SuggestionsRefType,
@@ -106,19 +105,17 @@ const FilterByGroupProvider: FC<FBGContextOptions> = ({
   );
 };
 
-const withFilterByGroupContext = <P extends object>(
-  Component: ComponentType<P> | string,
-) => (props: P & FBGContextOptions) => {
-    const { suggestions, multipleAllowedTags } = props;
-    return (
+const withFilterByGroupContext: Enhancer<FBGContextOptions> = Component => props => {
+  const { suggestions, multipleAllowedTags } = props as FBGContextOptions;
+  return (
       <FilterByGroupProvider
         suggestions={suggestions}
         multipleAllowedTags={multipleAllowedTags}
       >
         <Component {...props} />
       </FilterByGroupProvider>
-    );
-  };
+  );
+};
 
 type DefaultTagProps = {
   getSuggestions: () => TagType[],
