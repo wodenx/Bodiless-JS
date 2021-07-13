@@ -40,7 +40,7 @@
     "@bodiless/ui": "^0.2.4",
     "@bodiless/youtube": "^0.2.4",
     "@material/react-material-icon": "^0.15.0",
-    "autoprefixer": "^10.2.4",
+    "autoprefixer": "^9.8.6",
     "docsify-cli": "^4.3.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
