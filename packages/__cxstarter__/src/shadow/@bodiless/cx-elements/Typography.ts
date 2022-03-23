@@ -5,7 +5,7 @@ export default {
   ...cxTypographyBase,
   H1: asElementToken(cxTypographyBase.H1, {
     Theme: {
-      _: addProps({ 'data-shadowed-by': '__cxstarter__' }),
+      _: addProps({ 'data-shadowed-by': '__cxstarter__:Typography' }),
     },
   }),
 };

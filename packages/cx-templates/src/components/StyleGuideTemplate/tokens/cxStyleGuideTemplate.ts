@@ -21,16 +21,12 @@ import { on, replaceWith, Fragment, as } from '@bodiless/fclasses';
 import { cxLayout, LayoutClean } from '@bodiless/cx-layout';
 import { asStyleGuideTemplateToken } from '../StyleGuideTemplateClean';
 
-const Default = asStyleGuideTemplateToken({
+const Base = asStyleGuideTemplateToken({
   Components: {
     Wrapper: on(LayoutClean)(cxLayout.Default),
   },
   Theme: {
     TitleWrapper: cxTypography.H1,
-    Container: as(
-      cxSpacing.WithSiteMargin,
-      cxSpacing.WithSiteXLConstraint
-    ),
   },
   Editors: {
     Title: on(EditorPlainClean)(cxEditorPlain.Default),
@@ -43,11 +39,27 @@ const Default = asStyleGuideTemplateToken({
   },
 });
 
+const Default = asStyleGuideTemplateToken({
+  ...Base,
+  Theme: {
+    ...Base.Theme,
+    Container: as(
+      cxSpacing.WithSiteMargin,
+      cxSpacing.WithSiteXLConstraint
+    ),
+  },
+});
+
 const NoLayout = asStyleGuideTemplateToken({
-  ...Default,
+  ...Base,
   Components: {
-    ...Default.Components,
+    ...Base.Components,
     Wrapper: replaceWith(Fragment),
+  },
+  Theme: {
+    ...Base.Components,
+    TitleWrapper: 'container mx-auto',
+    DescriptionWrapper: 'container mx-auto',
   },
 });
 

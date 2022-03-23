@@ -6,7 +6,7 @@ const Default = asFluidToken({
   ...cxRichTextBase.Default,
   Compose: {
     ...(cxRichTextBase.Default.Compose || {}),
-    WithShadowedBy: addProps({ 'data-shadowed-by': '@bodiless/__cxstarter__' }),
+    WithShadowedBy: addProps({ 'data-shadowed-by': '__cxstarter_:RichText' }),
   },
   // Demonstrates how to remove a component from the default editor.
   // Core: {
