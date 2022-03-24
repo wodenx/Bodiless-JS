@@ -12,13 +12,6 @@
  * limitations under the License.
  */
 
-import { HTMLProps } from 'react';
-import { ComponentOrTag, DesignableComponentsProps } from '@bodiless/fclasses';
+import tokens from './cxMenuToggler';
 
-export type MenuTogglerComponents = {
-  Wrapper: ComponentOrTag<any>,
-  Icon: ComponentOrTag<any>,
-};
-
-export type MenuTogglerProps =
-  DesignableComponentsProps<MenuTogglerComponents> & HTMLProps<HTMLElement>;
+export default tokens;

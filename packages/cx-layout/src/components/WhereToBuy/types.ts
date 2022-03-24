@@ -12,6 +12,18 @@
  * limitations under the License.
  */
 
-export * from './MenuTogglerClean';
-export * from './cxMenuToggler';
-export * from './types';
+import { ComponentOrTag, DesignableComponentsProps } from '@bodiless/fclasses';
+
+type WhereToBuyComponents = {
+  Wrapper: ComponentOrTag<any>,
+  Button: ComponentOrTag<any>,
+  Icon: ComponentOrTag<any>,
+  Label: ComponentOrTag<any>,
+};
+
+type WhereToBuyProps = DesignableComponentsProps<WhereToBuyComponents>;
+
+export type {
+  WhereToBuyComponents,
+  WhereToBuyProps,
+};

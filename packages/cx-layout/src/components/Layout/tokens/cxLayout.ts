@@ -13,6 +13,7 @@
  */
 
 import { cxSpacing } from '@bodiless/cx-elements';
+import { withBurgerMenuProvider } from '@bodiless/cx-navigation';
 import {
   addProps,
   as,
@@ -29,6 +30,9 @@ import { WithBordersLabels } from './cxLayoutTest';
   * Token that defines a basic layout.
   */
 const Base = asLayoutToken({
+  Core: {
+    _: withBurgerMenuProvider,
+  },
   Components: {
     Helmet: cxHelmet.Default,
   },

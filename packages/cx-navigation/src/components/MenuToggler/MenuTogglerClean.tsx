@@ -12,31 +12,16 @@
  * limitations under the License.
  */
 
-import React, { FC } from 'react';
-
-import { Div, designable, Span } from '@bodiless/fclasses';
+import { withParent } from '@bodiless/core';
 import { asCxTokenSpec } from '@bodiless/cx-elements';
-import { MenuTogglerComponents, MenuTogglerProps } from './types';
+import { Div, flowHoc } from '@bodiless/fclasses';
+import type { TogglerComponents } from '@bodiless/navigation';
+import { BurgerMenuTogglerClean } from '@bodiless/navigation';
 
-const menuTogglerComponents: MenuTogglerComponents = {
-  Wrapper: Div,
-  Icon: Span,
-};
+const MenuTogglerClean = flowHoc(
+  withParent(Div, 'Wrapper'),
+)(BurgerMenuTogglerClean);
 
-const MenuTogglerBase: FC<MenuTogglerProps> = ({ components: C }) => (
-  <C.Wrapper>
-    <C.Icon />
-  </C.Wrapper>
-);
+export const asMenuTogglerToken = asCxTokenSpec<TogglerComponents>();
 
-/**
- * Create a menu toggler token.
- */
-const asMenuTogglerToken = asCxTokenSpec<MenuTogglerComponents>();
-
-const MenuTogglerClean = designable(menuTogglerComponents, 'MenuToggler')(MenuTogglerBase);
-
-export {
-  MenuTogglerClean,
-  asMenuTogglerToken
-};
+export default MenuTogglerClean;

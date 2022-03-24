@@ -12,6 +12,17 @@
  * limitations under the License.
  */
 
-export { MenuClean, cxMenu, asMenuToken } from './components/Menu';
-export { cxSubMenu, asSubMenuToken } from './components/SubMenu';
-export { MenuTitleClean, cxMenuTitle, asMenuTitleToken } from './components/MenuTitle';
+// Re-export provider so that menu toggler can show/hide burger menu.
+export { withBurgerMenuProvider } from '@bodiless/navigation';
+
+// CxNavigation components and tokens.
+export { BurgerMenuClean, asBurgerMenuToken, cxBurgerMenu } from './components/BurgerMenu';
+export { MenuClean, asMenuToken, cxMenu } from './components/Menu';
+export { MenuTitleClean, asMenuTitleToken, cxMenuTitle } from './components/MenuTitle';
+export { MenuTogglerClean, asMenuTogglerToken, cxMenuToggler } from './components/MenuToggler';
+export { asSubMenuToken, cxSubMenu } from './components/SubMenu';
+
+// CxNavigation types.
+export type { BurgerMenuComponents, BurgerMenuProps } from './components/BurgerMenu';
+export type { MenuComponents } from './components/Menu';
+export type { SubMenuComponents, SubMenuWrapperComponents } from './components/SubMenu';
