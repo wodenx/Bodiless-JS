@@ -11,15 +11,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import type { TokenDemoSpec } from '@bodiless/tokens';
 import vitalTable from './tokens';
 import vitalTableBase from './tokens/vitalTable';
 import TableClean, { asTableToken } from './TableClean';
+
+const vitalTableSpec: TokenDemoSpec = {
+  title: 'Components/Table',
+  component: TableClean,
+  tokens: vitalTable,
+  defaultTokens: ['Default'],
+  componentExportName: 'TableClean',
+  tokensExportName: 'vitalTable',
+};
 
 export {
   vitalTable,
   vitalTableBase,
   TableClean,
   asTableToken,
+  vitalTableSpec,
 };
 
 export * from './index.bl-edit';
