@@ -206,7 +206,7 @@ export interface VitalFlowContainer {
    */
   Hero: FluidToken,
   /**
-   * Defins a flow container which is to be used as a content region (that is,
+   * Defines a flow container which is to be used as a content region (that is,
    * nested within another flow container). This contains all components
    * defined in the `Default` flow container with the exception of
    * the Content Region itself (i.e. you can't have double nesting).
