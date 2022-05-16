@@ -20,11 +20,36 @@ import {
 import { asVitalTokenSpec } from '@bodiless/vital-elements';
 import type { TableComponents } from '@bodiless/table';
 
+/**
+ * This is the base component for tables.
+ *
+ * @category Component
+ *
+ * @example
+ * **Create a default table:**
+ * ```
+ * const DefaultTable = on(TableClean)(vitalTable.Default)
+ * ```
+ */
 const TableClean = CleanTable;
 
+/**
+ * Use this version of the table when all components are static.
+ * @category Component
+ * @example
+ * **Create a default table:**
+ * ```
+ * const DefaultStaticTable = on(TableStatic)(vitalTable.Default)
+ * ```
+ */
 const TableStatic = withoutHydration()(CleanTable);
 const asTableToken = asVitalTokenSpec<TableComponents>();
 
+/**
+ * This is the preview component that shows a gray text 'Cell' use in the component picker
+ *
+ * @category Component
+ */
 const TableCellPreview = () => <span className="bl-text-gray-800">Cell</span>;
 
 export default TableClean;

@@ -30,6 +30,7 @@
     "@bodiless/vital-link": "^1.0.0-beta.18",
     "@bodiless/vital-list": "^1.0.0-beta.18",
     "@bodiless/vital-navigation": "^1.0.0-beta.18",
+    "@bodiless/vital-table": "^1.0.0-beta.18",    
     "@bodiless/vital-templates": "^1.0.0-beta.18",
     "@bodiless/webpack": "^1.0.0-beta.18",
     "autoprefixer": "^10.4.2",

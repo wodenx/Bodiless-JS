@@ -44,9 +44,24 @@ const BorderDecorationVariations = {
   }),
 };
 
-/**
- * Token which adds image variations to a flow container.
- */
+const fluidToken = asFluidToken();
+type FluidToken = typeof fluidToken;
+export interface VitalTableFlowContainer {
+  WithTableVariations: FluidToken,
+  /**
+   * Defines a set of composed table varations to add to Flow Container. With the following
+   * variations:
+   * - No background Header/Footer color
+   * - Background Color on Header/Footer @see [[vitalTable.WithLightHeaderFooter]]
+   * - Background Color on First column @see [[vitalTable.WithFirtColumnHeader]]
+   * - Background color on Odd Rows  @see [[vitalTable.WithRowStripes]]
+   * - Background Color on Hover @see [[vitalTable.WithHoverable]]
+   * - Adds Scroll if table exceed viewport @see [[vitalTable.WithScrolling]]
+   * - Adds Borders to all cells  @see [[vitalTable.WithBorders]]
+   * - Add Borders to bottom of cells  @see [[vitalTable.WithBottomBorders]]
+   * - No Borders (default)
+   */
+}
 const WithTableVariations = asFluidToken({
   Components: {
     ...varyDesigns(

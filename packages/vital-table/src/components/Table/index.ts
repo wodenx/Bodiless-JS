@@ -12,12 +12,15 @@
  * limitations under the License.
  */
 import vitalTable from './tokens';
-
+import vitalTableOrig from './tokens/vitalTable';
 import TableClean, { asTableToken } from './TableClean';
 
-export {
-  default as vitalTableBase
-} from './tokens/vitalTable';
+/**
+ * Use this version of the vital table tokens when extending or shadowing.
+ * @category Token Collection
+ * @see vitalTableBase
+ */
+export const vitalTableBase = vitalTableOrig;
 
 export {
   vitalTable,

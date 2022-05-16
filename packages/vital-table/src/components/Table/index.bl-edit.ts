@@ -15,6 +15,12 @@
 // In non "static" mode (in dev mode and during HTML render), we need the static version
 // of the token to be the same as the normal version.
 import { TableStatic } from './TableClean';
-import vitalTableStatic from './tokens';
+import vitalTable from './tokens';
+
+/**
+ * Use these flow container tokens only with `vitalTableStatic`
+ * @category Token Collection
+ */
+const vitalTableStatic = vitalTable;
 
 export { TableStatic, vitalTableStatic };
