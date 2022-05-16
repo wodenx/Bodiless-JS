@@ -24,5 +24,6 @@ module.exports = {
   ],
   "core": {
     "builder": "webpack5"
-  }
+  },
+  "staticDirs": [{ from: '../node_modules/', to: './src/css' }],
 }
