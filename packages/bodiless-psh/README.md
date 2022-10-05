@@ -169,7 +169,9 @@ environment. Be aware of the following:
 - Edit environments for pull requests are currently only supported on GitHub repos. Content editor
   can make page updates on these edit environments and commit/push the changes back to remote
   GitHub repo. *note:* push feature is not available for cross repository pull requests
-  (e.g., PR's source branch is from forked repo).
+  (e.g., PR's source branch is from forked repo). Note that when a PR edit environment is created
+  on p.sh, it is actually the *source branch* of the pull request which is checked out and to which
+  changes can be pushed.
 - Changes pushed to code outside the `/edit` directory will
   not automatically be deployed to the edit environment.  You must manually update the
   edit environment as described under [Pushing Changes](#pushing-changes) below.
