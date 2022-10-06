@@ -24,12 +24,13 @@ application locally.
   > Note: Bodiless deployment on Platform.sh requires at least 15GB of storage available, so
   > you will have to upgrade to a paid "development" plan and upgrade your storage as described
   > below.
+- A [Platform.sh API token](https://docs.platform.sh/development/cli/api-tokens.html)
 - A GitHub Account
   > Note: In the following instructions, GitHub is used as an example source
   > code provider. If you're using a different supported provider (e.g., GitLab
   > or Bitbucket), adapt the instructions as needed.
-- A [Platform.sh API token](https://docs.platform.sh/development/cli/api-tokens.html)
-- A [GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
+- A [GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) with proper scope and
+expiration.
 
 ### Create a Platform.sh organization and add a payment method.
 
@@ -81,8 +82,8 @@ application locally.
     npm run psh:setup-starter
     ```
 01. Make sure that all of the requirements listed are met.  
-![Prerequisites](./assets/platformsh/SetupPshCliStep1.png).  You will also need your
-GitHub username and password.
+![Prerequisites](./assets/platformsh/SetupPshCliStep1.png). You will also need your
+GitHub username.
 01. Provide required input parameters. The script will return 'Success' response to the console, if all the parameters were provided correctly and integration with Platform.sh and project variables are created.
 01. After integration is created the deploy of the main branch will be triggered automatically.
 
@@ -97,7 +98,7 @@ variables and and integrations, and then try again.
 
 #### Verify the GitHub integration
 
-- Visit the "webhooks" section of your GitHub repository settings, eg
+- Visit the "webhooks" section of your GitHub repository settings, e.g.,
   ```
   https://github.com/project/repo/settings/hooks
   ```
@@ -137,7 +138,7 @@ prepare_deploy () {
 If you wish to install packages from a private registry, you may do so. The
 packages to be installed must be namespaced. Set the following 3 environment
 variables on p.sh. All variables should be visible at both build and run time:
-- `env:APP_NPM_REGISTRY`: the full path to your registry, eg
+- `env:APP_NPM_REGISTRY`: the full path to your registry, e.g.,
   `//my-artifactory.com/api/npm/my-registry/`.
 - `env:APP_NPM_AUTH`: Your NPM authentication token. This should be marked as sensitive.
   To obtain your token:
@@ -155,7 +156,7 @@ variables on p.sh. All variables should be visible at both build and run time:
   3. Copy the token value to the `env:APP_NPM_AUTH` variable in your p.sh project.
 
 - `env:APP_NPM_NAMESPACE`: The namespace of the packages in your private
-  registry, eg `@mynamespace`.
+  registry, e.g., `@mynamespace`.
 
 ## Building and Deploying
 
@@ -166,16 +167,19 @@ requests, so that every PR to your repository will be deployed to its own
 environment. Be aware of the following:
 - It is easy to reach your quota of development environments with this enabled, so use cautiously.
   One way to limit environment use is to create *draft* pull requests, as these are not deployed.
-- Edit environments for pull requests are currently only supported on GitHub repos -- and pushing 
-  changes from the edit environment is not supported on cross repository pull request(e.g. PR's
-  source branch from fork).
+- Edit environments for pull requests are currently only supported on GitHub repos. Content editor
+  can make page updates on these edit environments and commit/push the changes back to remote
+  GitHub repo. *note:* push feature is not available for cross repository pull requests
+  (e.g., PR's source branch is from forked repo). Note that when a PR edit environment is created
+  on p.sh, it is actually the *source branch* of the pull request which is checked out and to which
+  changes can be pushed.
 - Changes pushed to code outside the `/edit` directory will
   not automatically be deployed to the edit environment.  You must manually update the
   edit environment as described under [Pushing Changes](#pushing-changes) below.
 - Pull request environments will be automatically deleted when the PR is merged or declined.
 - If you manually delete a PR environment, it will not be recreated when the PR is
   updated.
-- PR environments are named simply `pr-{pr#}` (eg `pr-123`).  You can easily run platform cli
+- PR environments are named simply `pr-{pr#}` (e.g., `pr-123`).  You can easily run platform cli
   commands against them using the `-e pr-xxx` option.
 - A link to the p.sh environment will be posted to the PR:
   - **GitHub**: Expand the "Show All Checks" link next to the section on the "Conversations"

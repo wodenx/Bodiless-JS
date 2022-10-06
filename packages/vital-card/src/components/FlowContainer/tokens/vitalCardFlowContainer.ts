@@ -21,7 +21,7 @@ import {
 } from '../../Card';
 
 /*
- * Content Variations to use all fields or remove specic fields.
+ * Content Variations to use all fields or remove specific fields.
  */
 const ContentVariations = {
   All: asCardToken({
@@ -47,7 +47,7 @@ const HorizontalVariations = varyDesigns(
 );
 
 /*
-  * Vary Horizontal Variations over Content Varitions
+  * Vary Horizontal Variations over Content Variations
   */
 const HorizontalOrientationVariations = varyDesigns(
   HorizontalVariations,
@@ -55,7 +55,7 @@ const HorizontalOrientationVariations = varyDesigns(
 );
 
 /*
- * Vary Vertical Variations over Content Varitions
+ * Vary Vertical Variations over Content Variations
  */
 const VerticalOrientationVariations = varyDesigns(
   {
@@ -145,7 +145,7 @@ const WithTopicVariations = asFluidToken({
 });
 
 /*
- * Product Content Variations to use all fields or remove specic fields.
+ * Product Content Variations to use all fields or remove specific fields.
  */
 const ProductContentVariations = {
   All: asCardToken({
@@ -213,7 +213,7 @@ export interface VitalCardFlowContainer {
    * Composable token which adds basic card variations.
    * Defined by Fully clickable card with no visible CTA varied over
    *  - Orientation Properties
-   *  - Content Varitions
+   *  - Content Variations
    */
   WithBasicVariations: FluidToken,
   /**
