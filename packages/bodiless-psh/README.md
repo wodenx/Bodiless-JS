@@ -24,12 +24,13 @@ application locally.
   > Note: Bodiless deployment on Platform.sh requires at least 15GB of storage available, so
   > you will have to upgrade to a paid "development" plan and upgrade your storage as described
   > below.
+- A [Platform.sh API token](https://docs.platform.sh/development/cli/api-tokens.html)
 - A GitHub Account
   > Note: In the following instructions, GitHub is used as an example source
   > code provider. If you're using a different supported provider (e.g., GitLab
   > or Bitbucket), adapt the instructions as needed.
-- A [Platform.sh API token](https://docs.platform.sh/development/cli/api-tokens.html)
-- A [GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
+- A [GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) with proper scope and
+expiration.
 
 ### Create a Platform.sh organization and add a payment method.
 
@@ -81,8 +82,8 @@ application locally.
     npm run psh:setup-starter
     ```
 01. Make sure that all of the requirements listed are met.  
-![Prerequisites](./assets/platformsh/SetupPshCliStep1.png).  You will also need your
-GitHub username and password.
+![Prerequisites](./assets/platformsh/SetupPshCliStep1.png). You will also need your
+GitHub username.
 01. Provide required input parameters. The script will return 'Success' response to the console, if all the parameters were provided correctly and integration with Platform.sh and project variables are created.
 01. After integration is created the deploy of the main branch will be triggered automatically.
 
