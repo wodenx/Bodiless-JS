@@ -12,15 +12,14 @@ Upon completion of this tutorial, you will end up with code similar to that foun
 ## 0. Prerequisite: Create a Site
 
 To begin, follow the directions to [create a new
-site](../../About/GettingStarted#creating-a-new-site).  Choose the `__minimal__` starter
-template.  All the pages created in this tutorial will be in this new site.
+site](../../About/GettingStarted#creating-a-new-site). Choose the `__minimal__` starter template.
+All the pages created in this tutorial will be in this new site.
 
-> Note: The site created by the `@bodiless/cli new` command is structured as a *monorepo*.
-> The Gatsby site itself is located at `/sites/{site-name}`, where `site-name` is the name
-> you chose for your site. In this tutorial, we will only be creating files at site level,
-> and all paths are relative to this site directory.  In later tutorials, you will learn
-> how to take full advantage of the monorepo structure to create one or more packages
-> your site can depend on.
+?> **Note:** The site created by the `@bodiless/cli new` command is structured as a _monorepo_. The
+Gatsby site itself is located at `/sites/{site-name}`, where `site-name` is the name you chose for
+your site. In this tutorial, we will only be creating files at the site level, and all paths are
+relative to this site directory. In later tutorials, you will learn how to take full advantage of
+the monorepo structure to create one or more packages your site can depend on.
 
 ## 1. Creating a Page
 
@@ -82,7 +81,7 @@ for the new page, _relative to the current page path_. If page creation is succe
 redirected to the new page after a few seconds. The new page will be created using a default
 template located at `src/templates/_default.tsx`. After creating a page, look in the corresponding
 directory in the filesystem (e.g., `src/data/pages/{path/to/your/page`); you should see an
-`index.json` with the following contents:
+`index.json` file with the following contents:
 
 ```json
 {
@@ -266,7 +265,7 @@ Now define your editable `Image` and `Link` components:
 ```tsx
 const Link = asBodilessLink('hero-link')(A);
 const Image = asBodilessImage('hero-image', {
-  src: 'https://via.placeholder.com/6000x1200.png',
+  src: 'https://via.placeholder.com/1600x600.png',
   alt: 'Hero Image',
   title: 'Hero Image',
 })(Img);
@@ -298,13 +297,13 @@ these files are defined by the `nodeKey` passed as an argument to `asBodilessLin
 </Link>
 ```
 
-?> **Note:** the name of the file containing the image data. Because the image element is a child of the
-link, its content file is namespaced to its parent. This allows you to compose editable primitives
-into reusable components. We'll come back to this later.
+?> **Note:** Note the name of the file containing the image data. Because the image element is a
+child of the link, its content file is namespaced to its parent. This allows you to compose editable
+primitives into reusable components. We'll come back to this later.
 
-?> **Note:** also, the second argument to `asBodilessImage` above. This is a way to provide a placeholder
-value for the image data when no image has been uploaded. Here we use it to provide a landscape
-placeholder to improve the layout of an empty page. Of course, the image is not actually
+?> **Note:** Also note the second argument to `asBodilessImage` above. This is a way to provide a
+placeholder value for the image data when no image has been uploaded. Here, we use it to provide a
+landscape placeholder to improve the layout of an empty page. Of course, the image is not actually
 constrained, and will take the dimensions of any file you upload.
 
 ## 5. Editing Site-Level Data
@@ -443,8 +442,8 @@ content is saved in Slate's standard JSON serialization format. As with `Editabl
 the `.json` file is determined by the `nodeKey` prop.
 
 To configure the `RichText` editor, we specified what components should be used to render different
-text-formatting options. Normally, these would be defined by the styleguide of a site; here, we used
-very simple ones:
+text-formatting options. Normally, these would be defined by the style guide of a site; here, we
+used very simple ones:
 
 ```tsx
 const asBold = as(
@@ -555,7 +554,6 @@ import {
   H2, Section, Div, addClasses, as, stylable,
 } from '@bodiless/fclasses';
 import { withNode } from '@bodiless/core';
-import CaptionedImage from './CaptionedImage';
 
 const Wrapper = addClasses('my-2')(Section);
 const Header = addClasses('text-2xl')(H2);
@@ -606,9 +604,9 @@ same gallery, and any number of `Gallery` components on the same page; as long a
 distinct `nodeKey`, they will not collide.
 
 It's the `withNode()` HOC (imported from `@bodiless/core`) which adds the `nodeKey` prop to your
-`CaptionedImage` and `Gallery` components. Anytime you want to create a reusable component which has
-editable children, you must wrap it with `withNode()` to ensure that all its children have a unique
-location to store their data:
+`CaptionedImage` and `Gallery` components. Any time you want to create a reusable component which
+has editable children, you must wrap it with `withNode()` to ensure that all its children have a
+unique location to store their data:
 
 ```tsx
 export default withNode(MyComponent);
@@ -634,10 +632,10 @@ const withTealBorder = addClasses('border-teal-400');
 const withOrangeBorder = addClasses('border-orange-400');
 ```
 
-No new components have been created. Instead, _design tokens_ which describe them have been created.
+No new components have been created; instead, _design tokens_ which describe them have been created.
 These tokens are expressed as React higher-order components. These can be composed onto unstyled
 components to build up a design system. Usually these tokens would be defined elsewhere (most likely
-under you `src/components` directory) and imported as needed. More information about this pattern
+under your `src/components` directory) and imported as needed. More information about this pattern
 can be found in our [Design System documentation](../../Design/DesignSystem).
 
 Now we'll use these tokens to define the components which will be available for placement in our
@@ -648,6 +646,10 @@ gallery:
     import {
       H2, Section, Div, addClasses, as, stylable, replaceWith, withMeta,
     } from '@bodiless/fclasses';
+    ```
+01. Add `CaptionedImage` to your imports:
+    ```tsx
+    import CaptionedImage from './CaptionedImage';
     ```
 01. After your styled variations (`withBlueBorder`, etc.), add your component definitions:
     ```tsx
@@ -751,17 +753,19 @@ you add to the grid will have its own set of files, keyed with a uuid.
 
 ## 9. Responsive Layout
 
-With your viewport at desktop width, use the component selector to place two 50%-width tiles in the
-gallery. Now, change your viewport to tablet width. Notice that the layout is responsive by default,
-and the tiles now stack one per row. However, you can alter this behavior by resizing (or even
-reordering) the tiles while at tablet size. In fact, the Flow Container grid remembers the layout
-you set at every breakpoint, allowing you to create completely customized, responsive layouts.
+With your viewport at desktop width, use the component selector to place three 33%-width tiles in
+the gallery. Now, change your viewport to tablet width. Notice that the layout is responsive by
+default, and the tiles now stack one per row. However, you can alter this behavior by resizing (or
+even reordering) the tiles while at tablet size. In fact, the Flow Container grid remembers the
+layout you set at every breakpoint, allowing you to create completely customized, responsive
+layouts.
 
 **Tablet with tiles stacked:**
 ![Tablet Unsized](./assets/tabletunsized.jpg)
 
 **Tablet with tiles resized to 33%:**
 ![Tablet Resized](./assets/tabletsized.jpg)
+
 ## 10. Selection vs Configuration
 
 BodilessJS favors selection over configuration. It follows the belief that it is better to create
