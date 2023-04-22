@@ -20,9 +20,11 @@ import {
   ifToggledOn,
   EditButtonOptions,
   useEditContext,
+} from '@bodiless/core';
+import {
   useNode,
   ContentNode,
-} from '@bodiless/core';
+} from '@bodiless/data';
 import type { BodilessOptions } from '@bodiless/core';
 import flowRight from 'lodash/flowRight';
 import {

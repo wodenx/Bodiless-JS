@@ -17,18 +17,20 @@ import React, {
   useCallback, useEffect,
 } from 'react';
 import { useFormApi, useFormState } from 'informed';
-import { observer } from 'mobx-react';
 import {
-  withNode,
-  useNode,
   useEditContext,
   withMenuOptions,
   TMenuOption,
   MenuOptionsDefinition,
   useMenuOptionUI,
   ContextMenuForm,
-  withNodeKey,
+  observer,
 } from '@bodiless/core';
+import {
+  withNode,
+  useNode,
+  withNodeKey,
+} from '@bodiless/data';
 import {
   flowHoc,
   withOnlyProps,

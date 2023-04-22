@@ -13,9 +13,12 @@
  */
 
 import {
-  ContentNode, WithNodeKeyProps, withNodeKey, withNode, withNodeDataHandlers,
-  withMenuOptions, withContextActivator, useNode,
+  withMenuOptions, withContextActivator, observer,
 } from '@bodiless/core';
+import {
+  ContentNode, WithNodeKeyProps, withNodeKey, withNode, withNodeDataHandlers,
+  useNode,
+} from '@bodiless/data';
 import React, {
   ComponentType, HTMLProps, FC, useCallback,
 } from 'react';
@@ -25,7 +28,6 @@ import {
 } from '@bodiless/fclasses';
 import flow from 'lodash/flow';
 import flowRight from 'lodash/flowRight';
-import { observer } from 'mobx-react';
 import { v4 } from 'uuid';
 import {
   TokenSelectorProps, TokenSelectorData, withKeyFromData, withTokensFromData,

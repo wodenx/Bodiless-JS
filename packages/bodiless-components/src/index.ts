@@ -12,8 +12,8 @@
  * limitations under the License.kk
  */
 
-import Editable, { withPlaceholder, asEditable } from './Editable';
-import type { UseEditableOverrides, EditableData } from './Editable';
+import Editable, { withPlaceholder, asEditable } from './Editable.bl-edit';
+import type { UseEditableOverrides, EditableData } from './Editable.bl-edit';
 import NodeViewer from './NodeViewer';
 import withLinkToggle from './LinkToggle';
 import asBodilessAnchor from './Anchor/asBodilessAnchor';

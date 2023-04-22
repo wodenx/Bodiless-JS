@@ -13,7 +13,7 @@
  */
 
 import { ComponentType } from 'react';
-import { withNode, } from '@bodiless/core';
+import { withNode, } from '@bodiless/data';
 import {
   withDesign,
   addClasses,

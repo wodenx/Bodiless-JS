@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@bodiless/core": "^1.0.0-rc.37",
+    "@bodiless/data": "^1.0.0-rc.37",
     "@bodiless/fclasses": "^1.0.0-rc.37",
     "@bodiless/layouts": "^1.0.0-rc.37",
     "@bodiless/layouts-ui": "^1.0.0-rc.37",
@@ -47,7 +48,6 @@
     "@types/crypto-js": "4.1.1"
   },
   "peerDependencies": {
-    "mobx-react": "^7.2.1",
     "react": "^17.0.2"
   }
 }

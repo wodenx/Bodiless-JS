@@ -34,12 +34,12 @@
     "clean": "rimraf \"lib/*\" && rimraf tsconfig.tsbuildinfo && rimraf \"doc/api\""
   },
   "peerDependencies": {
-    "mobx-react": "^7.2.1",
     "react": "^17.0.2"
   },
   "dependencies": {
     "@bodiless/cli": "^1.0.0-rc.37",
     "@bodiless/core": "^1.0.0-rc.37",
+    "@bodiless/data": "^1.0.0-rc.37",
     "@bodiless/fclasses": "^1.0.0-rc.37",
     "axios": "^0.21.0",
     "crypto-js": "^4.1.1",

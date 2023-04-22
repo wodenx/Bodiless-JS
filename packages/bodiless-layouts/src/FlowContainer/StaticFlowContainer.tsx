@@ -14,7 +14,7 @@
 
 import React from 'react';
 import type { FC } from 'react';
-import { withNode } from '@bodiless/core';
+import { withNode } from '@bodiless/data';
 import { Div, withoutProps } from '@bodiless/fclasses';
 import type { DesignableProps } from '@bodiless/fclasses';
 import { useItemHandlers } from './model';

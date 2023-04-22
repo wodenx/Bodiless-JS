@@ -14,7 +14,7 @@
 
 import {
   observable, action, computed, makeObservable,
-} from 'mobx';
+} from '@bodiless/core';
 import type { BreadcrumbStoreType, BreadcrumbItemType } from './types';
 import { BreadcrumbStore as BreadcrumbStoreStatic } from './BreadcrumbStore.static';
 

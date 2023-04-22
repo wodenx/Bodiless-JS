@@ -13,12 +13,9 @@
  */
 
 import React, { FC, ComponentType } from 'react';
-import { observer } from 'mobx-react';
 import flow from 'lodash/flow';
-import {
-  withNode,
-  useEditContext,
-} from '@bodiless/core';
+import { useEditContext, observer } from '@bodiless/core';
+import { withNode } from '@bodiless/data';
 import {
   withDesign,
   addClasses,

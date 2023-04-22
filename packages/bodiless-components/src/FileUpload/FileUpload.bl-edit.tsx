@@ -19,7 +19,7 @@ import React, {
   ComponentType as CT,
 } from 'react';
 import debug from 'debug';
-import { useNode } from '@bodiless/core';
+import { useNode } from '@bodiless/data';
 import { useDropzone } from 'react-dropzone';
 import BackendSave from './BackendSave';
 

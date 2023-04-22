@@ -59,7 +59,9 @@
     "@bodiless/components-ui": "^1.0.0-rc.37",
     "@bodiless/core": "^1.0.0-rc.37",
     "@bodiless/core-ui": "^1.0.0-rc.37",
+    "@bodiless/data": "^1.0.0-rc.37",
     "@bodiless/fclasses": "^1.0.0-rc.37",
+    "@bodiless/git": "^1.0.0-rc.37",
     "@bodiless/layouts": "^1.0.0-rc.37",
     "@bodiless/navigation": "^1.0.0-rc.37",
     "@bodiless/organisms": "^1.0.0-rc.37",
@@ -114,8 +116,6 @@
   },
   "peerDependencies": {
     "gatsby": "^4.11.2",
-    "mobx": "^6.0.0",
-    "mobx-react": "^7.2.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   }

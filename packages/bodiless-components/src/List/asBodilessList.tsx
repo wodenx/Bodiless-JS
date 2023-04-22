@@ -13,14 +13,16 @@
  */
 
 import {
-  WithNodeKeyProps,
-  withNodeKey,
-  useNode,
-  NodeProvider,
   withOnlyProps,
   useEditContext,
   withActivateOnEffect,
 } from '@bodiless/core';
+import {
+  WithNodeKeyProps,
+  withNodeKey,
+  useNode,
+  NodeProvider,
+} from '@bodiless/data';
 import React, {
   ComponentType, PropsWithChildren, FC,
 } from 'react';

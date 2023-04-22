@@ -15,12 +15,13 @@
 import React, { FC } from 'react';
 import {
   ifEditable,
-  useNode,
   ifReadOnly,
 } from '@bodiless/core';
 import type {
-  WithNodeKeyProps, UseBodilessOverrides,
+  UseBodilessOverrides,
 } from '@bodiless/core';
+import { useNode } from '@bodiless/data';
+import type { WithNodeKeyProps } from '@bodiless/data';
 import {
   HOC, flowHoc, Enhancer,
 } from '@bodiless/fclasses';

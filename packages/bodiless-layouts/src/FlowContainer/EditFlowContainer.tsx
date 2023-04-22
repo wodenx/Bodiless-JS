@@ -15,12 +15,12 @@
 import React, { FC } from 'react';
 import MD5 from 'crypto-js/md5';
 import { arrayMove, SortEnd } from 'react-sortable-hoc';
-import { observer } from 'mobx-react';
 import flowRight from 'lodash/flowRight';
 
 import {
-  withNode, withMenuOptions, withResizeDetector, withActivateOnEffect,
+  withMenuOptions, withResizeDetector, withActivateOnEffect, observer,
 } from '@bodiless/core';
+import { withNode } from '@bodiless/data';
 import {
   stylable, ComponentOrTag,
 } from '@bodiless/fclasses';

@@ -13,7 +13,7 @@
  */
 import { vitalGenericTemplate, asGenericTemplateToken } from '@bodiless/vital-templates';
 import { as, on } from '@bodiless/fclasses';
-import { withNode, withNodeKey } from '@bodiless/core';
+import { withNode, withNodeKey } from '@bodiless/data';
 import { ContentListingClean, vitalContentListing } from '../../ContentListing';
 
 const Default = asGenericTemplateToken({
