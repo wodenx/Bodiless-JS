@@ -11,18 +11,19 @@ version control system.
 
 The _File_ menu contains the following items:
 
-* [Pull](#pull)
-* [Push](#push)
-* [History](#history)
-* [Revert](#revert)
+- [Update](#update)
+- [Save](#save)
+- [History](#history)
+- [Revert](#revert)
 
-## Pull
+## Update
 
-The **Pull** button will pull the latest code from your site's repository.
+The **Update** button will pull the latest code from your site's repository, updating your local
+site.
 
-## Push
+## Save
 
-With the **Push** button you can commit your local changes to your site and push them to the
+With the **Save** button you can commit your local changes to your site and push them to the
 appropriate branch.
 
 ## History
